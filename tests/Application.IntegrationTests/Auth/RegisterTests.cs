@@ -12,19 +12,19 @@ namespace Application.IntegrationTests.Auth
 {
     public class RegisterTests : TestBase
     {
-        private Register.CommandValidator _validator;
+        private RegisterValidator _validator;
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new object[] { new Register.UserDTO {
+            new object[] { new RegisterDTO {
                 Email = "john.doe",
                 Username = "John Doe",
                 Password = "password",
             } },
-            new object[] { new Register.UserDTO {
+            new object[] { new RegisterDTO {
                 Email = "john.doe@example.com",
             } },
-            new object[] { new Register.UserDTO {
+            new object[] { new RegisterDTO {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
                 Password = "pass",
@@ -33,14 +33,14 @@ namespace Application.IntegrationTests.Auth
 
         public RegisterTests()
         {
-            _validator = new Register.CommandValidator(_context);
+            _validator = new RegisterValidator(_context);
         }
 
         [Theory]
         [MemberData(nameof(Data))]
-        public void UserCannotRegisterWithInvalidData(Register.UserDTO user)
+        public void UserCannotRegisterWithInvalidData(RegisterDTO user)
         {
-            var result = _validator.TestValidate(new Register.RegisterCommand(user));
+            var result = _validator.TestValidate(new RegisterCommand(user));
 
             result.ShouldHaveAnyValidationError();
         }
@@ -48,7 +48,7 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task UserCanRegister()
         {
-            var request = new Register.RegisterCommand(new Register.UserDTO
+            var request = new RegisterCommand(new RegisterDTO
             {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
@@ -83,8 +83,8 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            var result = _validator.TestValidate(new Register.RegisterCommand(
-                new Register.UserDTO
+            var result = _validator.TestValidate(new RegisterCommand(
+                new RegisterDTO
                 {
                     Email = "john.doe@example.com",
                     Username = "John Doe",

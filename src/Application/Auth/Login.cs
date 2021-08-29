@@ -10,36 +10,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth
 {
+    public class LoginDTO
+    {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+    }
+
+    public record LoginCommand(LoginDTO User) : IRequest<UserEnvelope>;
+
+    public class LoginValidator : AbstractValidator<LoginCommand>
+    {
+        public LoginValidator(IAppDbContext context, IPasswordHasher passwordHasher)
+        {
+            RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
+            RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
+
+            RuleFor(x => x.User.Email).Must(
+                (credentials, email) =>
+                {
+                    var user = context.Users.Where(x => x.Email == email).SingleOrDefault();
+
+                    return user != null && passwordHasher.Check(credentials.User.Password, user.Password);
+                }
+            )
+                .WithMessage("Bad credentials");
+        }
+    }
+
     public class Login
     {
-        public class CredentialsDTO
-        {
-            public string Email { get; set; }
-
-            public string Password { get; set; }
-        }
-
-        public record LoginCommand(CredentialsDTO User) : IRequest<UserEnvelope>;
-
-        public class CommandValidator : AbstractValidator<LoginCommand>
-        {
-            public CommandValidator(IAppDbContext context, IPasswordHasher passwordHasher)
-            {
-                RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
-                RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
-
-                RuleFor(x => x.User.Email).Must(
-                    (credentials, email) =>
-                    {
-                        var user = context.Users.Where(x => x.Email == email).SingleOrDefault();
-
-                        return user != null && passwordHasher.Check(credentials.User.Password, user.Password);
-                    }
-                )
-                    .WithMessage("Bad credentials");
-            }
-        }
-
         public class Handler : IRequestHandler<LoginCommand, UserEnvelope>
         {
             private readonly IAppDbContext _context;

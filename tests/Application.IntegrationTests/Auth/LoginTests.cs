@@ -9,23 +9,23 @@ namespace Application.IntegrationTests.Auth
 {
     public class LoginTests : TestBase
     {
-        private Login.CommandValidator _validator;
+        private LoginValidator _validator;
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new object[] { new Login.CredentialsDTO {
+            new object[] { new LoginDTO {
                 Email = "john.doe",
                 Password = "password",
             } },
-            new object[] { new Login.CredentialsDTO {
+            new object[] { new LoginDTO {
                 Email = "john.doe@example.com",
                 Password = "pass",
             } },
-            new object[] { new Login.CredentialsDTO {
+            new object[] { new LoginDTO {
                 Email = "jane.doe@example.com",
                 Password = "password",
             } },
-            new object[] { new Login.CredentialsDTO {
+            new object[] { new LoginDTO {
                 Email = "john.doe@example.com",
                 Password = "badpassword",
             } },
@@ -33,12 +33,12 @@ namespace Application.IntegrationTests.Auth
 
         public LoginTests()
         {
-            _validator = new Login.CommandValidator(_context, _passwordHasher);
+            _validator = new LoginValidator(_context, _passwordHasher);
         }
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task UserCannotLoginWithInvalidData(Login.CredentialsDTO credentials)
+        public async Task UserCannotLoginWithInvalidData(LoginDTO credentials)
         {
             await _context.Users.AddAsync(new User
             {
@@ -48,7 +48,7 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            var result = _validator.TestValidate(new Login.LoginCommand(credentials));
+            var result = _validator.TestValidate(new LoginCommand(credentials));
 
             result.ShouldHaveAnyValidationError();
         }
@@ -65,7 +65,7 @@ namespace Application.IntegrationTests.Auth
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            var request = new Login.LoginCommand(new Login.CredentialsDTO
+            var request = new LoginCommand(new LoginDTO
             {
                 Email = "john.doe@example.com",
                 Password = "password",

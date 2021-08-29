@@ -10,34 +10,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth
 {
+    public class RegisterDTO
+    {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string Username { get; set; }
+    }
+
+    public record RegisterCommand(RegisterDTO User) : IRequest<UserEnvelope>;
+
+    public class RegisterValidator : AbstractValidator<RegisterCommand>
+    {
+        public RegisterValidator(IAppDbContext context)
+        {
+            RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
+            RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
+            RuleFor(x => x.User.Username).NotNull().NotEmpty();
+
+            RuleFor(x => x.User.Email).Must(
+                email => !context.Users.Where(x => x.Email == email).Any()
+            )
+                .WithMessage("User already existing");
+        }
+    }
+
     public class Register
     {
-        public class UserDTO
-        {
-            public string Email { get; set; }
-
-            public string Password { get; set; }
-
-            public string Username { get; set; }
-        }
-
-        public record RegisterCommand(UserDTO User) : IRequest<UserEnvelope>;
-
-        public class CommandValidator : AbstractValidator<RegisterCommand>
-        {
-            public CommandValidator(IAppDbContext context)
-            {
-                RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
-                RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
-                RuleFor(x => x.User.Username).NotNull().NotEmpty();
-
-                RuleFor(x => x.User.Email).Must(
-                    email => !context.Users.Where(x => x.Email == email).Any()
-                )
-                    .WithMessage("User already existing");
-            }
-        }
-
         public class Handler : IRequestHandler<RegisterCommand, UserEnvelope>
         {
             private readonly IAppDbContext _context;
