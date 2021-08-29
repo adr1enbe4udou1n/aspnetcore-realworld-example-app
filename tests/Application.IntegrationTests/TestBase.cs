@@ -12,17 +12,12 @@ using Xunit;
 
 namespace Application.IntegrationTests
 {
+    [Collection("DB")]
     public class TestBase : IAsyncLifetime
     {
         private readonly IConfigurationRoot _configuration;
 
         private readonly ServiceProvider _provider;
-
-        private readonly Checkpoint _checkpoint = new Checkpoint
-        {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" },
-            DbAdapter = DbAdapter.Postgres
-        };
 
         protected readonly IMediator _mediator;
 
@@ -42,7 +37,13 @@ namespace Application.IntegrationTests
             using (var conn = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await conn.OpenAsync();
-                await _checkpoint.Reset(conn);
+
+                var checkpoint = new Checkpoint
+                {
+                    TablesToIgnore = new[] { "__EFMigrationsHistory" },
+                    DbAdapter = DbAdapter.Postgres
+                };
+                await checkpoint.Reset(conn);
             }
         }
 
