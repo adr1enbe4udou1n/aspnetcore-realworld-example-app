@@ -32,7 +32,7 @@ namespace Application.Auth
             RuleFor(x => x.User.Email).Must(
                 email => !context.Users.Where(x => x.Email == email).Any()
             )
-                .WithMessage("User already existing");
+                .WithMessage("Email already existing");
         }
     }
 

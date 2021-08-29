@@ -10,21 +10,7 @@ namespace Application.IntegrationTests.Auth
 {
     public class LoginTests : TestBase
     {
-        private LoginValidator _validator;
-
-        public static IEnumerable<object[]> InvalidInputs => new List<object[]>
-        {
-            new object[] { new LoginDTO {
-                Email = "john.doe",
-                Password = "password",
-            } },
-            new object[] { new LoginDTO {
-                Email = "john.doe@example.com",
-                Password = "pass",
-            } },
-        };
-
-        public static IEnumerable<object[]> InvalidCredentials => new List<object[]>
+        public static IEnumerable<object[]> Data => new List<object[]>
         {
             new object[] { new LoginDTO {
                 Email = "jane.doe@example.com",
@@ -36,31 +22,9 @@ namespace Application.IntegrationTests.Auth
             } },
         };
 
-        public LoginTests()
-        {
-            _validator = new LoginValidator(_context, _passwordHasher);
-        }
-
         [Theory]
-        [MemberData(nameof(InvalidInputs))]
+        [MemberData(nameof(Data))]
         public async Task UserCannotLoginWithInvalidData(LoginDTO credentials)
-        {
-            await _context.Users.AddAsync(new User
-            {
-                Email = "john.doe@example.com",
-                Name = "John Doe",
-                Password = _passwordHasher.Hash("password"),
-            });
-            await _context.SaveChangesAsync();
-
-            var result = _validator.TestValidate(new LoginCommand(credentials));
-
-            result.ShouldHaveAnyValidationError();
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidCredentials))]
-        public async Task UserCannotLoginWithInvalidCredentials(LoginDTO credentials)
         {
             await _context.Users.AddAsync(new User
             {

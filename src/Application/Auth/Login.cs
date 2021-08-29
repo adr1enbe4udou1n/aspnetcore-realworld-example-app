@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +5,6 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +21,7 @@ namespace Application.Auth
 
     public class LoginValidator : AbstractValidator<LoginCommand>
     {
-        public LoginValidator(IAppDbContext context, IPasswordHasher passwordHasher)
+        public LoginValidator()
         {
             RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
             RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
@@ -51,7 +49,7 @@ namespace Application.Auth
 
             if (user == null || !_passwordHasher.Check(request.User.Password, user.Password))
             {
-                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("User.Email", "Bad credentials") });
+                throw new ValidationException("Bad credentials");
             }
 
             var currentUser = _mapper.Map<User, CurrentUser>(user);
