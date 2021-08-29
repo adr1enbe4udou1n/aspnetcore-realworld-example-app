@@ -40,7 +40,7 @@ namespace Application.IntegrationTests.Auth
         [MemberData(nameof(Data))]
         public void UserCannotRegisterWithInvalidData(Register.UserDTO user)
         {
-            var result = _validator.TestValidate(new Register.Command(user));
+            var result = _validator.TestValidate(new Register.RegisterCommand(user));
 
             result.ShouldHaveAnyValidationError();
         }
@@ -48,7 +48,7 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task UserCanRegister()
         {
-            var request = new Register.Command(new Register.UserDTO
+            var request = new Register.RegisterCommand(new Register.UserDTO
             {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
@@ -83,7 +83,7 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            var result = _validator.TestValidate(new Register.Command(
+            var result = _validator.TestValidate(new Register.RegisterCommand(
                 new Register.UserDTO
                 {
                     Email = "john.doe@example.com",

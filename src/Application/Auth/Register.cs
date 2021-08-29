@@ -21,9 +21,9 @@ namespace Application.Auth
             public string Username { get; set; }
         }
 
-        public record Command(UserDTO User) : IRequest<UserEnvelope>;
+        public record RegisterCommand(UserDTO User) : IRequest<UserEnvelope>;
 
-        public class CommandValidator : AbstractValidator<Command>
+        public class CommandValidator : AbstractValidator<RegisterCommand>
         {
             public CommandValidator(IAppDbContext context)
             {
@@ -38,7 +38,7 @@ namespace Application.Auth
             }
         }
 
-        public class Handler : IRequestHandler<Command, UserEnvelope>
+        public class Handler : IRequestHandler<RegisterCommand, UserEnvelope>
         {
             private readonly IAppDbContext _context;
             private readonly IPasswordHasher _passwordHasher;
@@ -53,7 +53,7 @@ namespace Application.Auth
                 _mapper = mapper;
             }
 
-            public async Task<UserEnvelope> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<UserEnvelope> Handle(RegisterCommand request, CancellationToken cancellationToken)
             {
                 var user = new User
                 {

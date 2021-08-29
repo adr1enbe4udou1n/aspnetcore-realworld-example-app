@@ -48,7 +48,7 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            var result = _validator.TestValidate(new Login.Command(credentials));
+            var result = _validator.TestValidate(new Login.LoginCommand(credentials));
 
             result.ShouldHaveAnyValidationError();
         }
@@ -65,7 +65,7 @@ namespace Application.IntegrationTests.Auth
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            var request = new Login.Command(new Login.CredentialsDTO
+            var request = new Login.LoginCommand(new Login.CredentialsDTO
             {
                 Email = "john.doe@example.com",
                 Password = "password",

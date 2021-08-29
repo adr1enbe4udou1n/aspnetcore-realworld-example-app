@@ -17,7 +17,13 @@ namespace WebUI.Controllers.Users
         }
 
         [HttpPost]
-        public Task<UserEnvelope> Create([FromBody] Register.Command command, CancellationToken cancellationToken)
+        public Task<UserEnvelope> Register([FromBody] Register.RegisterCommand command, CancellationToken cancellationToken)
+        {
+            return _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpPost("login")]
+        public Task<UserEnvelope> Login([FromBody] Login.LoginCommand command, CancellationToken cancellationToken)
         {
             return _mediator.Send(command, cancellationToken);
         }
