@@ -38,31 +38,28 @@ namespace Application.Auth
         }
     }
 
-    public class Login
+    public class LoginHandler : IRequestHandler<LoginCommand, UserEnvelope>
     {
-        public class Handler : IRequestHandler<LoginCommand, UserEnvelope>
+        private readonly IAppDbContext _context;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IMapper _mapper;
+
+        public LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
         {
-            private readonly IAppDbContext _context;
-            private readonly IPasswordHasher _passwordHasher;
-            private readonly IJwtTokenGenerator _jwtTokenGenerator;
-            private readonly IMapper _mapper;
+            _context = context;
+            _passwordHasher = passwordHasher;
+            _jwtTokenGenerator = jwtTokenGenerator;
+            _mapper = mapper;
+        }
 
-            public Handler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
-            {
-                _context = context;
-                _passwordHasher = passwordHasher;
-                _jwtTokenGenerator = jwtTokenGenerator;
-                _mapper = mapper;
-            }
+        public async Task<UserEnvelope> Handle(LoginCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _context.Users.Where(x => x.Email == request.User.Email).SingleOrDefaultAsync();
 
-            public async Task<UserEnvelope> Handle(LoginCommand request, CancellationToken cancellationToken)
-            {
-                var user = await _context.Users.Where(x => x.Email == request.User.Email).SingleOrDefaultAsync();
-
-                var currentUser = _mapper.Map<User, CurrentUser>(user);
-                currentUser.Token = _jwtTokenGenerator.CreateToken(user);
-                return new UserEnvelope(currentUser);
-            }
+            var currentUser = _mapper.Map<User, CurrentUser>(user);
+            currentUser.Token = _jwtTokenGenerator.CreateToken(user);
+            return new UserEnvelope(currentUser);
         }
     }
 }

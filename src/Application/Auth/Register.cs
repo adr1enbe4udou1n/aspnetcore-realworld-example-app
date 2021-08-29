@@ -36,39 +36,37 @@ namespace Application.Auth
         }
     }
 
-    public class Register
+
+    public class RegisterHandler : IRequestHandler<RegisterCommand, UserEnvelope>
     {
-        public class Handler : IRequestHandler<RegisterCommand, UserEnvelope>
+        private readonly IAppDbContext _context;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IMapper _mapper;
+
+        public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
         {
-            private readonly IAppDbContext _context;
-            private readonly IPasswordHasher _passwordHasher;
-            private readonly IJwtTokenGenerator _jwtTokenGenerator;
-            private readonly IMapper _mapper;
+            _context = context;
+            _passwordHasher = passwordHasher;
+            _jwtTokenGenerator = jwtTokenGenerator;
+            _mapper = mapper;
+        }
 
-            public Handler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+        public async Task<UserEnvelope> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        {
+            var user = new User
             {
-                _context = context;
-                _passwordHasher = passwordHasher;
-                _jwtTokenGenerator = jwtTokenGenerator;
-                _mapper = mapper;
-            }
+                Name = request.User.Username,
+                Email = request.User.Email,
+                Password = _passwordHasher.Hash(request.User.Password),
+            };
 
-            public async Task<UserEnvelope> Handle(RegisterCommand request, CancellationToken cancellationToken)
-            {
-                var user = new User
-                {
-                    Name = request.User.Username,
-                    Email = request.User.Email,
-                    Password = _passwordHasher.Hash(request.User.Password),
-                };
+            await _context.Users.AddAsync(user, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-                await _context.Users.AddAsync(user, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                var currentUser = _mapper.Map<User, CurrentUser>(user);
-                currentUser.Token = _jwtTokenGenerator.CreateToken(user);
-                return new UserEnvelope(currentUser);
-            }
+            var currentUser = _mapper.Map<User, CurrentUser>(user);
+            currentUser.Token = _jwtTokenGenerator.CreateToken(user);
+            return new UserEnvelope(currentUser);
         }
     }
 }
