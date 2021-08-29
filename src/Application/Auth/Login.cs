@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,16 +27,6 @@ namespace Application.Auth
         {
             RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
             RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
-
-            RuleFor(x => x.User.Email).Must(
-                (credentials, email) =>
-                {
-                    var user = context.Users.Where(x => x.Email == email).SingleOrDefault();
-
-                    return user != null && passwordHasher.Check(credentials.User.Password, user.Password);
-                }
-            )
-                .WithMessage("Bad credentials");
         }
     }
 
@@ -56,6 +48,11 @@ namespace Application.Auth
         public async Task<UserEnvelope> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _context.Users.Where(x => x.Email == request.User.Email).SingleOrDefaultAsync();
+
+            if (user == null || !_passwordHasher.Check(request.User.Password, user.Password))
+            {
+                throw new ValidationException(new List<ValidationFailure> { new ValidationFailure("User.Email", "Bad credentials") });
+            }
 
             var currentUser = _mapper.Map<User, CurrentUser>(user);
             currentUser.Token = _jwtTokenGenerator.CreateToken(user);

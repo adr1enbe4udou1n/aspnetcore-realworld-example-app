@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Auth;
 using Domain.Entities;
+using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace Application.IntegrationTests.Auth
     {
         private LoginValidator _validator;
 
-        public static IEnumerable<object[]> Data => new List<object[]>
+        public static IEnumerable<object[]> InvalidInputs => new List<object[]>
         {
             new object[] { new LoginDTO {
                 Email = "john.doe",
@@ -21,6 +22,10 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
                 Password = "pass",
             } },
+        };
+
+        public static IEnumerable<object[]> InvalidCredentials => new List<object[]>
+        {
             new object[] { new LoginDTO {
                 Email = "jane.doe@example.com",
                 Password = "password",
@@ -37,7 +42,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Theory]
-        [MemberData(nameof(Data))]
+        [MemberData(nameof(InvalidInputs))]
         public async Task UserCannotLoginWithInvalidData(LoginDTO credentials)
         {
             await _context.Users.AddAsync(new User
@@ -51,6 +56,21 @@ namespace Application.IntegrationTests.Auth
             var result = _validator.TestValidate(new LoginCommand(credentials));
 
             result.ShouldHaveAnyValidationError();
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidCredentials))]
+        public async Task UserCannotLoginWithInvalidCredentials(LoginDTO credentials)
+        {
+            await _context.Users.AddAsync(new User
+            {
+                Email = "john.doe@example.com",
+                Name = "John Doe",
+                Password = _passwordHasher.Hash("password"),
+            });
+            await _context.SaveChangesAsync();
+
+            await Assert.ThrowsAsync<ValidationException>(async () => await _mediator.Send(new LoginCommand(credentials)));
         }
 
         [Fact]
