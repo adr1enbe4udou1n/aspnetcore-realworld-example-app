@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Auth;
+using Domain.Entities;
+using FluentValidation.TestHelper;
+using JWT.Builder;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -9,6 +13,12 @@ namespace Application.IntegrationTests.Auth
 {
     public class RegisterTests : TestBase
     {
+        private Register.CommandValidator _validator;
+        public RegisterTests()
+        {
+            _validator = new Register.CommandValidator(_context);
+        }
+
         [Fact]
         public async Task UserCanRegister()
         {
@@ -21,12 +31,63 @@ namespace Application.IntegrationTests.Auth
 
             var currentUser = await _mediator.Send(request);
 
-            var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
-
-            Assert.NotNull(created);
             Assert.Equal(currentUser.User.Username, "John Doe");
             Assert.Equal(currentUser.User.Email, "john.doe@example.com");
-            // Assert.Equal(created.Hash, await new PasswordHasher().Hash("password", created.Salt));
+
+            var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
+            Assert.NotNull(created);
+
+            Assert.True(_passwordHasher.Check("password", created.Password));
+
+            var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
+
+            Assert.Equal(payload["jti"], (long)created.Id);
+            Assert.Equal(payload["name"], "John Doe");
+            Assert.Equal(payload["email_verified"], "john.doe@example.com");
+        }
+
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void UserCannotRegisterWithInvalidData(Register.UserDTO user)
+        {
+            var result = _validator.TestValidate(new Register.Command(user));
+
+            result.ShouldHaveAnyValidationError();
+        }
+
+        public static IEnumerable<object[]> Data => new List<object[]>
+        {
+            new object[] { new Register.UserDTO {
+                Email = "john.doe",
+                Username = "John Doe",
+                Password = "password",
+            } },
+            new object[] { new Register.UserDTO {
+                Email = "john.doe@example.com",
+            } },
+        };
+
+        [Fact]
+        public async Task UserCannotRegisterTwice()
+        {
+            await _context.Users.AddAsync(new User
+            {
+                Email = "john.doe@example.com",
+                Name = "John Doe",
+                Password = "password",
+            });
+            await _context.SaveChangesAsync();
+
+            var result = _validator.TestValidate(new Register.Command(
+                new Register.UserDTO
+                {
+                    Email = "john.doe@example.com",
+                    Username = "John Doe",
+                    Password = "password",
+                }
+            ));
+
+            result.ShouldHaveValidationErrorFor(x => x.User.Email);
         }
     }
 }

@@ -66,7 +66,7 @@ namespace Application.Auth
                 await _context.SaveChangesAsync(cancellationToken);
 
                 var currentUser = _mapper.Map<User, CurrentUser>(user);
-                currentUser.Token = _jwtTokenGenerator.CreateToken(user.Name);
+                currentUser.Token = _jwtTokenGenerator.CreateToken(user);
                 return new UserEnvelope(currentUser);
             }
         }

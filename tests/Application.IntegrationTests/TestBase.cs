@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Application.Interfaces;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,10 @@ namespace Application.IntegrationTests
         protected readonly IMediator _mediator;
 
         protected readonly AppDbContext _context;
+
+        protected readonly IPasswordHasher _passwordHasher;
+
+        protected readonly IJwtTokenGenerator _jwtTokenGenerator;
 
         public Task DisposeAsync()
         {
@@ -56,6 +61,8 @@ namespace Application.IntegrationTests
             _provider = services.BuildServiceProvider();
 
             _mediator = _provider.GetService<IMediator>();
+            _passwordHasher = _provider.GetService<IPasswordHasher>();
+            _jwtTokenGenerator = _provider.GetService<IJwtTokenGenerator>();
             _context = _provider.GetService<AppDbContext>();
 
             _context.Database.Migrate();

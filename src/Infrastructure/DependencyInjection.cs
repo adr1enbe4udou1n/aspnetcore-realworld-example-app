@@ -1,6 +1,6 @@
 using Application.Interfaces;
 using Infrastructure.Persistence;
-using Infreastructure.Security;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,7 @@ namespace Infrastructure
             });
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IJwtTokenGenerator>(options => new JwtTokenGenerator(configuration["JwtSecretKey"]));
 
             return services;
         }
