@@ -10,31 +10,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth
 {
-    public class Register
+    public class Login
     {
-        public class UserDTO
+        public class CredentialsDTO
         {
             public string Email { get; set; }
 
             public string Password { get; set; }
-
-            public string Username { get; set; }
         }
 
-        public record Command(UserDTO User) : IRequest<UserEnvelope>;
+        public record Command(CredentialsDTO User) : IRequest<UserEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator(IAppDbContext context)
+            public CommandValidator(IAppDbContext context, IPasswordHasher passwordHasher)
             {
                 RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
                 RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
-                RuleFor(x => x.User.Username).NotNull().NotEmpty();
 
                 RuleFor(x => x.User.Email).Must(
-                    email => !context.Users.Where(x => x.Email == email).Any()
+                    (credentials, email) =>
+                    {
+                        var user = context.Users.Where(x => x.Email == email).SingleOrDefault();
+
+                        return user != null && passwordHasher.Check(credentials.User.Password, user.Password);
+                    }
                 )
-                    .WithMessage("User already existing");
+                    .WithMessage("Bad credentials");
             }
         }
 
@@ -55,15 +57,7 @@ namespace Application.Auth
 
             public async Task<UserEnvelope> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = new User
-                {
-                    Name = request.User.Username,
-                    Email = request.User.Email,
-                    Password = _passwordHasher.Hash(request.User.Password),
-                };
-
-                await _context.Users.AddAsync(user, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
+                var user = await _context.Users.Where(x => x.Email == request.User.Email).SingleOrDefaultAsync();
 
                 var currentUser = _mapper.Map<User, CurrentUser>(user);
                 currentUser.Token = _jwtTokenGenerator.CreateToken(user);

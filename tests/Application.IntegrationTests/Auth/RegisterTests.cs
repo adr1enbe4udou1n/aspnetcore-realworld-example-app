@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Application.Auth;
 using Domain.Entities;
 using FluentValidation.TestHelper;
-using JWT.Builder;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -14,9 +13,36 @@ namespace Application.IntegrationTests.Auth
     public class RegisterTests : TestBase
     {
         private Register.CommandValidator _validator;
+
+        public static IEnumerable<object[]> Data => new List<object[]>
+        {
+            new object[] { new Register.UserDTO {
+                Email = "john.doe",
+                Username = "John Doe",
+                Password = "password",
+            } },
+            new object[] { new Register.UserDTO {
+                Email = "john.doe@example.com",
+            } },
+            new object[] { new Register.UserDTO {
+                Email = "john.doe@example.com",
+                Username = "John Doe",
+                Password = "pass",
+            } },
+        };
+
         public RegisterTests()
         {
             _validator = new Register.CommandValidator(_context);
+        }
+
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void UserCannotRegisterWithInvalidData(Register.UserDTO user)
+        {
+            var result = _validator.TestValidate(new Register.Command(user));
+
+            result.ShouldHaveAnyValidationError();
         }
 
         [Fact]
@@ -45,27 +71,6 @@ namespace Application.IntegrationTests.Auth
             Assert.Equal(payload["name"], "John Doe");
             Assert.Equal(payload["email_verified"], "john.doe@example.com");
         }
-
-        [Theory]
-        [MemberData(nameof(Data))]
-        public void UserCannotRegisterWithInvalidData(Register.UserDTO user)
-        {
-            var result = _validator.TestValidate(new Register.Command(user));
-
-            result.ShouldHaveAnyValidationError();
-        }
-
-        public static IEnumerable<object[]> Data => new List<object[]>
-        {
-            new object[] { new Register.UserDTO {
-                Email = "john.doe",
-                Username = "John Doe",
-                Password = "password",
-            } },
-            new object[] { new Register.UserDTO {
-                Email = "john.doe@example.com",
-            } },
-        };
 
         [Fact]
         public async Task UserCannotRegisterTwice()
