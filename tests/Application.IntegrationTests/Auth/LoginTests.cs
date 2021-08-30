@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Auth;
-using Application.Interfaces;
 using Domain.Entities;
 using FluentValidation;
-using FluentValidation.TestHelper;
-using Infrastructure.Persistence;
-using MediatR;
 using Xunit;
 
 namespace Application.IntegrationTests.Auth
@@ -62,14 +58,14 @@ namespace Application.IntegrationTests.Auth
 
             var currentUser = await _mediator.Send(request);
 
-            Assert.Equal(currentUser.User.Username, "John Doe");
-            Assert.Equal(currentUser.User.Email, "john.doe@example.com");
+            Assert.Equal("John Doe", currentUser.User.Username);
+            Assert.Equal("john.doe@example.com", currentUser.User.Email);
 
             var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
-            Assert.Equal(payload["jti"], (long)user.Id);
-            Assert.Equal(payload["name"], "John Doe");
-            Assert.Equal(payload["email_verified"], "john.doe@example.com");
+            Assert.Equal((long)user.Id, payload["jti"]);
+            Assert.Equal("John Doe", payload["name"]);
+            Assert.Equal("john.doe@example.com", payload["email_verified"]);
         }
     }
 }
