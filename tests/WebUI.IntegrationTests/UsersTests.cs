@@ -25,14 +25,6 @@ namespace WebUI.IntegrationTests
         [Fact]
         public async Task RegisterTest()
         {
-            _mediatorMock.Setup(
-                m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new UserEnvelope(new CurrentUser
-                {
-                    Email = "john.doe@example.com",
-                    Username = "John Doe",
-                }));
-
             var httpResponse = await _client.PostAsJsonAsync("/users", new RegisterCommand(
                 new RegisterDTO
                 {
@@ -47,23 +39,11 @@ namespace WebUI.IntegrationTests
             _mediatorMock.Verify(m => m.Send(
                 It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()), Times.Once()
             );
-
-            var json = await httpResponse.Content.ReadFromJsonAsync<UserEnvelope>();
-            Assert.Equal(json.User.Email, "john.doe@example.com");
-            Assert.Equal(json.User.Username, "John Doe");
         }
 
         [Fact]
         public async Task LoginTest()
         {
-            _mediatorMock.Setup(
-                m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new UserEnvelope(new CurrentUser
-                {
-                    Email = "john.doe@example.com",
-                    Username = "John Doe",
-                }));
-
             var httpResponse = await _client.PostAsJsonAsync("/users/login", new LoginCommand(
                 new LoginDTO
                 {
@@ -77,10 +57,6 @@ namespace WebUI.IntegrationTests
             _mediatorMock.Verify(m => m.Send(
                 It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()), Times.Once()
             );
-
-            var json = await httpResponse.Content.ReadFromJsonAsync<UserEnvelope>();
-            Assert.Equal(json.User.Email, "john.doe@example.com");
-            Assert.Equal(json.User.Username, "John Doe");
         }
     }
 }
