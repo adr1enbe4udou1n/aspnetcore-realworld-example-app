@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Infrastructure.Persistence;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
-using WebUI;
 using Xunit;
 
 namespace Application.IntegrationTests
@@ -50,7 +50,7 @@ namespace Application.IntegrationTests
         public TestBase()
         {
             _configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.Testing.json", true, true)
+                .AddJsonFile("appsettings.json", true, true)
                 .AddEnvironmentVariables()
                 .Build();
 
