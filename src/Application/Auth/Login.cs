@@ -19,15 +19,6 @@ namespace Application.Auth
 
     public record LoginCommand(LoginDTO User) : IRequest<UserEnvelope>;
 
-    public class LoginValidator : AbstractValidator<LoginCommand>
-    {
-        public LoginValidator()
-        {
-            RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
-            RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
-        }
-    }
-
     public class LoginHandler : IRequestHandler<LoginCommand, UserEnvelope>
     {
         private readonly IAppDbContext _context;
