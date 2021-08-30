@@ -1,15 +1,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Auth;
+using Application.Interfaces;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.TestHelper;
+using Infrastructure.Persistence;
+using MediatR;
 using Xunit;
 
 namespace Application.IntegrationTests.Auth
 {
     public class LoginTests : TestBase
     {
+        public LoginTests(Startup factory) : base(factory) { }
+
         public static IEnumerable<object[]> Data => new List<object[]>
         {
             new object[] { new LoginDTO {

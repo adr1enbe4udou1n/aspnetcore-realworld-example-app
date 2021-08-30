@@ -1,4 +1,6 @@
 using Infrastructure;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,18 +8,24 @@ namespace Application.IntegrationTests
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public IConfiguration Configuration { get; private set; }
+        public IServiceCollection Services { get; private set; } = new ServiceCollection();
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public Startup()
         {
-            services.AddApplication();
-            services.AddInfrastructure(Configuration);
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            Services.AddApplication();
+            Services.AddInfrastructure(Configuration);
+
+            var _provider = Services.BuildServiceProvider();
+
+            var appDbContext = _provider.GetService<AppDbContext>();
+
+            appDbContext.Database.Migrate();
         }
     }
 }

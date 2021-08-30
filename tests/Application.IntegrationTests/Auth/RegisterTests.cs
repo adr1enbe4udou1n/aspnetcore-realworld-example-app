@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Auth;
+using Application.Interfaces;
 using Domain.Entities;
 using FluentValidation.TestHelper;
+using Infrastructure.Persistence;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -13,6 +16,12 @@ namespace Application.IntegrationTests.Auth
     public class RegisterTests : TestBase
     {
         private RegisterValidator _validator;
+
+
+        public RegisterTests(Startup factory) : base(factory)
+        {
+            _validator = new RegisterValidator(_context);
+        }
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
@@ -30,11 +39,6 @@ namespace Application.IntegrationTests.Auth
                 Password = "pass",
             } },
         };
-
-        public RegisterTests()
-        {
-            _validator = new RegisterValidator(_context);
-        }
 
         [Theory]
         [MemberData(nameof(Data))]

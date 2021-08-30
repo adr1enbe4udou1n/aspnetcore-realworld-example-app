@@ -1,9 +1,7 @@
-using System.IO;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Infrastructure.Persistence;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -13,11 +11,9 @@ using Xunit;
 namespace Application.IntegrationTests
 {
     [Collection("DB")]
-    public class TestBase : IAsyncLifetime
+    public class TestBase : IAsyncLifetime, IClassFixture<Startup>
     {
-        private readonly IConfigurationRoot _configuration;
-
-        private readonly ServiceProvider _provider;
+        protected readonly IConfiguration _configuration;
 
         protected readonly IMediator _mediator;
 
@@ -26,6 +22,17 @@ namespace Application.IntegrationTests
         protected readonly IPasswordHasher _passwordHasher;
 
         protected readonly IJwtTokenGenerator _jwtTokenGenerator;
+
+        public TestBase(Startup factory)
+        {
+            var provider = factory.Services.BuildServiceProvider();
+            _configuration = factory.Configuration;
+
+            _mediator = provider.GetService<IMediator>();
+            _passwordHasher = provider.GetService<IPasswordHasher>();
+            _jwtTokenGenerator = provider.GetService<IJwtTokenGenerator>();
+            _context = provider.GetService<AppDbContext>();
+        }
 
         public Task DisposeAsync()
         {
@@ -45,28 +52,6 @@ namespace Application.IntegrationTests
                 };
                 await checkpoint.Reset(conn);
             }
-        }
-
-        public TestBase()
-        {
-            _configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
-                .AddEnvironmentVariables()
-                .Build();
-
-            var startup = new Startup(_configuration);
-            var services = new ServiceCollection();
-
-            startup.ConfigureServices(services);
-
-            _provider = services.BuildServiceProvider();
-
-            _mediator = _provider.GetService<IMediator>();
-            _passwordHasher = _provider.GetService<IPasswordHasher>();
-            _jwtTokenGenerator = _provider.GetService<IJwtTokenGenerator>();
-            _context = _provider.GetService<AppDbContext>();
-
-            _context.Database.Migrate();
         }
     }
 }
