@@ -26,12 +26,7 @@ namespace WebUI.IntegrationTests
         public async Task RegisterTest()
         {
             var httpResponse = await _client.PostAsJsonAsync("/users", new RegisterCommand(
-                new RegisterDTO
-                {
-                    Email = "john.doe@example.com",
-                    Username = "John Doe",
-                    Password = "password",
-                }
+                new RegisterDTO()
             ));
 
             httpResponse.EnsureSuccessStatusCode();
@@ -45,11 +40,7 @@ namespace WebUI.IntegrationTests
         public async Task LoginTest()
         {
             var httpResponse = await _client.PostAsJsonAsync("/users/login", new LoginCommand(
-                new LoginDTO
-                {
-                    Email = "john.doe@example.com",
-                    Password = "password",
-                }
+                new LoginDTO()
             ));
 
             httpResponse.EnsureSuccessStatusCode();
