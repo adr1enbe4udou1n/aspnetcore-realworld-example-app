@@ -7,6 +7,6 @@ namespace Application.Interfaces
     {
         string CreateToken(User user);
 
-        IDictionary<string, object> DecodeToken(string token);
+        IDictionary<string, string> DecodeToken(string token);
     }
 }

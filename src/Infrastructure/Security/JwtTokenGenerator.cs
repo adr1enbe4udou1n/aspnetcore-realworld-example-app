@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using Application.Interfaces;
 using Domain.Entities;
-using JWT.Algorithms;
-using JWT.Builder;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Security
 {
@@ -18,23 +21,41 @@ namespace Infrastructure.Security
 
         public string CreateToken(User user)
         {
-            return JwtBuilder.Create()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(_secret)
-                .AddClaim("exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
-                .AddClaim(ClaimName.FullName, user.Name)
-                .AddClaim(ClaimName.JwtId, user.Id)
-                .AddClaim(ClaimName.VerifiedEmail, user.Email)
-                .Encode();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] {
+                    new Claim("id", user.Id.ToString()),
+                    new Claim("name", user.Name),
+                    new Claim("email", user.Email)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
-        public IDictionary<string, object> DecodeToken(string token)
+        public IDictionary<string, string> DecodeToken(string token)
         {
-            return JwtBuilder.Create()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(_secret)
-                .MustVerifySignature()
-                .Decode<IDictionary<string, object>>(token);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_secret);
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            return jwtToken.Claims
+                .GroupBy(c => c.Type)
+                .ToDictionary(group => group.Key, group => group.Last().Value);
         }
     }
 }

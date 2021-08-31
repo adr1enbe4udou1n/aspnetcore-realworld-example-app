@@ -7,29 +7,17 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Application;
-using Application.Auth;
 using Application.Interfaces;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure;
-using Infrastructure.Persistence;
-using JWT;
-using JWT.Algorithms;
-using JWT.Builder;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using WebUI.Filters;
+using WebUI.Middlewares;
 
 namespace WebUI
 {
@@ -80,18 +68,6 @@ namespace WebUI
                     }
                 });
             });
-
-            services.AddSingleton<IAlgorithmFactory, HMACSHAAlgorithmFactory>();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = "Token";
-                options.DefaultChallengeScheme = "Token";
-            }).AddJwt("Token", options =>
-            {
-                options.Keys = new[] { Configuration["JwtSecretKey"] };
-                options.VerifySignature = true;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,8 +90,7 @@ namespace WebUI
                 .AllowAnyMethod()
             );
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

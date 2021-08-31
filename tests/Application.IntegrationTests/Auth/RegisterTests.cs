@@ -68,9 +68,9 @@ namespace Application.IntegrationTests.Auth
 
             var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
-            Assert.Equal((long)created.Id, payload["jti"]);
+            Assert.Equal(created.Id.ToString(), payload["id"]);
             Assert.Equal("John Doe", payload["name"]);
-            Assert.Equal("john.doe@example.com", payload["email_verified"]);
+            Assert.Equal("john.doe@example.com", payload["email"]);
         }
 
         [Fact]
