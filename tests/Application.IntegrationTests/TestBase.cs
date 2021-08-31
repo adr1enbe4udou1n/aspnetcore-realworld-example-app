@@ -64,7 +64,7 @@ namespace Application.IntegrationTests
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            await _currentUser.SetToken(_jwtTokenGenerator.CreateToken(user));
+            await _currentUser.SetIdentifier(user.Id);
         }
     }
 }

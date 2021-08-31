@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Domain.Entities;
 
@@ -7,12 +9,12 @@ namespace Application.Interfaces
     {
         User User { get; }
 
-        string Token { get; }
+        long Identifier { get; }
 
-        public bool IsAuthenticated { get; }
+        bool IsAuthenticated { get; }
 
-        public Task SetToken(string token);
+        Task SetIdentifier(long identifier);
 
-        public Task Fresh();
+        Task Fresh();
     }
 }

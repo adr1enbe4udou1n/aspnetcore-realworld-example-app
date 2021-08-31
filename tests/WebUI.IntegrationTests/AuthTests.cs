@@ -58,7 +58,7 @@ namespace WebUI.IntegrationTests
             httpResponse.EnsureSuccessStatusCode();
 
             _mediatorMock.Verify(m => m.Send(
-                It.IsAny<CurrentUserCommand>(), It.IsAny<CancellationToken>()), Times.Once()
+                It.IsAny<CurrentUserQuery>(), It.IsAny<CancellationToken>()), Times.Once()
             );
         }
     }

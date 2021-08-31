@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using Application.Interfaces;
 using Domain.Entities;
 using JWT.Algorithms;

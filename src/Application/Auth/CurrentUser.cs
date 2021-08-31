@@ -23,24 +23,26 @@ namespace Application.Auth
 
     public record UserEnvelope(CurrentUser User);
 
-    public record CurrentUserCommand() : IRequest<UserEnvelope>;
+    public record CurrentUserQuery() : IRequest<UserEnvelope>;
 
-    public class CurrentUserHandler : IRequestHandler<CurrentUserCommand, UserEnvelope>
+    public class CurrentUserHandler : IRequestHandler<CurrentUserQuery, UserEnvelope>
     {
         private readonly ICurrentUser _currentUser;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
 
-        public CurrentUserHandler(ICurrentUser currentUser, IMapper mapper)
+        public CurrentUserHandler(ICurrentUser currentUser, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
         {
             _currentUser = currentUser;
+            _jwtTokenGenerator = jwtTokenGenerator;
             _mapper = mapper;
         }
 
-        public Task<UserEnvelope> Handle(CurrentUserCommand request, CancellationToken cancellationToken)
+        public Task<UserEnvelope> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
         {
-            var currentUser = _mapper.Map<User, CurrentUser>(_currentUser.User);
-            currentUser.Token = _currentUser.Token;
-            return Task.FromResult(new UserEnvelope(currentUser));
+            var user = _mapper.Map<User, CurrentUser>(_currentUser.User);
+            user.Token = _jwtTokenGenerator.CreateToken(_currentUser.User);
+            return Task.FromResult(new UserEnvelope(user));
         }
     }
 }

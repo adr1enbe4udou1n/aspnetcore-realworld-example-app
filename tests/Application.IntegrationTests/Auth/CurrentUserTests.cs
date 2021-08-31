@@ -19,7 +19,7 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
             });
 
-            var currentUser = await _mediator.Send(new CurrentUserCommand());
+            var currentUser = await _mediator.Send(new CurrentUserQuery());
 
             Assert.Equal("John Doe", currentUser.User.Username);
             Assert.Equal("john.doe@example.com", currentUser.User.Email);
