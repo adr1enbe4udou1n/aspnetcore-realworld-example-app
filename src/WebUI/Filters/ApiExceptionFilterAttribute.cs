@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Application.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +27,32 @@ namespace WebUI.Filters
                     new ProblemDetails
                     {
                         Status = StatusCodes.Status400BadRequest,
+                        Title = context.Exception.Message,
+                    }
+                );
+
+                return;
+            }
+
+            if (context.Exception is UnauthorizedException)
+            {
+                context.Result = new ObjectResult(
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status401Unauthorized,
+                        Title = context.Exception.Message,
+                    }
+                );
+
+                return;
+            }
+
+            if (context.Exception is ForbiddenException)
+            {
+                context.Result = new ObjectResult(
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status403Forbidden,
                         Title = context.Exception.Message,
                     }
                 );

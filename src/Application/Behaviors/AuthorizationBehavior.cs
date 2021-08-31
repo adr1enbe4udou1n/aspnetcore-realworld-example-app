@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.Interfaces;
-using FluentValidation;
 using MediatR;
 
 namespace Application.Behaviors
@@ -20,9 +18,12 @@ namespace Application.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (_currentUser.User == null)
+            if (request is IAuthorizationRequest<TResponse>)
             {
-                throw new UnauthorizedAccessException();
+                if (_currentUser.User == null)
+                {
+                    throw new UnauthorizedException();
+                }
             }
 
             return await next();

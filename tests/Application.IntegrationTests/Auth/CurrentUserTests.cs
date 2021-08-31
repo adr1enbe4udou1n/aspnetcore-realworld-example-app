@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Application.Auth;
+using Application.Exceptions;
 using Domain.Entities;
 using Xunit;
 
@@ -23,6 +24,15 @@ namespace Application.IntegrationTests.Auth
 
             Assert.Equal("John Doe", currentUser.User.Username);
             Assert.Equal("john.doe@example.com", currentUser.User.Email);
+        }
+
+        [Fact]
+        public void GuestUserCannotFetchInfos()
+        {
+            Assert.ThrowsAsync<UnauthorizedException>(async () =>
+            {
+                await _mediator.Send(new CurrentUserQuery());
+            });
         }
     }
 }

@@ -23,9 +23,9 @@ namespace Application.Auth
 
     public record UserEnvelope(CurrentUser User);
 
-    public record CurrentUserQuery() : IRequest<UserEnvelope>;
+    public record CurrentUserQuery() : IAuthorizationRequest<UserEnvelope>;
 
-    public class CurrentUserHandler : IRequestHandler<CurrentUserQuery, UserEnvelope>
+    public class CurrentUserHandler : IAuthorizationRequestHandler<CurrentUserQuery, UserEnvelope>
     {
         private readonly ICurrentUser _currentUser;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
