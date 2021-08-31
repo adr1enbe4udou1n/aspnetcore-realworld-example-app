@@ -1,3 +1,4 @@
+using Application.Infrastructure.Security;
 using Application.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Security;
@@ -19,6 +20,7 @@ namespace Infrastructure
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtTokenGenerator>(options => new JwtTokenGenerator(configuration["JwtSecretKey"]));
+            services.AddScoped<ICurrentUser, CurrentUser>();
 
             return services;
         }

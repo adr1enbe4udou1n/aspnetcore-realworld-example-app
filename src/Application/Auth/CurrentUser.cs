@@ -1,3 +1,11 @@
+using System.Threading;
+using System.Threading.Tasks;
+using Application.Interfaces;
+using AutoMapper;
+using Domain.Entities;
+using FluentValidation;
+using MediatR;
+
 namespace Application.Auth
 {
     public class CurrentUser
@@ -14,4 +22,25 @@ namespace Application.Auth
     }
 
     public record UserEnvelope(CurrentUser User);
+
+    public record CurrentUserCommand() : IRequest<UserEnvelope>;
+
+    public class CurrentUserHandler : IRequestHandler<CurrentUserCommand, UserEnvelope>
+    {
+        private readonly ICurrentUser _currentUser;
+        private readonly IMapper _mapper;
+
+        public CurrentUserHandler(ICurrentUser currentUser, IMapper mapper)
+        {
+            _currentUser = currentUser;
+            _mapper = mapper;
+        }
+
+        public Task<UserEnvelope> Handle(CurrentUserCommand request, CancellationToken cancellationToken)
+        {
+            var currentUser = _mapper.Map<User, CurrentUser>(_currentUser.User);
+            currentUser.Token = _currentUser.Token;
+            return Task.FromResult(new UserEnvelope(currentUser));
+        }
+    }
 }

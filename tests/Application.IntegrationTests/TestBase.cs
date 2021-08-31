@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ namespace Application.IntegrationTests
     [Collection("DB")]
     public class TestBase : IAsyncLifetime, IClassFixture<Startup>
     {
+        protected readonly ServiceProvider _provider;
         protected readonly IConfiguration _configuration;
 
         protected readonly IMediator _mediator;
@@ -22,16 +24,18 @@ namespace Application.IntegrationTests
         protected readonly IPasswordHasher _passwordHasher;
 
         protected readonly IJwtTokenGenerator _jwtTokenGenerator;
+        protected readonly ICurrentUser _currentUser;
 
         public TestBase(Startup factory)
         {
-            var provider = factory.Services.BuildServiceProvider();
             _configuration = factory.Configuration;
+            var provider = factory.Services.BuildServiceProvider();
 
             _mediator = provider.GetService<IMediator>();
             _passwordHasher = provider.GetService<IPasswordHasher>();
             _jwtTokenGenerator = provider.GetService<IJwtTokenGenerator>();
             _context = provider.GetService<AppDbContext>();
+            _currentUser = provider.GetService<ICurrentUser>();
         }
 
         public Task DisposeAsync()
@@ -52,6 +56,15 @@ namespace Application.IntegrationTests
                 };
                 await checkpoint.Reset(conn);
             }
+        }
+
+        protected async Task ActingAs(User user)
+        {
+            user.Password = _passwordHasher.Hash("password");
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            await _currentUser.SetToken(_jwtTokenGenerator.CreateToken(user));
         }
     }
 }

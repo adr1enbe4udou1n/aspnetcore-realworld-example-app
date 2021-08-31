@@ -11,6 +11,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Persistence;
+using JWT;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -72,6 +73,19 @@ namespace WebUI
                     }
                 });
             });
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddJwt(
+                    options =>
+                    {
+                        options.Keys = new[] { Configuration["JwtSecretKey"] };
+                        options.VerifySignature = true;
+                    }
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +102,7 @@ namespace WebUI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
