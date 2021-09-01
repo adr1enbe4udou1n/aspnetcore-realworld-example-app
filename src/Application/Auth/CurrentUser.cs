@@ -26,21 +26,19 @@ namespace Application.Auth
     public class CurrentUserHandler : IAuthorizationRequestHandler<CurrentUserQuery, UserEnvelope>
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
 
-        public CurrentUserHandler(ICurrentUser currentUser, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+        public CurrentUserHandler(ICurrentUser currentUser, IMapper mapper)
         {
             _currentUser = currentUser;
-            _jwtTokenGenerator = jwtTokenGenerator;
             _mapper = mapper;
         }
 
         public Task<UserEnvelope> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<User, CurrentUser>(_currentUser.User);
-            user.Token = _jwtTokenGenerator.CreateToken(_currentUser.User);
-            return Task.FromResult(new UserEnvelope(user));
+            return Task.FromResult(new UserEnvelope(
+                _mapper.Map<User, CurrentUser>(_currentUser.User)
+            ));
         }
     }
 }

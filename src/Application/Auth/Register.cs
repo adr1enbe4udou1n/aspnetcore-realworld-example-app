@@ -42,14 +42,12 @@ namespace Application.Auth
     {
         private readonly IAppDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
 
-        public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+        public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
         {
             _context = context;
             _passwordHasher = passwordHasher;
-            _jwtTokenGenerator = jwtTokenGenerator;
             _mapper = mapper;
         }
 
@@ -65,9 +63,7 @@ namespace Application.Auth
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            var currentUser = _mapper.Map<User, CurrentUser>(user);
-            currentUser.Token = _jwtTokenGenerator.CreateToken(user);
-            return new UserEnvelope(currentUser);
+            return new UserEnvelope(_mapper.Map<User, CurrentUser>(user));
         }
     }
 }

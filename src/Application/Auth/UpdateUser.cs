@@ -35,14 +35,12 @@ namespace Application.Auth
     {
         private readonly ICurrentUser _currentUser;
         private readonly IAppDbContext _context;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
 
-        public UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+        public UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IMapper mapper)
         {
             _currentUser = currentUser;
             _context = context;
-            _jwtTokenGenerator = jwtTokenGenerator;
             _mapper = mapper;
         }
 
@@ -52,9 +50,9 @@ namespace Application.Auth
             _context.Users.Update(_currentUser.User);
             await _context.SaveChangesAsync(cancellationToken);
 
-            var user = _mapper.Map<User, CurrentUser>(_currentUser.User);
-            user.Token = _jwtTokenGenerator.CreateToken(_currentUser.User);
-            return new UserEnvelope(user);
+            return new UserEnvelope(
+                _mapper.Map<User, CurrentUser>(_currentUser.User)
+            );
         }
     }
 }
