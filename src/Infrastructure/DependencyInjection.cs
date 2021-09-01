@@ -8,6 +8,7 @@ using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Slugify;
 
 namespace Infrastructure
 {
@@ -24,6 +25,7 @@ namespace Infrastructure
             });
 
             services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ISlugHelper, SlugHelper>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
                 .Configure<JwtOptions>(configuration.GetSection("Jwt"));
