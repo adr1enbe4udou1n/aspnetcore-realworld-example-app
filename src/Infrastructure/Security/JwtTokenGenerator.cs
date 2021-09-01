@@ -4,25 +4,30 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using Application.Infrastructure.Settings;
 using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Security
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
-        private readonly string _secret;
+        private readonly ICurrentUser _currentUser;
+        private SymmetricSecurityKey _secret;
 
-        public JwtTokenGenerator(string secret)
+        public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, ICurrentUser currentUser)
         {
-            _secret = secret;
+            _secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.CurrentValue.SecretKey));
+            _currentUser = currentUser;
         }
 
         public string CreateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
@@ -32,7 +37,7 @@ namespace Infrastructure.Security
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature
+                    _secret, SecurityAlgorithms.HmacSha256Signature
                 )
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -42,11 +47,10 @@ namespace Infrastructure.Security
         public IDictionary<string, string> DecodeToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secret);
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = _secret,
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
@@ -56,6 +60,13 @@ namespace Infrastructure.Security
             return jwtToken.Claims
                 .GroupBy(c => c.Type)
                 .ToDictionary(group => group.Key, group => group.Last().Value);
+        }
+
+        public async Task SetUserFromCurrentToken(string token)
+        {
+            var userId = long.Parse(DecodeToken(token)["id"]);
+
+            await _currentUser.SetIdentifier(userId);
         }
     }
 }

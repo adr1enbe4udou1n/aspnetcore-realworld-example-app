@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domain.Entities;
 
 namespace Application.Interfaces
@@ -8,5 +9,7 @@ namespace Application.Interfaces
         string CreateToken(User user);
 
         IDictionary<string, string> DecodeToken(string token);
+
+        Task SetUserFromCurrentToken(string token);
     }
 }

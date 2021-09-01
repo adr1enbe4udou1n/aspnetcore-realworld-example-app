@@ -20,7 +20,7 @@ namespace Application.Behaviors
         {
             if (request is IAuthorizationRequest<TResponse>)
             {
-                if (_currentUser.User == null)
+                if (!_currentUser.IsAuthenticated)
                 {
                     throw new UnauthorizedException();
                 }

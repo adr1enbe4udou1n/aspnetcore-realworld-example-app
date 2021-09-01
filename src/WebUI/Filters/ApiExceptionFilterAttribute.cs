@@ -59,6 +59,14 @@ namespace WebUI.Filters
 
                 return;
             }
+
+            context.Result = new ObjectResult(
+                new ProblemDetails
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Title = context.Exception.Message,
+                }
+            );
         }
     }
 }

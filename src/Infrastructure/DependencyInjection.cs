@@ -1,4 +1,6 @@
+
 using Application.Infrastructure.Security;
+using Application.Infrastructure.Settings;
 using Application.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Security;
@@ -18,9 +20,10 @@ namespace Infrastructure
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<IJwtTokenGenerator>(options => new JwtTokenGenerator(configuration["JwtSecretKey"]));
             services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
+                .Configure<JwtOptions>(configuration.GetSection("Jwt"));
 
             return services;
         }
