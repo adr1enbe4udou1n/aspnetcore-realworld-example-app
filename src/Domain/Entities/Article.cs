@@ -27,9 +27,9 @@ namespace Domain.Entities
 
         public List<Comment> Comments { get; set; } = new();
 
-        public List<Tag> Tags { get; set; } = new();
+        public List<ArticleTag> Tags { get; set; } = new();
 
-        public List<User> FavoredUsers { get; set; } = new();
+        public List<ArticleFavorite> FavoredUsers { get; set; } = new();
 
         public string GetSlugSource() => Title;
     }

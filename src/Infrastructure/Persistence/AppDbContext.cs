@@ -71,6 +71,32 @@ namespace Infrastructure.Persistence
                 ;
             });
 
+            builder.Entity<ArticleTag>(b =>
+            {
+                b.HasKey(e => new { e.ArticleId, e.TagId });
+
+                b.HasOne(e => e.Article)
+                    .WithMany(e => e.Tags)
+                    .HasForeignKey(e => e.ArticleId);
+
+                b.HasOne(e => e.Tag)
+                    .WithMany(e => e.Articles)
+                    .HasForeignKey(e => e.TagId);
+            });
+
+            builder.Entity<ArticleFavorite>(b =>
+            {
+                b.HasKey(e => new { e.ArticleId, e.UserId });
+
+                b.HasOne(e => e.Article)
+                    .WithMany(e => e.FavoredUsers)
+                    .HasForeignKey(e => e.ArticleId);
+
+                b.HasOne(e => e.User)
+                    .WithMany(e => e.FavoriteArticles)
+                    .HasForeignKey(e => e.UserId);
+            });
+
             builder.Entity<FollowerUser>(b =>
             {
                 b.HasKey(e => new { e.FollowingId, e.FollowerId });

@@ -27,7 +27,7 @@ namespace Domain.Entities
 
         public List<Article> Articles { get; set; } = new();
 
-        public List<Article> FavoriteArticles { get; set; } = new();
+        public List<ArticleFavorite> FavoriteArticles { get; set; } = new();
 
         public List<Comment> Comments { get; set; } = new();
 
