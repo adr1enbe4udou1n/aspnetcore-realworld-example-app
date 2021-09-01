@@ -2,11 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
-    public class AuthorFollower
+    public class FollowerUser
     {
         [Required]
-        public int AuthorId { get; set; }
-        public User Author { get; set; }
+        public int FollowingId { get; set; }
+        public User Following { get; set; }
 
         [Required]
         public int FollowerId { get; set; }

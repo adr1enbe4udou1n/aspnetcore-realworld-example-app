@@ -60,43 +60,24 @@ namespace Infrastructure.Persistence
                 .HasIndex(u => u.Email).IsUnique()
             ;
 
-            builder.Entity<Article>()
-                .HasIndex(u => u.Slug).IsUnique()
-            ;
-
-            builder.Entity<ArticleTag>(b =>
+            builder.Entity<Article>(b =>
             {
-                b.HasKey(e => new { e.ArticleId, e.TagId });
-
-                b.HasOne(e => e.Article)
-                    .WithMany(e => e.Tags)
-                    .HasForeignKey(e => e.ArticleId);
-
-                b.HasOne(e => e.Tag)
-                    .WithMany(e => e.Articles)
-                    .HasForeignKey(e => e.TagId);
-            });
-
-            builder.Entity<ArticleFavorite>(b =>
-            {
-                b.HasKey(e => new { e.ArticleId, e.UserId });
-
-                b.HasOne(e => e.Article)
-                    .WithMany(e => e.FavoredUsers)
-                    .HasForeignKey(e => e.ArticleId);
-
-                b.HasOne(e => e.User)
-                    .WithMany(e => e.FavoriteArticles)
-                    .HasForeignKey(e => e.UserId);
-            });
-
-            builder.Entity<AuthorFollower>(b =>
-            {
-                b.HasKey(e => new { e.AuthorId, e.FollowerId });
+                b.HasIndex(u => u.Slug).IsUnique();
 
                 b.HasOne(e => e.Author)
+                    .WithMany(e => e.Articles)
+                    .HasForeignKey(a => a.AuthorId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                ;
+            });
+
+            builder.Entity<FollowerUser>(b =>
+            {
+                b.HasKey(e => new { e.FollowingId, e.FollowerId });
+
+                b.HasOne(e => e.Following)
                     .WithMany(e => e.Followers)
-                    .HasForeignKey(e => e.AuthorId)
+                    .HasForeignKey(e => e.FollowingId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 b.HasOne(e => e.Follower)

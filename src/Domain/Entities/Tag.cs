@@ -17,6 +17,6 @@ namespace Domain.Entities
 
         public DateTime UpdatedAt { get; set; }
 
-        public List<ArticleTag> Articles { get; set; } = new();
+        public List<Article> Articles { get; set; } = new();
     }
 }
