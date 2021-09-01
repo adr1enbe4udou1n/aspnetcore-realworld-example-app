@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Application;
-using Application.Interfaces;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,7 +31,6 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication();
             services.AddInfrastructure(Configuration);
 
             services
@@ -69,7 +67,7 @@ namespace WebUI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ICurrentUser currentUser)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

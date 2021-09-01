@@ -1,4 +1,5 @@
 
+using Application;
 using Application.Infrastructure.Security;
 using Application.Infrastructure.Settings;
 using Application.Interfaces;
@@ -14,6 +15,8 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddApplication();
+
             services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
             services.AddDbContext<AppDbContext>(options =>
             {

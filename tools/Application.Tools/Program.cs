@@ -43,7 +43,6 @@ namespace Application.Tools
                 .ConfigureHostConfiguration(config => config.AddJsonFile("appsettings.json", true, true))
                 .ConfigureServices((_, services) =>
                 {
-                    services.AddApplication();
                     services.AddInfrastructure(_.Configuration);
 
                     services.AddScoped<DatabaseManager>();

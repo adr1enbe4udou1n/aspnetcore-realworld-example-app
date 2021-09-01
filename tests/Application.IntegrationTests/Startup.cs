@@ -18,7 +18,6 @@ namespace Application.IntegrationTests
                 .AddEnvironmentVariables()
                 .Build();
 
-            Services.AddApplication();
             Services.AddInfrastructure(Configuration);
 
             var _provider = Services.BuildServiceProvider();
