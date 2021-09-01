@@ -29,13 +29,14 @@ namespace Application.Auth
             RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
             RuleFor(x => x.User.Username).NotNull().NotEmpty();
 
-            RuleFor(x => x.User.Email).Must(
-                email => !context.Users.Where(x => x.Email == email).Any()
+            RuleFor(x => x.User.Email).MustAsync(
+                async (email, cancellationToken) => !await context.Users
+                    .Where(x => x.Email == email)
+                    .AnyAsync(cancellationToken)
             )
-                .WithMessage("Email already existing");
+                .WithMessage("Email is already used");
         }
     }
-
 
     public class RegisterHandler : IRequestHandler<RegisterCommand, UserEnvelope>
     {

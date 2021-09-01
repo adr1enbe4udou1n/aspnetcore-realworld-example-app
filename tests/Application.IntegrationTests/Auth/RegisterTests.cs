@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Auth;
 using Domain.Entities;
-using FluentValidation.TestHelper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -12,13 +12,7 @@ namespace Application.IntegrationTests.Auth
 {
     public class RegisterTests : TestBase
     {
-        private RegisterValidator _validator;
-
-
-        public RegisterTests(Startup factory) : base(factory)
-        {
-            _validator = new RegisterValidator(_context);
-        }
+        public RegisterTests(Startup factory) : base(factory) { }
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
@@ -39,11 +33,14 @@ namespace Application.IntegrationTests.Auth
 
         [Theory]
         [MemberData(nameof(Data))]
-        public void UserCannotRegisterWithInvalidData(RegisterDTO user)
+        public async Task UserCannotRegisterWithInvalidData(RegisterDTO user)
         {
-            var result = _validator.TestValidate(new RegisterCommand(user));
+            var ex = await Assert.ThrowsAsync<ValidationException>(async () =>
+            {
+                await _mediator.Send(new RegisterCommand(user));
+            });
 
-            result.ShouldHaveAnyValidationError();
+            Assert.NotEmpty(ex.Errors);
         }
 
         [Fact]
@@ -84,16 +81,19 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            var result = _validator.TestValidate(new RegisterCommand(
-                new RegisterDTO
-                {
-                    Email = "john.doe@example.com",
-                    Username = "John Doe",
-                    Password = "password",
-                }
-            ));
+            var ex = await Assert.ThrowsAsync<ValidationException>(async () =>
+            {
+                await _mediator.Send(new RegisterCommand(
+                    new RegisterDTO
+                    {
+                        Email = "john.doe@example.com",
+                        Username = "John Doe",
+                        Password = "password",
+                    }
+                ));
+            });
 
-            result.ShouldHaveValidationErrorFor(x => x.User.Email);
+            Assert.Equal("Email is already used", ex.Errors.First(x => x.PropertyName == "User.Email").ErrorMessage);
         }
     }
 }

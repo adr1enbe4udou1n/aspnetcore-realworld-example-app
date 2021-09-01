@@ -15,7 +15,11 @@ namespace WebUI.Controllers.Users
             => _mediator = mediator;
 
         [HttpGet]
-        public Task<UserEnvelope> Get(CancellationToken cancellationToken)
+        public Task<UserEnvelope> Current(CancellationToken cancellationToken)
             => _mediator.Send(new CurrentUserQuery(), cancellationToken);
+
+        [HttpPut]
+        public Task<UserEnvelope> Update([FromBody] UpdateUserCommand command, CancellationToken cancellationToken)
+            => _mediator.Send(command, cancellationToken);
     }
 }

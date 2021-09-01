@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using FluentValidation;
-using MediatR;
 
 namespace Application.Auth
 {

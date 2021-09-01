@@ -8,7 +8,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Application;
 using Application.Interfaces;
-using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,8 +39,7 @@ namespace WebUI
                 .AddControllers(opt =>
                 {
                     opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
-                })
-                .AddFluentValidation();
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebUI", Version = "v1" });

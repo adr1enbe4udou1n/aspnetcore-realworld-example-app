@@ -51,7 +51,7 @@ namespace WebUI.IntegrationTests
         }
 
         [Fact]
-        public async Task CanUseUserRoute()
+        public async Task CanUseCurrentUserRoute()
         {
             var httpResponse = await _client.GetAsync("/user");
 
@@ -59,6 +59,20 @@ namespace WebUI.IntegrationTests
 
             _mediatorMock.Verify(m => m.Send(
                 It.IsAny<CurrentUserQuery>(), It.IsAny<CancellationToken>()), Times.Once()
+            );
+        }
+
+        [Fact]
+        public async Task CanUseUpdateUserRoute()
+        {
+            var httpResponse = await _client.PutAsJsonAsync("/user", new UpdateUserCommand(
+                new UpdateUserDTO()
+            ));
+
+            httpResponse.EnsureSuccessStatusCode();
+
+            _mediatorMock.Verify(m => m.Send(
+                It.IsAny<UpdateUserCommand>(), It.IsAny<CancellationToken>()), Times.Once()
             );
         }
     }
