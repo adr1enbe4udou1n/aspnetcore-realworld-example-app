@@ -10,6 +10,6 @@ namespace Application.Interfaces
 
         IDictionary<string, string> DecodeToken(string token);
 
-        Task SetUserFromCurrentToken(string token);
+        Task SetCurrentUserFromToken(string token);
     }
 }

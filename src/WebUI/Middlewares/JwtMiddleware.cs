@@ -24,7 +24,7 @@ namespace WebUI.Middlewares
             {
                 try
                 {
-                    await jwtTokenGenerator.SetUserFromCurrentToken(token);
+                    await jwtTokenGenerator.SetCurrentUserFromToken(token);
                 }
                 catch (SecurityTokenException)
                 {

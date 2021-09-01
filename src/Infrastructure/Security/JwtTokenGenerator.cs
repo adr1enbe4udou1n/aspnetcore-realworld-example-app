@@ -62,7 +62,7 @@ namespace Infrastructure.Security
                 .ToDictionary(group => group.Key, group => group.Last().Value);
         }
 
-        public async Task SetUserFromCurrentToken(string token)
+        public async Task SetCurrentUserFromToken(string token)
         {
             var userId = long.Parse(DecodeToken(token)["id"]);
 
