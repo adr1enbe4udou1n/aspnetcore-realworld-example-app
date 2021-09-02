@@ -1,14 +1,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Auth.Queries;
+using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Auth.Commands
+namespace Application.Features.Auth.Commands
 {
     public class UpdateUserDTO
     {
@@ -52,7 +52,7 @@ namespace Application.Auth.Commands
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UserEnvelope(
-                _mapper.Map<User, CurrentUser>(_currentUser.User)
+                _mapper.Map<User, CurrentUserDTO>(_currentUser.User)
             );
         }
     }

@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Auth.Commands;
-using Application.Auth.Queries;
+using Application.Features.Auth.Commands;
+using Application.Features.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,8 +12,7 @@ namespace WebUI.Controllers.Users
     {
         private readonly IMediator _mediator;
 
-        public UsersController(IMediator mediator)
-            => _mediator = mediator;
+        public UsersController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost]
         public Task<UserEnvelope> Register([FromBody] RegisterCommand command, CancellationToken cancellationToken)

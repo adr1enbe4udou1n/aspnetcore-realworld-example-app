@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Application.Auth.Commands;
-using Application.Auth.Queries;
+using Application.Features.Auth.Commands;
+using Application.Features.Auth.Queries;
 using Application.Exceptions;
 using Domain.Entities;
 using Xunit;

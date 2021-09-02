@@ -1,5 +1,5 @@
-using Application.Auth.Commands;
-using Application.Auth.Queries;
+using Application.Features.Auth.Commands;
+using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -13,7 +13,7 @@ namespace Application.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<User, CurrentUser>()
+            CreateMap<User, CurrentUserDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenMapper>());
         }

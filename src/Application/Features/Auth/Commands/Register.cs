@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Auth.Queries;
+using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -9,7 +9,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Auth.Commands
+namespace Application.Features.Auth.Commands
 {
     public class RegisterDTO
     {
@@ -64,7 +64,7 @@ namespace Application.Auth.Commands
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UserEnvelope(_mapper.Map<User, CurrentUser>(user));
+            return new UserEnvelope(_mapper.Map<User, CurrentUserDTO>(user));
         }
     }
 }

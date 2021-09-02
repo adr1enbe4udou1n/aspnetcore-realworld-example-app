@@ -4,9 +4,9 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Auth.Queries
+namespace Application.Features.Auth.Queries
 {
-    public class CurrentUser
+    public class CurrentUserDTO
     {
         public string Email { get; set; }
 
@@ -19,7 +19,7 @@ namespace Application.Auth.Queries
         public string Token { get; set; }
     }
 
-    public record UserEnvelope(CurrentUser User);
+    public record UserEnvelope(CurrentUserDTO User);
 
     public record CurrentUserQuery() : IAuthorizationRequest<UserEnvelope>;
 
@@ -37,7 +37,7 @@ namespace Application.Auth.Queries
         public Task<UserEnvelope> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(new UserEnvelope(
-                _mapper.Map<User, CurrentUser>(_currentUser.User)
+                _mapper.Map<User, CurrentUserDTO>(_currentUser.User)
             ));
         }
     }
