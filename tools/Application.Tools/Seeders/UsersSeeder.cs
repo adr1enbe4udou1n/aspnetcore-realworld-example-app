@@ -27,12 +27,14 @@ namespace Application.Tools.Seeders
                 Password = _passwordHasher.Hash("password"),
             });
 
-            var user = new Faker<User>()
-                .RuleFor(m => m.Name, f => f.Person.FullName)
-                .RuleFor(m => m.Email, f => f.Person.Email)
-                .RuleFor(m => m.Password, _passwordHasher.Hash("password"));
-
-            await _context.Users.AddRangeAsync(user.Generate(10));
+            await _context.Users.AddRangeAsync(
+                new Faker<User>()
+                    .RuleFor(m => m.Name, f => f.Person.FullName)
+                    .RuleFor(m => m.Email, f => f.Person.Email)
+                    .RuleFor(m => m.Password, _passwordHasher.Hash("password"))
+                    .Generate(10),
+                cancellationToken
+            );
 
             await _context.SaveChangesAsync(cancellationToken);
         }

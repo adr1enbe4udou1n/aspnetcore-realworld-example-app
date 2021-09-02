@@ -48,10 +48,12 @@ namespace Application.Tools
                     services.AddScoped<DatabaseManager>();
 
                     services.AddScoped<UsersSeeder>();
+                    services.AddScoped<ArticlesSeeder>();
 
                     services.AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
                     {
-                        options.GetRequiredService<UsersSeeder>()
+                        options.GetRequiredService<UsersSeeder>(),
+                        options.GetRequiredService<ArticlesSeeder>()
                     });
                 });
     }

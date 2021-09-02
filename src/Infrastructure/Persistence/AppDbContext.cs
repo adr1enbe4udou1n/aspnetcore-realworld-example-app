@@ -19,36 +19,48 @@ namespace Infrastructure.Persistence
             _slugHelper = slugHelper;
 
             ChangeTracker.StateChanged += UpdateTimestamps;
+            ChangeTracker.StateChanged += UpdateSlug;
             ChangeTracker.Tracked += UpdateTimestamps;
+            ChangeTracker.Tracked += UpdateSlug;
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
         private void UpdateTimestamps(object sender, EntityEntryEventArgs e)
         {
-            switch (e.Entry.Entity)
+            if (e.Entry.Entity is IHasTimestamps entity)
             {
-                case IHasTimestamps entity:
-                    switch (e.Entry.State)
-                    {
-                        case EntityState.Added:
+                switch (e.Entry.State)
+                {
+                    case EntityState.Added:
+                        if (entity.CreatedAt == default)
+                        {
                             entity.CreatedAt = DateTime.UtcNow;
+                        }
+                        entity.UpdatedAt = entity.CreatedAt;
+                        break;
+                    case EntityState.Modified:
+                        if (entity.UpdatedAt == default)
+                        {
                             entity.UpdatedAt = DateTime.UtcNow;
-                            break;
-                        case EntityState.Modified:
-                            entity.UpdatedAt = DateTime.UtcNow;
-                            break;
-                    }
-                    break;
-                case IHasSlug entity:
-                    if (entity.Slug == null)
-                    {
-                        entity.Slug = _slugHelper.GenerateSlug(entity.GetSlugSource());
-                    }
-                    break;
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void UpdateSlug(object sender, EntityEntryEventArgs e)
+        {
+            if (e.Entry.Entity is IHasSlug entity)
+            {
+                if (entity.Slug == null)
+                {
+                    entity.Slug = _slugHelper.GenerateSlug(entity.GetSlugSource());
+                }
             }
         }
 

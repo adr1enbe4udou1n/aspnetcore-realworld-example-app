@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Interfaces;
 
 namespace Domain.Entities
@@ -10,15 +11,19 @@ namespace Domain.Entities
         public int Id { get; set; }
 
         [Required]
+        [Column(TypeName = "varchar(255)")]
         public string Name { get; set; }
 
         [Required]
+        [Column(TypeName = "varchar(255)")]
         public string Email { get; set; }
 
+        [Column(TypeName = "varchar(255)")]
         public string Password { get; set; }
 
         public string Bio { get; set; }
 
+        [Column(TypeName = "varchar(255)")]
         public string Image { get; set; }
 
         public DateTime CreatedAt { get; set; }
