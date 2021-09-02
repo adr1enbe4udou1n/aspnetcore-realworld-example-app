@@ -4,7 +4,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Auth
+namespace Application.Auth.Queries
 {
     public class CurrentUser
     {

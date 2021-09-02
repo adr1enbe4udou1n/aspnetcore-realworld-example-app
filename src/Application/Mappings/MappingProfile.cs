@@ -1,4 +1,5 @@
-using Application.Auth;
+using Application.Auth.Commands;
+using Application.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Auth;
+using Application.Auth.Commands;
 using Application.Exceptions;
 using Domain.Entities;
 using FluentValidation;

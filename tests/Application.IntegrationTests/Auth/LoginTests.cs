@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Auth;
+using Application.Auth.Commands;
 using Domain.Entities;
 using FluentValidation;
 using Xunit;

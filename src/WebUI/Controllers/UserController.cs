@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Auth;
+using Application.Auth.Commands;
+using Application.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

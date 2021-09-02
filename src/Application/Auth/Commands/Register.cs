@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -8,7 +9,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Auth
+namespace Application.Auth.Commands
 {
     public class RegisterDTO
     {

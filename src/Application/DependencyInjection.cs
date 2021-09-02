@@ -1,4 +1,4 @@
-using Application.Auth;
+using Application.Auth.Commands;
 using Application.Behaviors;
 using AutoMapper;
 using FluentValidation;
