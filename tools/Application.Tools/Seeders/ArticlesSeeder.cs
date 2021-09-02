@@ -47,19 +47,14 @@ namespace Application.Tools.Seeders
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            var tags = new Faker<Tag>()
-                .RuleFor(a => a.Name, f => f.Lorem.Word())
-                .Generate(100);
-
-            await _context.Tags.AddRangeAsync(tags, cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            await _context.ArticleTags.AddRangeAsync(
-                new Faker<ArticleTag>()
-                    .RuleFor(a => a.ArticleId, f => f.PickRandom(articles).Id)
-                    .RuleFor(a => a.TagId, f => f.PickRandom(tags).Id)
-                    .Generate(1),
+            await _context.Tags.AddRangeAsync(
+                new Faker<Tag>()
+                    .RuleFor(a => a.Name, f => f.Lorem.Word())
+                    .RuleFor(a => a.Articles, f => f.PickRandom(articles, f.Random.Number(10))
+                        .Select(i => new ArticleTag { ArticleId = i.Id })
+                        .ToList()
+                    )
+                    .Generate(100),
                 cancellationToken
             );
 

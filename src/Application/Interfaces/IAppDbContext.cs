@@ -9,7 +9,6 @@ namespace Application.Interfaces
     {
         DbSet<User> Users { get; set; }
         DbSet<Article> Articles { get; set; }
-        DbSet<ArticleTag> ArticleTags { get; set; }
         DbSet<Comment> Comments { get; set; }
         DbSet<Tag> Tags { get; set; }
 
