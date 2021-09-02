@@ -42,7 +42,8 @@ namespace Application.Tools.Seeders
 
             users.ForEach(u =>
             {
-                u.Followers = new Faker().PickRandom(users, new Faker().Random.Number(5))
+                var f = new Faker();
+                u.Followers = f.PickRandom(users, f.Random.Number(5))
                     .Select(u => new FollowerUser { FollowerId = u.Id })
                     .ToList();
             });
