@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Features.Auth.Commands;
 using Domain.Entities;
+using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -35,12 +36,9 @@ namespace Application.IntegrationTests.Auth
         [MemberData(nameof(Data))]
         public async Task UserCannotRegisterWithInvalidData(RegisterDTO user)
         {
-            var ex = await Assert.ThrowsAsync<ValidationException>(async () =>
-            {
-                await _mediator.Send(new RegisterCommand(user));
-            });
-
-            Assert.NotEmpty(ex.Errors);
+            await _mediator.Invoking(m => m.Send(new RegisterCommand(user)))
+                .Should().ThrowAsync<ValidationException>()
+                .Where(e => e.Errors.Any());
         }
 
         [Fact]
@@ -55,19 +53,19 @@ namespace Application.IntegrationTests.Auth
 
             var currentUser = await _mediator.Send(request);
 
-            Assert.Equal("John Doe", currentUser.User.Username);
-            Assert.Equal("john.doe@example.com", currentUser.User.Email);
+            currentUser.User.Username.Should().Be("John Doe");
+            currentUser.User.Email.Should().Be("john.doe@example.com");
 
             var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
-            Assert.NotNull(created);
+            created.Should().NotBeNull();
 
-            Assert.True(_passwordHasher.Check("password", created.Password));
+            _passwordHasher.Check("password", created.Password).Should().BeTrue();
 
             var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
-            Assert.Equal(created.Id.ToString(), payload["id"]);
-            Assert.Equal("John Doe", payload["name"]);
-            Assert.Equal("john.doe@example.com", payload["email"]);
+            payload["id"].Should().Be(created.Id.ToString());
+            payload["name"].Should().Be("John Doe");
+            payload["email"].Should().Be("john.doe@example.com");
         }
 
         [Fact]
@@ -81,19 +79,16 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            var ex = await Assert.ThrowsAsync<ValidationException>(async () =>
-            {
-                await _mediator.Send(new RegisterCommand(
-                    new RegisterDTO
-                    {
-                        Email = "john.doe@example.com",
-                        Username = "John Doe",
-                        Password = "password",
-                    }
-                ));
-            });
-
-            Assert.Equal("Email is already used", ex.Errors.First(x => x.PropertyName == "User.Email").ErrorMessage);
+            await _mediator.Invoking(m => m.Send(new RegisterCommand(
+                new RegisterDTO
+                {
+                    Email = "john.doe@example.com",
+                    Username = "John Doe",
+                    Password = "password",
+                }
+            ))).Should().ThrowAsync<ValidationException>()
+                .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
+                    .ErrorMessage == "Email is already used");
         }
     }
 }

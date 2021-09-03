@@ -17,6 +17,13 @@ namespace Application.Features.Articles.Commands
 
     public class ArticleUpdateHandler : IAuthorizationRequestHandler<ArticleUpdateCommand, ArticleEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ArticleUpdateHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ArticleEnvelope> Handle(ArticleUpdateCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

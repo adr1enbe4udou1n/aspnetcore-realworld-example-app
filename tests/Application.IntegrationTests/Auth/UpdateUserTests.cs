@@ -7,6 +7,7 @@ using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using FluentAssertions;
 
 namespace Application.IntegrationTests.Auth
 {
@@ -30,22 +31,22 @@ namespace Application.IntegrationTests.Auth
 
             var currentUser = await _mediator.Send(request);
 
-            Assert.Equal("John Doe", currentUser.User.Username);
-            Assert.Equal("jane.doe@example.com", currentUser.User.Email);
+            currentUser.User.Username.Should().Be("John Doe");
+            currentUser.User.Email.Should().Be("jane.doe@example.com");
 
             var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
-            Assert.NotNull(created);
+            created.Should().NotBeNull();
         }
 
         [Fact]
-        public void GuestUserCannotUpdateInfos()
+        public async Task GuestUserCannotUpdateInfos()
         {
-            Assert.ThrowsAsync<UnauthorizedException>(async () =>
-            {
-                await _mediator.Send(new UpdateUserCommand(
-                    new UpdateUserDTO()
-                ));
-            });
+            await _mediator.Invoking(m => m.Send(new UpdateUserCommand(
+                new UpdateUserDTO
+                {
+                    Email = "jane.doe@example.com"
+                }
+            ))).Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -64,17 +65,14 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
             });
 
-            var ex = await Assert.ThrowsAsync<ValidationException>(async () =>
-            {
-                await _mediator.Send(new UpdateUserCommand(
-                    new UpdateUserDTO
-                    {
-                        Email = "jane.doe@example.com",
-                    }
-                ));
-            });
-
-            Assert.Equal("Email is already used", ex.Errors.First(x => x.PropertyName == "User.Email").ErrorMessage);
+            await _mediator.Invoking(m => m.Send(new UpdateUserCommand(
+                new UpdateUserDTO
+                {
+                    Email = "jane.doe@example.com",
+                }
+            ))).Should().ThrowAsync<ValidationException>()
+                .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
+                    .ErrorMessage == "Email is already used");
         }
     }
 }

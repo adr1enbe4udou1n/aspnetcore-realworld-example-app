@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Features.Auth.Commands;
 using Domain.Entities;
+using FluentAssertions;
 using FluentValidation;
 using Xunit;
 
@@ -35,7 +36,8 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            await Assert.ThrowsAsync<ValidationException>(async () => await _mediator.Send(new LoginCommand(credentials)));
+            await _mediator.Invoking(m => m.Send(new LoginCommand(credentials)))
+                .Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
@@ -58,14 +60,14 @@ namespace Application.IntegrationTests.Auth
 
             var currentUser = await _mediator.Send(request);
 
-            Assert.Equal("John Doe", currentUser.User.Username);
-            Assert.Equal("john.doe@example.com", currentUser.User.Email);
+            currentUser.User.Username.Should().Be("John Doe");
+            currentUser.User.Email.Should().Be("john.doe@example.com");
 
             var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
-            Assert.Equal(user.Id.ToString(), payload["id"]);
-            Assert.Equal("John Doe", payload["name"]);
-            Assert.Equal("john.doe@example.com", payload["email"]);
+            payload["id"].Should().Be(user.Id.ToString());
+            payload["name"].Should().Be("John Doe");
+            payload["email"].Should().Be("john.doe@example.com");
         }
     }
 }

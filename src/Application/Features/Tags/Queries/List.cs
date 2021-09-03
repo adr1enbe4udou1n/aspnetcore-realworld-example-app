@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Tags.Queries
 {
@@ -11,9 +14,17 @@ namespace Application.Features.Tags.Queries
 
     public class TagsListHandler : IRequestHandler<TagsListQuery, TagsEnvelope>
     {
-        public Task<TagsEnvelope> Handle(TagsListQuery request, CancellationToken cancellationToken)
+        private readonly IAppDbContext _context;
+
+        public TagsListHandler(IAppDbContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+        }
+
+        public async Task<TagsEnvelope> Handle(TagsListQuery request, CancellationToken cancellationToken)
+        {
+            var tags = await _context.Tags.OrderBy(t => t.Name).AsNoTracking().ToListAsync(cancellationToken);
+            return new TagsEnvelope(tags.Select(t => t.Name));
         }
     }
 }

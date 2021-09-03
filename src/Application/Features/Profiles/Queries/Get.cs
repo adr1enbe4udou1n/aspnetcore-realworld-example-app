@@ -21,6 +21,13 @@ namespace Application.Features.Profiles.Queries
 
     public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileGetQuery, ProfileEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ProfileGetHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ProfileEnvelope> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

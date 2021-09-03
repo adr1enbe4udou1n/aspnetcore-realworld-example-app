@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Features.Articles.Queries;
+using Application.Interfaces;
 using Application.Support;
 using MediatR;
 
@@ -30,6 +31,13 @@ namespace Application.Features.Comments.Queries
 
     public class CommentsListHandler : IRequestHandler<CommentsListQuery, CommentsEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public CommentsListHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<CommentsEnvelope> Handle(CommentsListQuery request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

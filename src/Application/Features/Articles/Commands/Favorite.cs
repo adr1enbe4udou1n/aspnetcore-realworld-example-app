@@ -12,6 +12,13 @@ namespace Application.Features.Articles.Commands
 
     public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavoriteCommand, ArticleEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ArticleFavoriteHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ArticleEnvelope> Handle(ArticleFavoriteCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

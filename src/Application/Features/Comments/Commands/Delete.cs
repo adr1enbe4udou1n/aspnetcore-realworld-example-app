@@ -13,6 +13,13 @@ namespace Application.Features.Comments.Commands
 
     public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteCommand>
     {
+        private readonly IAppDbContext _context;
+
+        public CommentDeleteHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

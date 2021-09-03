@@ -5,6 +5,7 @@ using Application.Features.Auth.Queries;
 using Application.Exceptions;
 using Domain.Entities;
 using Xunit;
+using FluentAssertions;
 
 namespace Application.IntegrationTests.Auth
 {
@@ -23,17 +24,15 @@ namespace Application.IntegrationTests.Auth
 
             var currentUser = await _mediator.Send(new CurrentUserQuery());
 
-            Assert.Equal("John Doe", currentUser.User.Username);
-            Assert.Equal("john.doe@example.com", currentUser.User.Email);
+            currentUser.User.Username.Should().Be("John Doe");
+            currentUser.User.Email.Should().Be("john.doe@example.com");
         }
 
         [Fact]
-        public void GuestUserCannotFetchInfos()
+        public async Task GuestUserCannotFetchInfos()
         {
-            Assert.ThrowsAsync<UnauthorizedException>(async () =>
-            {
-                await _mediator.Send(new CurrentUserQuery());
-            });
+            await _mediator.Invoking(m => m.Send(new CurrentUserQuery()))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
     }
 }

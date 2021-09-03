@@ -9,6 +9,13 @@ namespace Application.Features.Profiles.Commands
 
     public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowCommand, ProfileEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ProfileGetHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ProfileEnvelope> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

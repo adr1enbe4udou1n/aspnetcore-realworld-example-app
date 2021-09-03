@@ -20,6 +20,13 @@ namespace Application.Features.Comments.Commands
 
     public class CommentCreateHandler : IAuthorizationRequestHandler<CommentCreateCommand, CommentEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public CommentCreateHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<CommentEnvelope> Handle(CommentCreateCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

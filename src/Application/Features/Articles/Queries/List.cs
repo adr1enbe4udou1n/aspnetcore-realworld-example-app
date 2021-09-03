@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Interfaces;
 using Application.Support;
 using MediatR;
 
@@ -58,6 +59,13 @@ namespace Application.Features.Articles.Queries
 
     public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, ArticlesEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ArticlesListHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ArticlesEnvelope> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

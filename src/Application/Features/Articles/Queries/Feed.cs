@@ -13,6 +13,13 @@ namespace Application.Features.Articles.Queries
 
     public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuery, ArticlesEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ArticlesFeedHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ArticlesEnvelope> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

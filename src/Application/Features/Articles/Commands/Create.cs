@@ -23,6 +23,13 @@ namespace Application.Features.Articles.Commands
 
     public class ArticleCreateHandler : IAuthorizationRequestHandler<ArticleCreateCommand, ArticleEnvelope>
     {
+        private readonly IAppDbContext _context;
+
+        public ArticleCreateHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<ArticleEnvelope> Handle(ArticleCreateCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();

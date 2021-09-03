@@ -13,6 +13,13 @@ namespace Application.Features.Articles.Commands
 
     public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteCommand>
     {
+        private readonly IAppDbContext _context;
+
+        public ArticleDeleteHandler(IAppDbContext context)
+        {
+            _context = context;
+        }
+
         public Task<Unit> Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
