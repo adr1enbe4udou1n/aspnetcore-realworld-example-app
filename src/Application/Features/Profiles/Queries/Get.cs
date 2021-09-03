@@ -37,7 +37,7 @@ namespace Application.Features.Profiles.Queries
 
         public async Task<ProfileEnvelope> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(x => x.Name == request.Username);
+            var user = await _context.Users.FindAsync(x => x.Name == request.Username, cancellationToken);
 
             return new ProfileEnvelope(_mapper.Map<User, ProfileDTO>(user));
         }
