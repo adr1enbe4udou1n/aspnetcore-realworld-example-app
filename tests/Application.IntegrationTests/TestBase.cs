@@ -24,7 +24,10 @@ namespace Application.IntegrationTests
         protected readonly IPasswordHasher _passwordHasher;
 
         protected readonly IJwtTokenGenerator _jwtTokenGenerator;
+
         protected readonly ICurrentUser _currentUser;
+
+        protected readonly ISlugifier _slugifier;
 
         public TestBase(Startup factory)
         {
@@ -36,6 +39,7 @@ namespace Application.IntegrationTests
             _jwtTokenGenerator = provider.GetService<IJwtTokenGenerator>();
             _context = provider.GetService<AppDbContext>();
             _currentUser = provider.GetService<ICurrentUser>();
+            _slugifier = provider.GetService<ISlugifier>();
         }
 
         public Task DisposeAsync()

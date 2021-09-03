@@ -14,11 +14,11 @@ namespace Application.IntegrationTests.Auth
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new object[] { new LoginDTO {
+            new [] { new LoginDTO {
                 Email = "jane.doe@example.com",
                 Password = "password",
             } },
-            new object[] { new LoginDTO {
+            new [] { new LoginDTO {
                 Email = "john.doe@example.com",
                 Password = "badpassword",
             } },

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Application.Mappings
 
         public List<ArticleTag> Resolve(ArticleCreateDTO source, object destination, List<ArticleTag> destMember, ResolutionContext context)
         {
-            return source.TagList.Select(x =>
+            return source.TagList.Where(x => !String.IsNullOrEmpty(x)).Select(x =>
             {
                 var tag = _context.Tags.FirstOrDefault(t => t.Name == x);
 

@@ -17,15 +17,15 @@ namespace Application.IntegrationTests.Auth
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new object[] { new RegisterDTO {
+            new [] { new RegisterDTO {
                 Email = "john.doe",
                 Username = "John Doe",
                 Password = "password",
             } },
-            new object[] { new RegisterDTO {
+            new [] { new RegisterDTO {
                 Email = "john.doe@example.com",
             } },
-            new object[] { new RegisterDTO {
+            new [] { new RegisterDTO {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
                 Password = "pass",

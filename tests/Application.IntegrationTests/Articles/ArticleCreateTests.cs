@@ -7,6 +7,7 @@ using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Domain.Entities;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -15,6 +16,54 @@ namespace Application.IntegrationTests.Articles
     public class ArticleCreateTests : TestBase
     {
         public ArticleCreateTests(Startup factory) : base(factory) { }
+
+        public static IEnumerable<object[]> Data => new List<object[]>
+        {
+            new [] { new ArticleCreateDTO {
+                Title = "",
+                Description = "Test Description",
+                Body = "Test Body",
+            } },
+            new [] { new ArticleCreateDTO {
+                Title = "Test Title",
+                Description = "",
+                Body = "Test Body",
+            } },
+            new [] { new ArticleCreateDTO {
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "",
+            } },
+            new [] { new ArticleCreateDTO {
+                Title = "Existing Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            } },
+        };
+
+        [Theory]
+        [MemberData(nameof(Data))]
+        public async Task CannotCreateArticleWithInvalidData(ArticleCreateDTO article)
+        {
+            var user = await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
+
+            await _context.Articles.AddAsync(new Article
+            {
+                Title = "Existing Title",
+                Description = "Test Description",
+                Body = "Test Body",
+                Slug = _slugifier.Generate("Existing Title"),
+                Author = user,
+            });
+            await _context.SaveChangesAsync();
+
+            await _mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
+                .Should().ThrowAsync<ValidationException>();
+        }
 
         [Fact]
         public async Task GuestCannotCreateArticle()
