@@ -24,7 +24,7 @@ namespace Application.Tools.Seeders
             var users = await _context.Users.ToListAsync(cancellationToken);
 
             var articles = new Faker<Article>()
-                .RuleFor(a => a.Title, f => f.Lorem.Sentence())
+                .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))
                 .RuleFor(a => a.Description, f => f.Lorem.Paragraphs(1))
                 .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(5))
                 .RuleFor(a => a.AuthorId, f => f.PickRandom(users).Id)

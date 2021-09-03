@@ -25,10 +25,11 @@ namespace Infrastructure
             });
 
             services.AddScoped<ICurrentUser, CurrentUser>();
-            services.AddScoped<ISlugHelper, SlugHelper>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
                 .Configure<JwtOptions>(configuration.GetSection("Jwt"));
+
+            services.AddScoped<ISlugHelper, SlugHelper>();
 
             return services;
         }
