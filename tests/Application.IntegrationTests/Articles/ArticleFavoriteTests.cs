@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Features.Articles.Commands;
+using Application.Features.Articles.Queries;
 using Domain.Entities;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Application.IntegrationTests.Articles
@@ -31,15 +33,6 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
-
             await _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
                 "slug-article", true
             )))
@@ -49,21 +42,61 @@ namespace Application.IntegrationTests.Articles
         [Fact]
         public async Task CanFavoriteArticle()
         {
-            // TODO
+            await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
 
-            var response = await _mediator.Send(new ArticleFavoriteCommand("slug-article", true));
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
-            // TODO
+            var response = await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
+
+            response.Article.Should().BeEquivalentTo(new ArticleDTO
+            {
+                Favorited = true,
+                FavoritesCount = 1,
+            }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
+
+            (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
         }
 
         [Fact]
         public async Task CanUnfavoriteArticle()
         {
-            // TODO
+            await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
 
-            var response = await _mediator.Send(new ArticleFavoriteCommand("slug-article", false));
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
-            // TODO
+            await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
+
+            var response = await _mediator.Send(new ArticleFavoriteCommand("test-title", false));
+
+            response.Article.Should().BeEquivalentTo(new ArticleDTO
+            {
+                Favorited = false,
+                FavoritesCount = 0,
+            }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
+
+            (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Application.Features.Profiles.Commands
             {
                 if (_currentUser.User.IsFollowing(user))
                 {
-                    _currentUser.User.Following.RemoveAll(x => x.Following.Id == user.Id);
+                    _currentUser.User.Following.RemoveAll(x => x.FollowingId == user.Id);
                 }
             }
 

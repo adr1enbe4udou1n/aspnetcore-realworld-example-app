@@ -33,7 +33,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Author, opt => opt.MapFrom<AuthorResolver<ArticleCreateDTO>>())
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom<TagsResolver>());
             CreateMap<Article, ArticleDTO>()
-                .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)));
+                .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)))
+                .ForMember(dest => dest.Favorited, opt => opt.MapFrom<FavoriteResolver>())
+                .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom<FavoritesCountResolver>());
             CreateMap<User, AuthorDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
 
