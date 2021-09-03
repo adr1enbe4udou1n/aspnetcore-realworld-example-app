@@ -4,26 +4,15 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Slugify;
 
 namespace Infrastructure.Persistence
 {
     public class AppDbContext : DbContext, IAppDbContext
     {
-        private readonly ISlugHelper _slugHelper;
-        private readonly ICurrentUser _currentUser;
-
-        public AppDbContext(DbContextOptions<AppDbContext> options, ISlugHelper slugHelper, ICurrentUser currentUser) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            _slugHelper = slugHelper;
-            _currentUser = currentUser;
-
             ChangeTracker.StateChanged += UpdateTimestamps;
-            ChangeTracker.StateChanged += UpdateSlug;
-            ChangeTracker.StateChanged += UpdateAuthor;
             ChangeTracker.Tracked += UpdateTimestamps;
-            ChangeTracker.Tracked += UpdateSlug;
-            ChangeTracker.Tracked += UpdateAuthor;
         }
 
         public DbSet<User> Users { get; set; }
@@ -54,34 +43,16 @@ namespace Infrastructure.Persistence
             }
         }
 
-        private void UpdateSlug(object sender, EntityEntryEventArgs e)
-        {
-            if (e.Entry.Entity is IHasSlug entity)
-            {
-                if (entity.Slug == null)
-                {
-                    entity.Slug = _slugHelper.GenerateSlug(entity.GetSlugSource());
-                }
-            }
-        }
-
-        private void UpdateAuthor(object sender, EntityEntryEventArgs e)
-        {
-            if (e.Entry.Entity is IHasAuthor entity)
-            {
-                if (entity.Author == null)
-                {
-                    entity.AuthorId = _currentUser.User.Id;
-                }
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.Entity<User>()
                 .HasIndex(u => u.Email).IsUnique()
+            ;
+
+            builder.Entity<Tag>()
+                .HasIndex(u => u.Name).IsUnique()
             ;
 
             builder.Entity<Article>(b =>

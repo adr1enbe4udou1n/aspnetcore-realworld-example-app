@@ -218,6 +218,12 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_FollowerUser_FollowerId",
                 table: "FollowerUser",
                 column: "FollowerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_Name",
+                table: "Tags",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

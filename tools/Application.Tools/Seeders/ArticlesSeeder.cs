@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -13,10 +12,12 @@ namespace Application.Tools.Seeders
     public class ArticlesSeeder : ISeeder
     {
         private readonly IAppDbContext _context;
+        private readonly ISlugifier _slugifier;
 
-        public ArticlesSeeder(IAppDbContext context)
+        public ArticlesSeeder(IAppDbContext context, ISlugifier slugifier)
         {
             _context = context;
+            _slugifier = slugifier;
         }
 
         public async Task Run(CancellationToken cancellationToken)
@@ -33,6 +34,7 @@ namespace Application.Tools.Seeders
                     .Select(u => new ArticleFavorite { UserId = u.Id })
                     .ToList()
                 )
+                .RuleFor(a => a.Slug, (f, a) => _slugifier.Generate(a.Title))
                 .Generate(500);
 
             await _context.Articles.AddRangeAsync(articles, cancellationToken);

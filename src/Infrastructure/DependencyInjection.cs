@@ -30,6 +30,7 @@ namespace Infrastructure
                 .Configure<JwtOptions>(configuration.GetSection("Jwt"));
 
             services.AddScoped<ISlugHelper, SlugHelper>();
+            services.AddScoped<ISlugifier, Slugifier>();
 
             return services;
         }

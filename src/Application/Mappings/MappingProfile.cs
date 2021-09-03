@@ -28,8 +28,14 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
-            CreateMap<ArticleCreateDTO, Article>();
-            CreateMap<Article, ArticleDTO>();
+            CreateMap<ArticleCreateDTO, Article>()
+                .ForMember(dest => dest.Slug, opt => opt.MapFrom<SlugResolver>())
+                .ForMember(dest => dest.Author, opt => opt.MapFrom<AuthorResolver>())
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom<TagsResolver>());
+            CreateMap<Article, ArticleDTO>()
+                .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)));
+            CreateMap<User, AuthorDTO>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
         }
     }
 }
