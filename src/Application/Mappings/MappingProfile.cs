@@ -16,11 +16,11 @@ namespace Application.Mappings
         {
             CreateMap<User, CurrentUserDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenMapper>());
+                .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenResolver>());
 
             CreateMap<User, ProfileDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingMapper>());
+                .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
         }
     }
 }

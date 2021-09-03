@@ -5,11 +5,11 @@ using Domain.Entities;
 
 namespace Application.Mappings
 {
-    public class FollowingMapper : IValueResolver<User, object, bool>
+    public class FollowingResolver : IValueResolver<User, object, bool>
     {
         private readonly ICurrentUser _currentUser;
 
-        public FollowingMapper(ICurrentUser currentUser = null)
+        public FollowingResolver(ICurrentUser currentUser = null)
         {
             _currentUser = currentUser;
         }

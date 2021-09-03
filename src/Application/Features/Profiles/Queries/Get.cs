@@ -39,9 +39,7 @@ namespace Application.Features.Profiles.Queries
         {
             var user = await _context.Users.FindAsync(x => x.Name == request.Username);
 
-            return new ProfileEnvelope(
-                _mapper.Map<User, ProfileDTO>(user)
-            );
+            return new ProfileEnvelope(_mapper.Map<User, ProfileDTO>(user));
         }
     }
 }

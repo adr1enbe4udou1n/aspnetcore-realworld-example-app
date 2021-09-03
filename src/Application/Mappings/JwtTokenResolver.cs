@@ -4,11 +4,11 @@ using Domain.Entities;
 
 namespace Application.Mappings
 {
-    public class JwtTokenMapper : IValueResolver<User, object, string>
+    public class JwtTokenResolver : IValueResolver<User, object, string>
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-        public JwtTokenMapper(IJwtTokenGenerator jwtTokenGenerator)
+        public JwtTokenResolver(IJwtTokenGenerator jwtTokenGenerator)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
         }
