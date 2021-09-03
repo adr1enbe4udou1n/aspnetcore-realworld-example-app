@@ -58,13 +58,14 @@ namespace Application.IntegrationTests
             }
         }
 
-        protected async Task ActingAs(User user)
+        protected async Task<User> ActingAs(User user)
         {
             user.Password = _passwordHasher.Hash("password");
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
             await _currentUser.SetIdentifier(user.Id);
+            return user;
         }
     }
 }

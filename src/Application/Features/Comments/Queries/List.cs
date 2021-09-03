@@ -27,7 +27,7 @@ namespace Application.Features.Comments.Queries
         public IEnumerable<CommentDTO> Comments { get; set; }
     }
 
-    public record CommentsListQuery(string slug) : IRequest<CommentsEnvelope>;
+    public record CommentsListQuery(string Slug) : IRequest<CommentsEnvelope>;
 
     public class CommentsListHandler : IRequestHandler<CommentsListQuery, CommentsEnvelope>
     {

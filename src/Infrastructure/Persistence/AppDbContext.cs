@@ -1,7 +1,4 @@
 using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;

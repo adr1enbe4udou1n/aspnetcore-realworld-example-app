@@ -5,7 +5,7 @@ using Application.Interfaces;
 
 namespace Application.Features.Profiles.Commands
 {
-    public record ProfileFollowCommand(string username, bool follow) : IAuthorizationRequest<ProfileEnvelope>;
+    public record ProfileFollowCommand(string Username, bool Follow) : IAuthorizationRequest<ProfileEnvelope>;
 
     public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowCommand, ProfileEnvelope>
     {

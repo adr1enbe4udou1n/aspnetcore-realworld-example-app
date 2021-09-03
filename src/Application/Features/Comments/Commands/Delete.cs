@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.Features.Comments.Commands
 {
-    public record CommentDeleteCommand(string slug, int id) : IAuthorizationRequest;
+    public record CommentDeleteCommand(string Slug, int Id) : IAuthorizationRequest;
 
     public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteCommand>
     {

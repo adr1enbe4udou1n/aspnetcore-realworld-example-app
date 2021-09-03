@@ -13,7 +13,7 @@ namespace Application.Features.Articles.Commands
         public string Body { get; set; }
     }
 
-    public record ArticleUpdateCommand(string slug, ArticleUpdateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
+    public record ArticleUpdateCommand(string Slug, ArticleUpdateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
 
     public class ArticleUpdateHandler : IAuthorizationRequestHandler<ArticleUpdateCommand, ArticleEnvelope>
     {

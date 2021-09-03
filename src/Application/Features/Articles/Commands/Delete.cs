@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.Features.Articles.Commands
 {
-    public record ArticleDeleteCommand(string slug) : IAuthorizationRequest;
+    public record ArticleDeleteCommand(string Slug) : IAuthorizationRequest;
 
     public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteCommand>
     {

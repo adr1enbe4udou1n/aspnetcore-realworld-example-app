@@ -60,6 +60,19 @@ namespace WebUI.Filters
                 return;
             }
 
+            if (context.Exception is NotFoundException)
+            {
+                context.Result = new ObjectResult(
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status404NotFound,
+                        Title = context.Exception.Message,
+                    }
+                );
+
+                return;
+            }
+
             context.Result = new ObjectResult(
                 new ProblemDetails
                 {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Domain.Interfaces;
 
 namespace Domain.Entities
@@ -39,5 +40,10 @@ namespace Domain.Entities
         public List<FollowerUser> Following { get; set; } = new();
 
         public List<FollowerUser> Followers { get; set; } = new();
+
+        public bool IsFollowing(User user)
+        {
+            return Following.Any(f => f.FollowingId == user.Id);
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Application.Features.Comments.Commands
 
     public record CommentEnvelope(CommentDTO Comment);
 
-    public record CommentCreateCommand(string slug, CommentCreateDTO Comment) : IAuthorizationRequest<CommentEnvelope>;
+    public record CommentCreateCommand(string Slug, CommentCreateDTO Comment) : IAuthorizationRequest<CommentEnvelope>;
 
     public class CommentCreateHandler : IAuthorizationRequestHandler<CommentCreateCommand, CommentEnvelope>
     {

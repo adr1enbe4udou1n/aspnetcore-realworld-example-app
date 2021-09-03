@@ -8,7 +8,7 @@ namespace Application.Features.Articles.Queries
 {
     public record ArticleEnvelope(ArticleDTO Article);
 
-    public record ArticleGetQuery(string slug) : IRequest<ArticleEnvelope>;
+    public record ArticleGetQuery(string Slug) : IRequest<ArticleEnvelope>;
 
     public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, ArticleEnvelope>
     {

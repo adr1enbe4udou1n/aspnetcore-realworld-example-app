@@ -8,7 +8,7 @@ using Application.Interfaces;
 
 namespace Application.Features.Articles.Commands
 {
-    public record ArticleFavoriteCommand(string slug, bool favorite) : IAuthorizationRequest<ArticleEnvelope>;
+    public record ArticleFavoriteCommand(string Slug, bool Favorite) : IAuthorizationRequest<ArticleEnvelope>;
 
     public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavoriteCommand, ArticleEnvelope>
     {

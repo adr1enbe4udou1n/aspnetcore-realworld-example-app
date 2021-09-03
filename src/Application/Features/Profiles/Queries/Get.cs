@@ -1,6 +1,11 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Extensions;
 using Application.Interfaces;
+using AutoMapper;
+using Domain.Entities;
+using MediatR;
 
 namespace Application.Features.Profiles.Queries
 {
@@ -17,20 +22,26 @@ namespace Application.Features.Profiles.Queries
 
     public record ProfileEnvelope(ProfileDTO Profile);
 
-    public record ProfileGetQuery(string username) : IAuthorizationRequest<ProfileEnvelope>;
+    public record ProfileGetQuery(string Username) : IRequest<ProfileEnvelope>;
 
-    public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileGetQuery, ProfileEnvelope>
+    public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileEnvelope>
     {
         private readonly IAppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ProfileGetHandler(IAppDbContext context)
+        public ProfileGetHandler(IAppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public Task<ProfileEnvelope> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
+        public async Task<ProfileEnvelope> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var user = await _context.Users.FindAsync(x => x.Name == request.Username);
+
+            return new ProfileEnvelope(
+                _mapper.Map<User, ProfileDTO>(user)
+            );
         }
     }
 }
