@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
+using Application.Extensions;
 using Application.Features.Comments.Queries;
 using Application.Interfaces;
 using MediatR;
@@ -20,9 +22,18 @@ namespace Application.Features.Comments.Commands
             _context = context;
         }
 
-        public Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+            var comment = await _context.Comments.FindAsync(
+                x => x.Id == request.Id && x.ArticleId == article.Id,
+                cancellationToken
+            );
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

@@ -32,8 +32,7 @@ namespace Application.IntegrationTests.Profiles
                 Email = "john.doe@example.com",
             });
 
-            await _context.Users.AddRangeAsync(new List<User>
-            {
+            await _context.Users.AddRangeAsync(
                 new User
                 {
                     Name = "Jane Doe",
@@ -43,8 +42,8 @@ namespace Application.IntegrationTests.Profiles
                 {
                     Name = "Alice",
                     Email = "alice@example.com",
-                },
-            });
+                }
+            );
             await _context.SaveChangesAsync();
 
             var response = await _mediator.Send(new ProfileFollowCommand("Jane Doe", true));

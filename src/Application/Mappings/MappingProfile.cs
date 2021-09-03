@@ -2,13 +2,13 @@ using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Auth.Commands;
 using Application.Features.Auth.Queries;
+using Application.Features.Comments.Commands;
+using Application.Features.Comments.Queries;
 using Application.Features.Profiles.Queries;
-using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace Application.Mappings
 {
@@ -30,12 +30,16 @@ namespace Application.Mappings
 
             CreateMap<ArticleCreateDTO, Article>()
                 .ForMember(dest => dest.Slug, opt => opt.MapFrom<SlugResolver>())
-                .ForMember(dest => dest.Author, opt => opt.MapFrom<AuthorResolver>())
+                .ForMember(dest => dest.Author, opt => opt.MapFrom<AuthorResolver<ArticleCreateDTO>>())
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom<TagsResolver>());
             CreateMap<Article, ArticleDTO>()
                 .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)));
             CreateMap<User, AuthorDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<CommentCreateDTO, Comment>()
+                .ForMember(dest => dest.Author, opt => opt.MapFrom<AuthorResolver<CommentCreateDTO>>());
+            CreateMap<Comment, CommentDTO>();
         }
     }
 }

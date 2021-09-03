@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Application.Mappings
 {
-    public class AuthorResolver : IValueResolver<ArticleCreateDTO, object, User>
+    public class AuthorResolver<TSource> : IValueResolver<TSource, object, User>
     {
         private readonly ICurrentUser _currentUser;
 
@@ -14,7 +14,7 @@ namespace Application.Mappings
             _currentUser = currentUser;
         }
 
-        User IValueResolver<ArticleCreateDTO, object, User>.Resolve(ArticleCreateDTO source, object destination, User destMember, ResolutionContext context)
+        User IValueResolver<TSource, object, User>.Resolve(TSource source, object destination, User destMember, ResolutionContext context)
         {
             return _currentUser.User;
         }

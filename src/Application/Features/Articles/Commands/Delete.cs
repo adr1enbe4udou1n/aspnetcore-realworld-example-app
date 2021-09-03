@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using MediatR;
@@ -20,9 +21,14 @@ namespace Application.Features.Articles.Commands
             _context = context;
         }
 
-        public Task<Unit> Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+
+            _context.Articles.Remove(article);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Application.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (request is IAuthorizationRequest<TResponse>)
+            if (request is IAuthorizationRequest || request is IAuthorizationRequest<TResponse>)
             {
                 if (!_currentUser.IsAuthenticated)
                 {

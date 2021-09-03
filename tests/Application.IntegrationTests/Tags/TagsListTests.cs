@@ -15,12 +15,11 @@ namespace Application.IntegrationTests.Tags
         [Fact]
         public async Task CanListAllTags()
         {
-            await _context.Tags.AddRangeAsync(new List<Tag>
-            {
+            await _context.Tags.AddRangeAsync(
                 new Tag { Name = "Tag3" },
                 new Tag { Name = "Tag2" },
-                new Tag { Name = "Tag1" },
-            });
+                new Tag { Name = "Tag1" }
+            );
             await _context.SaveChangesAsync();
 
             var response = await _mediator.Send(new TagsListQuery());
