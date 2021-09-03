@@ -45,21 +45,20 @@ namespace Application.IntegrationTests.Articles
         [MemberData(nameof(Data))]
         public async Task CannotCreateArticleWithInvalidData(ArticleCreateDTO article)
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
             });
 
-            await _context.Articles.AddAsync(new Article
-            {
-                Title = "Existing Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                Slug = _slugifier.Generate("Existing Title"),
-                Author = user,
-            });
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Existing Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
             await _mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
                 .Should().ThrowAsync<ValidationException>();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Exceptions;
+using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Comments.Commands;
 using Application.Features.Comments.Queries;
@@ -28,21 +29,20 @@ namespace Application.IntegrationTests.Comments
         [MemberData(nameof(Data))]
         public async Task CannotCreateCommentWithInvalidData(CommentCreateDTO comment)
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
             });
 
-            await _context.Articles.AddAsync(new Article
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                Slug = _slugifier.Generate("Test Title"),
-                Author = user,
-            });
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
             await _mediator.Invoking(m => m.Send(new CommentCreateCommand("test-title", comment)))
                 .Should().ThrowAsync<ValidationException>();
@@ -78,7 +78,7 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task CanCreateComment()
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
@@ -86,15 +86,14 @@ namespace Application.IntegrationTests.Comments
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await _context.Articles.AddAsync(new Article
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                Slug = _slugifier.Generate("Test Title"),
-                Author = user,
-            });
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
             var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
             {

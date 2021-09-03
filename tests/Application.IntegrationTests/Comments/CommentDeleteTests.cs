@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Exceptions;
+using Application.Features.Articles.Commands;
 using Application.Features.Comments.Commands;
 using Domain.Entities;
 using FluentAssertions;
@@ -24,21 +25,20 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task CannotDeleteNotExistingComment()
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
             });
 
-            await _context.Articles.AddAsync(new Article
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                Slug = _slugifier.Generate("Test Title"),
-                Author = user,
-            });
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
             await _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
                 "test-title", 1
@@ -49,21 +49,20 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task CannotDeleteCommentWithInexistingArticle()
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
             });
 
-            await _context.Articles.AddAsync(new Article
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                Slug = _slugifier.Generate("Test Title"),
-                Author = user,
-            });
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
             var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
             {
@@ -79,31 +78,29 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task CannotDeleteCommentWithBadArticle()
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
             });
 
-            await _context.Articles.AddRangeAsync(
-                new Article
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
                     Body = "Test Body",
-                    Slug = _slugifier.Generate("Test Title"),
-                    Author = user,
-                },
-                new Article
+                }
+            ));
+
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
                 {
                     Title = "Other Title",
                     Description = "Test Description",
                     Body = "Test Body",
-                    Slug = _slugifier.Generate("Other Title"),
-                    Author = user,
                 }
-            );
-            await _context.SaveChangesAsync();
+            ));
 
             var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
             {
@@ -119,21 +116,20 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task CanDeleteComment()
         {
-            var user = await ActingAs(new User
+            await ActingAs(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
             });
 
-            await _context.Articles.AddAsync(new Article
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                Slug = _slugifier.Generate("Test Title"),
-                Author = user,
-            });
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
 
             var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
             {
