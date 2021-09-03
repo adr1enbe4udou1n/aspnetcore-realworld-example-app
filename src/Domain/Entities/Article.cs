@@ -6,7 +6,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities
 {
-    public class Article : IHasTimestamps, IHasSlug
+    public class Article : IHasTimestamps, IHasSlug, IHasAuthor
     {
         public int Id { get; set; }
 

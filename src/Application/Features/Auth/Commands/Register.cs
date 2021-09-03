@@ -54,13 +54,7 @@ namespace Application.Features.Auth.Commands
 
         public async Task<UserEnvelope> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            var user = new User
-            {
-                Name = request.User.Username,
-                Email = request.User.Email,
-                Password = _passwordHasher.Hash(request.User.Password),
-            };
-
+            var user = _mapper.Map<User>(request.User);
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 

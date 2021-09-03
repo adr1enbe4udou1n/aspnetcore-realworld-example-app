@@ -11,15 +11,19 @@ namespace Infrastructure.Persistence
     public class AppDbContext : DbContext, IAppDbContext
     {
         private readonly ISlugHelper _slugHelper;
+        private readonly ICurrentUser _currentUser;
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, ISlugHelper slugHelper) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, ISlugHelper slugHelper, ICurrentUser currentUser) : base(options)
         {
             _slugHelper = slugHelper;
+            _currentUser = currentUser;
 
             ChangeTracker.StateChanged += UpdateTimestamps;
             ChangeTracker.StateChanged += UpdateSlug;
+            ChangeTracker.StateChanged += UpdateAuthor;
             ChangeTracker.Tracked += UpdateTimestamps;
             ChangeTracker.Tracked += UpdateSlug;
+            ChangeTracker.Tracked += UpdateAuthor;
         }
 
         public DbSet<User> Users { get; set; }
@@ -57,6 +61,17 @@ namespace Infrastructure.Persistence
                 if (entity.Slug == null)
                 {
                     entity.Slug = _slugHelper.GenerateSlug(entity.GetSlugSource());
+                }
+            }
+        }
+
+        private void UpdateAuthor(object sender, EntityEntryEventArgs e)
+        {
+            if (e.Entry.Entity is IHasAuthor entity)
+            {
+                if (entity.Author == null)
+                {
+                    entity.AuthorId = _currentUser.User.Id;
                 }
             }
         }
