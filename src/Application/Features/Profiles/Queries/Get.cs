@@ -6,6 +6,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Queries
 {
@@ -37,7 +38,9 @@ namespace Application.Features.Profiles.Queries
 
         public async Task<ProfileEnvelope> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(x => x.Name == request.Username, cancellationToken);
+            var user = await _context.Users
+                .Include(u => u.Followers)
+                .FindAsync(x => x.Name == request.Username, cancellationToken);
 
             return new ProfileEnvelope(_mapper.Map<User, ProfileDTO>(user));
         }

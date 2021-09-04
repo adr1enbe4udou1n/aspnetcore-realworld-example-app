@@ -83,7 +83,6 @@ namespace Application.IntegrationTests
 
         protected async Task<User> ActingAs(User user)
         {
-            user.Password = _passwordHasher.Hash("password");
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -105,6 +104,7 @@ namespace Application.IntegrationTests
             SqlCounterLogger.CurrentCounter = 0;
 
             _logEnabled = true;
+            await _currentUser.Fresh();
             var result = await action();
             _logEnabled = false;
 

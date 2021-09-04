@@ -16,7 +16,7 @@ namespace Application.Mappings
 
         bool IValueResolver<Article, object, bool>.Resolve(Article source, object destination, bool destMember, ResolutionContext context)
         {
-            return _currentUser.IsAuthenticated && _currentUser.User.IsFavorite(source);
+            return _currentUser.IsAuthenticated && _currentUser.User.HasFavorite(source);
         }
     }
 }

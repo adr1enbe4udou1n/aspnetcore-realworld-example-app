@@ -46,7 +46,12 @@ namespace Domain.Entities
             return Following.Any(f => f.FollowingId == user.Id);
         }
 
-        public bool IsFavorite(Article article)
+        public bool IsFollowedBy(User user)
+        {
+            return Followers.Any(f => f.FollowerId == user.Id);
+        }
+
+        public bool HasFavorite(Article article)
         {
             return FavoriteArticles.Any(f => f.ArticleId == article.Id);
         }

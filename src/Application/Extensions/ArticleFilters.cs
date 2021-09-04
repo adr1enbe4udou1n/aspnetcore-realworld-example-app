@@ -20,12 +20,12 @@ namespace Application.Extensions
             return source;
         }
 
-        public static IQueryable<Article> FilterByAuthors(
+        public static IQueryable<Article> HasAuthorsFollowedBy(
             this IQueryable<Article> source,
-            IEnumerable<int> ids
+            User user
         )
         {
-            return source.Where(a => ids.Contains(a.AuthorId));
+            return source.Where(a => a.Author.Followers.Any(f => f.FollowerId == user.Id));
         }
 
         public static IQueryable<Article> FilterByTag(

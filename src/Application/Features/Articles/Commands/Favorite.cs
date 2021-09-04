@@ -8,6 +8,7 @@ using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands
 {
@@ -28,20 +29,22 @@ namespace Application.Features.Articles.Commands
 
         public async Task<ArticleEnvelope> Handle(ArticleFavoriteCommand request, CancellationToken cancellationToken)
         {
-            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+            var article = await _context.Articles
+                .Include(x => x.FavoredUsers)
+                .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
             if (request.Favorite)
             {
-                if (!_currentUser.User.IsFavorite(article))
+                if (!article.IsFavoritedBy(_currentUser.User))
                 {
-                    _currentUser.User.FavoriteArticles.Add(new ArticleFavorite { Article = article });
+                    article.FavoredUsers.Add(new ArticleFavorite { User = _currentUser.User });
                 }
             }
             else
             {
-                if (_currentUser.User.IsFavorite(article))
+                if (article.IsFavoritedBy(_currentUser.User))
                 {
-                    _currentUser.User.FavoriteArticles.RemoveAll(x => x.ArticleId == article.Id);
+                    article.FavoredUsers.RemoveAll(x => x.UserId == _currentUser.User.Id);
                 }
             }
 

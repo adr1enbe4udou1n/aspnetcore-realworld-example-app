@@ -6,6 +6,7 @@ using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands
 {
@@ -26,20 +27,22 @@ namespace Application.Features.Profiles.Commands
 
         public async Task<ProfileEnvelope> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(x => x.Name == request.Username, cancellationToken);
+            var user = await _context.Users
+                .Include(u => u.Followers)
+                .FindAsync(x => x.Name == request.Username, cancellationToken);
 
             if (request.Follow)
             {
-                if (!_currentUser.User.IsFollowing(user))
+                if (!user.IsFollowedBy(_currentUser.User))
                 {
-                    _currentUser.User.Following.Add(new FollowerUser { Following = user });
+                    user.Followers.Add(new FollowerUser { Follower = _currentUser.User });
                 }
             }
             else
             {
-                if (_currentUser.User.IsFollowing(user))
+                if (user.IsFollowedBy(_currentUser.User))
                 {
-                    _currentUser.User.Following.RemoveAll(x => x.FollowingId == user.Id);
+                    user.Followers.RemoveAll(x => x.FollowerId == _currentUser.User.Id);
                 }
             }
 

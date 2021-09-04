@@ -5,6 +5,7 @@ using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries
 {
@@ -25,7 +26,11 @@ namespace Application.Features.Articles.Queries
 
         public async Task<ArticleEnvelope> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
         {
-            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+            var article = await _context.Articles
+                .Include(x => x.Author)
+                .Include(x => x.Tags)
+                .ThenInclude(x => x.Tag)
+                .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
             return new ArticleEnvelope(_mapper.Map<ArticleDTO>(article));
         }

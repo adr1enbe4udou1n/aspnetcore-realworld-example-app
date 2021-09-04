@@ -7,6 +7,7 @@ using Application.Extensions;
 using Application.Interfaces;
 using Application.Support;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries
 {
@@ -30,7 +31,11 @@ namespace Application.Features.Articles.Queries
         public async Task<ArticlesEnvelope> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
         {
             var articles = await _context.Articles
-                .FilterByAuthors(_currentUser.User.Following.Select(x => x.FollowingId))
+                .Include(x => x.FavoredUsers)
+                .Include(x => x.Author)
+                .Include(x => x.Tags)
+                .ThenInclude(x => x.Tag)
+                .HasAuthorsFollowedBy(_currentUser.User)
                 .OrderByDescending(x => x.Id)
                 .PaginateAsync(request);
 

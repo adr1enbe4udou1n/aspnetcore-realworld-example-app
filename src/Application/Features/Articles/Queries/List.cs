@@ -70,6 +70,10 @@ namespace Application.Features.Articles.Queries
         public async Task<ArticlesEnvelope> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
         {
             var articles = await _context.Articles
+                .Include(x => x.FavoredUsers)
+                .Include(x => x.Author)
+                .Include(x => x.Tags)
+                .ThenInclude(x => x.Tag)
                 .FilterByAuthor(request.Author)
                 .FilterByTag(request.Tag)
                 .FilterByFavoritedBy(request.Favorited)

@@ -16,7 +16,7 @@ namespace Application.Mappings
 
         bool IValueResolver<User, object, bool>.Resolve(User source, object destination, bool destMember, ResolutionContext context)
         {
-            return _currentUser.IsAuthenticated && _currentUser.User.IsFollowing(source);
+            return _currentUser.IsAuthenticated && source.IsFollowedBy(_currentUser.User);
         }
     }
 }
