@@ -44,14 +44,12 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var comments = new List<string>
+            var comments = new List<string>();
+
+            for (int i = 1; i <= 5; i++)
             {
-                "Test Comment 1",
-                "Test Comment 2",
-                "Test Comment 3",
-                "Test Comment 4",
-                "Test Comment 5",
-            };
+                comments.Add($"Test Comment {i}");
+            }
 
             foreach (var c in comments)
             {

@@ -1,8 +1,10 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -64,6 +66,14 @@ namespace Application.IntegrationTests
             user.Password = _passwordHasher.Hash("password");
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
+
+            await _currentUser.SetIdentifier(user.Id);
+            return user;
+        }
+
+        protected async Task<User> ActingAsExistingUser(string name)
+        {
+            var user = await _context.Users.Where(u => u.Name == name).SingleAsync();
 
             await _currentUser.SetIdentifier(user.Id);
             return user;

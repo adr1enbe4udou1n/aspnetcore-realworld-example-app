@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Extensions;
 using Application.Interfaces;
 using Application.Support;
+using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries
 {
@@ -41,12 +45,7 @@ namespace Application.Features.Articles.Queries
         public int FavoritesCount { get; set; }
     }
 
-    public class ArticlesEnvelope
-    {
-        public IEnumerable<ArticleDTO> Articles { get; set; }
-
-        public int ArticlesCount { get; set; }
-    }
+    public record ArticlesEnvelope(IEnumerable<ArticleDTO> Articles, int ArticlesCount);
 
     public class ArticlesListQuery : PagedQuery, IRequest<ArticlesEnvelope>
     {
@@ -60,15 +59,23 @@ namespace Application.Features.Articles.Queries
     public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, ArticlesEnvelope>
     {
         private readonly IAppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ArticlesListHandler(IAppDbContext context)
+        public ArticlesListHandler(IAppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public Task<ArticlesEnvelope> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
+        public async Task<ArticlesEnvelope> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var articles = await _context.Articles
+                .OrderByDescending(x => x.Id)
+                .PaginateAsync(request);
+
+            return new ArticlesEnvelope(_mapper.Map<IEnumerable<ArticleDTO>>(
+                articles.Items
+            ), articles.Total);
         }
     }
 }
