@@ -6,12 +6,13 @@ using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Profiles
 {
     public class ProfileGetTests : TestBase
     {
-        public ProfileGetTests(Startup factory) : base(factory) { }
+        public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task CanGetProfile()
@@ -25,7 +26,9 @@ namespace Application.IntegrationTests.Profiles
             });
             await _context.SaveChangesAsync();
 
-            var response = await _mediator.Send(new ProfileGetQuery("John Doe"));
+            var response = await Act(() =>
+                _mediator.Send(new ProfileGetQuery("John Doe"))
+            );
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {
@@ -39,8 +42,10 @@ namespace Application.IntegrationTests.Profiles
         [Fact]
         public async Task CannotGetNotExistingProfile()
         {
-            await _mediator.Invoking(m => m.Send(new ProfileGetQuery("John Doe")))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ProfileGetQuery("John Doe")))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -65,7 +70,9 @@ namespace Application.IntegrationTests.Profiles
                 }
             });
 
-            var response = await _mediator.Send(new ProfileGetQuery("Jane Doe"));
+            var response = await Act(() =>
+                _mediator.Send(new ProfileGetQuery("Jane Doe"))
+            );
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {

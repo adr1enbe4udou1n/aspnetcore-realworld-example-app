@@ -5,12 +5,13 @@ using Application.Features.Tags.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Tags
 {
     public class TagListTests : TestBase
     {
-        public TagListTests(Startup factory) : base(factory) { }
+        public TagListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task CanListAllTags()
@@ -22,7 +23,9 @@ namespace Application.IntegrationTests.Tags
             );
             await _context.SaveChangesAsync();
 
-            var response = await _mediator.Send(new TagsListQuery());
+            var response = await Act(() =>
+                _mediator.Send(new TagsListQuery())
+            );
 
             response.Tags.Should().Equal("Tag1", "Tag2", "Tag3");
         }

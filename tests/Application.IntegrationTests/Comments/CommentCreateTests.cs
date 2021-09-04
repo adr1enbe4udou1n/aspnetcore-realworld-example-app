@@ -11,12 +11,13 @@ using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Comments
 {
     public class CommentCreateTests : TestBase
     {
-        public CommentCreateTests(Startup factory) : base(factory) { }
+        public CommentCreateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
@@ -44,8 +45,10 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await _mediator.Invoking(m => m.Send(new CommentCreateCommand("test-title", comment)))
-                .Should().ThrowAsync<ValidationException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentCreateCommand("test-title", comment)))
+                    .Should().ThrowAsync<ValidationException>()
+            );
         }
 
         [Fact]
@@ -57,22 +60,26 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new CommentCreateCommand(
-                "slug-article", new CommentCreateDTO
-                {
-                    Body = "Test Body",
-                }
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentCreateCommand(
+                    "slug-article", new CommentCreateDTO
+                    {
+                        Body = "Test Body",
+                    }
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
         public async Task GuestCannotCreateComment()
         {
-            await _mediator.Invoking(m => m.Send(new CommentCreateCommand(
-                "slug-article", new CommentCreateDTO()
-            )))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentCreateCommand(
+                    "slug-article", new CommentCreateDTO()
+                )))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -95,10 +102,12 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
-            {
-                Body = "Thank you !",
-            }));
+            var response = await Act(() =>
+                _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                {
+                    Body = "Thank you !",
+                }))
+            );
 
             response.Comment.Should().BeEquivalentTo(new CommentDTO
             {

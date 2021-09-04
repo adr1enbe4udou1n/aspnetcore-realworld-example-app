@@ -6,12 +6,13 @@ using Application.Exceptions;
 using Domain.Entities;
 using Xunit;
 using FluentAssertions;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Auth
 {
     public class CurrentUserTests : TestBase
     {
-        public CurrentUserTests(Startup factory) : base(factory) { }
+        public CurrentUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task LoggedUserCanFetchInfos()
@@ -22,7 +23,9 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
             });
 
-            var currentUser = await _mediator.Send(new CurrentUserQuery());
+            var currentUser = await Act(() =>
+                _mediator.Send(new CurrentUserQuery())
+            );
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("john.doe@example.com");
@@ -31,8 +34,10 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task GuestUserCannotFetchInfos()
         {
-            await _mediator.Invoking(m => m.Send(new CurrentUserQuery()))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CurrentUserQuery()))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
     }
 }

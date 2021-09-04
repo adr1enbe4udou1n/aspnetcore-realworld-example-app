@@ -10,12 +10,13 @@ using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Articles
 {
     public class ArticleCreateTests : TestBase
     {
-        public ArticleCreateTests(Startup factory) : base(factory) { }
+        public ArticleCreateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
@@ -60,17 +61,21 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            await _mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
-                .Should().ThrowAsync<ValidationException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
+                    .Should().ThrowAsync<ValidationException>()
+            );
         }
 
         [Fact]
         public async Task GuestCannotCreateArticle()
         {
-            await _mediator.Invoking(m => m.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO()
-            )))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleCreateCommand(
+                    new ArticleCreateDTO()
+                )))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -90,15 +95,17 @@ namespace Application.IntegrationTests.Articles
             });
             await _context.SaveChangesAsync();
 
-            var response = await _mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
-                {
-                    Title = "Test Article",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                    TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" }
-                }
-            ));
+            var response = await Act(() =>
+                _mediator.Send(new ArticleCreateCommand(
+                    new ArticleCreateDTO
+                    {
+                        Title = "Test Article",
+                        Description = "Test Description",
+                        Body = "Test Body",
+                        TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" }
+                    }
+                ))
+            );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

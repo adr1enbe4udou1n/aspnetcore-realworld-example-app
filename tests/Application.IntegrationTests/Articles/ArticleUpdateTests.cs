@@ -9,12 +9,13 @@ using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Articles
 {
     public class ArticleUpdateTests : TestBase
     {
-        public ArticleUpdateTests(Startup factory) : base(factory) { }
+        public ArticleUpdateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
@@ -33,10 +34,12 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                "test-title", article
-            )))
-                .Should().ThrowAsync<ValidationException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                    "test-title", article
+                )))
+                    .Should().ThrowAsync<ValidationException>()
+            );
         }
 
         [Fact]
@@ -48,23 +51,27 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                "slug-article",
-                new ArticleUpdateDTO
-                {
-                    Body = "New Body",
-                }
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                    "slug-article",
+                    new ArticleUpdateDTO
+                    {
+                        Body = "New Body",
+                    }
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
         public async Task GuestCannotUpdateArticle()
         {
-            await _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                "slug-article", new ArticleUpdateDTO()
-            )))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                    "slug-article", new ArticleUpdateDTO()
+                )))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -91,14 +98,16 @@ namespace Application.IntegrationTests.Articles
                 Email = "jane.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                "test-title",
-                new ArticleUpdateDTO
-                {
-                    Body = "New Body",
-                }
-            )))
-                .Should().ThrowAsync<ForbiddenException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                    "test-title",
+                    new ArticleUpdateDTO
+                    {
+                        Body = "New Body",
+                    }
+                )))
+                    .Should().ThrowAsync<ForbiddenException>()
+            );
         }
 
         [Fact]
@@ -119,13 +128,15 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await _mediator.Send(new ArticleUpdateCommand(
-                "test-title",
-                new ArticleUpdateDTO
-                {
-                    Body = "New Body",
-                }
-            ));
+            var response = await Act(() =>
+                _mediator.Send(new ArticleUpdateCommand(
+                    "test-title",
+                    new ArticleUpdateDTO
+                    {
+                        Body = "New Body",
+                    }
+                ))
+            );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

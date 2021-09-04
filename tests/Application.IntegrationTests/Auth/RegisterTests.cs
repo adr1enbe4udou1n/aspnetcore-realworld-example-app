@@ -8,12 +8,13 @@ using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Auth
 {
     public class RegisterTests : TestBase
     {
-        public RegisterTests(Startup factory) : base(factory) { }
+        public RegisterTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
@@ -36,9 +37,11 @@ namespace Application.IntegrationTests.Auth
         [MemberData(nameof(Data))]
         public async Task UserCannotRegisterWithInvalidData(RegisterDTO user)
         {
-            await _mediator.Invoking(m => m.Send(new RegisterCommand(user)))
-                .Should().ThrowAsync<ValidationException>()
-                .Where(e => e.Errors.Any());
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new RegisterCommand(user)))
+                    .Should().ThrowAsync<ValidationException>()
+                    .Where(e => e.Errors.Any())
+            );
         }
 
         [Fact]
@@ -51,7 +54,9 @@ namespace Application.IntegrationTests.Auth
                 Password = "password",
             });
 
-            var currentUser = await _mediator.Send(request);
+            var currentUser = await Act(() =>
+                _mediator.Send(request)
+            );
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("john.doe@example.com");
@@ -79,16 +84,19 @@ namespace Application.IntegrationTests.Auth
             });
             await _context.SaveChangesAsync();
 
-            await _mediator.Invoking(m => m.Send(new RegisterCommand(
-                new RegisterDTO
-                {
-                    Email = "john.doe@example.com",
-                    Username = "John Doe",
-                    Password = "password",
-                }
-            ))).Should().ThrowAsync<ValidationException>()
-                .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
-                    .ErrorMessage == "Email is already used");
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new RegisterCommand(
+                    new RegisterDTO
+                    {
+                        Email = "john.doe@example.com",
+                        Username = "John Doe",
+                        Password = "password",
+                    }
+                )))
+                    .Should().ThrowAsync<ValidationException>()
+                    .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
+                        .ErrorMessage == "Email is already used")
+            );
         }
     }
 }

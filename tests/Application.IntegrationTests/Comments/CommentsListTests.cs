@@ -10,18 +10,21 @@ using Application.Features.Comments.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Comments
 {
     public class CommentsListTests : TestBase
     {
-        public CommentsListTests(Startup factory) : base(factory) { }
+        public CommentsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task CanListAllCommentsOfNotExistingArticle()
         {
-            await _mediator.Invoking(m => m.Send(new CommentsListQuery("test-title")))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentsListQuery("test-title")))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -75,7 +78,9 @@ namespace Application.IntegrationTests.Comments
                 }));
             }
 
-            var response = await _mediator.Send(new CommentsListQuery("test-title"));
+            var response = await Act(() =>
+                _mediator.Send(new CommentsListQuery("test-title"))
+            );
 
             response.Comments.Count().Should().Be(10);
 

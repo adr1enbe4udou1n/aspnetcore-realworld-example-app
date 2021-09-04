@@ -8,18 +8,21 @@ using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Comments
 {
     public class CommentDeleteTests : TestBase
     {
-        public CommentDeleteTests(Startup factory) : base(factory) { }
+        public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task GuestCannotDeleteComment()
         {
-            await _mediator.Invoking(m => m.Send(new CommentDeleteCommand("slug-article", 1)))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentDeleteCommand("slug-article", 1)))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -40,10 +43,12 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                "test-title", 1
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
+                    "test-title", 1
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -69,10 +74,12 @@ namespace Application.IntegrationTests.Comments
                 Body = "Thank you !",
             }));
 
-            await _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                "slug-article", response.Comment.Id
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
+                    "slug-article", response.Comment.Id
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -107,10 +114,12 @@ namespace Application.IntegrationTests.Comments
                 Body = "Thank you !",
             }));
 
-            await _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                "other-title", response.Comment.Id
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
+                    "other-title", response.Comment.Id
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -142,10 +151,12 @@ namespace Application.IntegrationTests.Comments
                 Email = "jane.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                "test-title", response.Comment.Id
-            )))
-                .Should().ThrowAsync<ForbiddenException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
+                    "test-title", response.Comment.Id
+                )))
+                    .Should().ThrowAsync<ForbiddenException>()
+            );
         }
 
         [Fact]
@@ -171,7 +182,9 @@ namespace Application.IntegrationTests.Comments
                 Body = "Thank you !",
             }));
 
-            await _mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id));
+            await Act(() =>
+                _mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id))
+            );
 
             (await _context.Comments.AnyAsync()).Should().BeFalse();
         }
@@ -212,7 +225,9 @@ namespace Application.IntegrationTests.Comments
 
             await _currentUser.SetIdentifier(user.Id);
 
-            await _mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id));
+            await Act(() =>
+                _mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id))
+            );
 
             (await _context.Comments.CountAsync()).Should().Be(1);
         }

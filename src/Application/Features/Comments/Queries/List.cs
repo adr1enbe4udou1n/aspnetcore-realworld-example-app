@@ -43,7 +43,10 @@ namespace Application.Features.Comments.Queries
 
         public async Task<CommentsEnvelope> Handle(CommentsListQuery request, CancellationToken cancellationToken)
         {
-            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+            var article = await _context.Articles
+                .Include(a => a.Comments)
+                .ThenInclude(c => c.Author)
+                .FindAsync(x => x.Slug == request.Slug, cancellationToken);
             var comments = article.Comments.OrderByDescending(x => x.Id).ToList();
 
             return new CommentsEnvelope(_mapper.Map<IEnumerable<CommentDTO>>(comments));

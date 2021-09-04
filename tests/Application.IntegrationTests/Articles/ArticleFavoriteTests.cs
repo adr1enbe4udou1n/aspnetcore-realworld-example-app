@@ -8,20 +8,23 @@ using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Articles
 {
     public class ArticleFavoriteTests : TestBase
     {
-        public ArticleFavoriteTests(Startup factory) : base(factory) { }
+        public ArticleFavoriteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task GuestCannotFavoriteArticle()
         {
-            await _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
-                "slug-article", true
-            )))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
+                    "slug-article", true
+                )))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -33,10 +36,12 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
-                "slug-article", true
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
+                    "slug-article", true
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -57,7 +62,9 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
+            var response = await Act(() =>
+                _mediator.Send(new ArticleFavoriteCommand("test-title", true))
+            );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {
@@ -88,7 +95,9 @@ namespace Application.IntegrationTests.Articles
 
             await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
 
-            var response = await _mediator.Send(new ArticleFavoriteCommand("test-title", false));
+            var response = await Act(() =>
+                _mediator.Send(new ArticleFavoriteCommand("test-title", false))
+            );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -7,9 +9,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using Respawn;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests
 {
@@ -29,16 +33,32 @@ namespace Application.IntegrationTests
 
         protected readonly ICurrentUser _currentUser;
 
-        public TestBase(Startup factory)
-        {
-            _configuration = factory.Configuration;
-            var provider = factory.Services.BuildServiceProvider();
+        protected bool _logEnabled = false;
 
-            _mediator = provider.GetService<IMediator>();
-            _passwordHasher = provider.GetService<IPasswordHasher>();
-            _jwtTokenGenerator = provider.GetService<IJwtTokenGenerator>();
-            _context = provider.GetService<AppDbContext>();
-            _currentUser = provider.GetService<ICurrentUser>();
+        protected readonly ITestOutputHelper _output;
+
+        public TestBase(Startup factory, ITestOutputHelper output)
+        {
+            _output = output;
+
+            _configuration = factory.Configuration;
+            var provider = factory.Services
+                .AddLogging((builder) => builder
+                    .AddProvider(new SqlCounterLoggerProvider(() => _logEnabled))
+                    .AddXUnit(output, options =>
+                    {
+                        options.Filter = (category, level) =>
+                        {
+                            return category == DbLoggerCategory.Database.Command.Name && _logEnabled;
+                        };
+                    }))
+                .BuildServiceProvider();
+
+            _mediator = provider.GetRequiredService<IMediator>();
+            _passwordHasher = provider.GetRequiredService<IPasswordHasher>();
+            _jwtTokenGenerator = provider.GetRequiredService<IJwtTokenGenerator>();
+            _context = provider.GetRequiredService<AppDbContext>();
+            _currentUser = provider.GetRequiredService<ICurrentUser>();
         }
 
         public Task DisposeAsync()
@@ -77,6 +97,20 @@ namespace Application.IntegrationTests
 
             await _currentUser.SetIdentifier(user.Id);
             return user;
+        }
+
+        protected async Task<TResult> Act<TResult>(Func<Task<TResult>> action)
+        {
+            _context.ChangeTracker.Clear();
+            SqlCounterLogger.CurrentCounter = 0;
+
+            _logEnabled = true;
+            var result = await action();
+            _logEnabled = false;
+
+            _output.WriteLine($"SQL queries count : {SqlCounterLogger.CurrentCounter}");
+
+            return result;
         }
     }
 }

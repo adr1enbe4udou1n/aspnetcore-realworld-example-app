@@ -7,18 +7,21 @@ using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Articles
 {
     public class ArticleDeleteTests : TestBase
     {
-        public ArticleDeleteTests(Startup factory) : base(factory) { }
+        public ArticleDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task GuestCannotDeleteArticle()
         {
-            await _mediator.Invoking(m => m.Send(new ArticleDeleteCommand("slug-article")))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleDeleteCommand("slug-article")))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -30,10 +33,12 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
-                "slug-article"
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
+                    "slug-article"
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -60,10 +65,12 @@ namespace Application.IntegrationTests.Articles
                 Email = "jane.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
-                "test-title"
-            )))
-                .Should().ThrowAsync<ForbiddenException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
+                    "test-title"
+                )))
+                    .Should().ThrowAsync<ForbiddenException>()
+            );
         }
 
         [Fact]
@@ -84,9 +91,11 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            await _mediator.Send(new ArticleDeleteCommand(
-                "test-title"
-            ));
+            await Act(() =>
+                _mediator.Send(new ArticleDeleteCommand(
+                    "test-title"
+                ))
+            );
 
             (await _context.Articles.AnyAsync()).Should().BeFalse();
         }

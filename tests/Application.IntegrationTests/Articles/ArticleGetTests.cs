@@ -8,13 +8,13 @@ using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Articles
 {
     public class ArticleGetTests : TestBase
     {
-        public ArticleGetTests(Startup factory) : base(factory) { }
-
+        public ArticleGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task CannotGetNotExistingArticle()
@@ -25,10 +25,12 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Invoking(m => m.Send(new ArticleGetQuery(
-                "slug-article"
-            )))
-                .Should().ThrowAsync<NotFoundException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ArticleGetQuery(
+                    "slug-article"
+                )))
+                    .Should().ThrowAsync<NotFoundException>()
+            );
         }
 
         [Fact]
@@ -52,7 +54,9 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await _mediator.Send(new ArticleGetQuery("test-title"));
+            var response = await Act(() =>
+                _mediator.Send(new ArticleGetQuery("test-title"))
+            );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

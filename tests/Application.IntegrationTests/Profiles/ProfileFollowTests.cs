@@ -9,18 +9,21 @@ using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Profiles
 {
     public class ProfileFollowTests : TestBase
     {
-        public ProfileFollowTests(Startup factory) : base(factory) { }
+        public ProfileFollowTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task GuestCannotFollowProfile()
         {
-            await _mediator.Invoking(m => m.Send(new ProfileFollowCommand("john", true)))
-                .Should().ThrowAsync<UnauthorizedException>();
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ProfileFollowCommand("john", true)))
+                    .Should().ThrowAsync<UnauthorizedException>()
+            );
         }
 
         [Fact]
@@ -46,7 +49,9 @@ namespace Application.IntegrationTests.Profiles
             );
             await _context.SaveChangesAsync();
 
-            var response = await _mediator.Send(new ProfileFollowCommand("Jane Doe", true));
+            var response = await Act(() =>
+                _mediator.Send(new ProfileFollowCommand("Jane Doe", true))
+            );
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {
@@ -87,7 +92,9 @@ namespace Application.IntegrationTests.Profiles
                 }
             });
 
-            var response = await _mediator.Send(new ProfileFollowCommand("Jane Doe", false));
+            var response = await Act(() =>
+                _mediator.Send(new ProfileFollowCommand("Jane Doe", false))
+            );
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {
