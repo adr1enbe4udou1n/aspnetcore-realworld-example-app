@@ -70,6 +70,9 @@ namespace Application.Features.Articles.Queries
         public async Task<ArticlesEnvelope> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
         {
             var articles = await _context.Articles
+                .FilterByAuthor(request.Author)
+                .FilterByTag(request.Tag)
+                .FilterByFavoritedBy(request.Favorited)
                 .OrderByDescending(x => x.Id)
                 .PaginateAsync(request);
 
