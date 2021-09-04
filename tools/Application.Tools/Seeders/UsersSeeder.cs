@@ -23,16 +23,11 @@ namespace Application.Tools.Seeders
 
         public async Task Run(CancellationToken cancellationToken)
         {
-            await _context.Users.AddAsync(new User
-            {
-                Name = "admin",
-                Email = "admin@example.com",
-                Password = _passwordHasher.Hash("password"),
-            });
-
             var users = new Faker<User>()
                 .RuleFor(m => m.Name, f => f.Person.FullName)
                 .RuleFor(m => m.Email, f => f.Person.Email)
+                .RuleFor(m => m.Bio, f => f.Lorem.Paragraphs(3))
+                .RuleFor(m => m.Image, f => f.Internet.Avatar())
                 .RuleFor(m => m.Password, _passwordHasher.Hash("password"))
                 .Generate(50);
 

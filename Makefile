@@ -18,5 +18,7 @@ migration-remove:
 	dotnet ef migrations remove -p src/Infrastructure -s src/WebUI
 db-update:
 	dotnet ef database update -p src/Infrastructure -s src/WebUI $(name)
+fresh:
+	dotnet run -p tools/Application.Tools fresh
 seed:
 	dotnet run -p tools/Application.Tools seed

@@ -19,8 +19,8 @@ namespace WebUI.Controllers
             => await _mediator.Send(new CommentsListQuery(slug), cancellationToken);
 
         [HttpPost("{slug}/comments")]
-        public async Task<CommentEnvelope> Create(string slug, [FromBody] CommentCreateDTO comment, CancellationToken cancellationToken)
-            => await _mediator.Send(new CommentCreateCommand(slug, comment), cancellationToken);
+        public async Task<CommentEnvelope> Create(string slug, [FromBody] CommentCreateCommand command, CancellationToken cancellationToken)
+            => await _mediator.Send(new CommentCreateCommand(slug, command.Comment), cancellationToken);
 
         [HttpDelete("{slug}/comments/{commentId}")]
         public async Task Delete(string slug, int commentId, CancellationToken cancellationToken)

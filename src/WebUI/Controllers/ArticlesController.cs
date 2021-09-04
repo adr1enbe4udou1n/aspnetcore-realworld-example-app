@@ -18,7 +18,7 @@ namespace WebUI.Controllers
         public async Task<ArticlesEnvelope> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
             => await _mediator.Send(query, cancellationToken);
 
-        [HttpGet("{feed}")]
+        [HttpGet("feed")]
         public async Task<ArticlesEnvelope> Feed([FromQuery] ArticlesFeedQuery query, CancellationToken cancellationToken)
             => await _mediator.Send(query, cancellationToken);
 
@@ -31,8 +31,8 @@ namespace WebUI.Controllers
             => await _mediator.Send(command, cancellationToken);
 
         [HttpPut("{slug}")]
-        public async Task<ArticleEnvelope> Update(string slug, [FromBody] ArticleUpdateDTO article, CancellationToken cancellationToken)
-            => await _mediator.Send(new ArticleUpdateCommand(slug, article), cancellationToken);
+        public async Task<ArticleEnvelope> Update(string slug, [FromBody] ArticleUpdateCommand command, CancellationToken cancellationToken)
+            => await _mediator.Send(new ArticleUpdateCommand(slug, command.Article), cancellationToken);
 
         [HttpDelete("{slug}")]
         public async Task Delete(string slug, CancellationToken cancellationToken)

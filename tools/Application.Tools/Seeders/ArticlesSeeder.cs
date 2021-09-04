@@ -55,7 +55,7 @@ namespace Application.Tools.Seeders
 
             await _context.Tags.AddRangeAsync(
                 new Faker<Tag>()
-                    .RuleFor(a => a.Name, f => f.Lorem.Word())
+                    .RuleFor(a => a.Name, f => $"{f.Lorem.Word()} {f.UniqueIndex}")
                     .RuleFor(a => a.Articles, f => f.PickRandom(articles, f.Random.Number(10))
                         .Select(a => new ArticleTag { ArticleId = a.Id })
                         .ToList()

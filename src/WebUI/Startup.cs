@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebUI.Converters;
 using WebUI.Filters;
 using WebUI.Middlewares;
 
@@ -37,7 +38,10 @@ namespace WebUI
                 .AddControllers(opt =>
                 {
                     opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
-                });
+                })
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new DateTimeConverter())
+                );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebUI", Version = "v1" });

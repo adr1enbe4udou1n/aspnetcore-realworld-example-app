@@ -18,14 +18,25 @@ namespace Application.Tools
     {
         static async Task Main(string[] args)
         {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide a valid argument");
+                return;
+            }
+
             var host = CreateHostBuilder(args).Build();
 
             using var scope = host.Services.CreateScope();
 
+            var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
+
             switch (args[0])
             {
+                case "fresh":
+                    await databaseManager.Reset();
+                    break;
+
                 case "seed":
-                    var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
                     await databaseManager.Reset();
 
                     var token = new CancellationToken();
