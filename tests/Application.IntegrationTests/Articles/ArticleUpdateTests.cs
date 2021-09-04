@@ -68,7 +68,41 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanUpdateArticle()
+        public async Task CannotUpdateArticleOfOtherAuthor()
+        {
+            await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
+
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
+
+            await ActingAs(new User
+            {
+                Name = "Jane Doe",
+                Email = "jane.doe@example.com",
+            });
+
+            await _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                "test-title",
+                new ArticleUpdateDTO
+                {
+                    Body = "New Body",
+                }
+            )))
+                .Should().ThrowAsync<ForbiddenException>();
+        }
+
+        [Fact]
+        public async Task CanUpdateOwnArticle()
         {
             await ActingAs(new User
             {

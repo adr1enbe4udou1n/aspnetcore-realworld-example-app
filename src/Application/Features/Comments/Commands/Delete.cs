@@ -16,10 +16,12 @@ namespace Application.Features.Comments.Commands
     public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteCommand>
     {
         private readonly IAppDbContext _context;
+        private readonly ICurrentUser _currentUser;
 
-        public CommentDeleteHandler(IAppDbContext context)
+        public CommentDeleteHandler(IAppDbContext context, ICurrentUser currentUser)
         {
             _context = context;
+            _currentUser = currentUser;
         }
 
         public async Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
@@ -29,6 +31,11 @@ namespace Application.Features.Comments.Commands
                 x => x.Id == request.Id && x.ArticleId == article.Id,
                 cancellationToken
             );
+
+            if (article.AuthorId != _currentUser.User.Id && comment.AuthorId != _currentUser.User.Id)
+            {
+                throw new ForbiddenException();
+            }
 
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync(cancellationToken);

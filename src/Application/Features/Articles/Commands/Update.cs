@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
@@ -30,16 +31,23 @@ namespace Application.Features.Articles.Commands
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public ArticleUpdateHandler(IAppDbContext context, IMapper mapper)
+        public ArticleUpdateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
         {
             _context = context;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<ArticleEnvelope> Handle(ArticleUpdateCommand request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+
+            if (article.AuthorId != _currentUser.User.Id)
+            {
+                throw new ForbiddenException();
+            }
 
             article.Body = request.Article.Body;
 

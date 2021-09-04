@@ -114,7 +114,42 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CanDeleteComment()
+        public async Task CannotDeleteCommentOfOtherAuthor()
+        {
+            await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
+
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
+
+            var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            {
+                Body = "Thank you !",
+            }));
+
+            await ActingAs(new User
+            {
+                Name = "Jane Doe",
+                Email = "jane.doe@example.com",
+            });
+
+            await _mediator.Invoking(m => m.Send(new CommentDeleteCommand(
+                "test-title", response.Comment.Id
+            )))
+                .Should().ThrowAsync<ForbiddenException>();
+        }
+
+        [Fact]
+        public async Task CanDeleteOwnComment()
         {
             await ActingAs(new User
             {
@@ -139,6 +174,47 @@ namespace Application.IntegrationTests.Comments
             await _mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id));
 
             (await _context.Comments.AnyAsync()).Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task CanDeleteAllCommentsOfOwnArticle()
+        {
+            var user = await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
+
+            await _mediator.Send(new ArticleCreateCommand(
+                new ArticleCreateDTO
+                {
+                    Title = "Test Title",
+                    Description = "Test Description",
+                    Body = "Test Body",
+                }
+            ));
+
+            await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            {
+                Body = "Thank you !",
+            }));
+
+            await ActingAs(new User
+            {
+                Name = "Jane Doe",
+                Email = "jane.doe@example.com",
+            });
+
+            var response = await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            {
+                Body = "Thank you John !",
+            }));
+
+            await _currentUser.SetIdentifier(user.Id);
+
+            await _mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id));
+
+            (await _context.Comments.CountAsync()).Should().Be(1);
         }
     }
 }
