@@ -42,7 +42,7 @@ namespace Application.Features.Profiles.Queries
                 .Include(u => u.Followers)
                 .FindAsync(x => x.Name == request.Username, cancellationToken);
 
-            return new ProfileEnvelope(_mapper.Map<User, ProfileDTO>(user));
+            return new ProfileEnvelope(_mapper.Map<ProfileDTO>(user));
         }
     }
 }

@@ -7,6 +7,7 @@ using Application.Extensions;
 using Application.Interfaces;
 using Application.Support;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries
@@ -31,17 +32,15 @@ namespace Application.Features.Articles.Queries
         public async Task<ArticlesEnvelope> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
         {
             var articles = await _context.Articles
-                .Include(x => x.FavoredUsers)
-                .Include(x => x.Author)
-                .Include(x => x.Tags)
-                .ThenInclude(x => x.Tag)
                 .HasAuthorsFollowedBy(_currentUser.User)
                 .OrderByDescending(x => x.Id)
+                .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider, new
+                {
+                    currentUser = _currentUser.User
+                })
                 .PaginateAsync(request);
 
-            return new ArticlesEnvelope(_mapper.Map<IEnumerable<ArticleDTO>>(
-                articles.Items
-            ), articles.Total);
+            return new ArticlesEnvelope(articles.Items, articles.Total);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Application.Features.Auth.Commands
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UserEnvelope(
-                _mapper.Map<User, CurrentUserDTO>(_currentUser.User)
+                _mapper.Map<CurrentUserDTO>(_currentUser.User)
             );
         }
     }

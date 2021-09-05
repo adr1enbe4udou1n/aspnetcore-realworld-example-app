@@ -42,7 +42,7 @@ namespace Application.Features.Auth.Commands
                 throw new ValidationException("Bad credentials");
             }
 
-            return new UserEnvelope(_mapper.Map<User, CurrentUserDTO>(user));
+            return new UserEnvelope(_mapper.Map<CurrentUserDTO>(user));
         }
     }
 }

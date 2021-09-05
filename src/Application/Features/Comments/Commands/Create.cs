@@ -35,11 +35,13 @@ namespace Application.Features.Comments.Commands
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public CommentCreateHandler(IAppDbContext context, IMapper mapper)
+        public CommentCreateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
         {
             _context = context;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<CommentEnvelope> Handle(CommentCreateCommand request, CancellationToken cancellationToken)
@@ -47,6 +49,7 @@ namespace Application.Features.Comments.Commands
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
             var comment = _mapper.Map<Comment>(request.Comment);
+            comment.AuthorId = _currentUser.User.Id;
             comment.ArticleId = article.Id;
 
             await _context.Comments.AddAsync(comment, cancellationToken);

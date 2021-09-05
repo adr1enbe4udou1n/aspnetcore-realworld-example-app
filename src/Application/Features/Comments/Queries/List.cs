@@ -8,6 +8,7 @@ using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using Application.Support;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,22 +35,29 @@ namespace Application.Features.Comments.Queries
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public CommentsListHandler(IAppDbContext context, IMapper mapper)
+        public CommentsListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
         {
             _context = context;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<CommentsEnvelope> Handle(CommentsListQuery request, CancellationToken cancellationToken)
         {
-            var article = await _context.Articles
-                .Include(a => a.Comments)
-                .ThenInclude(c => c.Author)
-                .FindAsync(x => x.Slug == request.Slug, cancellationToken);
-            var comments = article.Comments.OrderByDescending(x => x.Id).ToList();
+            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-            return new CommentsEnvelope(_mapper.Map<IEnumerable<CommentDTO>>(comments));
+            var comments = await _context.Comments
+                .Where(c => c.ArticleId == article.Id)
+                .OrderByDescending(x => x.Id)
+                .ProjectTo<CommentDTO>(_mapper.ConfigurationProvider, new
+                {
+                    currentUser = _currentUser.User
+                })
+                .ToListAsync(cancellationToken);
+
+            return new CommentsEnvelope(comments);
         }
     }
 }

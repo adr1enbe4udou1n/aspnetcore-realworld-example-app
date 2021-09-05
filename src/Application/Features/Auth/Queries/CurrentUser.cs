@@ -37,7 +37,7 @@ namespace Application.Features.Auth.Queries
         public Task<UserEnvelope> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(new UserEnvelope(
-                _mapper.Map<User, CurrentUserDTO>(_currentUser.User)
+                _mapper.Map<CurrentUserDTO>(_currentUser.User)
             ));
         }
     }

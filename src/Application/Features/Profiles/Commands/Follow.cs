@@ -48,7 +48,7 @@ namespace Application.Features.Profiles.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ProfileEnvelope(_mapper.Map<User, ProfileDTO>(user));
+            return new ProfileEnvelope(_mapper.Map<ProfileDTO>(user));
         }
     }
 }

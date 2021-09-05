@@ -54,11 +54,13 @@ namespace Application.Features.Auth.Commands
 
         public async Task<UserEnvelope> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<User>(request.User);
+            var user = _mapper.Map<RegisterDTO, User>(request.User);
+            user.Password = _passwordHasher.Hash(request.User.Password);
+
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UserEnvelope(_mapper.Map<User, CurrentUserDTO>(user));
+            return new UserEnvelope(_mapper.Map<CurrentUserDTO>(user));
         }
     }
 }
