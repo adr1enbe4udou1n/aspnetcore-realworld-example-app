@@ -12,6 +12,4 @@ RUN apt-get install -y tzdata
 COPY --from=build /build/publish /app
 WORKDIR /app
 
-EXPOSE 5000
-
 ENTRYPOINT ["dotnet", "WebUI.dll"]

@@ -49,7 +49,7 @@ namespace targets
                     }
                 });
 
-            Target(Publish, DependsOn(Test),
+            Target(Publish, DependsOn(Build),
                 ForEach("src/WebUI"),
                 project =>
                 {
