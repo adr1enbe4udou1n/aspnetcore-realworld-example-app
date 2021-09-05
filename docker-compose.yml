@@ -6,6 +6,8 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings:DefaultConnection: "Server=db; Port=5432; User Id=main; Password=main; Database=main"
       Jwt:SecretKey:
+    depends_on:
+      - db
     ports:
       - "5000:5000"
 

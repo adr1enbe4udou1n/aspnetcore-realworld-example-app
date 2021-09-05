@@ -1,11 +1,7 @@
 build:
-	dotnet build
-clean:
-	dotnet clean
-restore:
-	dotnet restore
-tool-restore:
-	dotnet tool restore
+	docker-compose build
+run:
+	docker-compose up
 watch:
 	dotnet watch run --project src/WebUI
 start:
@@ -30,7 +26,3 @@ fresh:
 	dotnet run -p tools/Application.Tools fresh
 seed:
 	dotnet run -p tools/Application.Tools seed
-docker-build:
-	docker-compose build
-docker-run:
-	docker-compose up

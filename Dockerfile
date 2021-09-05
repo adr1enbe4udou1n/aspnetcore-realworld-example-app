@@ -7,7 +7,7 @@ RUN dotnet run -p targets
 
 #runtime container
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
-RUN apk add --no-cache tzdata
+RUN apt-get install -y tzdata
 
 COPY --from=build /build/publish /app
 WORKDIR /app
