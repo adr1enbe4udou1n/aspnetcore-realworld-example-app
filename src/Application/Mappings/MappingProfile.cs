@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Auth.Commands;
@@ -7,8 +9,6 @@ using Application.Features.Comments.Queries;
 using Application.Features.Profiles.Queries;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Linq;
 
 namespace Application.Mappings
 {

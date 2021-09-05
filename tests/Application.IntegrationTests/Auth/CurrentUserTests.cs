@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.Features.Auth.Commands;
 using Application.Features.Auth.Queries;
-using Application.Exceptions;
 using Domain.Entities;
-using Xunit;
 using FluentAssertions;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Auth

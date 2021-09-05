@@ -24,13 +24,13 @@ namespace Application.Support
             }
         }
 
-        public int Offset { get; set; } = 0;
+        public int Offset { get; set; }
     }
 
     public class PagedResponse<T>
     {
         public IEnumerable<T> Items { get; set; }
 
-        public int Total { get; set; } = 0;
+        public int Total { get; set; }
     }
 }

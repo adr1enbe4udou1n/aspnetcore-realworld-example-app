@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Features.Auth.Commands;
 using Application.Exceptions;
+using Application.Features.Auth.Commands;
 using Domain.Entities;
+using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using FluentAssertions;
 using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Auth

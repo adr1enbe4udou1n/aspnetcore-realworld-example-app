@@ -20,6 +20,7 @@ namespace Application.IntegrationTests.Events
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
         }
     }
 }

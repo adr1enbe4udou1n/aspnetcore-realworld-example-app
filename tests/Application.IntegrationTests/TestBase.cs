@@ -20,7 +20,10 @@ namespace Application.IntegrationTests
     [Collection("DB")]
     public class TestBase : IAsyncLifetime, IClassFixture<Startup>
     {
-        protected readonly ServiceProvider _provider;
+        private readonly ServiceProvider _provider;
+        private readonly ITestOutputHelper _output;
+        private bool _logEnabled;
+
         protected readonly IConfiguration _configuration;
 
         protected readonly IMediator _mediator;
@@ -32,10 +35,6 @@ namespace Application.IntegrationTests
         protected readonly IJwtTokenGenerator _jwtTokenGenerator;
 
         protected readonly ICurrentUser _currentUser;
-
-        protected bool _logEnabled = false;
-
-        protected readonly ITestOutputHelper _output;
 
         public TestBase(Startup factory, ITestOutputHelper output)
         {

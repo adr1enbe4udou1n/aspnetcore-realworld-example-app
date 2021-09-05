@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Features.Auth.Commands;
@@ -68,7 +69,7 @@ namespace Application.IntegrationTests.Auth
 
             var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
-            payload["id"].Should().Be(created.Id.ToString());
+            payload["id"].Should().Be(created.Id.ToString(CultureInfo.InvariantCulture));
             payload["name"].Should().Be("John Doe");
             payload["email"].Should().Be("john.doe@example.com");
         }
