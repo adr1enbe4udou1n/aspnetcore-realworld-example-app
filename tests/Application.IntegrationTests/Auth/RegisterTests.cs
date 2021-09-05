@@ -39,7 +39,7 @@ namespace Application.IntegrationTests.Auth
         public async Task UserCannotRegisterWithInvalidData(RegisterDTO user)
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new RegisterCommand(user)))
+                Mediator.Invoking(m => m.Send(new RegisterCommand(user)))
                     .Should().ThrowAsync<ValidationException>()
                     .Where(e => e.Errors.Any())
             );
@@ -56,18 +56,18 @@ namespace Application.IntegrationTests.Auth
             });
 
             var currentUser = await Act(() =>
-                _mediator.Send(request)
+                Mediator.Send(request)
             );
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("john.doe@example.com");
 
-            var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
+            var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
             created.Should().NotBeNull();
 
-            _passwordHasher.Check("password", created.Password).Should().BeTrue();
+            PasswordHasher.Check("password", created.Password).Should().BeTrue();
 
-            var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
+            var payload = JwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
             payload["id"].Should().Be(created.Id.ToString(CultureInfo.InvariantCulture));
             payload["name"].Should().Be("John Doe");
@@ -77,16 +77,16 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task UserCannotRegisterTwice()
         {
-            await _context.Users.AddAsync(new User
+            await Context.Users.AddAsync(new User
             {
                 Email = "john.doe@example.com",
                 Name = "John Doe",
                 Password = "password",
             });
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new RegisterCommand(
+                Mediator.Invoking(m => m.Send(new RegisterCommand(
                     new RegisterDTO
                     {
                         Email = "john.doe@example.com",

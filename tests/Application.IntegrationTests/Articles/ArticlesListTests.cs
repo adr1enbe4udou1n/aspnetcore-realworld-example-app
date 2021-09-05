@@ -22,7 +22,7 @@ namespace Application.IntegrationTests.Articles
             await CreateArticles();
 
             var response = await Act(() =>
-                _mediator.Send(new ArticlesListQuery
+                Mediator.Send(new ArticlesListQuery
                 {
                     Limit = 30,
                     Offset = 10
@@ -55,7 +55,7 @@ namespace Application.IntegrationTests.Articles
             await CreateArticles();
 
             var response = await Act(() =>
-                _mediator.Send(new ArticlesListQuery
+                Mediator.Send(new ArticlesListQuery
                 {
                     Limit = 10,
                     Offset = 0,
@@ -89,7 +89,7 @@ namespace Application.IntegrationTests.Articles
             await CreateArticles();
 
             var response = await Act(() =>
-                _mediator.Send(new ArticlesListQuery
+                Mediator.Send(new ArticlesListQuery
                 {
                     Limit = 10,
                     Offset = 0,
@@ -133,11 +133,11 @@ namespace Application.IntegrationTests.Articles
 
             foreach (var a in articles)
             {
-                await _mediator.Send(new ArticleFavoriteCommand(a, true));
+                await Mediator.Send(new ArticleFavoriteCommand(a, true));
             }
 
             var response = await Act(() =>
-                _mediator.Send(new ArticlesListQuery
+                Mediator.Send(new ArticlesListQuery
                 {
                     Limit = 10,
                     Offset = 0,
@@ -172,10 +172,10 @@ namespace Application.IntegrationTests.Articles
         {
             await CreateArticles();
 
-            await _mediator.Send(new ProfileFollowCommand("John Doe", true));
+            await Mediator.Send(new ProfileFollowCommand("John Doe", true));
 
             var response = await Act(() =>
-                _mediator.Send(new ArticlesFeedQuery
+                Mediator.Send(new ArticlesFeedQuery
                 {
                     Limit = 10,
                     Offset = 0
@@ -230,7 +230,7 @@ namespace Application.IntegrationTests.Articles
 
             foreach (var a in articles)
             {
-                await _mediator.Send(new ArticleCreateCommand(
+                await Mediator.Send(new ArticleCreateCommand(
                     new ArticleCreateDTO
                     {
                         Title = a,

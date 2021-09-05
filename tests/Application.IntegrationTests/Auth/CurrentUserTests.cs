@@ -24,7 +24,7 @@ namespace Application.IntegrationTests.Auth
             });
 
             var currentUser = await Act(() =>
-                _mediator.Send(new CurrentUserQuery())
+                Mediator.Send(new CurrentUserQuery())
             );
 
             currentUser.User.Username.Should().Be("John Doe");
@@ -35,7 +35,7 @@ namespace Application.IntegrationTests.Auth
         public async Task GuestUserCannotFetchInfos()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new CurrentUserQuery()))
+                Mediator.Invoking(m => m.Send(new CurrentUserQuery()))
                     .Should().ThrowAsync<UnauthorizedException>()
             );
         }

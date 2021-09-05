@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -31,7 +32,7 @@ namespace Infrastructure.Security
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim("id", user.Id.ToString()),
+                    new Claim("id", user.Id.ToString(CultureInfo.InvariantCulture)),
                     new Claim("name", user.Name),
                     new Claim("email", user.Email)
                 }),
@@ -64,7 +65,7 @@ namespace Infrastructure.Security
 
         public async Task SetCurrentUserFromToken(string token)
         {
-            var userId = long.Parse(DecodeToken(token)["id"]);
+            var userId = long.Parse(DecodeToken(token)["id"], CultureInfo.InvariantCulture);
 
             await _currentUser.SetIdentifier(userId);
         }

@@ -35,7 +35,8 @@ namespace Application.Features.Auth.Commands
 
         public async Task<UserEnvelope> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.Where(x => x.Email == request.User.Email).SingleOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.Email == request.User.Email)
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (user == null || !_passwordHasher.Check(request.User.Password, user.Password))
             {

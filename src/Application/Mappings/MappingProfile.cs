@@ -37,7 +37,7 @@ namespace Application.Mappings
                     src => currentUser != null ? src.FavoredUsers.Any(f => f.User.Id == currentUser.Id) : false)
                 )
                 .ForMember(dest => dest.Favorited, opt => opt.MapFrom<FavoriteResolver>())
-                .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count()));
+                .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count));
             CreateMap<User, AuthorDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
 

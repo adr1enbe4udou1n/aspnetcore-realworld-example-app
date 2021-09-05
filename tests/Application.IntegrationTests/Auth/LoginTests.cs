@@ -32,16 +32,16 @@ namespace Application.IntegrationTests.Auth
         [MemberData(nameof(Data))]
         public async Task UserCannotLoginWithInvalidData(LoginDTO credentials)
         {
-            await _context.Users.AddAsync(new User
+            await Context.Users.AddAsync(new User
             {
                 Email = "john.doe@example.com",
                 Name = "John Doe",
-                Password = _passwordHasher.Hash("password"),
+                Password = PasswordHasher.Hash("password"),
             });
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new LoginCommand(credentials)))
+                Mediator.Invoking(m => m.Send(new LoginCommand(credentials)))
                     .Should().ThrowAsync<ValidationException>()
             );
         }
@@ -53,13 +53,13 @@ namespace Application.IntegrationTests.Auth
             {
                 Email = "john.doe@example.com",
                 Name = "John Doe",
-                Password = _passwordHasher.Hash("password"),
+                Password = PasswordHasher.Hash("password"),
             };
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await Context.Users.AddAsync(user);
+            await Context.SaveChangesAsync();
 
             var currentUser = await Act(() =>
-                _mediator.Send(new LoginCommand(
+                Mediator.Send(new LoginCommand(
                     new LoginDTO
                     {
                         Email = "john.doe@example.com",
@@ -71,7 +71,7 @@ namespace Application.IntegrationTests.Auth
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("john.doe@example.com");
 
-            var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
+            var payload = JwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
             payload["id"].Should().Be(user.Id.ToString(CultureInfo.InvariantCulture));
             payload["name"].Should().Be("John Doe");

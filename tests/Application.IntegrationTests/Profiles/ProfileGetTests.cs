@@ -17,17 +17,17 @@ namespace Application.IntegrationTests.Profiles
         [Fact]
         public async Task CanGetProfile()
         {
-            await _context.Users.AddAsync(new User
+            await Context.Users.AddAsync(new User
             {
                 Name = "John Doe",
                 Email = "john.doe@example.com",
                 Bio = "My Bio",
                 Image = "https://i.pravatar.cc/300",
             });
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             var response = await Act(() =>
-                _mediator.Send(new ProfileGetQuery("John Doe"))
+                Mediator.Send(new ProfileGetQuery("John Doe"))
             );
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
@@ -43,7 +43,7 @@ namespace Application.IntegrationTests.Profiles
         public async Task CannotGetNotExistingProfile()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ProfileGetQuery("John Doe")))
+                Mediator.Invoking(m => m.Send(new ProfileGetQuery("John Doe")))
                     .Should().ThrowAsync<NotFoundException>()
             );
         }
@@ -71,7 +71,7 @@ namespace Application.IntegrationTests.Profiles
             });
 
             var response = await Act(() =>
-                _mediator.Send(new ProfileGetQuery("Jane Doe"))
+                Mediator.Send(new ProfileGetQuery("Jane Doe"))
             );
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO

@@ -20,7 +20,7 @@ namespace Application.IntegrationTests.Articles
         public async Task GuestCannotFavoriteArticle()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
+                Mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
                     "slug-article", true
                 )))
                     .Should().ThrowAsync<UnauthorizedException>()
@@ -37,7 +37,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
+                Mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
                     "slug-article", true
                 )))
                     .Should().ThrowAsync<NotFoundException>()
@@ -53,7 +53,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -63,7 +63,7 @@ namespace Application.IntegrationTests.Articles
             ));
 
             var response = await Act(() =>
-                _mediator.Send(new ArticleFavoriteCommand("test-title", true))
+                Mediator.Send(new ArticleFavoriteCommand("test-title", true))
             );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
@@ -72,7 +72,7 @@ namespace Application.IntegrationTests.Articles
                 FavoritesCount = 1,
             }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
 
-            (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
+            (await Context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -93,10 +93,10 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
+            await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
 
             var response = await Act(() =>
-                _mediator.Send(new ArticleFavoriteCommand("test-title", false))
+                Mediator.Send(new ArticleFavoriteCommand("test-title", false))
             );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
@@ -105,7 +105,7 @@ namespace Application.IntegrationTests.Articles
                 FavoritesCount = 0,
             }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
 
-            (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
+            (await Context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
         }
     }
 }

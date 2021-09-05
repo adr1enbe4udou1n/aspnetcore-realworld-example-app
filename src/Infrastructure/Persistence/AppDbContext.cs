@@ -43,19 +43,19 @@ namespace Infrastructure.Persistence
             }
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            builder.Entity<User>()
+            modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email).IsUnique()
             ;
 
-            builder.Entity<Tag>()
+            modelBuilder.Entity<Tag>()
                 .HasIndex(u => u.Name).IsUnique()
             ;
 
-            builder.Entity<Article>(b =>
+            modelBuilder.Entity<Article>(b =>
             {
                 b.HasIndex(u => u.Slug).IsUnique();
 
@@ -66,7 +66,7 @@ namespace Infrastructure.Persistence
                 ;
             });
 
-            builder.Entity<ArticleTag>(b =>
+            modelBuilder.Entity<ArticleTag>(b =>
             {
                 b.HasKey(e => new { e.ArticleId, e.TagId });
 
@@ -79,7 +79,7 @@ namespace Infrastructure.Persistence
                     .HasForeignKey(e => e.TagId);
             });
 
-            builder.Entity<ArticleFavorite>(b =>
+            modelBuilder.Entity<ArticleFavorite>(b =>
             {
                 b.HasKey(e => new { e.ArticleId, e.UserId });
 
@@ -92,7 +92,7 @@ namespace Infrastructure.Persistence
                     .HasForeignKey(e => e.UserId);
             });
 
-            builder.Entity<FollowerUser>(b =>
+            modelBuilder.Entity<FollowerUser>(b =>
             {
                 b.HasKey(e => new { e.FollowingId, e.FollowerId });
 

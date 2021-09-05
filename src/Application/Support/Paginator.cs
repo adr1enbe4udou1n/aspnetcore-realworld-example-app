@@ -10,7 +10,7 @@ namespace Application.Support
     {
         public const int MaxLimit = 20;
 
-        public int _limit = MaxLimit;
+        private int _limit = MaxLimit;
 
         public int Limit
         {

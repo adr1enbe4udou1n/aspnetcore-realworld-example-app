@@ -82,7 +82,7 @@ namespace Application.Features.Articles.Queries
                 {
                     currentUser = _currentUser.User
                 })
-                .PaginateAsync(request);
+                .PaginateAsync(request, cancellationToken);
 
             return new ArticlesEnvelope(articles.Items, articles.Total);
         }

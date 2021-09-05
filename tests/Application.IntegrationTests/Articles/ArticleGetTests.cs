@@ -26,7 +26,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleGetQuery(
+                Mediator.Invoking(m => m.Send(new ArticleGetQuery(
                     "slug-article"
                 )))
                     .Should().ThrowAsync<NotFoundException>()
@@ -44,7 +44,7 @@ namespace Application.IntegrationTests.Articles
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -55,7 +55,7 @@ namespace Application.IntegrationTests.Articles
             ));
 
             var response = await Act(() =>
-                _mediator.Send(new ArticleGetQuery("test-title"))
+                Mediator.Send(new ArticleGetQuery("test-title"))
             );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO

@@ -22,7 +22,7 @@ namespace Application.IntegrationTests.Comments
         public async Task CanListAllCommentsOfNotExistingArticle()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new CommentsListQuery("test-title")))
+                Mediator.Invoking(m => m.Send(new CommentsListQuery("test-title")))
                     .Should().ThrowAsync<NotFoundException>()
             );
         }
@@ -38,7 +38,7 @@ namespace Application.IntegrationTests.Comments
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -56,7 +56,7 @@ namespace Application.IntegrationTests.Comments
 
             foreach (var c in comments)
             {
-                await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
                 {
                     Body = $"This is John, {c} !",
                 }));
@@ -72,14 +72,14 @@ namespace Application.IntegrationTests.Comments
 
             foreach (var c in comments)
             {
-                await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
                 {
                     Body = $"This is Jane, {c} !",
                 }));
             }
 
             var response = await Act(() =>
-                _mediator.Send(new CommentsListQuery("test-title"))
+                Mediator.Send(new CommentsListQuery("test-title"))
             );
 
             response.Comments.Count().Should().Be(10);

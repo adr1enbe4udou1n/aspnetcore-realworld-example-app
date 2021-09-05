@@ -20,21 +20,20 @@ namespace Application.IntegrationTests
     [Collection("DB")]
     public class TestBase : IAsyncLifetime, IClassFixture<Startup>
     {
-        private readonly ServiceProvider _provider;
         private readonly ITestOutputHelper _output;
         private bool _logEnabled;
 
-        protected readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
-        protected readonly IMediator _mediator;
+        protected IMediator Mediator { get; private set; }
 
-        protected readonly AppDbContext _context;
+        protected AppDbContext Context { get; private set; }
 
-        protected readonly IPasswordHasher _passwordHasher;
+        protected IPasswordHasher PasswordHasher { get; private set; }
 
-        protected readonly IJwtTokenGenerator _jwtTokenGenerator;
+        protected IJwtTokenGenerator JwtTokenGenerator { get; private set; }
 
-        protected readonly ICurrentUser _currentUser;
+        protected ICurrentUser CurrentUser { get; private set; }
 
         public TestBase(Startup factory, ITestOutputHelper output)
         {
@@ -53,11 +52,11 @@ namespace Application.IntegrationTests
                     }))
                 .BuildServiceProvider();
 
-            _mediator = provider.GetRequiredService<IMediator>();
-            _passwordHasher = provider.GetRequiredService<IPasswordHasher>();
-            _jwtTokenGenerator = provider.GetRequiredService<IJwtTokenGenerator>();
-            _context = provider.GetRequiredService<AppDbContext>();
-            _currentUser = provider.GetRequiredService<ICurrentUser>();
+            Mediator = provider.GetRequiredService<IMediator>();
+            PasswordHasher = provider.GetRequiredService<IPasswordHasher>();
+            JwtTokenGenerator = provider.GetRequiredService<IJwtTokenGenerator>();
+            Context = provider.GetRequiredService<AppDbContext>();
+            CurrentUser = provider.GetRequiredService<ICurrentUser>();
         }
 
         public Task DisposeAsync()
@@ -82,28 +81,28 @@ namespace Application.IntegrationTests
 
         protected async Task<User> ActingAs(User user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await Context.Users.AddAsync(user);
+            await Context.SaveChangesAsync();
 
-            await _currentUser.SetIdentifier(user.Id);
+            await CurrentUser.SetIdentifier(user.Id);
             return user;
         }
 
         protected async Task<User> ActingAsExistingUser(string name)
         {
-            var user = await _context.Users.Where(u => u.Name == name).SingleAsync();
+            var user = await Context.Users.Where(u => u.Name == name).SingleAsync();
 
-            await _currentUser.SetIdentifier(user.Id);
+            await CurrentUser.SetIdentifier(user.Id);
             return user;
         }
 
         protected async Task<TResult> Act<TResult>(Func<Task<TResult>> action)
         {
-            _context.ChangeTracker.Clear();
+            Context.ChangeTracker.Clear();
             SqlCounterLogger.CurrentCounter = 0;
 
             _logEnabled = true;
-            await _currentUser.Fresh();
+            await CurrentUser.Fresh();
             var result = await action();
             _logEnabled = false;
 

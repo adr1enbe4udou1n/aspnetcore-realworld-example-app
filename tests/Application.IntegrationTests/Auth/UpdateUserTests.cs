@@ -31,13 +31,13 @@ namespace Application.IntegrationTests.Auth
             });
 
             var currentUser = await Act(() =>
-                _mediator.Send(request)
+                Mediator.Send(request)
             );
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("jane.doe@example.com");
 
-            var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
+            var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
             created.Should().NotBeNull();
         }
 
@@ -45,7 +45,7 @@ namespace Application.IntegrationTests.Auth
         public async Task GuestUserCannotUpdateInfos()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new UpdateUserCommand(
+                Mediator.Invoking(m => m.Send(new UpdateUserCommand(
                     new UpdateUserDTO
                     {
                         Email = "jane.doe@example.com"
@@ -58,12 +58,12 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task LoggedUserCannotUpdateWithAlreadyUsedEmail()
         {
-            var created = await _context.Users.AddAsync(new User
+            var created = await Context.Users.AddAsync(new User
             {
                 Name = "John Doe",
                 Email = "jane.doe@example.com"
             });
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             await ActingAs(new User
             {
@@ -72,7 +72,7 @@ namespace Application.IntegrationTests.Auth
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new UpdateUserCommand(
+                Mediator.Invoking(m => m.Send(new UpdateUserCommand(
                     new UpdateUserDTO
                     {
                         Email = "jane.doe@example.com",

@@ -52,7 +52,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Existing Title",
@@ -62,7 +62,7 @@ namespace Application.IntegrationTests.Articles
             ));
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
+                Mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
                     .Should().ThrowAsync<ValidationException>()
             );
         }
@@ -71,7 +71,7 @@ namespace Application.IntegrationTests.Articles
         public async Task GuestCannotCreateArticle()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleCreateCommand(
+                Mediator.Invoking(m => m.Send(new ArticleCreateCommand(
                     new ArticleCreateDTO()
                 )))
                     .Should().ThrowAsync<UnauthorizedException>()
@@ -89,14 +89,14 @@ namespace Application.IntegrationTests.Articles
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await _context.Tags.AddAsync(new Tag
+            await Context.Tags.AddAsync(new Tag
             {
                 Name = "Existing Tag"
             });
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             var response = await Act(() =>
-                _mediator.Send(new ArticleCreateCommand(
+                Mediator.Send(new ArticleCreateCommand(
                     new ArticleCreateDTO
                     {
                         Title = "Test Article",
@@ -122,8 +122,8 @@ namespace Application.IntegrationTests.Articles
                 TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
             }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-            (await _context.Articles.AnyAsync()).Should().BeTrue();
-            (await _context.Tags.CountAsync()).Should().Be(3);
+            (await Context.Articles.AnyAsync()).Should().BeTrue();
+            (await Context.Tags.CountAsync()).Should().Be(3);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Application.IntegrationTests.Articles
         public async Task GuestCannotDeleteArticle()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleDeleteCommand("slug-article")))
+                Mediator.Invoking(m => m.Send(new ArticleDeleteCommand("slug-article")))
                     .Should().ThrowAsync<UnauthorizedException>()
             );
         }
@@ -35,7 +35,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
+                Mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
                     "slug-article"
                 )))
                     .Should().ThrowAsync<NotFoundException>()
@@ -51,7 +51,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -67,7 +67,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
+                Mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
                     "test-title"
                 )))
                     .Should().ThrowAsync<ForbiddenException>()
@@ -83,7 +83,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -94,22 +94,22 @@ namespace Application.IntegrationTests.Articles
 
             for (int i = 1; i <= 5; i++)
             {
-                await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
                 {
                     Body = $"This is John, Test Comment {i} !",
                 }));
             }
 
-            await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
+            await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
 
             await Act(() =>
-                _mediator.Send(new ArticleDeleteCommand(
+                Mediator.Send(new ArticleDeleteCommand(
                     "test-title"
                 ))
             );
 
-            (await _context.Articles.AnyAsync()).Should().BeFalse();
-            (await _context.Comments.AnyAsync()).Should().BeFalse();
+            (await Context.Articles.AnyAsync()).Should().BeFalse();
+            (await Context.Comments.AnyAsync()).Should().BeFalse();
         }
     }
 }

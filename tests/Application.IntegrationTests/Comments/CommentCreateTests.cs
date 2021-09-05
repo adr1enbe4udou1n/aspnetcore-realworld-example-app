@@ -36,7 +36,7 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -46,7 +46,7 @@ namespace Application.IntegrationTests.Comments
             ));
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new CommentCreateCommand("test-title", comment)))
+                Mediator.Invoking(m => m.Send(new CommentCreateCommand("test-title", comment)))
                     .Should().ThrowAsync<ValidationException>()
             );
         }
@@ -61,7 +61,7 @@ namespace Application.IntegrationTests.Comments
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new CommentCreateCommand(
+                Mediator.Invoking(m => m.Send(new CommentCreateCommand(
                     "slug-article", new CommentCreateDTO
                     {
                         Body = "Test Body",
@@ -75,7 +75,7 @@ namespace Application.IntegrationTests.Comments
         public async Task GuestCannotCreateComment()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new CommentCreateCommand(
+                Mediator.Invoking(m => m.Send(new CommentCreateCommand(
                     "slug-article", new CommentCreateDTO()
                 )))
                     .Should().ThrowAsync<UnauthorizedException>()
@@ -93,7 +93,7 @@ namespace Application.IntegrationTests.Comments
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -103,7 +103,7 @@ namespace Application.IntegrationTests.Comments
             ));
 
             var response = await Act(() =>
-                _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
                 {
                     Body = "Thank you !",
                 }))
@@ -120,7 +120,7 @@ namespace Application.IntegrationTests.Comments
                 },
             }, options => options.Excluding(x => x.Id).Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-            (await _context.Comments.AnyAsync()).Should().BeTrue();
+            (await Context.Comments.AnyAsync()).Should().BeTrue();
         }
     }
 }

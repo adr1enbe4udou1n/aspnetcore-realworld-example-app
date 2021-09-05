@@ -31,11 +31,11 @@ namespace Application.Extensions
             CancellationToken cancellationToken = default
         )
         {
-            var count = await source.CountAsync();
+            var count = await source.CountAsync(cancellationToken);
             var items = await source
                 .Skip(query.Offset)
                 .Take(query.Limit)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new PagedResponse<TSource>
             {

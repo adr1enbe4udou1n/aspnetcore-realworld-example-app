@@ -35,7 +35,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
                     "test-title", article
                 )))
                     .Should().ThrowAsync<ValidationException>()
@@ -52,7 +52,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
                     "slug-article",
                     new ArticleUpdateDTO
                     {
@@ -67,7 +67,7 @@ namespace Application.IntegrationTests.Articles
         public async Task GuestCannotUpdateArticle()
         {
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
                     "slug-article", new ArticleUpdateDTO()
                 )))
                     .Should().ThrowAsync<UnauthorizedException>()
@@ -83,7 +83,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -99,7 +99,7 @@ namespace Application.IntegrationTests.Articles
             });
 
             await Act(() =>
-                _mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
                     "test-title",
                     new ArticleUpdateDTO
                     {
@@ -119,7 +119,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await _mediator.Send(new ArticleCreateCommand(
+            await Mediator.Send(new ArticleCreateCommand(
                 new ArticleCreateDTO
                 {
                     Title = "Test Title",
@@ -129,7 +129,7 @@ namespace Application.IntegrationTests.Articles
             ));
 
             var response = await Act(() =>
-                _mediator.Send(new ArticleUpdateCommand(
+                Mediator.Send(new ArticleUpdateCommand(
                     "test-title",
                     new ArticleUpdateDTO
                     {
@@ -151,7 +151,7 @@ namespace Application.IntegrationTests.Articles
                 TagList = new List<string>(),
             }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-            (await _context.Articles.AnyAsync(x => x.Body == "New Body")).Should().BeTrue();
+            (await Context.Articles.AnyAsync(x => x.Body == "New Body")).Should().BeTrue();
         }
     }
 }
