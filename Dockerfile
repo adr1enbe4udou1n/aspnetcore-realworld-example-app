@@ -1,15 +1,7 @@
-#build container
-FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
-
-WORKDIR /build
-COPY . .
-RUN dotnet run -p targets
-
-#runtime container
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 RUN apt-get install -y tzdata
 
-COPY --from=build /build/publish /app
+COPY /publish /app
 WORKDIR /app
 
 ENTRYPOINT ["dotnet", "WebUI.dll"]

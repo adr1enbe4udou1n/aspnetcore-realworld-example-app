@@ -3,7 +3,8 @@ services:
   app:
     build: .
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+
       ConnectionStrings:DefaultConnection: "Server=db; Port=5432; User Id=main; Password=main; Database=main"
       Jwt:SecretKey: "super secret key"
     depends_on:
@@ -17,4 +18,3 @@ services:
       POSTGRES_USER: main
       POSTGRES_PASSWORD: main
       POSTGRES_DB: main
-    ports: [5432]

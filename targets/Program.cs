@@ -49,8 +49,8 @@ namespace targets
                     }
                 });
 
-            Target(Publish, DependsOn(Build),
-                ForEach("src/WebUI"),
+            Target(Publish, DependsOn(Test),
+                ForEach("src/WebUI", "tools/Application.Tools"),
                 project =>
                 {
                     Run("dotnet",

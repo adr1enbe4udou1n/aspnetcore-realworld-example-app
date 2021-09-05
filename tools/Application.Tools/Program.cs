@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Tools.Interfaces;
@@ -9,8 +8,7 @@ using Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Npgsql;
-using Respawn;
+using static Bullseye.Targets;
 
 namespace Application.Tools
 {
@@ -18,35 +16,29 @@ namespace Application.Tools
     {
         static async Task Main(string[] args)
         {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Please provide a valid argument");
-                return;
-            }
-
             var host = CreateHostBuilder(args).Build();
 
             using var scope = host.Services.CreateScope();
 
-            var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
-
-            switch (args[0])
-            {
-                case "fresh":
+            Target("fresh", "Wipe all data from database",
+                async () =>
+                {
+                    var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
                     await databaseManager.Reset();
-                    break;
+                });
 
-                case "seed":
-                    await databaseManager.Reset();
-
+            Target("seed", "Seed data to database", DependsOn("fresh"),
+                async () =>
+                {
                     var token = new CancellationToken();
 
                     foreach (var seeder in scope.ServiceProvider.GetRequiredService<IEnumerable<ISeeder>>())
                     {
                         await seeder.Run(token);
                     }
-                    break;
-            }
+                });
+
+            await RunTargetsAndExitAsync(args);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
