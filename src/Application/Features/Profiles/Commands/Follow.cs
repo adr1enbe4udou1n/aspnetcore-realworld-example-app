@@ -6,6 +6,7 @@ using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands
@@ -33,6 +34,10 @@ namespace Application.Features.Profiles.Commands
 
             if (request.Follow)
             {
+                if (user.Id == _currentUser.User.Id)
+                {
+                    throw new ValidationException("You cannot follow yourself");
+                }
                 if (!user.IsFollowedBy(_currentUser.User))
                 {
                     user.Followers.Add(new FollowerUser { Follower = _currentUser.User });

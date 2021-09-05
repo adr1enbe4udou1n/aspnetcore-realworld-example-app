@@ -7,6 +7,7 @@ using Application.Features.Profiles.Commands;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
@@ -24,6 +25,23 @@ namespace Application.IntegrationTests.Profiles
                 _mediator.Invoking(m => m.Send(new ProfileFollowCommand("john", true)))
                     .Should().ThrowAsync<UnauthorizedException>()
             );
+        }
+
+        [Fact]
+        public async Task CannotFollowHimself()
+        {
+            await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
+
+            await Act(() =>
+                _mediator.Invoking(m => m.Send(new ProfileFollowCommand("John Doe", true)))
+                    .Should().ThrowAsync<ValidationException>().WithMessage("You cannot follow yourself")
+            );
+
+            (await _context.Set<FollowerUser>().CountAsync()).Should().Be(0);
         }
 
         [Fact]
