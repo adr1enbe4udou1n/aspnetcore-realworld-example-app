@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Features.Articles.Commands;
+using Application.Features.Comments.Commands;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -74,7 +75,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanDeleteOwnArticle()
+        public async Task CanDeleteOwnArticleWithAllComments()
         {
             await ActingAs(new User
             {
@@ -91,6 +92,16 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
+            for (int i = 1; i <= 5; i++)
+            {
+                await _mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                {
+                    Body = $"This is John, Test Comment {i} !",
+                }));
+            }
+
+            await _mediator.Send(new ArticleFavoriteCommand("test-title", true));
+
             await Act(() =>
                 _mediator.Send(new ArticleDeleteCommand(
                     "test-title"
@@ -98,6 +109,7 @@ namespace Application.IntegrationTests.Articles
             );
 
             (await _context.Articles.AnyAsync()).Should().BeFalse();
+            (await _context.Comments.AnyAsync()).Should().BeFalse();
         }
     }
 }

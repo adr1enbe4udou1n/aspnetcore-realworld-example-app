@@ -61,19 +61,27 @@ namespace Application.Features.Articles.Commands
         public async Task<ArticleEnvelope> Handle(ArticleCreateCommand request, CancellationToken cancellationToken)
         {
             var article = _mapper.Map<Article>(request.Article);
+            var existingTags = await _context.Tags
+                .Where(
+                    x => request.Article.TagList.Any(t => t == x.Name)
+                )
+                .ToListAsync(cancellationToken);
 
             article.AuthorId = _currentUser.User.Id;
             article.Slug = _slugifier.Generate(request.Article.Title);
 
-            article.Tags = request.Article.TagList.Where(x => !String.IsNullOrEmpty(x)).Select(x =>
-            {
-                var tag = _context.Tags.FirstOrDefault(t => t.Name == x);
-
-                return new ArticleTag
+            article.Tags = request.Article.TagList
+                .Where(x => !String.IsNullOrEmpty(x))
+                .Select(x =>
                 {
-                    Tag = tag == null ? new Tag { Name = x } : tag
-                };
-            }).ToList();
+                    var tag = existingTags.FirstOrDefault(t => t.Name == x);
+
+                    return new ArticleTag
+                    {
+                        Tag = tag == null ? new Tag { Name = x } : tag
+                    };
+                })
+                .ToList();
 
             await _context.Articles.AddAsync(article, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);

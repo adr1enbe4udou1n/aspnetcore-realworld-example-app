@@ -8,9 +8,11 @@ watch:
 	dotnet watch run --project src/WebUI
 start:
 	dotnet run --project src/WebUI
-test-app:
-	dotnet watch test --project tests/Application.IntegrationTests
-test-web:
+test:
+	dotnet test -l:"console;verbosity=detailed"
+test-watch-app:
+	dotnet watch test --project tests/Application.IntegrationTests -l:"console;verbosity=detailed"
+test-watch-web:
 	dotnet watch test --project tests/WebUI.IntegrationTests
 migration-add:
 	dotnet ef migrations add -p src/Infrastructure -s src/WebUI -o Persistence/Migrations $(name)
