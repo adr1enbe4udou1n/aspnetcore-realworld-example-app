@@ -1,0 +1,18 @@
+version: "3"
+services:
+  conduit:
+    build: .
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings:DefaultConnection: "Server=db; Port=5432; User Id=main; Password=main; Database=main"
+      Jwt:SecretKey:
+    ports:
+      - "5000:5000"
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: main
+      POSTGRES_DB: main
+    ports: [5432]
