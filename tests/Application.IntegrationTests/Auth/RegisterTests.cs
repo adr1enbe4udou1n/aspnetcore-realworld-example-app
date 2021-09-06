@@ -38,11 +38,9 @@ namespace Application.IntegrationTests.Auth
         [MemberData(nameof(Data))]
         public async Task UserCannotRegisterWithInvalidData(RegisterDTO user)
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new RegisterCommand(user)))
-                    .Should().ThrowAsync<ValidationException>()
-                    .Where(e => e.Errors.Any())
-            );
+            await this.Invoking(x => x.Act(new RegisterCommand(user)))
+                .Should().ThrowAsync<ValidationException>()
+                .Where(e => e.Errors.Any());
         }
 
         [Fact]
@@ -55,9 +53,7 @@ namespace Application.IntegrationTests.Auth
                 Password = "password",
             });
 
-            var currentUser = await Act(() =>
-                Mediator.Send(request)
-            );
+            var currentUser = await Act(request);
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("john.doe@example.com");
@@ -85,8 +81,8 @@ namespace Application.IntegrationTests.Auth
             });
             await Context.SaveChangesAsync();
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new RegisterCommand(
+            await this.Invoking(x => x.Act(
+                new RegisterCommand(
                     new RegisterDTO
                     {
                         Email = "john.doe@example.com",
@@ -96,8 +92,7 @@ namespace Application.IntegrationTests.Auth
                 )))
                     .Should().ThrowAsync<ValidationException>()
                     .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
-                        .ErrorMessage == "Email is already used")
-            );
+                        .ErrorMessage == "Email is already used");
         }
     }
 }

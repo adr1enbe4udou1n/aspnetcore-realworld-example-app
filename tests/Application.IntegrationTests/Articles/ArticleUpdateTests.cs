@@ -34,12 +34,10 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                    "test-title", article
-                )))
-                    .Should().ThrowAsync<ValidationException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleUpdateCommand(
+                "test-title", article
+            )))
+                .Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
@@ -51,27 +49,23 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                    "slug-article",
-                    new ArticleUpdateDTO
-                    {
-                        Body = "New Body",
-                    }
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleUpdateCommand(
+                "slug-article",
+                new ArticleUpdateDTO
+                {
+                    Body = "New Body",
+                }
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
         public async Task GuestCannotUpdateArticle()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
-                    "slug-article", new ArticleUpdateDTO()
-                )))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleUpdateCommand(
+                "slug-article", new ArticleUpdateDTO()
+            )))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -98,16 +92,15 @@ namespace Application.IntegrationTests.Articles
                 Email = "jane.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleUpdateCommand(
+            await this.Invoking(x => x.Act(
+                new ArticleUpdateCommand(
                     "test-title",
                     new ArticleUpdateDTO
                     {
                         Body = "New Body",
                     }
                 )))
-                    .Should().ThrowAsync<ForbiddenException>()
-            );
+                    .Should().ThrowAsync<ForbiddenException>();
         }
 
         [Fact]
@@ -128,15 +121,13 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticleUpdateCommand(
-                    "test-title",
-                    new ArticleUpdateDTO
-                    {
-                        Body = "New Body",
-                    }
-                ))
-            );
+            var response = await Act(new ArticleUpdateCommand(
+                "test-title",
+                new ArticleUpdateDTO
+                {
+                    Body = "New Body",
+                }
+            ));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

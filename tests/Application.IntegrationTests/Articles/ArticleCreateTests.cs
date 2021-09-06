@@ -61,21 +61,17 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleCreateCommand(article)))
-                    .Should().ThrowAsync<ValidationException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleCreateCommand(article)))
+                .Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
         public async Task GuestCannotCreateArticle()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleCreateCommand(
-                    new ArticleCreateDTO()
-                )))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleCreateCommand(
+                new ArticleCreateDTO()
+            )))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -95,8 +91,8 @@ namespace Application.IntegrationTests.Articles
             });
             await Context.SaveChangesAsync();
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticleCreateCommand(
+            var response = await Act(
+                new ArticleCreateCommand(
                     new ArticleCreateDTO
                     {
                         Title = "Test Article",
@@ -104,7 +100,7 @@ namespace Application.IntegrationTests.Articles
                         Body = "Test Body",
                         TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" }
                     }
-                ))
+                )
             );
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO

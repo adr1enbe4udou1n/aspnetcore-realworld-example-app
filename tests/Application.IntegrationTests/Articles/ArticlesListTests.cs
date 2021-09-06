@@ -21,13 +21,11 @@ namespace Application.IntegrationTests.Articles
         {
             await CreateArticles();
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticlesListQuery
-                {
-                    Limit = 30,
-                    Offset = 10
-                })
-            );
+            var response = await Act(new ArticlesListQuery
+            {
+                Limit = 30,
+                Offset = 10
+            });
 
             response.Articles.Count().Should().Be(20);
             response.ArticlesCount.Should().Be(50);
@@ -54,14 +52,12 @@ namespace Application.IntegrationTests.Articles
         {
             await CreateArticles();
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticlesListQuery
-                {
-                    Limit = 10,
-                    Offset = 0,
-                    Author = "John"
-                })
-            );
+            var response = await Act(new ArticlesListQuery
+            {
+                Limit = 10,
+                Offset = 0,
+                Author = "John"
+            });
 
             response.Articles.Count().Should().Be(10);
             response.ArticlesCount.Should().Be(30);
@@ -88,14 +84,12 @@ namespace Application.IntegrationTests.Articles
         {
             await CreateArticles();
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticlesListQuery
-                {
-                    Limit = 10,
-                    Offset = 0,
-                    Tag = "Tag Jane Doe",
-                })
-            );
+            var response = await Act(new ArticlesListQuery
+            {
+                Limit = 10,
+                Offset = 0,
+                Tag = "Tag Jane Doe",
+            });
 
             response.Articles.Count().Should().Be(10);
             response.ArticlesCount.Should().Be(20);
@@ -136,14 +130,12 @@ namespace Application.IntegrationTests.Articles
                 await Mediator.Send(new ArticleFavoriteCommand(a, true));
             }
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticlesListQuery
-                {
-                    Limit = 10,
-                    Offset = 0,
-                    Favorited = "Jane",
-                })
-            );
+            var response = await Act(new ArticlesListQuery
+            {
+                Limit = 10,
+                Offset = 0,
+                Favorited = "Jane",
+            });
 
             response.Articles.Count().Should().Be(5);
             response.ArticlesCount.Should().Be(5);
@@ -174,13 +166,11 @@ namespace Application.IntegrationTests.Articles
 
             await Mediator.Send(new ProfileFollowCommand("John Doe", true));
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticlesFeedQuery
-                {
-                    Limit = 10,
-                    Offset = 0
-                })
-            );
+            var response = await Act(new ArticlesFeedQuery
+            {
+                Limit = 10,
+                Offset = 0
+            });
 
             response.Articles.Count().Should().Be(10);
             response.ArticlesCount.Should().Be(30);

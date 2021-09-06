@@ -21,10 +21,8 @@ namespace Application.IntegrationTests.Profiles
         [Fact]
         public async Task GuestCannotFollowProfile()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ProfileFollowCommand("john", true)))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new ProfileFollowCommand("john", true)))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -36,10 +34,8 @@ namespace Application.IntegrationTests.Profiles
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ProfileFollowCommand("John Doe", true)))
-                    .Should().ThrowAsync<ValidationException>().WithMessage("You cannot follow yourself")
-            );
+            await this.Invoking(x => x.Act(new ProfileFollowCommand("John Doe", true)))
+                .Should().ThrowAsync<ValidationException>().WithMessage("You cannot follow yourself");
 
             (await Context.Set<FollowerUser>().CountAsync()).Should().Be(0);
         }
@@ -67,9 +63,7 @@ namespace Application.IntegrationTests.Profiles
             );
             await Context.SaveChangesAsync();
 
-            var response = await Act(() =>
-                Mediator.Send(new ProfileFollowCommand("Jane Doe", true))
-            );
+            var response = await Act(new ProfileFollowCommand("Jane Doe", true));
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {
@@ -110,9 +104,7 @@ namespace Application.IntegrationTests.Profiles
                 }
             });
 
-            var response = await Act(() =>
-                Mediator.Send(new ProfileFollowCommand("Jane Doe", false))
-            );
+            var response = await Act(new ProfileFollowCommand("Jane Doe", false));
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {

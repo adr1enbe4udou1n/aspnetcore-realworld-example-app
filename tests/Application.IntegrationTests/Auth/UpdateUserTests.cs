@@ -30,9 +30,7 @@ namespace Application.IntegrationTests.Auth
                 Email = "jane.doe@example.com"
             });
 
-            var currentUser = await Act(() =>
-                Mediator.Send(request)
-            );
+            var currentUser = await Act(request);
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("jane.doe@example.com");
@@ -44,15 +42,13 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task GuestUserCannotUpdateInfos()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new UpdateUserCommand(
-                    new UpdateUserDTO
-                    {
-                        Email = "jane.doe@example.com"
-                    }
-                )))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new UpdateUserCommand(
+                new UpdateUserDTO
+                {
+                    Email = "jane.doe@example.com"
+                }
+            )))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -71,8 +67,8 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new UpdateUserCommand(
+            await this.Invoking(x => x.Act(
+                new UpdateUserCommand(
                     new UpdateUserDTO
                     {
                         Email = "jane.doe@example.com",
@@ -80,8 +76,7 @@ namespace Application.IntegrationTests.Auth
                 )))
                     .Should().ThrowAsync<ValidationException>()
                     .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
-                        .ErrorMessage == "Email is already used")
-            );
+                        .ErrorMessage == "Email is already used");
         }
     }
 }

@@ -26,9 +26,7 @@ namespace Application.IntegrationTests.Profiles
             });
             await Context.SaveChangesAsync();
 
-            var response = await Act(() =>
-                Mediator.Send(new ProfileGetQuery("John Doe"))
-            );
+            var response = await Act(new ProfileGetQuery("John Doe"));
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {
@@ -42,10 +40,8 @@ namespace Application.IntegrationTests.Profiles
         [Fact]
         public async Task CannotGetNotExistingProfile()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ProfileGetQuery("John Doe")))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new ProfileGetQuery("John Doe")))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -70,9 +66,7 @@ namespace Application.IntegrationTests.Profiles
                 }
             });
 
-            var response = await Act(() =>
-                Mediator.Send(new ProfileGetQuery("Jane Doe"))
-            );
+            var response = await Act(new ProfileGetQuery("Jane Doe"));
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {

@@ -19,12 +19,10 @@ namespace Application.IntegrationTests.Articles
         [Fact]
         public async Task GuestCannotFavoriteArticle()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
-                    "slug-article", true
-                )))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleFavoriteCommand(
+                "slug-article", true
+            )))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -36,12 +34,10 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleFavoriteCommand(
-                    "slug-article", true
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleFavoriteCommand(
+                "slug-article", true
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -62,9 +58,7 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticleFavoriteCommand("test-title", true))
-            );
+            var response = await Act(new ArticleFavoriteCommand("test-title", true));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {
@@ -95,9 +89,7 @@ namespace Application.IntegrationTests.Articles
 
             await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticleFavoriteCommand("test-title", false))
-            );
+            var response = await Act(new ArticleFavoriteCommand("test-title", false));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

@@ -19,10 +19,8 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task GuestCannotDeleteComment()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentDeleteCommand("slug-article", 1)))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new CommentDeleteCommand("slug-article", 1)))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -43,12 +41,10 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                    "test-title", 1
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+                "test-title", 1
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -74,12 +70,10 @@ namespace Application.IntegrationTests.Comments
                 Body = "Thank you !",
             }));
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                    "slug-article", response.Comment.Id
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+                "slug-article", response.Comment.Id
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -114,12 +108,10 @@ namespace Application.IntegrationTests.Comments
                 Body = "Thank you !",
             }));
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                    "other-title", response.Comment.Id
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+                "other-title", response.Comment.Id
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -151,12 +143,10 @@ namespace Application.IntegrationTests.Comments
                 Email = "jane.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentDeleteCommand(
-                    "test-title", response.Comment.Id
-                )))
-                    .Should().ThrowAsync<ForbiddenException>()
-            );
+            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+                "test-title", response.Comment.Id
+            )))
+                .Should().ThrowAsync<ForbiddenException>();
         }
 
         [Fact]
@@ -182,9 +172,7 @@ namespace Application.IntegrationTests.Comments
                 Body = "Thank you !",
             }));
 
-            await Act(() =>
-                Mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id))
-            );
+            await Act(new CommentDeleteCommand("test-title", response.Comment.Id));
 
             (await Context.Comments.AnyAsync()).Should().BeFalse();
         }
@@ -225,9 +213,7 @@ namespace Application.IntegrationTests.Comments
 
             await CurrentUser.SetIdentifier(user.Id);
 
-            await Act(() =>
-                Mediator.Send(new CommentDeleteCommand("test-title", response.Comment.Id))
-            );
+            await Act(new CommentDeleteCommand("test-title", response.Comment.Id));
 
             (await Context.Comments.CountAsync()).Should().Be(1);
         }

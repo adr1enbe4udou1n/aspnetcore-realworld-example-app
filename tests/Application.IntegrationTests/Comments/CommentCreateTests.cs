@@ -45,10 +45,8 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentCreateCommand("test-title", comment)))
-                    .Should().ThrowAsync<ValidationException>()
-            );
+            await this.Invoking(x => x.Act(new CommentCreateCommand("test-title", comment)))
+                .Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
@@ -60,26 +58,22 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentCreateCommand(
-                    "slug-article", new CommentCreateDTO
-                    {
-                        Body = "Test Body",
-                    }
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new CommentCreateCommand(
+                "slug-article", new CommentCreateDTO
+                {
+                    Body = "Test Body",
+                }
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
         public async Task GuestCannotCreateComment()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentCreateCommand(
-                    "slug-article", new CommentCreateDTO()
-                )))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new CommentCreateCommand(
+                "slug-article", new CommentCreateDTO()
+            )))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -102,12 +96,10 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await Act(() =>
-                Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
-                {
-                    Body = "Thank you !",
-                }))
-            );
+            var response = await Act(new CommentCreateCommand("test-title", new CommentCreateDTO
+            {
+                Body = "Thank you !",
+            }));
 
             response.Comment.Should().BeEquivalentTo(new CommentDTO
             {

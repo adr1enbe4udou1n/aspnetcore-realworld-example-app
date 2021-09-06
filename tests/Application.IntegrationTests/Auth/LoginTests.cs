@@ -40,10 +40,8 @@ namespace Application.IntegrationTests.Auth
             });
             await Context.SaveChangesAsync();
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new LoginCommand(credentials)))
-                    .Should().ThrowAsync<ValidationException>()
-            );
+            await this.Invoking(x => x.Act(new LoginCommand(credentials)))
+                .Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
@@ -58,14 +56,14 @@ namespace Application.IntegrationTests.Auth
             await Context.Users.AddAsync(user);
             await Context.SaveChangesAsync();
 
-            var currentUser = await Act(() =>
-                Mediator.Send(new LoginCommand(
+            var currentUser = await Act(
+                new LoginCommand(
                     new LoginDTO
                     {
                         Email = "john.doe@example.com",
                         Password = "password",
                     }
-                ))
+                )
             );
 
             currentUser.User.Username.Should().Be("John Doe");

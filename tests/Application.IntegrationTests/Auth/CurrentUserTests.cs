@@ -23,9 +23,7 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
             });
 
-            var currentUser = await Act(() =>
-                Mediator.Send(new CurrentUserQuery())
-            );
+            var currentUser = await Act(new CurrentUserQuery());
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("john.doe@example.com");
@@ -34,10 +32,8 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task GuestUserCannotFetchInfos()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CurrentUserQuery()))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new CurrentUserQuery()))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
     }
 }

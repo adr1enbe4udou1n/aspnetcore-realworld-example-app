@@ -35,12 +35,14 @@ namespace Application.IntegrationTests
 
         protected ICurrentUser CurrentUser { get; private set; }
 
+        private readonly IServiceProvider _provider;
+
         public TestBase(Startup factory, ITestOutputHelper output)
         {
             _output = output;
 
             _configuration = factory.Configuration;
-            var provider = factory.Services
+            _provider = factory.Services
                 .AddLogging((builder) => builder
                     .AddProvider(new SqlCounterLoggerProvider(() => _logEnabled))
                     .AddXUnit(output, options =>
@@ -52,11 +54,11 @@ namespace Application.IntegrationTests
                     }))
                 .BuildServiceProvider();
 
-            Mediator = provider.GetRequiredService<IMediator>();
-            PasswordHasher = provider.GetRequiredService<IPasswordHasher>();
-            JwtTokenGenerator = provider.GetRequiredService<IJwtTokenGenerator>();
-            Context = provider.GetRequiredService<AppDbContext>();
-            CurrentUser = provider.GetRequiredService<ICurrentUser>();
+            Mediator = _provider.GetRequiredService<IMediator>();
+            PasswordHasher = _provider.GetRequiredService<IPasswordHasher>();
+            JwtTokenGenerator = _provider.GetRequiredService<IJwtTokenGenerator>();
+            Context = _provider.GetRequiredService<AppDbContext>();
+            CurrentUser = _provider.GetRequiredService<ICurrentUser>();
         }
 
         public Task DisposeAsync()
@@ -79,36 +81,39 @@ namespace Application.IntegrationTests
             }
         }
 
+        private int _userId;
+
         protected async Task<User> ActingAs(User user)
         {
             await Context.Users.AddAsync(user);
             await Context.SaveChangesAsync();
 
             await CurrentUser.SetIdentifier(user.Id);
+            _userId = user.Id;
             return user;
         }
 
-        protected async Task<User> ActingAsExistingUser(string name)
+        protected async Task<TResponse> Act<TResponse>(IRequest<TResponse> request)
         {
-            var user = await Context.Users.Where(u => u.Name == name).SingleAsync();
-
-            await CurrentUser.SetIdentifier(user.Id);
-            return user;
-        }
-
-        protected async Task<TResult> Act<TResult>(Func<Task<TResult>> action)
-        {
-            Context.ChangeTracker.Clear();
             SqlCounterLogger.CurrentCounter = 0;
 
-            _logEnabled = true;
-            await CurrentUser.Fresh();
-            var result = await action();
-            _logEnabled = false;
+            using (var scope = _provider.CreateScope())
+            {
+                _logEnabled = true;
 
-            _output.WriteLine($"SQL queries count : {SqlCounterLogger.CurrentCounter}");
+                var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+                await currentUser.SetIdentifier(_userId);
 
-            return result;
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
+                var result = await mediator.Send<TResponse>(request);
+
+                _logEnabled = false;
+
+                _output.WriteLine($"SQL queries count : {SqlCounterLogger.CurrentCounter}");
+
+                return result;
+            }
+
         }
     }
 }

@@ -25,12 +25,10 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleGetQuery(
-                    "slug-article"
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleGetQuery(
+                "slug-article"
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -54,9 +52,7 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await Act(() =>
-                Mediator.Send(new ArticleGetQuery("test-title"))
-            );
+            var response = await Act(new ArticleGetQuery("test-title"));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

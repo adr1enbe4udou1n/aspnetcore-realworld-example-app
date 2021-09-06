@@ -19,10 +19,8 @@ namespace Application.IntegrationTests.Articles
         [Fact]
         public async Task GuestCannotDeleteArticle()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleDeleteCommand("slug-article")))
-                    .Should().ThrowAsync<UnauthorizedException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleDeleteCommand("slug-article")))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
@@ -34,12 +32,10 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
-                    "slug-article"
-                )))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleDeleteCommand(
+                "slug-article"
+            )))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -66,12 +62,10 @@ namespace Application.IntegrationTests.Articles
                 Email = "jane.doe@example.com",
             });
 
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new ArticleDeleteCommand(
-                    "test-title"
-                )))
-                    .Should().ThrowAsync<ForbiddenException>()
-            );
+            await this.Invoking(x => x.Act(new ArticleDeleteCommand(
+                "test-title"
+            )))
+                .Should().ThrowAsync<ForbiddenException>();
         }
 
         [Fact]
@@ -102,11 +96,7 @@ namespace Application.IntegrationTests.Articles
 
             await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
 
-            await Act(() =>
-                Mediator.Send(new ArticleDeleteCommand(
-                    "test-title"
-                ))
-            );
+            await Act(new ArticleDeleteCommand("test-title"));
 
             (await Context.Articles.AnyAsync()).Should().BeFalse();
             (await Context.Comments.AnyAsync()).Should().BeFalse();

@@ -21,10 +21,8 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task CanListAllCommentsOfNotExistingArticle()
         {
-            await Act(() =>
-                Mediator.Invoking(m => m.Send(new CommentsListQuery("test-title")))
-                    .Should().ThrowAsync<NotFoundException>()
-            );
+            await this.Invoking(x => x.Act(new CommentsListQuery("test-title")))
+                .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
@@ -78,9 +76,7 @@ namespace Application.IntegrationTests.Comments
                 }));
             }
 
-            var response = await Act(() =>
-                Mediator.Send(new CommentsListQuery("test-title"))
-            );
+            var response = await Act(new CommentsListQuery("test-title"));
 
             response.Comments.Count().Should().Be(10);
 

@@ -23,9 +23,7 @@ namespace Application.IntegrationTests.Tags
             );
             await Context.SaveChangesAsync();
 
-            var response = await Act(() =>
-                Mediator.Send(new TagsListQuery())
-            );
+            var response = await Act(new TagsListQuery());
 
             response.Tags.Should().Equal("Tag1", "Tag2", "Tag3");
         }
