@@ -26,21 +26,6 @@ namespace Application.IntegrationTests.Profiles
         }
 
         [Fact]
-        public async Task CannotFollowHimself()
-        {
-            await ActingAs(new User
-            {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
-
-            await this.Invoking(x => x.Act(new ProfileFollowCommand("John Doe", true)))
-                .Should().ThrowAsync<ValidationException>().WithMessage("You cannot follow yourself");
-
-            (await Context.Set<FollowerUser>().CountAsync()).Should().Be(0);
-        }
-
-        [Fact]
         public async Task CanFollowProfile()
         {
             await ActingAs(new User

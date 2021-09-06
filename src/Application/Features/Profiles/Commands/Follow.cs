@@ -34,10 +34,6 @@ namespace Application.Features.Profiles.Commands
 
             if (request.Follow)
             {
-                if (user.Id == _currentUser.User.Id)
-                {
-                    throw new ValidationException("You cannot follow yourself");
-                }
                 if (!user.IsFollowedBy(_currentUser.User))
                 {
                     user.Followers.Add(new FollowerUser { Follower = _currentUser.User });
