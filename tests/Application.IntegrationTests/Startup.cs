@@ -9,7 +9,6 @@ namespace Application.IntegrationTests
     public class Startup
     {
         public IConfiguration Configuration { get; private set; }
-        public IServiceCollection Services { get; private set; } = new ServiceCollection();
 
         public Startup()
         {
@@ -18,13 +17,20 @@ namespace Application.IntegrationTests
                 .AddEnvironmentVariables()
                 .Build();
 
-            Services.AddInfrastructure(Configuration);
-
-            var _provider = Services.BuildServiceProvider();
+            var services = GetApplicationServices();
+            var _provider = services.BuildServiceProvider();
 
             var appDbContext = _provider.GetService<AppDbContext>();
 
             appDbContext.Database.Migrate();
+        }
+
+        public IServiceCollection GetApplicationServices()
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            services.AddInfrastructure(Configuration);
+            return services;
         }
     }
 }

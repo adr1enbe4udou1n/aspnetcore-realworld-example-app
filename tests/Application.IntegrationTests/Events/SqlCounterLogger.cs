@@ -8,14 +8,21 @@ namespace Application.IntegrationTests.Events
     {
         private readonly string _categoryName;
 
-        private readonly Func<bool> _isEnabled;
+        private static int _currentCounter;
 
-        public static int CurrentCounter { get; set; }
-
-        public SqlCounterLogger(string categoryName, Func<bool> isEnabled)
+        public SqlCounterLogger(string categoryName)
         {
             _categoryName = categoryName;
-            _isEnabled = isEnabled;
+        }
+
+        public static int GetCounter()
+        {
+            return _currentCounter;
+        }
+
+        public static void ResetCounter()
+        {
+            _currentCounter = 0;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -25,14 +32,14 @@ namespace Application.IntegrationTests.Events
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            return _isEnabled();
+            return true;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (IsEnabled(logLevel) && _categoryName == DbLoggerCategory.Database.Command.Name)
+            if (_categoryName == DbLoggerCategory.Database.Command.Name)
             {
-                CurrentCounter++;
+                _currentCounter++;
             }
         }
     }

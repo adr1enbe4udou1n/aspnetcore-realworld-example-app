@@ -6,16 +6,13 @@ namespace Application.IntegrationTests.Events
 {
     public class SqlCounterLoggerProvider : ILoggerProvider
     {
-        private readonly Func<bool> _isEnabled;
-
-        public SqlCounterLoggerProvider(Func<bool> isEnabled)
+        public SqlCounterLoggerProvider()
         {
-            _isEnabled = isEnabled;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new SqlCounterLogger(categoryName, _isEnabled);
+            return new SqlCounterLogger(categoryName);
         }
 
         public void Dispose()
