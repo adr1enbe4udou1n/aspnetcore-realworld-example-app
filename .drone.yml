@@ -25,6 +25,17 @@ steps:
   depends_on:
     - build
 
+- name: deploy
+  image: appleboy/drone-ssh
+  settings:
+    host: front.okami101.io
+    port: 2222
+    username: okami
+    key:
+      from_secret: swarm_ssh_key
+    script:
+      - docker service update --image registry.okami101.io/adr1enbe4udou1n/aspnet-realworld:latest aspnet-realworld_app --with-registry-auth
+
 services:
 - name: db
   image: postgres:13
@@ -37,27 +48,3 @@ trigger:
   event:
   - push
   - pull_request
-
----
-kind: pipeline
-type: docker
-name: deploy
-
-steps:
-
-- name: deploy
-  image: appleboy/drone-ssh
-  settings:
-    host: front.okami101.io
-    port: 2222
-    username: okami
-    key:
-      from_secret: swarm_ssh_key
-    script:
-      - docker service update --image registry.okami101.io/adr1enbe4udou1n/aspnet-realworld:latest aspnet-realworld_app --with-registry-auth
-
-trigger:
-  event:
-  - promote
-  target:
-  - production
