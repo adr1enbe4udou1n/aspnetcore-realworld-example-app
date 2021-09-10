@@ -1,11 +1,13 @@
-build:
-	docker-compose build
+.PHONY: publish
+
 run:
-	docker-compose up
+	dotnet run -p src/WebUI
 watch:
 	dotnet watch run -p src/WebUI
-start:
-	dotnet run -p src/WebUI
+fresh:
+	dotnet run -p tools/Application.Tools fresh
+seed:
+	dotnet run -p tools/Application.Tools seed
 publish:
 	dotnet run -p targets
 format:
@@ -22,7 +24,3 @@ migration-remove:
 	dotnet ef migrations remove -p src/Infrastructure -s src/WebUI
 db-update:
 	dotnet ef database update -p src/Infrastructure -s src/WebUI $(name)
-fresh:
-	dotnet run -p tools/Application.Tools fresh
-seed:
-	dotnet run -p tools/Application.Tools seed

@@ -10,19 +10,42 @@ We've gone to great lengths to adhere to the ASP.NET Core community styleguides 
 
 For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
-Set valid PostgreSQL connection by setting `ConnectionStrings__DefaultConnection` variable environment before next commands.
+## Usage
+
+### PostgreSQL
+
+This project use **PostgreSQL** as main database provider. You can run it easily via `docker-compose up -d`.
+
+Two databases will spin up, one for normal development and one dedicated for integrations tests. Indeed In-Memory testing are poorly suitable for real integrations tests for me. See [Avoid In-Memory Databases for Tests](https://jimmybogard.com/avoid-in-memory-databases-for-tests/).
+
+Besides there is no support for cascading foreign keys and no support for Automapper Projection feature. Of course the big con of real database testing is no parallel support so far slower, **7s** (real db) vs **1s** (parallelized in memory db) in my machine.
+
+### Run app
+
+```sh
+make seed
+make run
+```
+
+And that's all, go to <http://localhost:5000/swagger>
 
 ### Validate API with Newman
 
+Launch follow scripts for validating realworld schema :
+
 ```sh
-dotnet run -p src/WebUI
+make fresh # wipe all database for clean state
 newman run postman.json --global-var "APIURL=http://localhost:5000" --global-var="USERNAME=johndoe" --global-var="EMAIL=john.doe@example.com" --global-var="PASSWORD=password"
 ```
 
-### Useful commands
+### Full test suite
 
-```sh
-dotnet run -p targets # Execute all format + test suite + publish pipeline
-dotnet run -p tools/Application.Tools fresh # Wipe all database data
-dotnet run -p tools/Application.Tools seed # Seed random data via Bogus
-```
+This project is fully tested via xunit, just run `make test` for launching it. All SQL queries are automatically showed up for easy debug and easy N+1 detection.
+
+Use `make test-watch-app` for realtime test watching, perfect for TDD.
+
+### Publishing
+
+Use `make publish` for publishing the app. Be sure to have PostgreSQL running before. This will execute all pipeline with code format checking, building, testing then publishing under `publish` directory.
+
+The local `Dockerfile` is suitable as production container.
