@@ -23,7 +23,7 @@ Besides there is no support for cascading foreign keys and no support for Automa
 ### Run app
 
 ```sh
-make seed
+make seed # migrate and fill db with fake data
 make run
 ```
 
@@ -35,6 +35,7 @@ Launch follow scripts for validating realworld schema :
 
 ```sh
 make fresh # wipe all database for clean state
+make run
 newman run postman.json --global-var "APIURL=http://localhost:5000" --global-var="USERNAME=johndoe" --global-var="EMAIL=john.doe@example.com" --global-var="PASSWORD=password"
 ```
 
