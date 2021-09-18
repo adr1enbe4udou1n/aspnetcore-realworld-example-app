@@ -44,7 +44,7 @@ namespace WebUI
                 );
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebUI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Conduit", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -79,7 +79,7 @@ namespace WebUI
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebUI v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Conduit v1"));
 
             app.UseRouting();
 
