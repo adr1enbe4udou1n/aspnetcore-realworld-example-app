@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: main
       POSTGRES_DB: main
     ports:
-      - 54320:5432
+      - 5433:5432
 
   db_test:
     image: postgres:13
@@ -16,4 +16,4 @@ services:
       POSTGRES_PASSWORD: main
       POSTGRES_DB: main
     ports:
-      - 54321:5432
+      - 5434:5432
