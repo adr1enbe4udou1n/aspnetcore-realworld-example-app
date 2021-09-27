@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Application.Interfaces
 {
@@ -13,5 +14,7 @@ namespace Application.Interfaces
         DbSet<Tag> Tags { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+        DatabaseFacade Database { get; }
     }
 }
