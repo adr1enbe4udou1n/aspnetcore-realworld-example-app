@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Extensions;
@@ -21,6 +22,8 @@ namespace Application.Features.Comments.Commands
 
     public record CommentEnvelope(CommentDTO Comment);
 
+    [DisplayName("CommentCreateCommand")]
+    public record CommentCreateBody(CommentCreateDTO Comment);
     public record CommentCreateCommand(string Slug, CommentCreateDTO Comment) : IAuthorizationRequest<CommentEnvelope>;
 
     public class CommentCreateValidator : AbstractValidator<CommentCreateCommand>

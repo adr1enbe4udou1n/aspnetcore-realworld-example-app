@@ -31,7 +31,7 @@ namespace WebUI.Controllers
             => await _mediator.Send(command, cancellationToken);
 
         [HttpPut("{slug}")]
-        public async Task<ArticleEnvelope> Update(string slug, [FromBody] ArticleUpdateCommand command, CancellationToken cancellationToken)
+        public async Task<ArticleEnvelope> Update(string slug, [FromBody] ArticleUpdateBody command, CancellationToken cancellationToken)
             => await _mediator.Send(new ArticleUpdateCommand(slug, command.Article), cancellationToken);
 
         [HttpDelete("{slug}")]

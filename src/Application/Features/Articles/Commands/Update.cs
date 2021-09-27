@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Exceptions;
@@ -17,6 +18,8 @@ namespace Application.Features.Articles.Commands
         public string Body { get; set; }
     }
 
+    [DisplayName("ArticleUpdateCommand")]
+    public record ArticleUpdateBody(ArticleUpdateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
     public record ArticleUpdateCommand(string Slug, ArticleUpdateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
 
     public class ArticleUpdateValidator : AbstractValidator<ArticleUpdateCommand>

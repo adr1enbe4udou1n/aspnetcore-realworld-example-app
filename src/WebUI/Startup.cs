@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -40,7 +42,7 @@ namespace WebUI
                     opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
                 })
                 .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.Converters.Add(new DateTimeConverter())
+                    options.JsonSerializerOptions.Converters.Add(new Converters.DateTimeConverter())
                 );
             services.AddSwaggerGen(c =>
             {
@@ -67,6 +69,8 @@ namespace WebUI
                         Array.Empty<string>()
                     }
                 });
+
+                c.CustomSchemaIds(x => x.GetCustomAttributes(false).OfType<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? x.Name);
             });
         }
 
