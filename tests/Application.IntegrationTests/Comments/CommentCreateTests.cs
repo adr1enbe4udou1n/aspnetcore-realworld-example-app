@@ -6,6 +6,7 @@ using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Comments.Commands;
 using Application.Features.Comments.Queries;
+using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using FluentValidation;
@@ -104,7 +105,7 @@ namespace Application.IntegrationTests.Comments
             response.Comment.Should().BeEquivalentTo(new CommentDTO
             {
                 Body = "Thank you !",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "John Doe",
                     Bio = "My Bio",

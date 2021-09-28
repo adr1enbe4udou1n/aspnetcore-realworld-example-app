@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,20 +30,26 @@ namespace Application.Features.Profiles.Queries
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
 
-        public ProfileGetHandler(IAppDbContext context, IMapper mapper)
+        public ProfileGetHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
         {
             _context = context;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
         {
             var user = await _context.Users
                 .Include(u => u.Followers)
-                .FindAsync(x => x.Name == request.Username, cancellationToken);
+                .ProjectTo<ProfileDTO>(_mapper.ConfigurationProvider, new
+                {
+                    currentUser = _currentUser.User
+                })
+                .FindAsync(x => x.Username == request.Username, cancellationToken);
 
-            return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
+            return new ProfileResponse(user);
         }
     }
 }

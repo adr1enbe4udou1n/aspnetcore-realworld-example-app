@@ -5,6 +5,7 @@ using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +50,15 @@ namespace Application.Features.Profiles.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
+            var profile = await _context.Users
+                .Include(u => u.Followers)
+                .ProjectTo<ProfileDTO>(_mapper.ConfigurationProvider, new
+                {
+                    currentUser = _currentUser.User
+                })
+                .FindAsync(x => x.Username == request.Username, cancellationToken);
+
+            return new ProfileResponse(profile);
         }
     }
 }

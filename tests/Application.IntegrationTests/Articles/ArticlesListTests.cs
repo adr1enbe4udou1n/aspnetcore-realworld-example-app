@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Commands;
+using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Application.IntegrationTests.Articles
                 Title = "Jane Doe - Test Title 10",
                 Description = "Test Description",
                 Body = "Test Body",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "Jane Doe"
                 },
@@ -67,7 +68,7 @@ namespace Application.IntegrationTests.Articles
                 Title = "John Doe - Test Title 30",
                 Description = "Test Description",
                 Body = "Test Body",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "John Doe"
                 },
@@ -99,7 +100,7 @@ namespace Application.IntegrationTests.Articles
                 Title = "Jane Doe - Test Title 20",
                 Description = "Test Description",
                 Body = "Test Body",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "Jane Doe"
                 },
@@ -145,7 +146,7 @@ namespace Application.IntegrationTests.Articles
                 Title = "John Doe - Test Title 16",
                 Description = "Test Description",
                 Body = "Test Body",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "John Doe"
                 },
@@ -180,7 +181,7 @@ namespace Application.IntegrationTests.Articles
                 Title = "John Doe - Test Title 30",
                 Description = "Test Description",
                 Body = "Test Body",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "John Doe"
                 },

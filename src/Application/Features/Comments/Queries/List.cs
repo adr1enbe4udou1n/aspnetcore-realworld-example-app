@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Extensions;
 using Application.Features.Articles.Queries;
+using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Support;
 using AutoMapper;
@@ -24,7 +25,7 @@ namespace Application.Features.Comments.Queries
 
         public DateTime UpdatedAt { get; set; }
 
-        public AuthorDTO Author { get; set; }
+        public ProfileDTO Author { get; set; }
     }
 
     public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);

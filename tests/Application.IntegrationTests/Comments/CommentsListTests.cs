@@ -7,6 +7,7 @@ using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Comments.Commands;
 using Application.Features.Comments.Queries;
+using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Xunit;
@@ -83,7 +84,7 @@ namespace Application.IntegrationTests.Comments
             response.Comments.First().Should().BeEquivalentTo(new CommentDTO
             {
                 Body = "This is Jane, Test Comment 5 !",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "Jane Doe",
                     Bio = "My Bio",

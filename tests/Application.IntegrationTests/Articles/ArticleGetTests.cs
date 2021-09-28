@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
+using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,7 @@ namespace Application.IntegrationTests.Articles
                 Description = "Test Description",
                 Body = "Test Body",
                 Slug = "test-title",
-                Author = new AuthorDTO
+                Author = new ProfileDTO
                 {
                     Username = "John Doe",
                     Bio = "My Bio",
