@@ -10,6 +10,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Application;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -19,7 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WebUI.Converters;
 using WebUI.Filters;
-using WebUI.Middlewares;
+using WebUI.Handlers;
 
 namespace WebUI
 {
@@ -46,11 +48,17 @@ namespace WebUI
                 .AddJsonOptions(options =>
                     options.JsonSerializerOptions.Converters.Add(new Converters.DateTimeConverter())
                 );
-            services.AddAuthentication(options =>
+
+            services.AddAuthentication("Bearer")
+                .AddScheme<AuthenticationSchemeOptions, TokenAuthenticationHandler>("Bearer", null);
+
+            services.AddAuthorization(options =>
             {
-                options.DefaultScheme = "Token";
-                options.DefaultChallengeScheme = "Token";
+                var policy = new AuthorizationPolicyBuilder("Bearer");
+                policy.RequireAuthenticatedUser();
+                options.DefaultPolicy = policy.Build();
             });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -123,7 +131,7 @@ namespace WebUI
                     .AllowAnyMethod()
                 );
 
-                app.UseMiddleware<JwtMiddleware>();
+                app.UseAuthorization();
                 app.UseAuthorization();
 
                 app.UseEndpoints(endpoints =>

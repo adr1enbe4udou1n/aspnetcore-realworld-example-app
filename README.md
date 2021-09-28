@@ -36,7 +36,7 @@ Launch follow scripts for validating realworld schema :
 ```sh
 make fresh # wipe all database for clean state
 make run
-newman run postman.json --global-var "APIURL=http://localhost:5000" --global-var="USERNAME=johndoe" --global-var="EMAIL=john.doe@example.com" --global-var="PASSWORD=password"
+npx newman run postman.json --global-var "APIURL=http://localhost:5000/api" --global-var="USERNAME=johndoe" --global-var="EMAIL=john.doe@example.com" --global-var="PASSWORD=password"
 ```
 
 ### Full test suite
