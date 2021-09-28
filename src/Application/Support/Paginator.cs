@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,10 @@ namespace Application.Support
 
         private int _limit = MaxLimit;
 
+        /// <summary>
+        /// Limit number of articles returned (default is 20)
+        /// </summary>
+        [DefaultValue(20)]
         public int Limit
         {
             get
@@ -24,6 +29,10 @@ namespace Application.Support
             }
         }
 
+        /// <summary>
+        /// Offset/skip number of articles (default is 0)
+        /// </summary>
+        [DefaultValue(0)]
         public int Offset { get; set; }
     }
 

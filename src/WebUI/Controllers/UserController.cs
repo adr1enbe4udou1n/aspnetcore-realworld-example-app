@@ -31,7 +31,7 @@ namespace WebUI.Controllers.Users
         /// Update current user
         /// </summary>
         /// <remarks>Updated user information for current user</remarks>
-        /// <param name="command"></param>
+        /// <param name="command">User details to update. At least <strong>one</strong> field is required.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut]

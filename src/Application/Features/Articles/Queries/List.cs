@@ -51,10 +51,19 @@ namespace Application.Features.Articles.Queries
 
     public class ArticlesListQuery : PagedQuery, IRequest<ArticlesEnvelope>
     {
+        /// <summary>
+        /// Filter by author (username)
+        /// </summary>
         public string Author { get; set; }
 
+        /// <summary>
+        /// Filter by favorites of a user (username)
+        /// </summary>
         public string Favorited { get; set; }
 
+        /// <summary>
+        /// Filter by tag
+        /// </summary>
         public string Tag { get; set; }
     }
 

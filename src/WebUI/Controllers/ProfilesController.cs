@@ -20,7 +20,7 @@ namespace WebUI.Controllers
         /// Get a profile
         /// </summary>
         /// <remarks>Get a profile of a user of the system. Auth is optional</remarks>
-        /// <param name="username"></param>
+        /// <param name="username">Username of the profile to get</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
@@ -31,7 +31,7 @@ namespace WebUI.Controllers
         /// Follow a user
         /// </summary>
         /// <remarks>Follow a user by username</remarks>
-        /// <param name="username"></param>
+        /// <param name="username">Username of the profile you want to follow</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("follow")]
@@ -43,7 +43,7 @@ namespace WebUI.Controllers
         /// Unfollow a user
         /// </summary>
         /// <remarks>Unfollow a user by username</remarks>
-        /// <param name="username"></param>
+        /// <param name="username">Username of the profile you want to unfollow</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("follow")]

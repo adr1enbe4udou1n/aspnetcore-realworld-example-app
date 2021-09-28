@@ -20,7 +20,7 @@ namespace WebUI.Controllers.Users
         /// Register a new user
         /// </summary>
         /// <remarks>Register a new user</remarks>
-        /// <param name="command"></param>
+        /// <param name="command">Details of the new user to register</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
@@ -31,7 +31,7 @@ namespace WebUI.Controllers.Users
         /// Existing user login
         /// </summary>
         /// <remarks>Login for existing user</remarks>
-        /// <param name="command"></param>
+        /// <param name="command">Credentials to use</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("login")]

@@ -41,6 +41,7 @@ namespace WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddRouting(options => options.LowercaseUrls = true);
+
             services
                 .AddControllers(opt =>
                 {
@@ -79,8 +80,8 @@ namespace WebUI
                     },
                 });
 
-                var filePath = Path.Combine(System.AppContext.BaseDirectory, "WebUI.xml");
-                c.IncludeXmlComments(filePath);
+                c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "Application.xml"));
+                c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "WebUI.xml"));
 
                 c.AddServer(new OpenApiServer
                 {
@@ -111,6 +112,8 @@ namespace WebUI
                 c.DocInclusionPredicate((name, api) => true);
 
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                c.DescribeAllParametersInCamelCase();
             });
         }
 
@@ -146,3 +149,4 @@ namespace WebUI
         }
     }
 }
+

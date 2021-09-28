@@ -43,7 +43,7 @@ namespace WebUI.Controllers
         /// Get an article
         /// </summary>
         /// <remarks>Get an article. Auth not required</remarks>
-        /// <param name="slug"></param>
+        /// <param name="slug">Slug of the article to get</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{slug}")]
@@ -54,7 +54,7 @@ namespace WebUI.Controllers
         /// Create an article
         /// </summary>
         /// <remarks>Create an article. Auth is required</remarks>
-        /// <param name="command"></param>
+        /// <param name="command">Article to create</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
@@ -66,8 +66,8 @@ namespace WebUI.Controllers
         /// Update an article
         /// </summary>
         /// <remarks>Update an article. Auth is required</remarks>
-        /// <param name="slug"></param>
-        /// <param name="command"></param>
+        /// <param name="slug">Slug of the article to update</param>
+        /// <param name="command">Article to update</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("{slug}")]
@@ -79,7 +79,7 @@ namespace WebUI.Controllers
         /// Delete an article
         /// </summary>
         /// <remarks>Delete an article. Auth is required</remarks>
-        /// <param name="slug"></param>
+        /// <param name="slug">Slug of the article to delete</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("{slug}")]
@@ -91,7 +91,7 @@ namespace WebUI.Controllers
         /// Favorite an article
         /// </summary>
         /// <remarks>Favorite an article. Auth is required</remarks>
-        /// <param name="slug"></param>
+        /// <param name="slug">Slug of the article that you want to favorite</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("{slug}/favorite")]
@@ -104,7 +104,7 @@ namespace WebUI.Controllers
         /// Unfavorite an article
         /// </summary>
         /// <remarks>Unfavorite an article. Auth is required</remarks>
-        /// <param name="slug"></param>
+        /// <param name="slug">Slug of the article that you want to unfavorite</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("{slug}/favorite")]

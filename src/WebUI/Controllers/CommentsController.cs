@@ -20,7 +20,7 @@ namespace WebUI.Controllers
         /// Get comments for an article
         /// </summary>
         /// <remarks>Get the comments for an article. Auth is optional</remarks>
-        /// <param name="slug"></param>
+        /// <param name="slug">Slug of the article that you want to get comments for</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
@@ -31,8 +31,8 @@ namespace WebUI.Controllers
         /// Create a comment for an article
         /// </summary>
         /// <remarks>Create a comment for an article. Auth is required</remarks>
-        /// <param name="slug"></param>
-        /// <param name="command"></param>
+        /// <param name="slug">Slug of the article that you want to create a comment for</param>
+        /// <param name="command">Comment you want to create</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
@@ -44,8 +44,8 @@ namespace WebUI.Controllers
         /// Delete a comment for an article
         /// </summary>
         /// <remarks>Delete a comment for an article. Auth is required</remarks>
-        /// <param name="slug"></param>
-        /// <param name="commentId"></param>
+        /// <param name="slug">Slug of the article that you want to delete a comment for</param>
+        /// <param name="commentId">ID of the comment you want to delete</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("{commentId}")]
