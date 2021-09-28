@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands
 {
-    public class ArticleCreateDTO
+    public class NewArticleDTO
     {
         public string Title { get; set; }
 
@@ -24,9 +24,9 @@ namespace Application.Features.Articles.Commands
         public List<string> TagList { get; set; } = new();
     }
 
-    public record ArticleCreateCommand(ArticleCreateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
+    public record NewArticleRequest(NewArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
 
-    public class ArticleCreateValidator : AbstractValidator<ArticleCreateCommand>
+    public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
     {
         public ArticleCreateValidator(IAppDbContext context, ISlugifier slugifier)
         {
@@ -43,7 +43,7 @@ namespace Application.Features.Articles.Commands
         }
     }
 
-    public class ArticleCreateHandler : IAuthorizationRequestHandler<ArticleCreateCommand, ArticleEnvelope>
+    public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleRequest, SingleArticleResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -58,7 +58,7 @@ namespace Application.Features.Articles.Commands
             _slugifier = slugifier;
         }
 
-        public async Task<ArticleEnvelope> Handle(ArticleCreateCommand request, CancellationToken cancellationToken)
+        public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
         {
             var article = _mapper.Map<Article>(request.Article);
             var existingTags = await _context.Tags
@@ -86,7 +86,7 @@ namespace Application.Features.Articles.Commands
             await _context.Articles.AddAsync(article, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ArticleEnvelope(_mapper.Map<ArticleDTO>(article));
+            return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
         }
     }
 }

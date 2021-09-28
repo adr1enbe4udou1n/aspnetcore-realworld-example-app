@@ -11,9 +11,9 @@ using MediatR;
 
 namespace Application.Features.Articles.Commands
 {
-    public record ArticleDeleteCommand(string Slug) : IAuthorizationRequest;
+    public record ArticleDeleteRequest(string Slug) : IAuthorizationRequest;
 
-    public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteCommand>
+    public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteRequest>
     {
         private readonly IAppDbContext _context;
         private readonly ICurrentUser _currentUser;
@@ -24,7 +24,7 @@ namespace Application.Features.Articles.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Unit> Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ArticleDeleteRequest request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 

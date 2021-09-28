@@ -24,7 +24,7 @@ namespace WebUI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ProfileEnvelope> Get(string username, CancellationToken cancellationToken)
+        public async Task<ProfileResponse> Get(string username, CancellationToken cancellationToken)
             => await _mediator.Send(new ProfileGetQuery(username), cancellationToken);
 
         /// <summary>
@@ -36,8 +36,8 @@ namespace WebUI.Controllers
         /// <returns></returns>
         [HttpPost("follow")]
         [Authorize]
-        public async Task<ProfileEnvelope> Follow(string username, CancellationToken cancellationToken)
-            => await _mediator.Send(new ProfileFollowCommand(username, true), cancellationToken);
+        public async Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
+            => await _mediator.Send(new ProfileFollowRequest(username, true), cancellationToken);
 
         /// <summary>
         /// Unfollow a user
@@ -48,7 +48,7 @@ namespace WebUI.Controllers
         /// <returns></returns>
         [HttpDelete("follow")]
         [Authorize]
-        public async Task<ProfileEnvelope> Unfollow(string username, CancellationToken cancellationToken)
-            => await _mediator.Send(new ProfileFollowCommand(username, false), cancellationToken);
+        public async Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
+            => await _mediator.Send(new ProfileFollowRequest(username, false), cancellationToken);
     }
 }

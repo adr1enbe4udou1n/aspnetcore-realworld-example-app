@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries
 {
-    public record ArticleEnvelope(ArticleDTO Article);
+    public record SingleArticleResponse(ArticleDTO Article);
 
-    public record ArticleGetQuery(string Slug) : IRequest<ArticleEnvelope>;
+    public record ArticleGetQuery(string Slug) : IRequest<SingleArticleResponse>;
 
-    public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, ArticleEnvelope>
+    public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Application.Features.Articles.Queries
             _mapper = mapper;
         }
 
-        public async Task<ArticleEnvelope> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
+        public async Task<SingleArticleResponse> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles
                 .Include(x => x.Author)
@@ -32,7 +32,7 @@ namespace Application.Features.Articles.Queries
                 .ThenInclude(x => x.Tag)
                 .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-            return new ArticleEnvelope(_mapper.Map<ArticleDTO>(article));
+            return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
         }
     }
 }

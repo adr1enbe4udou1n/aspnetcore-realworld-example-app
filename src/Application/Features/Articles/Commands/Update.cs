@@ -14,18 +14,18 @@ using FluentValidation;
 
 namespace Application.Features.Articles.Commands
 {
-    public class ArticleUpdateDTO
+    public class UpdateArticleDTO
     {
         public string Title { get; set; }
         public string Description { get; set; }
         public string Body { get; set; }
     }
 
-    [DisplayName("ArticleUpdateCommand")]
-    public record ArticleUpdateBody(ArticleUpdateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
-    public record ArticleUpdateCommand(string Slug, ArticleUpdateDTO Article) : IAuthorizationRequest<ArticleEnvelope>;
+    [DisplayName("UpdateArticleRequest")]
+    public record UpdateArticleBody(UpdateArticleDTO Article);
+    public record UpdateArticleRequest(string Slug, UpdateArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
 
-    public class ArticleUpdateValidator : AbstractValidator<ArticleUpdateCommand>
+    public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
     {
         public ArticleUpdateValidator()
         {
@@ -35,7 +35,7 @@ namespace Application.Features.Articles.Commands
         }
     }
 
-    public class ArticleUpdateHandler : IAuthorizationRequestHandler<ArticleUpdateCommand, ArticleEnvelope>
+    public class ArticleUpdateHandler : IAuthorizationRequestHandler<UpdateArticleRequest, SingleArticleResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -48,7 +48,7 @@ namespace Application.Features.Articles.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<ArticleEnvelope> Handle(ArticleUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<SingleArticleResponse> Handle(UpdateArticleRequest request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
@@ -57,12 +57,12 @@ namespace Application.Features.Articles.Commands
                 throw new ForbiddenException();
             }
 
-            article = _mapper.Map<ArticleUpdateDTO, Article>(request.Article, article);
+            article = _mapper.Map<UpdateArticleDTO, Article>(request.Article, article);
 
             _context.Articles.Update(article);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ArticleEnvelope(_mapper.Map<ArticleDTO>(article));
+            return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace WebUI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ArticlesEnvelope> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
+        public async Task<MultipleArticlesResponse> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
             => await _mediator.Send(query, cancellationToken);
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace WebUI.Controllers
         /// <returns></returns>
         [HttpGet("feed")]
         [Authorize]
-        public async Task<ArticlesEnvelope> Feed([FromQuery] ArticlesFeedQuery query, CancellationToken cancellationToken)
+        public async Task<MultipleArticlesResponse> Feed([FromQuery] ArticlesFeedQuery query, CancellationToken cancellationToken)
             => await _mediator.Send(query, cancellationToken);
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace WebUI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{slug}")]
-        public async Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken)
+        public async Task<SingleArticleResponse> Get(string slug, CancellationToken cancellationToken)
             => await _mediator.Send(new ArticleGetQuery(slug), cancellationToken);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace WebUI.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        public async Task<ArticleEnvelope> Create([FromBody] ArticleCreateCommand command, CancellationToken cancellationToken)
+        public async Task<SingleArticleResponse> Create([FromBody] NewArticleRequest command, CancellationToken cancellationToken)
             => await _mediator.Send(command, cancellationToken);
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace WebUI.Controllers
         /// <returns></returns>
         [HttpPut("{slug}")]
         [Authorize]
-        public async Task<ArticleEnvelope> Update(string slug, [FromBody] ArticleUpdateBody command, CancellationToken cancellationToken)
-            => await _mediator.Send(new ArticleUpdateCommand(slug, command.Article), cancellationToken);
+        public async Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleBody command, CancellationToken cancellationToken)
+            => await _mediator.Send(new UpdateArticleRequest(slug, command.Article), cancellationToken);
 
         /// <summary>
         /// Delete an article
@@ -85,7 +85,7 @@ namespace WebUI.Controllers
         [HttpDelete("{slug}")]
         [Authorize]
         public async Task Delete(string slug, CancellationToken cancellationToken)
-            => await _mediator.Send(new ArticleDeleteCommand(slug), cancellationToken);
+            => await _mediator.Send(new ArticleDeleteRequest(slug), cancellationToken);
 
         /// <summary>
         /// Favorite an article
@@ -97,8 +97,8 @@ namespace WebUI.Controllers
         [HttpPost("{slug}/favorite")]
         [Authorize]
         [ApiExplorerSettings(GroupName = "Favorites")]
-        public async Task<ArticleEnvelope> Favorite(string slug, CancellationToken cancellationToken)
-            => await _mediator.Send(new ArticleFavoriteCommand(slug, true), cancellationToken);
+        public async Task<SingleArticleResponse> Favorite(string slug, CancellationToken cancellationToken)
+            => await _mediator.Send(new ArticleFavoriteRequest(slug, true), cancellationToken);
 
         /// <summary>
         /// Unfavorite an article
@@ -110,7 +110,7 @@ namespace WebUI.Controllers
         [HttpDelete("{slug}/favorite")]
         [Authorize]
         [ApiExplorerSettings(GroupName = "Favorites")]
-        public async Task<ArticleEnvelope> Unfavorite(string slug, CancellationToken cancellationToken)
-            => await _mediator.Send(new ArticleFavoriteCommand(slug, false), cancellationToken);
+        public async Task<SingleArticleResponse> Unfavorite(string slug, CancellationToken cancellationToken)
+            => await _mediator.Send(new ArticleFavoriteRequest(slug, false), cancellationToken);
     }
 }

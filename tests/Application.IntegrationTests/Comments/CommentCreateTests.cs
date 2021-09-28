@@ -21,14 +21,14 @@ namespace Application.IntegrationTests.Comments
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new [] { new CommentCreateDTO {
+            new [] { new NewCommentDTO {
                 Body = "",
             } },
         };
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotCreateCommentWithInvalidData(CommentCreateDTO comment)
+        public async Task CannotCreateCommentWithInvalidData(NewCommentDTO comment)
         {
             await ActingAs(new User
             {
@@ -36,8 +36,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -45,7 +45,7 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await this.Invoking(x => x.Act(new CommentCreateCommand("test-title", comment)))
+            await this.Invoking(x => x.Act(new NewCommentRequest("test-title", comment)))
                 .Should().ThrowAsync<ValidationException>();
         }
 
@@ -58,8 +58,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new CommentCreateCommand(
-                "slug-article", new CommentCreateDTO
+            await this.Invoking(x => x.Act(new NewCommentRequest(
+                "slug-article", new NewCommentDTO
                 {
                     Body = "Test Body",
                 }
@@ -70,8 +70,8 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task GuestCannotCreateComment()
         {
-            await this.Invoking(x => x.Act(new CommentCreateCommand(
-                "slug-article", new CommentCreateDTO()
+            await this.Invoking(x => x.Act(new NewCommentRequest(
+                "slug-article", new NewCommentDTO()
             )))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
@@ -87,8 +87,8 @@ namespace Application.IntegrationTests.Comments
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -96,7 +96,7 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await Act(new CommentCreateCommand("test-title", new CommentCreateDTO
+            var response = await Act(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you !",
             }));

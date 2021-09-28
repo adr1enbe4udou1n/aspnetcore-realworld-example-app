@@ -19,7 +19,7 @@ namespace Application.IntegrationTests.Articles
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new [] { new ArticleUpdateDTO {
+            new [] { new UpdateArticleDTO {
                 Title = "Test Title",
                 Description = "Test Description",
                 Body = "",
@@ -28,7 +28,7 @@ namespace Application.IntegrationTests.Articles
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotUpdateArticleWithInvalidData(ArticleUpdateDTO article)
+        public async Task CannotUpdateArticleWithInvalidData(UpdateArticleDTO article)
         {
             await ActingAs(new User
             {
@@ -36,7 +36,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new ArticleUpdateCommand(
+            await this.Invoking(x => x.Act(new UpdateArticleRequest(
                 "test-title", article
             )))
                 .Should().ThrowAsync<ValidationException>();
@@ -51,9 +51,9 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new ArticleUpdateCommand(
+            await this.Invoking(x => x.Act(new UpdateArticleRequest(
                 "slug-article",
-                new ArticleUpdateDTO
+                new UpdateArticleDTO
                 {
                     Title = "New Title",
                     Description = "New Description",
@@ -66,8 +66,8 @@ namespace Application.IntegrationTests.Articles
         [Fact]
         public async Task GuestCannotUpdateArticle()
         {
-            await this.Invoking(x => x.Act(new ArticleUpdateCommand(
-                "slug-article", new ArticleUpdateDTO()
+            await this.Invoking(x => x.Act(new UpdateArticleRequest(
+                "slug-article", new UpdateArticleDTO()
             )))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
@@ -81,8 +81,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -97,9 +97,9 @@ namespace Application.IntegrationTests.Articles
             });
 
             await this.Invoking(x => x.Act(
-                new ArticleUpdateCommand(
+                new UpdateArticleRequest(
                     "test-title",
-                    new ArticleUpdateDTO
+                    new UpdateArticleDTO
                     {
                         Title = "New Title",
                         Description = "New Description",
@@ -118,8 +118,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -127,9 +127,9 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await Act(new ArticleUpdateCommand(
+            var response = await Act(new UpdateArticleRequest(
                 "test-title",
-                new ArticleUpdateDTO
+                new UpdateArticleDTO
                 {
                     Title = "New Title",
                     Description = "New Description",

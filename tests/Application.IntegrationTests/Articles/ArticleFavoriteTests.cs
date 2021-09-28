@@ -19,7 +19,7 @@ namespace Application.IntegrationTests.Articles
         [Fact]
         public async Task GuestCannotFavoriteArticle()
         {
-            await this.Invoking(x => x.Act(new ArticleFavoriteCommand(
+            await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
                 "slug-article", true
             )))
                 .Should().ThrowAsync<UnauthorizedException>();
@@ -34,7 +34,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new ArticleFavoriteCommand(
+            await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
                 "slug-article", true
             )))
                 .Should().ThrowAsync<NotFoundException>();
@@ -49,8 +49,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -58,7 +58,7 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            var response = await Act(new ArticleFavoriteCommand("test-title", true));
+            var response = await Act(new ArticleFavoriteRequest("test-title", true));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {
@@ -78,8 +78,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -87,9 +87,9 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
+            await Mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
-            var response = await Act(new ArticleFavoriteCommand("test-title", false));
+            var response = await Act(new ArticleFavoriteRequest("test-title", false));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {

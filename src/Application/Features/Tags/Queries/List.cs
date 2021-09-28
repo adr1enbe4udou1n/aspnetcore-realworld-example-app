@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Tags.Queries
 {
-    public record TagsEnvelope(IEnumerable<string> Tags);
+    public record TagsResponse(IEnumerable<string> Tags);
 
-    public record TagsListQuery() : IRequest<TagsEnvelope>;
+    public record TagsListQuery() : IRequest<TagsResponse>;
 
-    public class TagsListHandler : IRequestHandler<TagsListQuery, TagsEnvelope>
+    public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
     {
         private readonly IAppDbContext _context;
 
@@ -21,10 +21,10 @@ namespace Application.Features.Tags.Queries
             _context = context;
         }
 
-        public async Task<TagsEnvelope> Handle(TagsListQuery request, CancellationToken cancellationToken)
+        public async Task<TagsResponse> Handle(TagsListQuery request, CancellationToken cancellationToken)
         {
             var tags = await _context.Tags.OrderBy(t => t.Name).AsNoTracking().ToListAsync(cancellationToken);
-            return new TagsEnvelope(tags.Select(t => t.Name));
+            return new TagsResponse(tags.Select(t => t.Name));
         }
     }
 }

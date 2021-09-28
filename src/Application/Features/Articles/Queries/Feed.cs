@@ -12,11 +12,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries
 {
-    public class ArticlesFeedQuery : PagedQuery, IAuthorizationRequest<ArticlesEnvelope>
+    public class ArticlesFeedQuery : PagedQuery, IAuthorizationRequest<MultipleArticlesResponse>
     {
     }
 
-    public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuery, ArticlesEnvelope>
+    public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuery, MultipleArticlesResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace Application.Features.Articles.Queries
             _currentUser = currentUser;
         }
 
-        public async Task<ArticlesEnvelope> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
+        public async Task<MultipleArticlesResponse> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
         {
             var articles = await _context.Articles
                 .HasAuthorsFollowedBy(_currentUser.User)
@@ -40,7 +40,7 @@ namespace Application.Features.Articles.Queries
                 })
                 .PaginateAsync(request, cancellationToken);
 
-            return new ArticlesEnvelope(articles.Items, articles.Total);
+            return new MultipleArticlesResponse(articles.Items, articles.Total);
         }
     }
 }

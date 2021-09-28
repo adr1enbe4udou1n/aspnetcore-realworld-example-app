@@ -18,9 +18,9 @@ namespace Application.Features.Auth.Commands
         public string Image { get; set; }
     }
 
-    public record UpdateUserCommand(UpdateUserDTO User) : IAuthorizationRequest<UserEnvelope>;
+    public record UpdateUserRequest(UpdateUserDTO User) : IAuthorizationRequest<UserResponse>;
 
-    public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
+    public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
     {
         public UpdateUserValidator(ICurrentUser currentUser, IAppDbContext context)
         {
@@ -38,7 +38,7 @@ namespace Application.Features.Auth.Commands
         }
     }
 
-    public class UpdateUserHandler : IAuthorizationRequestHandler<UpdateUserCommand, UserEnvelope>
+    public class UpdateUserHandler : IAuthorizationRequestHandler<UpdateUserRequest, UserResponse>
     {
         private readonly ICurrentUser _currentUser;
         private readonly IAppDbContext _context;
@@ -51,13 +51,13 @@ namespace Application.Features.Auth.Commands
             _mapper = mapper;
         }
 
-        public async Task<UserEnvelope> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<UpdateUserDTO, User>(request.User, _currentUser.User);
             _context.Users.Update(user);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UserEnvelope(_mapper.Map<CurrentUserDTO>(user));
+            return new UserResponse(_mapper.Map<UserDTO>(user));
         }
     }
 }

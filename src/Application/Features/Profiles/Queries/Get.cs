@@ -21,11 +21,11 @@ namespace Application.Features.Profiles.Queries
         public bool Following { get; set; }
     }
 
-    public record ProfileEnvelope(ProfileDTO Profile);
+    public record ProfileResponse(ProfileDTO Profile);
 
-    public record ProfileGetQuery(string Username) : IRequest<ProfileEnvelope>;
+    public record ProfileGetQuery(string Username) : IRequest<ProfileResponse>;
 
-    public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileEnvelope>
+    public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -36,13 +36,13 @@ namespace Application.Features.Profiles.Queries
             _mapper = mapper;
         }
 
-        public async Task<ProfileEnvelope> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
+        public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
         {
             var user = await _context.Users
                 .Include(u => u.Followers)
                 .FindAsync(x => x.Name == request.Username, cancellationToken);
 
-            return new ProfileEnvelope(_mapper.Map<ProfileDTO>(user));
+            return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
         }
     }
 }

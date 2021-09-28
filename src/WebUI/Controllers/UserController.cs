@@ -24,7 +24,7 @@ namespace WebUI.Controllers.Users
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public Task<UserEnvelope> Current(CancellationToken cancellationToken)
+        public Task<UserResponse> Current(CancellationToken cancellationToken)
             => _mediator.Send(new CurrentUserQuery(), cancellationToken);
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace WebUI.Controllers.Users
         /// <returns></returns>
         [HttpPut]
         [Authorize]
-        public Task<UserEnvelope> Update([FromBody] UpdateUserCommand command, CancellationToken cancellationToken)
+        public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
             => _mediator.Send(command, cancellationToken);
     }
 }

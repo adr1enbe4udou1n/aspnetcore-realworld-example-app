@@ -27,11 +27,11 @@ namespace Application.Features.Comments.Queries
         public AuthorDTO Author { get; set; }
     }
 
-    public record CommentsEnvelope(IEnumerable<CommentDTO> Comments);
+    public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);
 
-    public record CommentsListQuery(string Slug) : IRequest<CommentsEnvelope>;
+    public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse>;
 
-    public class CommentsListHandler : IRequestHandler<CommentsListQuery, CommentsEnvelope>
+    public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -44,7 +44,7 @@ namespace Application.Features.Comments.Queries
             _currentUser = currentUser;
         }
 
-        public async Task<CommentsEnvelope> Handle(CommentsListQuery request, CancellationToken cancellationToken)
+        public async Task<MultipleCommentsResponse> Handle(CommentsListQuery request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
@@ -57,7 +57,7 @@ namespace Application.Features.Comments.Queries
                 })
                 .ToListAsync(cancellationToken);
 
-            return new CommentsEnvelope(comments);
+            return new MultipleCommentsResponse(comments);
         }
     }
 }

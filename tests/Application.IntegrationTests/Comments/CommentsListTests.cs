@@ -36,8 +36,8 @@ namespace Application.IntegrationTests.Comments
                 Image = "https://i.pravatar.cc/300"
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -54,7 +54,7 @@ namespace Application.IntegrationTests.Comments
 
             foreach (var c in comments)
             {
-                await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
                 {
                     Body = $"This is John, {c} !",
                 }));
@@ -70,7 +70,7 @@ namespace Application.IntegrationTests.Comments
 
             foreach (var c in comments)
             {
-                await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
                 {
                     Body = $"This is Jane, {c} !",
                 }));

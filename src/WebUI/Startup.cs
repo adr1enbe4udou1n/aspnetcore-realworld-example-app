@@ -101,7 +101,7 @@ namespace WebUI
 
                 c.CustomSchemaIds(x => x.GetCustomAttributes(false)
                     .OfType<DisplayNameAttribute>()
-                    .FirstOrDefault()?.DisplayName ?? x.Name
+                    .FirstOrDefault()?.DisplayName ?? x.Name.Replace("DTO", string.Empty)
                 );
 
                 c.TagActionsBy(y => new[]

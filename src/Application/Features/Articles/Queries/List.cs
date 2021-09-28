@@ -47,9 +47,9 @@ namespace Application.Features.Articles.Queries
         public int FavoritesCount { get; set; }
     }
 
-    public record ArticlesEnvelope(IEnumerable<ArticleDTO> Articles, int ArticlesCount);
+    public record MultipleArticlesResponse(IEnumerable<ArticleDTO> Articles, int ArticlesCount);
 
-    public class ArticlesListQuery : PagedQuery, IRequest<ArticlesEnvelope>
+    public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
     {
         /// <summary>
         /// Filter by author (username)
@@ -67,7 +67,7 @@ namespace Application.Features.Articles.Queries
         public string Tag { get; set; }
     }
 
-    public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, ArticlesEnvelope>
+    public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -80,7 +80,7 @@ namespace Application.Features.Articles.Queries
             _currentUser = currentUser;
         }
 
-        public async Task<ArticlesEnvelope> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
+        public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
         {
             var articles = await _context.Articles
                 .FilterByAuthor(request.Author)
@@ -93,7 +93,7 @@ namespace Application.Features.Articles.Queries
                 })
                 .PaginateAsync(request, cancellationToken);
 
-            return new ArticlesEnvelope(articles.Items, articles.Total);
+            return new MultipleArticlesResponse(articles.Items, articles.Total);
         }
     }
 }

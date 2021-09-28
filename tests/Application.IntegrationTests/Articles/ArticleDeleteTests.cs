@@ -19,7 +19,7 @@ namespace Application.IntegrationTests.Articles
         [Fact]
         public async Task GuestCannotDeleteArticle()
         {
-            await this.Invoking(x => x.Act(new ArticleDeleteCommand("slug-article")))
+            await this.Invoking(x => x.Act(new ArticleDeleteRequest("slug-article")))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
 
@@ -32,7 +32,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new ArticleDeleteCommand(
+            await this.Invoking(x => x.Act(new ArticleDeleteRequest(
                 "slug-article"
             )))
                 .Should().ThrowAsync<NotFoundException>();
@@ -47,8 +47,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -62,7 +62,7 @@ namespace Application.IntegrationTests.Articles
                 Email = "jane.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new ArticleDeleteCommand(
+            await this.Invoking(x => x.Act(new ArticleDeleteRequest(
                 "test-title"
             )))
                 .Should().ThrowAsync<ForbiddenException>();
@@ -77,8 +77,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -88,15 +88,15 @@ namespace Application.IntegrationTests.Articles
 
             for (int i = 1; i <= 5; i++)
             {
-                await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+                await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
                 {
                     Body = $"This is John, Test Comment {i} !",
                 }));
             }
 
-            await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
+            await Mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
-            await Act(new ArticleDeleteCommand("test-title"));
+            await Act(new ArticleDeleteRequest("test-title"));
 
             (await Context.Articles.AnyAsync()).Should().BeFalse();
             (await Context.Comments.AnyAsync()).Should().BeFalse();

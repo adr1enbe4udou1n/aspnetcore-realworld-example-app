@@ -12,9 +12,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands
 {
-    public record ArticleFavoriteCommand(string Slug, bool Favorite) : IAuthorizationRequest<ArticleEnvelope>;
+    public record ArticleFavoriteRequest(string Slug, bool Favorite) : IAuthorizationRequest<SingleArticleResponse>;
 
-    public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavoriteCommand, ArticleEnvelope>
+    public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavoriteRequest, SingleArticleResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace Application.Features.Articles.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<ArticleEnvelope> Handle(ArticleFavoriteCommand request, CancellationToken cancellationToken)
+        public async Task<SingleArticleResponse> Handle(ArticleFavoriteRequest request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles
                 .Include(x => x.FavoredUsers)
@@ -50,7 +50,7 @@ namespace Application.Features.Articles.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ArticleEnvelope(_mapper.Map<ArticleDTO>(article));
+            return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
         }
     }
 }

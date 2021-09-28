@@ -21,7 +21,7 @@ namespace Application.IntegrationTests.Profiles
         [Fact]
         public async Task GuestCannotFollowProfile()
         {
-            await this.Invoking(x => x.Act(new ProfileFollowCommand("john", true)))
+            await this.Invoking(x => x.Act(new ProfileFollowRequest("john", true)))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
 
@@ -48,7 +48,7 @@ namespace Application.IntegrationTests.Profiles
             );
             await Context.SaveChangesAsync();
 
-            var response = await Act(new ProfileFollowCommand("Jane Doe", true));
+            var response = await Act(new ProfileFollowRequest("Jane Doe", true));
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {
@@ -89,7 +89,7 @@ namespace Application.IntegrationTests.Profiles
                 }
             });
 
-            var response = await Act(new ProfileFollowCommand("Jane Doe", false));
+            var response = await Act(new ProfileFollowRequest("Jane Doe", false));
 
             response.Profile.Should().BeEquivalentTo(new ProfileDTO
             {

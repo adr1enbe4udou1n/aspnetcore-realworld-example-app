@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands
 {
-    public record ProfileFollowCommand(string Username, bool Follow) : IAuthorizationRequest<ProfileEnvelope>;
+    public record ProfileFollowRequest(string Username, bool Follow) : IAuthorizationRequest<ProfileResponse>;
 
-    public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowCommand, ProfileEnvelope>
+    public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowRequest, ProfileResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Application.Features.Profiles.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<ProfileEnvelope> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
+        public async Task<ProfileResponse> Handle(ProfileFollowRequest request, CancellationToken cancellationToken)
         {
             var user = await _context.Users
                 .Include(u => u.Followers)
@@ -49,7 +49,7 @@ namespace Application.Features.Profiles.Commands
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ProfileEnvelope(_mapper.Map<ProfileDTO>(user));
+            return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
         }
     }
 }

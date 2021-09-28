@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Application.Features.Auth.Queries
 {
-    public class CurrentUserDTO
+    public class UserDTO
     {
         public string Email { get; set; }
 
@@ -19,11 +19,11 @@ namespace Application.Features.Auth.Queries
         public string Token { get; set; }
     }
 
-    public record UserEnvelope(CurrentUserDTO User);
+    public record UserResponse(UserDTO User);
 
-    public record CurrentUserQuery() : IAuthorizationRequest<UserEnvelope>;
+    public record CurrentUserQuery() : IAuthorizationRequest<UserResponse>;
 
-    public class CurrentUserHandler : IAuthorizationRequestHandler<CurrentUserQuery, UserEnvelope>
+    public class CurrentUserHandler : IAuthorizationRequestHandler<CurrentUserQuery, UserResponse>
     {
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
@@ -34,10 +34,10 @@ namespace Application.Features.Auth.Queries
             _mapper = mapper;
         }
 
-        public Task<UserEnvelope> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
+        public Task<UserResponse> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new UserEnvelope(
-                _mapper.Map<CurrentUserDTO>(_currentUser.User)
+            return Task.FromResult(new UserResponse(
+                _mapper.Map<UserDTO>(_currentUser.User)
             ));
         }
     }

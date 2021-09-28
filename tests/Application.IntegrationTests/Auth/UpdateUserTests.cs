@@ -25,7 +25,7 @@ namespace Application.IntegrationTests.Auth
                 Email = "john.doe@example.com",
             });
 
-            var request = new UpdateUserCommand(new UpdateUserDTO
+            var request = new UpdateUserRequest(new UpdateUserDTO
             {
                 Email = "jane.doe@example.com",
                 Bio = "My Bio"
@@ -45,7 +45,7 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task GuestUserCannotUpdateInfos()
         {
-            await this.Invoking(x => x.Act(new UpdateUserCommand(
+            await this.Invoking(x => x.Act(new UpdateUserRequest(
                 new UpdateUserDTO
                 {
                     Email = "jane.doe@example.com"
@@ -71,7 +71,7 @@ namespace Application.IntegrationTests.Auth
             });
 
             await this.Invoking(x => x.Act(
-                new UpdateUserCommand(
+                new UpdateUserRequest(
                     new UpdateUserDTO
                     {
                         Email = "jane.doe@example.com",

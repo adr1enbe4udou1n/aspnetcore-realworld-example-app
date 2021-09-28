@@ -14,19 +14,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Commands
 {
-    public class CommentCreateDTO
+    public class NewCommentDTO
     {
 
         public string Body { get; set; }
     }
 
-    public record CommentEnvelope(CommentDTO Comment);
+    public record SingleCommentResponse(CommentDTO Comment);
 
-    [DisplayName("CommentCreateCommand")]
-    public record CommentCreateBody(CommentCreateDTO Comment);
-    public record CommentCreateCommand(string Slug, CommentCreateDTO Comment) : IAuthorizationRequest<CommentEnvelope>;
+    [DisplayName("NewCommentRequest")]
+    public record NewCommentBody(NewCommentDTO Comment);
+    public record NewCommentRequest(string Slug, NewCommentDTO Comment) : IAuthorizationRequest<SingleCommentResponse>;
 
-    public class CommentCreateValidator : AbstractValidator<CommentCreateCommand>
+    public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
     {
         public CommentCreateValidator()
         {
@@ -34,7 +34,7 @@ namespace Application.Features.Comments.Commands
         }
     }
 
-    public class CommentCreateHandler : IAuthorizationRequestHandler<CommentCreateCommand, CommentEnvelope>
+    public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentRequest, SingleCommentResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -47,7 +47,7 @@ namespace Application.Features.Comments.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<CommentEnvelope> Handle(CommentCreateCommand request, CancellationToken cancellationToken)
+        public async Task<SingleCommentResponse> Handle(NewCommentRequest request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
@@ -58,7 +58,7 @@ namespace Application.Features.Comments.Commands
             await _context.Comments.AddAsync(comment, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new CommentEnvelope(_mapper.Map<CommentDTO>(comment));
+            return new SingleCommentResponse(_mapper.Map<CommentDTO>(comment));
         }
     }
 }

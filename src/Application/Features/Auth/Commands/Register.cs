@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands
 {
-    public class RegisterDTO
+    public class NewUserDTO
     {
         public string Email { get; set; }
 
@@ -20,9 +20,9 @@ namespace Application.Features.Auth.Commands
         public string Username { get; set; }
     }
 
-    public record RegisterCommand(RegisterDTO User) : IRequest<UserEnvelope>;
+    public record NewUserRequest(NewUserDTO User) : IRequest<UserResponse>;
 
-    public class RegisterValidator : AbstractValidator<RegisterCommand>
+    public class RegisterValidator : AbstractValidator<NewUserRequest>
     {
         public RegisterValidator(IAppDbContext context)
         {
@@ -39,7 +39,7 @@ namespace Application.Features.Auth.Commands
         }
     }
 
-    public class RegisterHandler : IRequestHandler<RegisterCommand, UserEnvelope>
+    public class RegisterHandler : IRequestHandler<NewUserRequest, UserResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
@@ -52,15 +52,15 @@ namespace Application.Features.Auth.Commands
             _mapper = mapper;
         }
 
-        public async Task<UserEnvelope> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(NewUserRequest request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<RegisterDTO, User>(request.User);
+            var user = _mapper.Map<NewUserDTO, User>(request.User);
             user.Password = _passwordHasher.Hash(request.User.Password);
 
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UserEnvelope(_mapper.Map<CurrentUserDTO>(user));
+            return new UserResponse(_mapper.Map<UserDTO>(user));
         }
     }
 }

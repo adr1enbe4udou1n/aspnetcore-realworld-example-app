@@ -20,22 +20,22 @@ namespace Application.IntegrationTests.Articles
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new [] { new ArticleCreateDTO {
+            new [] { new NewArticleDTO {
                 Title = "",
                 Description = "Test Description",
                 Body = "Test Body",
             } },
-            new [] { new ArticleCreateDTO {
+            new [] { new NewArticleDTO {
                 Title = "Test Title",
                 Description = "",
                 Body = "Test Body",
             } },
-            new [] { new ArticleCreateDTO {
+            new [] { new NewArticleDTO {
                 Title = "Test Title",
                 Description = "Test Description",
                 Body = "",
             } },
-            new [] { new ArticleCreateDTO {
+            new [] { new NewArticleDTO {
                 Title = "Existing Title",
                 Description = "Test Description",
                 Body = "Test Body",
@@ -44,7 +44,7 @@ namespace Application.IntegrationTests.Articles
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotCreateArticleWithInvalidData(ArticleCreateDTO article)
+        public async Task CannotCreateArticleWithInvalidData(NewArticleDTO article)
         {
             await ActingAs(new User
             {
@@ -52,8 +52,8 @@ namespace Application.IntegrationTests.Articles
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Existing Title",
                     Description = "Test Description",
@@ -61,15 +61,15 @@ namespace Application.IntegrationTests.Articles
                 }
             ));
 
-            await this.Invoking(x => x.Act(new ArticleCreateCommand(article)))
+            await this.Invoking(x => x.Act(new NewArticleRequest(article)))
                 .Should().ThrowAsync<ValidationException>();
         }
 
         [Fact]
         public async Task GuestCannotCreateArticle()
         {
-            await this.Invoking(x => x.Act(new ArticleCreateCommand(
-                new ArticleCreateDTO()
+            await this.Invoking(x => x.Act(new NewArticleRequest(
+                new NewArticleDTO()
             )))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
@@ -92,8 +92,8 @@ namespace Application.IntegrationTests.Articles
             await Context.SaveChangesAsync();
 
             var response = await Act(
-                new ArticleCreateCommand(
-                    new ArticleCreateDTO
+                new NewArticleRequest(
+                    new NewArticleDTO
                     {
                         Title = "Test Article",
                         Description = "Test Description",

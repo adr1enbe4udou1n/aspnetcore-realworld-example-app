@@ -25,28 +25,28 @@ namespace WebUI.IntegrationTests
         [Fact]
         public async Task CanUseUsersRoute()
         {
-            var httpResponse = await _client.PostAsJsonAsync("/api/users", new RegisterCommand(
-                new RegisterDTO()
+            var httpResponse = await _client.PostAsJsonAsync("/api/users", new NewUserRequest(
+                new NewUserDTO()
             ));
 
             httpResponse.EnsureSuccessStatusCode();
 
             _mediatorMock.Verify(m => m.Send(
-                It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()), Times.Once()
+                It.IsAny<NewUserRequest>(), It.IsAny<CancellationToken>()), Times.Once()
             );
         }
 
         [Fact]
         public async Task CanUseLoginRoute()
         {
-            var httpResponse = await _client.PostAsJsonAsync("/api/users/login", new LoginCommand(
-                new LoginDTO()
+            var httpResponse = await _client.PostAsJsonAsync("/api/users/login", new LoginUserRequest(
+                new LoginUserDTO()
             ));
 
             httpResponse.EnsureSuccessStatusCode();
 
             _mediatorMock.Verify(m => m.Send(
-                It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()), Times.Once()
+                It.IsAny<LoginUserRequest>(), It.IsAny<CancellationToken>()), Times.Once()
             );
         }
     }

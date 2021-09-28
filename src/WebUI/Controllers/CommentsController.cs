@@ -24,7 +24,7 @@ namespace WebUI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<CommentsEnvelope> List(string slug, CancellationToken cancellationToken)
+        public async Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
             => await _mediator.Send(new CommentsListQuery(slug), cancellationToken);
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace WebUI.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        public async Task<CommentEnvelope> Create(string slug, [FromBody] CommentCreateBody command, CancellationToken cancellationToken)
-            => await _mediator.Send(new CommentCreateCommand(slug, command.Comment), cancellationToken);
+        public async Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
+            => await _mediator.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
 
         /// <summary>
         /// Delete a comment for an article
@@ -51,6 +51,6 @@ namespace WebUI.Controllers
         [HttpDelete("{commentId}")]
         [Authorize]
         public async Task Delete(string slug, int commentId, CancellationToken cancellationToken)
-            => await _mediator.Send(new CommentDeleteCommand(slug, commentId), cancellationToken);
+            => await _mediator.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
     }
 }

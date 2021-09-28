@@ -11,16 +11,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands
 {
-    public class LoginDTO
+    public class LoginUserDTO
     {
         public string Email { get; set; }
 
         public string Password { get; set; }
     }
 
-    public record LoginCommand(LoginDTO User) : IRequest<UserEnvelope>;
+    public record LoginUserRequest(LoginUserDTO User) : IRequest<UserResponse>;
 
-    public class LoginHandler : IRequestHandler<LoginCommand, UserEnvelope>
+    public class LoginHandler : IRequestHandler<LoginUserRequest, UserResponse>
     {
         private readonly IAppDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
@@ -33,7 +33,7 @@ namespace Application.Features.Auth.Commands
             _mapper = mapper;
         }
 
-        public async Task<UserEnvelope> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _context.Users.Where(x => x.Email == request.User.Email)
                 .SingleOrDefaultAsync(cancellationToken);
@@ -43,7 +43,7 @@ namespace Application.Features.Auth.Commands
                 throw new ValidationException("Bad credentials");
             }
 
-            return new UserEnvelope(_mapper.Map<CurrentUserDTO>(user));
+            return new UserResponse(_mapper.Map<UserDTO>(user));
         }
     }
 }

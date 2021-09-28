@@ -19,15 +19,15 @@ namespace Application.IntegrationTests.Auth
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new [] { new RegisterDTO {
+            new [] { new NewUserDTO {
                 Email = "john.doe",
                 Username = "John Doe",
                 Password = "password",
             } },
-            new [] { new RegisterDTO {
+            new [] { new NewUserDTO {
                 Email = "john.doe@example.com",
             } },
-            new [] { new RegisterDTO {
+            new [] { new NewUserDTO {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
                 Password = "pass",
@@ -36,9 +36,9 @@ namespace Application.IntegrationTests.Auth
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task UserCannotRegisterWithInvalidData(RegisterDTO user)
+        public async Task UserCannotRegisterWithInvalidData(NewUserDTO user)
         {
-            await this.Invoking(x => x.Act(new RegisterCommand(user)))
+            await this.Invoking(x => x.Act(new NewUserRequest(user)))
                 .Should().ThrowAsync<ValidationException>()
                 .Where(e => e.Errors.Any());
         }
@@ -46,7 +46,7 @@ namespace Application.IntegrationTests.Auth
         [Fact]
         public async Task UserCanRegister()
         {
-            var request = new RegisterCommand(new RegisterDTO
+            var request = new NewUserRequest(new NewUserDTO
             {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
@@ -82,8 +82,8 @@ namespace Application.IntegrationTests.Auth
             await Context.SaveChangesAsync();
 
             await this.Invoking(x => x.Act(
-                new RegisterCommand(
-                    new RegisterDTO
+                new NewUserRequest(
+                    new NewUserDTO
                     {
                         Email = "john.doe@example.com",
                         Username = "John Doe",

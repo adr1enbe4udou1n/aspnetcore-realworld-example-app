@@ -19,7 +19,7 @@ namespace Application.IntegrationTests.Comments
         [Fact]
         public async Task GuestCannotDeleteComment()
         {
-            await this.Invoking(x => x.Act(new CommentDeleteCommand("slug-article", 1)))
+            await this.Invoking(x => x.Act(new CommentDeleteRequest("slug-article", 1)))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
 
@@ -32,8 +32,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -41,7 +41,7 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+            await this.Invoking(x => x.Act(new CommentDeleteRequest(
                 "test-title", 1
             )))
                 .Should().ThrowAsync<NotFoundException>();
@@ -56,8 +56,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -65,12 +65,12 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you !",
             }));
 
-            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+            await this.Invoking(x => x.Act(new CommentDeleteRequest(
                 "slug-article", response.Comment.Id
             )))
                 .Should().ThrowAsync<NotFoundException>();
@@ -85,8 +85,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -94,8 +94,8 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Other Title",
                     Description = "Test Description",
@@ -103,12 +103,12 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you !",
             }));
 
-            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+            await this.Invoking(x => x.Act(new CommentDeleteRequest(
                 "other-title", response.Comment.Id
             )))
                 .Should().ThrowAsync<NotFoundException>();
@@ -123,8 +123,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -132,7 +132,7 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you !",
             }));
@@ -143,7 +143,7 @@ namespace Application.IntegrationTests.Comments
                 Email = "jane.doe@example.com",
             });
 
-            await this.Invoking(x => x.Act(new CommentDeleteCommand(
+            await this.Invoking(x => x.Act(new CommentDeleteRequest(
                 "test-title", response.Comment.Id
             )))
                 .Should().ThrowAsync<ForbiddenException>();
@@ -158,8 +158,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -167,12 +167,12 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            var response = await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you !",
             }));
 
-            await Act(new CommentDeleteCommand("test-title", response.Comment.Id));
+            await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
 
             (await Context.Comments.AnyAsync()).Should().BeFalse();
         }
@@ -186,8 +186,8 @@ namespace Application.IntegrationTests.Comments
                 Email = "john.doe@example.com",
             });
 
-            await Mediator.Send(new ArticleCreateCommand(
-                new ArticleCreateDTO
+            await Mediator.Send(new NewArticleRequest(
+                new NewArticleDTO
                 {
                     Title = "Test Title",
                     Description = "Test Description",
@@ -195,7 +195,7 @@ namespace Application.IntegrationTests.Comments
                 }
             ));
 
-            await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you !",
             }));
@@ -206,14 +206,14 @@ namespace Application.IntegrationTests.Comments
                 Email = "jane.doe@example.com",
             });
 
-            var response = await Mediator.Send(new CommentCreateCommand("test-title", new CommentCreateDTO
+            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = "Thank you John !",
             }));
 
             await CurrentUser.SetIdentifier(user.Id);
 
-            await Act(new CommentDeleteCommand("test-title", response.Comment.Id));
+            await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
 
             (await Context.Comments.CountAsync()).Should().Be(1);
         }

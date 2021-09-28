@@ -11,9 +11,9 @@ using MediatR;
 
 namespace Application.Features.Comments.Commands
 {
-    public record CommentDeleteCommand(string Slug, int Id) : IAuthorizationRequest;
+    public record CommentDeleteRequest(string Slug, int Id) : IAuthorizationRequest;
 
-    public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteCommand>
+    public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteRequest>
     {
         private readonly IAppDbContext _context;
         private readonly ICurrentUser _currentUser;
@@ -24,7 +24,7 @@ namespace Application.Features.Comments.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CommentDeleteRequest request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
             var comment = await _context.Comments.FindAsync(

@@ -127,7 +127,7 @@ namespace Application.IntegrationTests.Articles
 
             foreach (var a in articles)
             {
-                await Mediator.Send(new ArticleFavoriteCommand(a, true));
+                await Mediator.Send(new ArticleFavoriteRequest(a, true));
             }
 
             var response = await Act(new ArticlesListQuery
@@ -164,7 +164,7 @@ namespace Application.IntegrationTests.Articles
         {
             await CreateArticles();
 
-            await Mediator.Send(new ProfileFollowCommand("John Doe", true));
+            await Mediator.Send(new ProfileFollowRequest("John Doe", true));
 
             var response = await Act(new ArticlesFeedQuery
             {
@@ -220,8 +220,8 @@ namespace Application.IntegrationTests.Articles
 
             foreach (var a in articles)
             {
-                await Mediator.Send(new ArticleCreateCommand(
-                    new ArticleCreateDTO
+                await Mediator.Send(new NewArticleRequest(
+                    new NewArticleDTO
                     {
                         Title = a,
                         Description = "Test Description",

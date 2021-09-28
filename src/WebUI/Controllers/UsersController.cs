@@ -24,7 +24,7 @@ namespace WebUI.Controllers.Users
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<UserEnvelope> Register([FromBody] RegisterCommand command, CancellationToken cancellationToken)
+        public Task<UserResponse> Register([FromBody] NewUserRequest command, CancellationToken cancellationToken)
             => _mediator.Send(command, cancellationToken);
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace WebUI.Controllers.Users
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        public Task<UserEnvelope> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
+        public Task<UserResponse> Login([FromBody] LoginUserRequest command, CancellationToken cancellationToken)
             => _mediator.Send(command, cancellationToken);
     }
 }

@@ -18,11 +18,11 @@ namespace Application.Mappings
         {
             User currentUser = null;
 
-            CreateMap<User, CurrentUserDTO>()
+            CreateMap<User, UserDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenResolver>());
 
-            CreateMap<RegisterDTO, User>()
+            CreateMap<NewUserDTO, User>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
 
             CreateMap<UpdateUserDTO, User>()
@@ -34,9 +34,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
-            CreateMap<ArticleCreateDTO, Article>()
+            CreateMap<NewArticleDTO, Article>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
-            CreateMap<ArticleUpdateDTO, Article>();
+            CreateMap<UpdateArticleDTO, Article>();
             CreateMap<Article, ArticleDTO>()
                 .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)))
                 .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
@@ -47,7 +47,7 @@ namespace Application.Mappings
             CreateMap<User, AuthorDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
 
-            CreateMap<CommentCreateDTO, Comment>()
+            CreateMap<NewCommentDTO, Comment>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
             CreateMap<Comment, CommentDTO>();
         }

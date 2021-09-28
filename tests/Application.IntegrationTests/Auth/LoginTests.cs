@@ -18,11 +18,11 @@ namespace Application.IntegrationTests.Auth
 
         public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new [] { new LoginDTO {
+            new [] { new LoginUserDTO {
                 Email = "jane.doe@example.com",
                 Password = "password",
             } },
-            new [] { new LoginDTO {
+            new [] { new LoginUserDTO {
                 Email = "john.doe@example.com",
                 Password = "badpassword",
             } },
@@ -30,7 +30,7 @@ namespace Application.IntegrationTests.Auth
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task UserCannotLoginWithInvalidData(LoginDTO credentials)
+        public async Task UserCannotLoginWithInvalidData(LoginUserDTO credentials)
         {
             await Context.Users.AddAsync(new User
             {
@@ -40,7 +40,7 @@ namespace Application.IntegrationTests.Auth
             });
             await Context.SaveChangesAsync();
 
-            await this.Invoking(x => x.Act(new LoginCommand(credentials)))
+            await this.Invoking(x => x.Act(new LoginUserRequest(credentials)))
                 .Should().ThrowAsync<ValidationException>();
         }
 
@@ -57,8 +57,8 @@ namespace Application.IntegrationTests.Auth
             await Context.SaveChangesAsync();
 
             var currentUser = await Act(
-                new LoginCommand(
-                    new LoginDTO
+                new LoginUserRequest(
+                    new LoginUserDTO
                     {
                         Email = "john.doe@example.com",
                         Password = "password",

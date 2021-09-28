@@ -21,7 +21,7 @@ namespace WebUI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<TagsEnvelope> List(CancellationToken cancellationToken)
+        public async Task<TagsResponse> List(CancellationToken cancellationToken)
             => await _mediator.Send(new TagsListQuery(), cancellationToken);
     }
 }
