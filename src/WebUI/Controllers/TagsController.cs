@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
 {
-    [Route("tags")]
+    [Route("[controller]")]
+    [ApiExplorerSettings(GroupName = "Tags")]
     public class TagsController
     {
         private readonly IMediator _mediator;

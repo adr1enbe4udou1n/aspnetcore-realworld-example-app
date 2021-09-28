@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Application.Features.Auth.Commands;
 using Application.Features.Auth.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers.Users
 {
-    [Route("users")]
+    [Route("[controller]")]
+    [ApiExplorerSettings(GroupName = "User and Authentication")]
     public class UsersController
     {
         private readonly IMediator _mediator;

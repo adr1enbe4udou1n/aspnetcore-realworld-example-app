@@ -12,6 +12,7 @@ using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +37,7 @@ namespace WebUI
         {
             services.AddInfrastructure(Configuration);
 
+            services.AddRouting(options => options.LowercaseUrls = true);
             services
                 .AddControllers(opt =>
                 {
@@ -44,9 +46,34 @@ namespace WebUI
                 .AddJsonOptions(options =>
                     options.JsonSerializerOptions.Converters.Add(new Converters.DateTimeConverter())
                 );
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Token";
+                options.DefaultChallengeScheme = "Token";
+            });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Conduit", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Conduit API",
+                    Version = "1.0.0",
+                    Description = "Conduit API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "RealWorld",
+                        Url = new Uri("https://realworld.io"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT License",
+                        Url = new Uri("https://opensource.org/licenses/MIT"),
+                    },
+                });
+
+                c.AddServer(new OpenApiServer
+                {
+                    Url = "/api",
+                });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -59,18 +86,19 @@ namespace WebUI
 
                 c.SupportNonNullableReferenceTypes();
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                c.CustomSchemaIds(x => x.GetCustomAttributes(false)
+                    .OfType<DisplayNameAttribute>()
+                    .FirstOrDefault()?.DisplayName ?? x.Name
+                );
+
+                c.TagActionsBy(y => new[]
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                        },
-                        Array.Empty<string>()
-                    }
+                    y.GroupName ?? throw new InvalidOperationException()
                 });
 
-                c.CustomSchemaIds(x => x.GetCustomAttributes(false).OfType<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? x.Name);
+                c.DocInclusionPredicate((name, api) => true);
+
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
         }
 
@@ -85,19 +113,23 @@ namespace WebUI
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Conduit v1"));
 
-            app.UseRouting();
-
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-            );
-
-            app.UseMiddleware<JwtMiddleware>();
-
-            app.UseEndpoints(endpoints =>
+            app.Map("/api", app =>
             {
-                endpoints.MapControllers();
+                app.UseRouting();
+
+                app.UseCors(x => x
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                );
+
+                app.UseMiddleware<JwtMiddleware>();
+                app.UseAuthorization();
+
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
             });
         }
     }
