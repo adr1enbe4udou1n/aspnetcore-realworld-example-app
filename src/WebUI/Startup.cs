@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
@@ -77,6 +78,9 @@ namespace WebUI
                         Url = new Uri("https://opensource.org/licenses/MIT"),
                     },
                 });
+
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "WebUI.xml");
+                c.IncludeXmlComments(filePath);
 
                 c.AddServer(new OpenApiServer
                 {

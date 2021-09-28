@@ -27,13 +27,16 @@ namespace Application.IntegrationTests.Auth
 
             var request = new UpdateUserCommand(new UpdateUserDTO
             {
-                Email = "jane.doe@example.com"
+                Email = "jane.doe@example.com",
+                Bio = "My Bio"
             });
 
             var currentUser = await Act(request);
 
             currentUser.User.Username.Should().Be("John Doe");
             currentUser.User.Email.Should().Be("jane.doe@example.com");
+            currentUser.User.Bio.Should().Be("My Bio");
+            currentUser.User.Image.Should().BeNull();
 
             var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
             created.Should().NotBeNull();

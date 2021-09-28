@@ -12,7 +12,10 @@ namespace Application.Features.Auth.Commands
 {
     public class UpdateUserDTO
     {
+        public string Username { get; set; }
         public string Email { get; set; }
+        public string Bio { get; set; }
+        public string Image { get; set; }
     }
 
     public record UpdateUserCommand(UpdateUserDTO User) : IAuthorizationRequest<UserEnvelope>;
@@ -21,14 +24,17 @@ namespace Application.Features.Auth.Commands
     {
         public UpdateUserValidator(ICurrentUser currentUser, IAppDbContext context)
         {
-            RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
+            When(x => !string.IsNullOrEmpty(x.User.Email), () =>
+            {
+                RuleFor(x => x.User.Email).EmailAddress();
 
-            RuleFor(x => x.User.Email).MustAsync(
-                async (email, cancellationToken) => !await context.Users
-                    .Where(x => x.Id != currentUser.User.Id && x.Email == email)
-                    .AnyAsync(cancellationToken)
-            )
-                .WithMessage("Email is already used");
+                RuleFor(x => x.User.Email).MustAsync(
+                    async (email, cancellationToken) => !await context.Users
+                        .Where(x => x.Id != currentUser.User.Id && x.Email == email)
+                        .AnyAsync(cancellationToken)
+                    )
+                        .WithMessage("Email is already used");
+            });
         }
     }
 
@@ -47,13 +53,11 @@ namespace Application.Features.Auth.Commands
 
         public async Task<UserEnvelope> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            _currentUser.User.Email = request.User.Email;
-            _context.Users.Update(_currentUser.User);
+            var user = _mapper.Map<UpdateUserDTO, User>(request.User, _currentUser.User);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new UserEnvelope(
-                _mapper.Map<CurrentUserDTO>(_currentUser.User)
-            );
+            return new UserEnvelope(_mapper.Map<CurrentUserDTO>(user));
         }
     }
 }

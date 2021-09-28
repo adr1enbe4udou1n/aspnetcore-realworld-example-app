@@ -25,12 +25,18 @@ namespace Application.Mappings
             CreateMap<RegisterDTO, User>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
 
+            CreateMap<UpdateUserDTO, User>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            ;
+
             CreateMap<User, ProfileDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
             CreateMap<ArticleCreateDTO, Article>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+            CreateMap<ArticleUpdateDTO, Article>();
             CreateMap<Article, ArticleDTO>()
                 .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)))
                 .ForMember(dest => dest.Favorited, opt => opt.MapFrom(

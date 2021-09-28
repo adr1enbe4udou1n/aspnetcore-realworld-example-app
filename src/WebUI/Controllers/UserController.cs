@@ -16,11 +16,24 @@ namespace WebUI.Controllers.Users
 
         public UserController(IMediator mediator) => _mediator = mediator;
 
+        /// <summary>
+        /// Get current user
+        /// </summary>
+        /// <remarks>Gets the currently logged-in user</remarks>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet]
         [Authorize]
         public Task<UserEnvelope> Current(CancellationToken cancellationToken)
             => _mediator.Send(new CurrentUserQuery(), cancellationToken);
 
+        /// <summary>
+        /// Update current user
+        /// </summary>
+        /// <remarks>Updated user information for current user</remarks>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPut]
         [Authorize]
         public Task<UserEnvelope> Update([FromBody] UpdateUserCommand command, CancellationToken cancellationToken)

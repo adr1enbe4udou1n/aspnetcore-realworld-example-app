@@ -20,6 +20,8 @@ namespace Application.IntegrationTests.Articles
         public static IEnumerable<object[]> Data => new List<object[]>
         {
             new [] { new ArticleUpdateDTO {
+                Title = "Test Title",
+                Description = "Test Description",
                 Body = "",
             } },
         };
@@ -53,6 +55,8 @@ namespace Application.IntegrationTests.Articles
                 "slug-article",
                 new ArticleUpdateDTO
                 {
+                    Title = "New Title",
+                    Description = "New Description",
                     Body = "New Body",
                 }
             )))
@@ -97,6 +101,8 @@ namespace Application.IntegrationTests.Articles
                     "test-title",
                     new ArticleUpdateDTO
                     {
+                        Title = "New Title",
+                        Description = "New Description",
                         Body = "New Body",
                     }
                 )))
@@ -125,14 +131,16 @@ namespace Application.IntegrationTests.Articles
                 "test-title",
                 new ArticleUpdateDTO
                 {
+                    Title = "New Title",
+                    Description = "New Description",
                     Body = "New Body",
                 }
             ));
 
             response.Article.Should().BeEquivalentTo(new ArticleDTO
             {
-                Title = "Test Title",
-                Description = "Test Description",
+                Title = "New Title",
+                Description = "New Description",
                 Body = "New Body",
                 Slug = "test-title",
                 Author = new AuthorDTO

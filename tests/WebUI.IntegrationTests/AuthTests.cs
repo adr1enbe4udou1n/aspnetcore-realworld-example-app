@@ -25,7 +25,7 @@ namespace WebUI.IntegrationTests
         [Fact]
         public async Task CanUseUsersRoute()
         {
-            var httpResponse = await _client.PostAsJsonAsync("/users", new RegisterCommand(
+            var httpResponse = await _client.PostAsJsonAsync("/api/users", new RegisterCommand(
                 new RegisterDTO()
             ));
 
@@ -39,7 +39,7 @@ namespace WebUI.IntegrationTests
         [Fact]
         public async Task CanUseLoginRoute()
         {
-            var httpResponse = await _client.PostAsJsonAsync("/users/login", new LoginCommand(
+            var httpResponse = await _client.PostAsJsonAsync("/api/users/login", new LoginCommand(
                 new LoginDTO()
             ));
 
@@ -47,32 +47,6 @@ namespace WebUI.IntegrationTests
 
             _mediatorMock.Verify(m => m.Send(
                 It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()), Times.Once()
-            );
-        }
-
-        [Fact]
-        public async Task CanUseCurrentUserRoute()
-        {
-            var httpResponse = await _client.GetAsync("/user");
-
-            httpResponse.EnsureSuccessStatusCode();
-
-            _mediatorMock.Verify(m => m.Send(
-                It.IsAny<CurrentUserQuery>(), It.IsAny<CancellationToken>()), Times.Once()
-            );
-        }
-
-        [Fact]
-        public async Task CanUseUpdateUserRoute()
-        {
-            var httpResponse = await _client.PutAsJsonAsync("/user", new UpdateUserCommand(
-                new UpdateUserDTO()
-            ));
-
-            httpResponse.EnsureSuccessStatusCode();
-
-            _mediatorMock.Verify(m => m.Send(
-                It.IsAny<UpdateUserCommand>(), It.IsAny<CancellationToken>()), Times.Once()
             );
         }
     }

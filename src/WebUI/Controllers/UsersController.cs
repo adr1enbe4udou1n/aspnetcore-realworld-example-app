@@ -16,10 +16,24 @@ namespace WebUI.Controllers.Users
 
         public UsersController(IMediator mediator) => _mediator = mediator;
 
+        /// <summary>
+        /// Register a new user
+        /// </summary>
+        /// <remarks>Register a new user</remarks>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost]
         public Task<UserEnvelope> Register([FromBody] RegisterCommand command, CancellationToken cancellationToken)
             => _mediator.Send(command, cancellationToken);
 
+        /// <summary>
+        /// Existing user login
+        /// </summary>
+        /// <remarks>Login for existing user</remarks>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public Task<UserEnvelope> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
             => _mediator.Send(command, cancellationToken);

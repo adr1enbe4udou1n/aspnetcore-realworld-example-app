@@ -9,12 +9,15 @@ using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using AutoMapper;
+using Domain.Entities;
 using FluentValidation;
 
 namespace Application.Features.Articles.Commands
 {
     public class ArticleUpdateDTO
     {
+        public string Title { get; set; }
+        public string Description { get; set; }
         public string Body { get; set; }
     }
 
@@ -26,6 +29,8 @@ namespace Application.Features.Articles.Commands
     {
         public ArticleUpdateValidator()
         {
+            RuleFor(x => x.Article.Title).NotNull().NotEmpty();
+            RuleFor(x => x.Article.Description).NotNull().NotEmpty();
             RuleFor(x => x.Article.Body).NotNull().NotEmpty();
         }
     }
@@ -52,7 +57,7 @@ namespace Application.Features.Articles.Commands
                 throw new ForbiddenException();
             }
 
-            article.Body = request.Article.Body;
+            article = _mapper.Map<ArticleUpdateDTO, Article>(request.Article, article);
 
             _context.Articles.Update(article);
             await _context.SaveChangesAsync(cancellationToken);
