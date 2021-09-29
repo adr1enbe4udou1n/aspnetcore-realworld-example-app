@@ -29,9 +29,9 @@ namespace Application.Features.Articles.Commands
     {
         public ArticleUpdateValidator()
         {
-            RuleFor(x => x.Article.Title).NotNull().NotEmpty();
-            RuleFor(x => x.Article.Description).NotNull().NotEmpty();
-            RuleFor(x => x.Article.Body).NotNull().NotEmpty();
+            RuleFor(x => x.Article.Title).NotEmpty().When(x => x.Article.Title != null);
+            RuleFor(x => x.Article.Description).NotEmpty().When(x => x.Article.Description != null);
+            RuleFor(x => x.Article.Body).NotEmpty().When(x => x.Article.Body != null);
         }
     }
 

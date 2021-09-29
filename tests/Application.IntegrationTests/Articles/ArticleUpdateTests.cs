@@ -134,7 +134,6 @@ namespace Application.IntegrationTests.Articles
                 {
                     Title = "New Title",
                     Description = "New Description",
-                    Body = "New Body",
                 }
             ));
 
@@ -142,7 +141,7 @@ namespace Application.IntegrationTests.Articles
             {
                 Title = "New Title",
                 Description = "New Description",
-                Body = "New Body",
+                Body = "Test Body",
                 Slug = "test-title",
                 Author = new ProfileDTO
                 {
@@ -151,7 +150,7 @@ namespace Application.IntegrationTests.Articles
                 TagList = new List<string>(),
             }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-            (await Context.Articles.AnyAsync(x => x.Body == "New Body")).Should().BeTrue();
+            (await Context.Articles.AnyAsync(x => x.Title == "New Title")).Should().BeTrue();
         }
     }
 }

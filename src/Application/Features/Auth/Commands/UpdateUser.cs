@@ -24,6 +24,8 @@ namespace Application.Features.Auth.Commands
     {
         public UpdateUserValidator(ICurrentUser currentUser, IAppDbContext context)
         {
+            RuleFor(x => x.User.Username).NotEmpty().When(x => x.User.Username != null);
+
             When(x => !string.IsNullOrEmpty(x.User.Email), () =>
             {
                 RuleFor(x => x.User.Email).EmailAddress();

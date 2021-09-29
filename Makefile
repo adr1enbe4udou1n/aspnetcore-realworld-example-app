@@ -18,9 +18,9 @@ test-watch-app:
 	dotnet watch test -p tests/Application.IntegrationTests -l:"console;verbosity=detailed"
 test-watch-web:
 	dotnet watch test -p tests/WebUI.IntegrationTests
-migration-add:
+migrations-add:
 	dotnet ef migrations add -p src/Infrastructure -s src/WebUI -o Persistence/Migrations $(name)
-migration-remove:
+migrations-remove:
 	dotnet ef migrations remove -p src/Infrastructure -s src/WebUI
 db-update:
 	dotnet ef database update -p src/Infrastructure -s src/WebUI $(name)

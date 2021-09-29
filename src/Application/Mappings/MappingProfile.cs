@@ -38,7 +38,8 @@ namespace Application.Mappings
             CreateMap<NewArticleDTO, Article>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
 
-            CreateMap<UpdateArticleDTO, Article>();
+            CreateMap<UpdateArticleDTO, Article>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Article, ArticleDTO>()
                 .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)))
