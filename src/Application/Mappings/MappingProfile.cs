@@ -32,11 +32,14 @@ namespace Application.Mappings
 
             CreateMap<User, ProfileDTO>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? src.IsFollowedBy(currentUser) : false));
+                .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? src.IsFollowedBy(currentUser) : false))
+                .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
             CreateMap<NewArticleDTO, Article>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+
             CreateMap<UpdateArticleDTO, Article>();
+
             CreateMap<Article, ArticleDTO>()
                 .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)))
                 .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
@@ -47,6 +50,7 @@ namespace Application.Mappings
 
             CreateMap<NewCommentDTO, Comment>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+
             CreateMap<Comment, CommentDTO>();
         }
     }
