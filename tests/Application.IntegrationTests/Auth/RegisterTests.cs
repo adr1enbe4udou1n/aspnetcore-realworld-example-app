@@ -36,7 +36,7 @@ namespace Application.IntegrationTests.Auth
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task UserCannotRegisterWithInvalidData(NewUserDTO user)
+        public async Task User_Cannot_Register_With_Invalid_Data(NewUserDTO user)
         {
             await this.Invoking(x => x.Act(new NewUserRequest(user)))
                 .Should().ThrowAsync<ValidationException>()
@@ -44,7 +44,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task UserCanRegister()
+        public async Task User_Can_Register()
         {
             var request = new NewUserRequest(new NewUserDTO
             {
@@ -71,7 +71,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task UserCannotRegisterTwice()
+        public async Task User_Cannot_Register_Twice()
         {
             await Context.Users.AddAsync(new User
             {

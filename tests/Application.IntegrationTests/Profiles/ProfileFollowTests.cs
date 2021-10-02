@@ -19,14 +19,14 @@ namespace Application.IntegrationTests.Profiles
         public ProfileFollowTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task GuestCannotFollowProfile()
+        public async Task Guest_Cannot_Follow_Profile()
         {
             await this.Invoking(x => x.Act(new ProfileFollowRequest("john", true)))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
-        public async Task CanFollowProfile()
+        public async Task Can_Follow_Profile()
         {
             await ActingAs(new User
             {
@@ -62,7 +62,7 @@ namespace Application.IntegrationTests.Profiles
         }
 
         [Fact]
-        public async Task CanUnfollowProfile()
+        public async Task Can_Unfollow_Profile()
         {
             await ActingAs(new User
             {

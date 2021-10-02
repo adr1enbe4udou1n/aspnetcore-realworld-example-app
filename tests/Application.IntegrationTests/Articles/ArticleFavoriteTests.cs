@@ -17,7 +17,7 @@ namespace Application.IntegrationTests.Articles
         public ArticleFavoriteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task GuestCannotFavoriteArticle()
+        public async Task Guest_Cannot_Favorite_Article()
         {
             await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
                 "slug-article", true
@@ -26,7 +26,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CannotFavoriteNotExistingArticle()
+        public async Task Cannot_Favorite_Non_Existent_Article()
         {
             await ActingAs(new User
             {
@@ -41,7 +41,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanFavoriteArticle()
+        public async Task Can_Favorite_Article()
         {
             await ActingAs(new User
             {
@@ -70,7 +70,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanUnfavoriteArticle()
+        public async Task Can_Unfavorite_Article()
         {
             await ActingAs(new User
             {

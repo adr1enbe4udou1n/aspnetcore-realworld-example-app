@@ -20,14 +20,14 @@ namespace Application.IntegrationTests.Comments
         public CommentsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task CanListAllCommentsOfNotExistingArticle()
+        public async Task Cannot_List_All_Comments_Of_Non_Existent_Article()
         {
             await this.Invoking(x => x.Act(new CommentsListQuery("test-title")))
                 .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
-        public async Task CanListAllCommentsOfArticle()
+        public async Task Can_List_All_Comments_Of_Article()
         {
             await ActingAs(new User
             {

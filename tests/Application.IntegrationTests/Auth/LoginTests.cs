@@ -30,7 +30,7 @@ namespace Application.IntegrationTests.Auth
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task UserCannotLoginWithInvalidData(LoginUserDTO credentials)
+        public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDTO credentials)
         {
             await Context.Users.AddAsync(new User
             {
@@ -45,7 +45,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task UserCanLogin()
+        public async Task User_Can_Login()
         {
             var user = new User
             {

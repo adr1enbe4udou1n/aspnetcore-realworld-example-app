@@ -29,7 +29,7 @@ namespace Application.IntegrationTests.Comments
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotCreateCommentWithInvalidData(NewCommentDTO comment)
+        public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDTO comment)
         {
             await ActingAs(new User
             {
@@ -51,7 +51,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CannotCreateCommentToNotExistingArticle()
+        public async Task Cannot_Create_Comment_To_Non_Existent_Article()
         {
             await ActingAs(new User
             {
@@ -69,7 +69,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task GuestCannotCreateComment()
+        public async Task Guest_Cannot_Create_Comment()
         {
             await this.Invoking(x => x.Act(new NewCommentRequest(
                 "slug-article", new NewCommentDTO()
@@ -78,7 +78,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CanCreateComment()
+        public async Task Can_Create_Comment()
         {
             await ActingAs(new User
             {

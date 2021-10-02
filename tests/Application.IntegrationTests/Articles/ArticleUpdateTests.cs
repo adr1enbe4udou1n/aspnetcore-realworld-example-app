@@ -29,7 +29,7 @@ namespace Application.IntegrationTests.Articles
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotUpdateArticleWithInvalidData(UpdateArticleDTO article)
+        public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDTO article)
         {
             await ActingAs(new User
             {
@@ -44,7 +44,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CannotUpdateNotExistingArticle()
+        public async Task Cannot_Update_Non_Existent_Article()
         {
             await ActingAs(new User
             {
@@ -65,7 +65,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task GuestCannotUpdateArticle()
+        public async Task Guest_Cannot_Update_Article()
         {
             await this.Invoking(x => x.Act(new UpdateArticleRequest(
                 "slug-article", new UpdateArticleDTO()
@@ -74,7 +74,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CannotUpdateArticleOfOtherAuthor()
+        public async Task Cannot_Update_Article_Of_Other_Author()
         {
             await ActingAs(new User
             {
@@ -111,7 +111,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanUpdateOwnArticle()
+        public async Task Can_Update_Own_Article()
         {
             await ActingAs(new User
             {

@@ -18,7 +18,7 @@ namespace Application.IntegrationTests.Articles
         public ArticlesListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task CanPaginateArticles()
+        public async Task Can_Paginate_Articles()
         {
             await CreateArticles();
 
@@ -49,7 +49,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanFilterByAuthorArticles()
+        public async Task Can_Filter_Articles_By_Author()
         {
             await CreateArticles();
 
@@ -81,7 +81,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanFilterByTagArticles()
+        public async Task Can_Filter_Articles_By_Tag()
         {
             await CreateArticles();
 
@@ -113,7 +113,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanFilterByFavoritedArticles()
+        public async Task Can_Filter_Articles_By_Favorited()
         {
             await CreateArticles();
 
@@ -161,7 +161,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanListFollowedAuthorArticles()
+        public async Task Can_Paginate_Articles_Of_Followed_Authors()
         {
             await CreateArticles();
 

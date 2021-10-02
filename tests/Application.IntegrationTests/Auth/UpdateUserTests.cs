@@ -33,7 +33,7 @@ namespace Application.IntegrationTests.Auth
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotUpdateInfosWithInvalidData(UpdateUserDTO user)
+        public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDTO user)
         {
             await ActingAs(new User
             {
@@ -46,7 +46,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task LoggedUserCanUpdateInfos()
+        public async Task Logged_User_Can_Update_Infos()
         {
             await ActingAs(new User
             {
@@ -72,7 +72,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task GuestUserCannotUpdateInfos()
+        public async Task Guest_User_Cannot_Update_Infos()
         {
             await this.Invoking(x => x.Act(new UpdateUserRequest(
                 new UpdateUserDTO
@@ -84,7 +84,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task LoggedUserCannotUpdateWithAlreadyUsedEmail()
+        public async Task Logged_User_Cannot_Update_With_Already_Used_Email()
         {
             var created = await Context.Users.AddAsync(new User
             {

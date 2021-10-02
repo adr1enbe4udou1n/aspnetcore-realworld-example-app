@@ -23,7 +23,7 @@ namespace WebUI.IntegrationTests
         }
 
         [Fact]
-        public async Task CanUseUsersRoute()
+        public async Task Can_Use_Users_Route()
         {
             var httpResponse = await _client.PostAsJsonAsync("/api/users", new NewUserRequest(
                 new NewUserDTO()
@@ -37,7 +37,7 @@ namespace WebUI.IntegrationTests
         }
 
         [Fact]
-        public async Task CanUseLoginRoute()
+        public async Task Can_Use_Login_Route()
         {
             var httpResponse = await _client.PostAsJsonAsync("/api/users/login", new LoginUserRequest(
                 new LoginUserDTO()

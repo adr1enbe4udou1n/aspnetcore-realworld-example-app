@@ -45,7 +45,7 @@ namespace Application.IntegrationTests.Articles
 
         [Theory]
         [MemberData(nameof(Data))]
-        public async Task CannotCreateArticleWithInvalidData(NewArticleDTO article)
+        public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDTO article)
         {
             await ActingAs(new User
             {
@@ -67,7 +67,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task GuestCannotCreateArticle()
+        public async Task Guest_Cannot_Create_Article()
         {
             await this.Invoking(x => x.Act(new NewArticleRequest(
                 new NewArticleDTO()
@@ -76,7 +76,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanCreateArticle()
+        public async Task Can_Create_Article()
         {
             await ActingAs(new User
             {

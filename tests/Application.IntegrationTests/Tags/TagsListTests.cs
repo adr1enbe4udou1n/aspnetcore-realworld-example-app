@@ -14,7 +14,7 @@ namespace Application.IntegrationTests.Tags
         public TagListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task CanListAllTags()
+        public async Task Can_List_All_Tags()
         {
             await Context.Tags.AddRangeAsync(
                 new Tag { Name = "Tag3" },

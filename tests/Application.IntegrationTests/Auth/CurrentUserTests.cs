@@ -15,7 +15,7 @@ namespace Application.IntegrationTests.Auth
         public CurrentUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task LoggedUserCanFetchInfos()
+        public async Task Logged_User_Can_Fetch_Infos()
         {
             await ActingAs(new User
             {
@@ -30,7 +30,7 @@ namespace Application.IntegrationTests.Auth
         }
 
         [Fact]
-        public async Task GuestUserCannotFetchInfos()
+        public async Task Guest_User_Cannot_Fetch_Infos()
         {
             await this.Invoking(x => x.Act(new CurrentUserQuery()))
                 .Should().ThrowAsync<UnauthorizedException>();

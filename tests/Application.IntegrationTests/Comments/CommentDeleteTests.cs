@@ -17,14 +17,14 @@ namespace Application.IntegrationTests.Comments
         public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task GuestCannotDeleteComment()
+        public async Task Guest_Cannot_Delete_Comment()
         {
             await this.Invoking(x => x.Act(new CommentDeleteRequest("slug-article", 1)))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
-        public async Task CannotDeleteNotExistingComment()
+        public async Task Cannot_Delete_Non_Existent_Comment()
         {
             await ActingAs(new User
             {
@@ -48,7 +48,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CannotDeleteCommentWithInexistingArticle()
+        public async Task Cannot_Delete_Comment_With_Non_Existent_Article()
         {
             await ActingAs(new User
             {
@@ -77,7 +77,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CannotDeleteCommentWithBadArticle()
+        public async Task Cannot_Delete_Comment_With_Bad_Article()
         {
             await ActingAs(new User
             {
@@ -115,7 +115,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CannotDeleteCommentOfOtherAuthor()
+        public async Task Cannot_Delete_Comment_Of_Other_Author()
         {
             await ActingAs(new User
             {
@@ -150,7 +150,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CanDeleteOwnComment()
+        public async Task Can_Delete_Own_Comment()
         {
             await ActingAs(new User
             {
@@ -178,7 +178,7 @@ namespace Application.IntegrationTests.Comments
         }
 
         [Fact]
-        public async Task CanDeleteAllCommentsOfOwnArticle()
+        public async Task Can_Delete_All_Comments_Of_Own_Article()
         {
             var user = await ActingAs(new User
             {

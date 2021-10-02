@@ -15,7 +15,7 @@ namespace Application.IntegrationTests.Profiles
         public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task CanGetProfile()
+        public async Task Can_Get_Profile()
         {
             await Context.Users.AddAsync(new User
             {
@@ -38,14 +38,14 @@ namespace Application.IntegrationTests.Profiles
         }
 
         [Fact]
-        public async Task CannotGetNotExistingProfile()
+        public async Task Cannot_Get_Non_Existent_Profile()
         {
             await this.Invoking(x => x.Act(new ProfileGetQuery("John Doe")))
                 .Should().ThrowAsync<NotFoundException>();
         }
 
         [Fact]
-        public async Task CanGetFollowedProfile()
+        public async Task Can_Get_Followed_Profile()
         {
             await ActingAs(new User
             {

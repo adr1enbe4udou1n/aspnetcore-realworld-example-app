@@ -18,7 +18,7 @@ namespace Application.IntegrationTests.Articles
         public ArticleGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task CannotGetNotExistingArticle()
+        public async Task Cannot_Get_Non_Existent_Article()
         {
             await ActingAs(new User
             {
@@ -33,7 +33,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanGetArticle()
+        public async Task Can_Get_Article()
         {
             await ActingAs(new User
             {

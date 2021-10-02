@@ -17,14 +17,14 @@ namespace Application.IntegrationTests.Articles
         public ArticleDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
-        public async Task GuestCannotDeleteArticle()
+        public async Task Guest_Cannot_Delete_Article()
         {
             await this.Invoking(x => x.Act(new ArticleDeleteRequest("slug-article")))
                 .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]
-        public async Task CannotDeleteNotExistingArticle()
+        public async Task Cannot_Delete_Non_Existent_Article()
         {
             await ActingAs(new User
             {
@@ -39,7 +39,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CannotDeleteArticleOfOtherAuthor()
+        public async Task Cannot_Delete_Article_Of_Other_Author()
         {
             await ActingAs(new User
             {
@@ -69,7 +69,7 @@ namespace Application.IntegrationTests.Articles
         }
 
         [Fact]
-        public async Task CanDeleteOwnArticleWithAllComments()
+        public async Task Can_Delete_Own_Article_With_All_Comments()
         {
             await ActingAs(new User
             {
