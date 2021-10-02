@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Exceptions;
@@ -15,6 +16,34 @@ namespace Application.IntegrationTests.Auth
     public class UpdateUserTests : TestBase
     {
         public UpdateUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+        public static IEnumerable<object[]> Data => new List<object[]>
+        {
+            new [] { new UpdateUserDTO {
+                Username = "John Doe",
+                Email = "john.doe",
+                Bio = "My Bio",
+            } },
+            new [] { new UpdateUserDTO {
+                Username = "",
+                Email = "john.doe@example.com",
+                Bio = "My Bio",
+            } },
+        };
+
+        [Theory]
+        [MemberData(nameof(Data))]
+        public async Task CannotUpdateInfosWithInvalidData(UpdateUserDTO user)
+        {
+            await ActingAs(new User
+            {
+                Name = "John Doe",
+                Email = "john.doe@example.com",
+            });
+
+            await this.Invoking(x => x.Act(new UpdateUserRequest(user)))
+                .Should().ThrowAsync<ValidationException>();
+        }
 
         [Fact]
         public async Task LoggedUserCanUpdateInfos()
