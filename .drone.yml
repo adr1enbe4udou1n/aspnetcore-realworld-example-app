@@ -34,7 +34,7 @@ steps:
     key:
       from_secret: swarm_ssh_key
     script:
-      - docker service update --image registry.okami101.io/adr1enbe4udou1n/aspnet-realworld:latest aspnet-realworld_app --with-registry-auth
+      - docker service update --image registry.okami101.io/adr1enbe4udou1n/aspnet-realworld:latest aspnetrealworld_app --with-registry-auth
   depends_on:
     - image
 
