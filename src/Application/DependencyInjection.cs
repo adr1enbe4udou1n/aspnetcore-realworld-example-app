@@ -12,14 +12,12 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
-
-            return services;
+            return services.AddAutoMapper(Assembly.GetExecutingAssembly())
+                .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+                .AddMediatR(Assembly.GetExecutingAssembly())
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
         }
     }
 }

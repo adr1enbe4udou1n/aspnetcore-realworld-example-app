@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Respawn;
@@ -8,14 +10,18 @@ namespace Application.Tools
     public class DatabaseManager
     {
         private IConfiguration _configuration;
+        private readonly IAppDbContext _context;
 
-        public DatabaseManager(IConfiguration configuration)
+        public DatabaseManager(IConfiguration configuration, IAppDbContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
         public async Task Reset()
         {
+            await _context.Database.MigrateAsync();
+
             using (var conn = new NpgsqlConnection(
                 _configuration.GetConnectionString("DefaultConnection")
             ))

@@ -46,18 +46,16 @@ namespace Application.Tools
                 .ConfigureHostConfiguration(config => config.AddJsonFile("appsettings.json", true, true))
                 .ConfigureServices((_, services) =>
                 {
-                    services.AddInfrastructure(_.Configuration);
-
-                    services.AddScoped<DatabaseManager>();
-
-                    services.AddScoped<UsersSeeder>();
-                    services.AddScoped<ArticlesSeeder>();
-
-                    services.AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
-                    {
-                        options.GetRequiredService<UsersSeeder>(),
-                        options.GetRequiredService<ArticlesSeeder>()
-                    });
+                    services
+                        .AddInfrastructure(_.Configuration)
+                        .AddScoped<DatabaseManager>()
+                        .AddScoped<UsersSeeder>()
+                        .AddScoped<ArticlesSeeder>()
+                        .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
+                        {
+                            options.GetRequiredService<UsersSeeder>(),
+                            options.GetRequiredService<ArticlesSeeder>()
+                        });
                 });
     }
 }

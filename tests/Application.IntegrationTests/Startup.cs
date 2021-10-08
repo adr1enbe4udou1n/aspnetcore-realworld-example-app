@@ -29,8 +29,7 @@ namespace Application.IntegrationTests
         {
             IServiceCollection services = new ServiceCollection();
 
-            services.AddInfrastructure(Configuration);
-            return services;
+            return services.AddInfrastructure(Configuration);
         }
     }
 }

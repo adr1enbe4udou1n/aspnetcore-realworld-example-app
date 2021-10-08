@@ -16,23 +16,18 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddApplication();
-
-            services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddScoped<ICurrentUser, CurrentUser>();
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
-                .Configure<JwtOptions>(configuration.GetSection("Jwt"));
-
-            services.AddScoped<ISlugHelper, SlugHelper>();
-            services.AddScoped<ISlugifier, Slugifier>();
-
-            return services;
+            return services.AddApplication()
+                .AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>())
+                .AddDbContext<AppDbContext>(options =>
+                {
+                    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                })
+                .AddScoped<ICurrentUser, CurrentUser>()
+                .AddScoped<IPasswordHasher, PasswordHasher>()
+                .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
+                    .Configure<JwtOptions>(configuration.GetSection("Jwt"))
+                .AddScoped<ISlugHelper, SlugHelper>()
+                .AddScoped<ISlugifier, Slugifier>();
         }
     }
 }
