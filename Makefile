@@ -11,7 +11,7 @@ seed:
 publish:
 	dotnet run -p targets
 format:
-	dotnet tool run dotnet-format
+	dotnet format
 test:
 	dotnet test -l:"console;verbosity=detailed"
 test-watch-app:
