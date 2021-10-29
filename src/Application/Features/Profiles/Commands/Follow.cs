@@ -29,6 +29,7 @@ namespace Application.Features.Profiles.Commands
         public async Task<ProfileResponse> Handle(ProfileFollowRequest request, CancellationToken cancellationToken)
         {
             var user = await _context.Users
+                .AsTracking()
                 .Include(u => u.Followers)
                 .FindAsync(x => x.Name == request.Username, cancellationToken);
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Commands;
@@ -158,6 +159,13 @@ namespace Application.IntegrationTests.Articles
                 .Excluding(x => x.CreatedAt)
                 .Excluding(x => x.UpdatedAt)
             );
+        }
+
+        [Fact]
+        public async Task Guest_Cannot_Paginate_Articles_Of_Followed_Authors()
+        {
+            await this.Invoking(x => x.Act(new ArticlesFeedQuery()))
+                .Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Fact]

@@ -20,6 +20,7 @@ namespace Infrastructure
                 .AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>())
                 .AddDbContext<AppDbContext>(options =>
                 {
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
                 })
                 .AddScoped<ICurrentUser, CurrentUser>()

@@ -42,7 +42,10 @@ namespace Application.Mappings
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Article, ArticleDTO>()
-                .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags.Select(t => t.Tag.Name)))
+                .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags
+                    .Select(t => t.Tag.Name)
+                    .OrderBy(t => t)
+                ))
                 .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
                     src => currentUser != null ? src.FavoredUsers.Any(f => f.User.Id == currentUser.Id) : false)
                 )

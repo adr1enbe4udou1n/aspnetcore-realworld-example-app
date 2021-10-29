@@ -9,9 +9,9 @@ using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Tags
 {
-    public class TagListTests : TestBase
+    public class TagsListTests : TestBase
     {
-        public TagListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+        public TagsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
         [Fact]
         public async Task Can_List_All_Tags()

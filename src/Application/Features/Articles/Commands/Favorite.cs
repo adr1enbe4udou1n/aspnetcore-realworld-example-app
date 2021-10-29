@@ -30,6 +30,7 @@ namespace Application.Features.Articles.Commands
         public async Task<SingleArticleResponse> Handle(ArticleFavoriteRequest request, CancellationToken cancellationToken)
         {
             var article = await _context.Articles
+                .AsTracking()
                 .Include(x => x.FavoredUsers)
                 .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 

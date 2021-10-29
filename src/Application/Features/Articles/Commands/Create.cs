@@ -62,6 +62,7 @@ namespace Application.Features.Articles.Commands
         {
             var article = _mapper.Map<Article>(request.Article);
             var existingTags = await _context.Tags
+                .AsTracking()
                 .Where(
                     x => request.Article.TagList.Any(t => t == x.Name)
                 )
