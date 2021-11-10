@@ -10,14 +10,14 @@ public class Comment : IHasTimestamps
 
     [Required]
     public int ArticleId { get; set; }
-    public Article? Article { get; set; }
+    public Article Article { get; set; } = new();
 
     [Required]
     public int AuthorId { get; set; }
-    public User? Author { get; set; }
+    public User Author { get; set; } = new();
 
     [Required]
-    public string? Body { get; set; }
+    public string Body { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
 

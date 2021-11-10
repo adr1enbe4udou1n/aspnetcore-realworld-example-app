@@ -20,7 +20,7 @@ public class Startup
         var services = GetApplicationServices();
         var _provider = services.BuildServiceProvider();
 
-        var appDbContext = _provider.GetService<AppDbContext>();
+        var appDbContext = _provider.GetRequiredService<AppDbContext>();
 
         appDbContext.Database.Migrate();
     }

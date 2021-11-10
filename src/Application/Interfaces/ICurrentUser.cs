@@ -7,7 +7,7 @@ namespace Application.Interfaces;
 
 public interface ICurrentUser
 {
-    User User { get; }
+    User? User { get; }
 
     long Identifier { get; }
 

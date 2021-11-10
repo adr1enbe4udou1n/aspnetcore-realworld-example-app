@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.Behaviors;
 
-public class DbTransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class DbTransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly IAppDbContext _context;
 

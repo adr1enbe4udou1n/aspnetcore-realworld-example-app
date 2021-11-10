@@ -8,10 +8,10 @@ namespace Application.Interfaces;
 
 public interface IAppDbContext
 {
-    DbSet<User> Users { get; set; }
-    DbSet<Article> Articles { get; set; }
-    DbSet<Comment> Comments { get; set; }
-    DbSet<Tag> Tags { get; set; }
+    DbSet<User> Users { get; }
+    DbSet<Article> Articles { get; }
+    DbSet<Comment> Comments { get; }
+    DbSet<Tag> Tags { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 

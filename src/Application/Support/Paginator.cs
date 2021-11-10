@@ -38,7 +38,7 @@ public class PagedQuery
 
 public class PagedResponse<T>
 {
-    public IEnumerable<T>? Items { get; set; }
+    public List<T> Items { get; set; } = new();
 
     public int Total { get; set; }
 }

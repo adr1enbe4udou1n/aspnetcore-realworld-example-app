@@ -16,7 +16,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        User currentUser = null;
+        User? currentUser = null;
 
         CreateMap<User, UserDTO>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
@@ -36,7 +36,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
         CreateMap<NewArticleDTO, Article>()
-            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser!.Id));
 
         CreateMap<UpdateArticleDTO, Article>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -53,7 +53,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count));
 
         CreateMap<NewCommentDTO, Comment>()
-            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser!.Id));
 
         CreateMap<Comment, CommentDTO>();
     }

@@ -61,7 +61,7 @@ public class RegisterTests : TestBase
         var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
         created.Should().NotBeNull();
 
-        PasswordHasher.Check("password", created.Password).Should().BeTrue();
+        PasswordHasher.Check("password", created!.Password!).Should().BeTrue();
 
         var payload = JwtTokenGenerator.DecodeToken(currentUser.User.Token);
 

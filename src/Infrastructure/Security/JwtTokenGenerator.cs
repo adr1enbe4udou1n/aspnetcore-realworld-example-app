@@ -22,6 +22,11 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
     public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, ICurrentUser currentUser)
     {
+        if (options.CurrentValue.SecretKey == null)
+        {
+            throw new ArgumentNullException("You must set a JWT secret key");
+        }
+
         _secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.CurrentValue.SecretKey));
         _currentUser = currentUser;
     }

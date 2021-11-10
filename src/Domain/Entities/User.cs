@@ -13,11 +13,11 @@ public class User : IHasTimestamps
 
     [Required]
     [Column(TypeName = "varchar(255)")]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [Column(TypeName = "varchar(255)")]
-    public string? Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Column(TypeName = "varchar(255)")]
     public string? Password { get; set; }

@@ -52,7 +52,7 @@ public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentReque
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         var comment = _mapper.Map<Comment>(request.Comment);
-        comment.AuthorId = _currentUser.User.Id;
+        comment.AuthorId = _currentUser.User!.Id;
         comment.ArticleId = article.Id;
 
         await _context.Comments.AddAsync(comment, cancellationToken);

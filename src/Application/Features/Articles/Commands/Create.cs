@@ -15,11 +15,11 @@ namespace Application.Features.Articles.Commands;
 
 public class NewArticleDTO
 {
-    public string? Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
-    public string? Body { get; set; }
+    public string Body { get; set; } = string.Empty;
 
     public List<string> TagList { get; set; } = new();
 }
@@ -36,7 +36,7 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
 
         RuleFor(x => x.Article.Title).MustAsync(
             async (title, cancellationToken) => !await context.Articles
-                .Where(x => x.Slug == slugifier.Generate(title))
+                .Where(x => x.Slug == slugifier.Generate(title!))
                 .AnyAsync(cancellationToken)
         )
             .WithMessage("Slug with this title already used");
@@ -68,7 +68,7 @@ public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleReque
             )
             .ToListAsync(cancellationToken);
 
-        article.AuthorId = _currentUser.User.Id;
+        article.AuthorId = _currentUser.User!.Id;
         article.Slug = _slugifier.Generate(request.Article.Title);
 
         article.Tags = request.Article.TagList

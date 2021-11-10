@@ -13,9 +13,9 @@ namespace Application.Features.Auth.Commands;
 
 public class LoginUserDTO
 {
-    public string? Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
-    public string? Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 }
 
 public record LoginUserRequest(LoginUserDTO User) : IRequest<UserResponse>;
@@ -38,7 +38,7 @@ public class LoginHandler : IRequestHandler<LoginUserRequest, UserResponse>
         var user = await _context.Users.Where(x => x.Email == request.User.Email)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (user == null || !_passwordHasher.Check(request.User.Password, user.Password))
+        if (user == null || user.Password == null || !_passwordHasher.Check(request.User.Password, user.Password))
         {
             throw new ValidationException("Bad credentials");
         }

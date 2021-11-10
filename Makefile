@@ -1,26 +1,26 @@
 .PHONY: publish
 
 run:
-	dotnet run -p src/WebUI
+	dotnet run --project src/WebUI
 watch:
-	dotnet watch run -p src/WebUI
+	dotnet watch run --project src/WebUI
 fresh:
-	dotnet run -p tools/Application.Tools fresh
+	dotnet run --project tools/Application.Tools fresh
 seed:
-	dotnet run -p tools/Application.Tools seed
+	dotnet run --project tools/Application.Tools seed
 publish:
-	dotnet run -p targets
+	dotnet run --project targets
 format:
 	dotnet format
 test:
 	dotnet test -l:"console;verbosity=detailed"
 test-watch-app:
-	dotnet watch test -p tests/Application.IntegrationTests -l:"console;verbosity=detailed"
+	dotnet watch test --project tests/Application.IntegrationTests -l:"console;verbosity=detailed"
 test-watch-web:
-	dotnet watch test -p tests/WebUI.IntegrationTests
+	dotnet watch test --project tests/WebUI.IntegrationTests
 migrations-add:
-	dotnet ef migrations add -p src/Infrastructure -s src/WebUI -o Persistence/Migrations $(name)
+	dotnet ef migrations add --project src/Infrastructure -s src/WebUI -o Persistence/Migrations $(name)
 migrations-remove:
-	dotnet ef migrations remove -p src/Infrastructure -s src/WebUI
+	dotnet ef migrations remove --project src/Infrastructure -s src/WebUI
 db-update:
-	dotnet ef database update -p src/Infrastructure -s src/WebUI $(name)
+	dotnet ef database update --project src/Infrastructure -s src/WebUI $(name)

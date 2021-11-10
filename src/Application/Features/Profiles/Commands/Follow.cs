@@ -35,16 +35,16 @@ public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowReque
 
         if (request.Follow)
         {
-            if (!user.IsFollowedBy(_currentUser.User))
+            if (!user.IsFollowedBy(_currentUser.User!))
             {
-                user.Followers.Add(new FollowerUser { Follower = _currentUser.User });
+                user.Followers.Add(new FollowerUser { Follower = _currentUser.User! });
             }
         }
         else
         {
-            if (user.IsFollowedBy(_currentUser.User))
+            if (user.IsFollowedBy(_currentUser.User!))
             {
-                user.Followers.RemoveAll(x => x.FollowerId == _currentUser.User.Id);
+                user.Followers.RemoveAll(x => x.FollowerId == _currentUser.User!.Id);
             }
         }
 

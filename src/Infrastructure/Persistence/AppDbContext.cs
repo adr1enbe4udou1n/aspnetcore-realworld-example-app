@@ -15,12 +15,13 @@ public class AppDbContext : DbContext, IAppDbContext
         ChangeTracker.Tracked += UpdateTimestamps;
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Article> Articles { get; set; }
-    public DbSet<Comment> Comments { get; set; }
-    public DbSet<Tag> Tags { get; set; }
+    public DbSet<User> Users => Set<User>();
 
-    private void UpdateTimestamps(object sender, EntityEntryEventArgs e)
+    public DbSet<Article> Articles => Set<Article>();
+    public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<Tag> Tags => Set<Tag>();
+
+    private void UpdateTimestamps(object? sender, EntityEntryEventArgs e)
     {
         if (e.Entry.Entity is IHasTimestamps entity)
         {

@@ -10,7 +10,7 @@ public static class ArticleFilters
 {
     public static IQueryable<Article> FilterByAuthor(
         this IQueryable<Article> source,
-        string author
+        string? author
     )
     {
         if (!string.IsNullOrEmpty(author))
@@ -30,7 +30,7 @@ public static class ArticleFilters
 
     public static IQueryable<Article> FilterByTag(
         this IQueryable<Article> source,
-        string name
+        string? name
     )
     {
         if (!string.IsNullOrEmpty(name))
@@ -42,7 +42,7 @@ public static class ArticleFilters
 
     public static IQueryable<Article> FilterByFavoritedBy(
         this IQueryable<Article> source,
-        string favoritedBy
+        string? favoritedBy
     )
     {
         if (!string.IsNullOrEmpty(favoritedBy))

@@ -38,7 +38,7 @@ public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationSc
 
             return AuthenticateResult.Success(
                 new AuthenticationTicket(new ClaimsPrincipal(
-                    new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, _currentUser.User.Name) }, Scheme.Name)
+                    new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, _currentUser.User!.Name) }, Scheme.Name)
                 ), Scheme.Name)
             );
         }

@@ -12,7 +12,7 @@ public class Tag
 
     [Required]
     [Column(TypeName = "varchar(255)")]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public List<ArticleTag> Articles { get; set; } = new();
 }

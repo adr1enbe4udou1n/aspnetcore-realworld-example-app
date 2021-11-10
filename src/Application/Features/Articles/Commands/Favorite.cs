@@ -36,16 +36,16 @@ public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavori
 
         if (request.Favorite)
         {
-            if (!article.IsFavoritedBy(_currentUser.User))
+            if (!article.IsFavoritedBy(_currentUser.User!))
             {
-                article.FavoredUsers.Add(new ArticleFavorite { User = _currentUser.User });
+                article.FavoredUsers.Add(new ArticleFavorite { User = _currentUser.User! });
             }
         }
         else
         {
-            if (article.IsFavoritedBy(_currentUser.User))
+            if (article.IsFavoritedBy(_currentUser.User!))
             {
-                article.FavoredUsers.RemoveAll(x => x.UserId == _currentUser.User.Id);
+                article.FavoredUsers.RemoveAll(x => x.UserId == _currentUser.User!.Id);
             }
         }
 

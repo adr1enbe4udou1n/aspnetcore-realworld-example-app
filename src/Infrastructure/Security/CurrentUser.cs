@@ -14,7 +14,7 @@ public class CurrentUser : ICurrentUser
 
     public long Identifier { get; private set; }
 
-    public User User { get; private set; }
+    public User? User { get; private set; }
 
     public bool IsAuthenticated { get => User != null; }
 

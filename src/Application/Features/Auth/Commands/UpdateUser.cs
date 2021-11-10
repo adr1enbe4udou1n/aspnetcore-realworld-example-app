@@ -32,7 +32,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
 
             RuleFor(x => x.User.Email).MustAsync(
                 async (email, cancellationToken) => !await context.Users
-                    .Where(x => x.Id != currentUser.User.Id && x.Email == email)
+                    .Where(x => x.Id != currentUser.User!.Id && x.Email == email)
                     .AnyAsync(cancellationToken)
                 )
                     .WithMessage("Email is already used");
@@ -55,7 +55,7 @@ public class UpdateUserHandler : IAuthorizationRequestHandler<UpdateUserRequest,
 
     public async Task<UserResponse> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        var user = _mapper.Map<UpdateUserDTO, User>(request.User, _currentUser.User);
+        var user = _mapper.Map<UpdateUserDTO, User>(request.User, _currentUser.User!);
         _context.Users.Update(user);
         await _context.SaveChangesAsync(cancellationToken);
 

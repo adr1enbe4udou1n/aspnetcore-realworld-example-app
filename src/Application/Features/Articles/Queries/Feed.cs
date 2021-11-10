@@ -32,7 +32,7 @@ public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuer
     public async Task<MultipleArticlesResponse> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
     {
         var articles = await _context.Articles
-            .HasAuthorsFollowedBy(_currentUser.User)
+            .HasAuthorsFollowedBy(_currentUser.User!)
             .OrderByDescending(x => x.Id)
             .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider, new
             {

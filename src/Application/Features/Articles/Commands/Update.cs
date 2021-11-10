@@ -52,7 +52,7 @@ public class ArticleUpdateHandler : IAuthorizationRequestHandler<UpdateArticleRe
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        if (article.AuthorId != _currentUser.User.Id)
+        if (article.AuthorId != _currentUser.User!.Id)
         {
             throw new ForbiddenException();
         }

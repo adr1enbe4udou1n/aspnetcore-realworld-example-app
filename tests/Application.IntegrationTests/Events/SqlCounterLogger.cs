@@ -27,7 +27,7 @@ public class SqlCounterLogger : ILogger
 
     public IDisposable BeginScope<TState>(TState state)
     {
-        return null;
+        return null!;
     }
 
     public bool IsEnabled(LogLevel logLevel)
@@ -35,7 +35,7 @@ public class SqlCounterLogger : ILogger
         return true;
     }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         if (_categoryName == DbLoggerCategory.Database.Command.Name)
         {

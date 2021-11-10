@@ -32,7 +32,7 @@ public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteRe
             cancellationToken
         );
 
-        if (article.AuthorId != _currentUser.User.Id && comment.AuthorId != _currentUser.User.Id)
+        if (article.AuthorId != _currentUser.User!.Id && comment.AuthorId != _currentUser.User!.Id)
         {
             throw new ForbiddenException();
         }
