@@ -1,11 +1,10 @@
 using System;
 
-namespace Application.Exceptions
+namespace Application.Exceptions;
+
+public class NotFoundException : Exception
 {
-    public class NotFoundException : Exception
+    public NotFoundException() : base("Resource not found")
     {
-        public NotFoundException() : base("Resource not found")
-        {
-        }
     }
 }

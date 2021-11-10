@@ -10,52 +10,51 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using static Bullseye.Targets;
 
-namespace Application.Tools
+namespace Application.Tools;
+
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            var host = CreateHostBuilder(args).Build();
+        var host = CreateHostBuilder(args).Build();
 
-            using var scope = host.Services.CreateScope();
+        using var scope = host.Services.CreateScope();
 
-            Target("fresh", "Wipe all data from database",
-                async () =>
+        Target("fresh", "Wipe all data from database",
+            async () =>
+            {
+                var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
+                await databaseManager.Reset();
+            });
+
+        Target("seed", "Seed data to database", DependsOn("fresh"),
+            async () =>
+            {
+                var token = new CancellationToken();
+
+                foreach (var seeder in scope.ServiceProvider.GetRequiredService<IEnumerable<ISeeder>>())
                 {
-                    var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
-                    await databaseManager.Reset();
-                });
+                    await seeder.Run(token);
+                }
+            });
 
-            Target("seed", "Seed data to database", DependsOn("fresh"),
-                async () =>
-                {
-                    var token = new CancellationToken();
+        await RunTargetsAndExitAsync(args);
+    }
 
-                    foreach (var seeder in scope.ServiceProvider.GetRequiredService<IEnumerable<ISeeder>>())
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureHostConfiguration(config => config.AddJsonFile("appsettings.json", true, true))
+            .ConfigureServices((_, services) =>
+            {
+                services
+                    .AddInfrastructure(_.Configuration)
+                    .AddScoped<DatabaseManager>()
+                    .AddScoped<UsersSeeder>()
+                    .AddScoped<ArticlesSeeder>()
+                    .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
                     {
-                        await seeder.Run(token);
-                    }
-                });
-
-            await RunTargetsAndExitAsync(args);
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureHostConfiguration(config => config.AddJsonFile("appsettings.json", true, true))
-                .ConfigureServices((_, services) =>
-                {
-                    services
-                        .AddInfrastructure(_.Configuration)
-                        .AddScoped<DatabaseManager>()
-                        .AddScoped<UsersSeeder>()
-                        .AddScoped<ArticlesSeeder>()
-                        .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
-                        {
                             options.GetRequiredService<UsersSeeder>(),
                             options.GetRequiredService<ArticlesSeeder>()
-                        });
-                });
-    }
+                    });
+            });
 }

@@ -10,25 +10,24 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Slugify;
 
-namespace Infrastructure
+namespace Infrastructure;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
-            return services.AddApplication()
-                .AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>())
-                .AddDbContext<AppDbContext>(options =>
-                {
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-                })
-                .AddScoped<ICurrentUser, CurrentUser>()
-                .AddScoped<IPasswordHasher, PasswordHasher>()
-                .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
-                    .Configure<JwtOptions>(configuration.GetSection("Jwt"))
-                .AddScoped<ISlugHelper, SlugHelper>()
-                .AddScoped<ISlugifier, Slugifier>();
-        }
+        return services.AddApplication()
+            .AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>())
+            .AddDbContext<AppDbContext>(options =>
+            {
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            })
+            .AddScoped<ICurrentUser, CurrentUser>()
+            .AddScoped<IPasswordHasher, PasswordHasher>()
+            .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
+                .Configure<JwtOptions>(configuration.GetSection("Jwt"))
+            .AddScoped<ISlugHelper, SlugHelper>()
+            .AddScoped<ISlugifier, Slugifier>();
     }
 }

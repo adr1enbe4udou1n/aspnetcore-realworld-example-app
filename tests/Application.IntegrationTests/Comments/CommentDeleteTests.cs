@@ -10,212 +10,211 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Comments
+namespace Application.IntegrationTests.Comments;
+
+public class CommentDeleteTests : TestBase
 {
-    public class CommentDeleteTests : TestBase
+    public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
+    public async Task Guest_Cannot_Delete_Comment()
     {
-        public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+        await this.Invoking(x => x.Act(new CommentDeleteRequest("slug-article", 1)))
+            .Should().ThrowAsync<UnauthorizedException>();
+    }
 
-        [Fact]
-        public async Task Guest_Cannot_Delete_Comment()
+    [Fact]
+    public async Task Cannot_Delete_Non_Existent_Comment()
+    {
+        await ActingAs(new User
         {
-            await this.Invoking(x => x.Act(new CommentDeleteRequest("slug-article", 1)))
-                .Should().ThrowAsync<UnauthorizedException>();
-        }
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
 
-        [Fact]
-        public async Task Cannot_Delete_Non_Existent_Comment()
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
+            {
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
+
+        await this.Invoking(x => x.Act(new CommentDeleteRequest(
+            "test-title", 1
+        )))
+            .Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
+    public async Task Cannot_Delete_Comment_With_Non_Existent_Article()
+    {
+        await ActingAs(new User
         {
-            await ActingAs(new User
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
+
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
             {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
 
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
-
-            await this.Invoking(x => x.Act(new CommentDeleteRequest(
-                "test-title", 1
-            )))
-                .Should().ThrowAsync<NotFoundException>();
-        }
-
-        [Fact]
-        public async Task Cannot_Delete_Comment_With_Non_Existent_Article()
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
-            await ActingAs(new User
-            {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
+            Body = "Thank you !",
+        }));
 
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
+        await this.Invoking(x => x.Act(new CommentDeleteRequest(
+            "slug-article", response.Comment.Id
+        )))
+            .Should().ThrowAsync<NotFoundException>();
+    }
 
-            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
-            {
-                Body = "Thank you !",
-            }));
-
-            await this.Invoking(x => x.Act(new CommentDeleteRequest(
-                "slug-article", response.Comment.Id
-            )))
-                .Should().ThrowAsync<NotFoundException>();
-        }
-
-        [Fact]
-        public async Task Cannot_Delete_Comment_With_Bad_Article()
+    [Fact]
+    public async Task Cannot_Delete_Comment_With_Bad_Article()
+    {
+        await ActingAs(new User
         {
-            await ActingAs(new User
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
+
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
             {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
 
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
-
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Other Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
-
-            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
             {
-                Body = "Thank you !",
-            }));
+                Title = "Other Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
 
-            await this.Invoking(x => x.Act(new CommentDeleteRequest(
-                "other-title", response.Comment.Id
-            )))
-                .Should().ThrowAsync<NotFoundException>();
-        }
-
-        [Fact]
-        public async Task Cannot_Delete_Comment_Of_Other_Author()
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
-            await ActingAs(new User
-            {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
+            Body = "Thank you !",
+        }));
 
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
+        await this.Invoking(x => x.Act(new CommentDeleteRequest(
+            "other-title", response.Comment.Id
+        )))
+            .Should().ThrowAsync<NotFoundException>();
+    }
 
-            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
-            {
-                Body = "Thank you !",
-            }));
-
-            await ActingAs(new User
-            {
-                Name = "Jane Doe",
-                Email = "jane.doe@example.com",
-            });
-
-            await this.Invoking(x => x.Act(new CommentDeleteRequest(
-                "test-title", response.Comment.Id
-            )))
-                .Should().ThrowAsync<ForbiddenException>();
-        }
-
-        [Fact]
-        public async Task Can_Delete_Own_Comment()
+    [Fact]
+    public async Task Cannot_Delete_Comment_Of_Other_Author()
+    {
+        await ActingAs(new User
         {
-            await ActingAs(new User
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
+
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
             {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
 
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
-
-            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
-            {
-                Body = "Thank you !",
-            }));
-
-            await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
-
-            (await Context.Comments.AnyAsync()).Should().BeFalse();
-        }
-
-        [Fact]
-        public async Task Can_Delete_All_Comments_Of_Own_Article()
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
-            var user = await ActingAs(new User
+            Body = "Thank you !",
+        }));
+
+        await ActingAs(new User
+        {
+            Name = "Jane Doe",
+            Email = "jane.doe@example.com",
+        });
+
+        await this.Invoking(x => x.Act(new CommentDeleteRequest(
+            "test-title", response.Comment.Id
+        )))
+            .Should().ThrowAsync<ForbiddenException>();
+    }
+
+    [Fact]
+    public async Task Can_Delete_Own_Comment()
+    {
+        await ActingAs(new User
+        {
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
+
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
             {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-            });
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
 
-            await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
-                {
-                    Title = "Test Title",
-                    Description = "Test Description",
-                    Body = "Test Body",
-                }
-            ));
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        {
+            Body = "Thank you !",
+        }));
 
-            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
+
+        (await Context.Comments.AnyAsync()).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Can_Delete_All_Comments_Of_Own_Article()
+    {
+        var user = await ActingAs(new User
+        {
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
+
+        await Mediator.Send(new NewArticleRequest(
+            new NewArticleDTO
             {
-                Body = "Thank you !",
-            }));
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
+        ));
 
-            await ActingAs(new User
-            {
-                Name = "Jane Doe",
-                Email = "jane.doe@example.com",
-            });
+        await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        {
+            Body = "Thank you !",
+        }));
 
-            var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
-            {
-                Body = "Thank you John !",
-            }));
+        await ActingAs(new User
+        {
+            Name = "Jane Doe",
+            Email = "jane.doe@example.com",
+        });
 
-            await CurrentUser.SetIdentifier(user.Id);
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        {
+            Body = "Thank you John !",
+        }));
 
-            await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
+        await CurrentUser.SetIdentifier(user.Id);
 
-            (await Context.Comments.CountAsync()).Should().Be(1);
-        }
+        await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
+
+        (await Context.Comments.CountAsync()).Should().Be(1);
     }
 }

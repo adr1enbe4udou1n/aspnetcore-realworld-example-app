@@ -2,14 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface IJwtTokenGenerator
 {
-    public interface IJwtTokenGenerator
-    {
-        string CreateToken(User user);
+    string CreateToken(User user);
 
-        IDictionary<string, string> DecodeToken(string token);
+    IDictionary<string, string> DecodeToken(string token);
 
-        Task SetCurrentUserFromToken(string token);
-    }
+    Task SetCurrentUserFromToken(string token);
 }

@@ -2,20 +2,19 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Slugify;
 
-namespace Infrastructure.Security
+namespace Infrastructure.Security;
+
+public class Slugifier : ISlugifier
 {
-    public class Slugifier : ISlugifier
+    private readonly ISlugHelper _slugHelper;
+
+    public Slugifier(ISlugHelper slugHelper)
     {
-        private readonly ISlugHelper _slugHelper;
+        _slugHelper = slugHelper;
+    }
 
-        public Slugifier(ISlugHelper slugHelper)
-        {
-            _slugHelper = slugHelper;
-        }
-
-        public string Generate(string text)
-        {
-            return _slugHelper.GenerateSlug(text);
-        }
+    public string Generate(string text)
+    {
+        return _slugHelper.GenerateSlug(text);
     }
 }

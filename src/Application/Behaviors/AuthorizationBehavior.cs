@@ -5,28 +5,27 @@ using Application.Exceptions;
 using Application.Interfaces;
 using MediatR;
 
-namespace Application.Behaviors
+namespace Application.Behaviors;
+
+public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private readonly ICurrentUser _currentUser;
+
+    public AuthorizationBehavior(ICurrentUser currentUser)
     {
-        private readonly ICurrentUser _currentUser;
+        _currentUser = currentUser;
+    }
 
-        public AuthorizationBehavior(ICurrentUser currentUser)
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    {
+        if (request is IAuthorizationRequest || request is IAuthorizationRequest<TResponse>)
         {
-            _currentUser = currentUser;
-        }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            if (request is IAuthorizationRequest || request is IAuthorizationRequest<TResponse>)
+            if (!_currentUser.IsAuthenticated)
             {
-                if (!_currentUser.IsAuthenticated)
-                {
-                    throw new UnauthorizedException();
-                }
+                throw new UnauthorizedException();
             }
-
-            return await next();
         }
+
+        return await next();
     }
 }

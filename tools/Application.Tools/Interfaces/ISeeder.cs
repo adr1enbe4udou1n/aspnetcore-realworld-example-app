@@ -1,10 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Tools.Interfaces
+namespace Application.Tools.Interfaces;
+
+public interface ISeeder
 {
-    public interface ISeeder
-    {
-        Task Run(CancellationToken cancellationToken);
-    }
+    Task Run(CancellationToken cancellationToken);
 }

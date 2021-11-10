@@ -11,83 +11,82 @@ using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Articles.Commands
+namespace Application.Features.Articles.Commands;
+
+public class NewArticleDTO
 {
-    public class NewArticleDTO
+    public string? Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? Body { get; set; }
+
+    public List<string> TagList { get; set; } = new();
+}
+
+public record NewArticleRequest(NewArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
+
+public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
+{
+    public ArticleCreateValidator(IAppDbContext context, ISlugifier slugifier)
     {
-        public string Title { get; set; }
+        RuleFor(x => x.Article.Title).NotNull().NotEmpty();
+        RuleFor(x => x.Article.Description).NotNull().NotEmpty();
+        RuleFor(x => x.Article.Body).NotNull().NotEmpty();
 
-        public string Description { get; set; }
+        RuleFor(x => x.Article.Title).MustAsync(
+            async (title, cancellationToken) => !await context.Articles
+                .Where(x => x.Slug == slugifier.Generate(title))
+                .AnyAsync(cancellationToken)
+        )
+            .WithMessage("Slug with this title already used");
+    }
+}
 
-        public string Body { get; set; }
+public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleRequest, SingleArticleResponse>
+{
+    private readonly IAppDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
+    private readonly ISlugifier _slugifier;
 
-        public List<string> TagList { get; set; } = new();
+    public ArticleCreateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser, ISlugifier slugifier)
+    {
+        _context = context;
+        _mapper = mapper;
+        _currentUser = currentUser;
+        _slugifier = slugifier;
     }
 
-    public record NewArticleRequest(NewArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
-
-    public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
+    public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
     {
-        public ArticleCreateValidator(IAppDbContext context, ISlugifier slugifier)
-        {
-            RuleFor(x => x.Article.Title).NotNull().NotEmpty();
-            RuleFor(x => x.Article.Description).NotNull().NotEmpty();
-            RuleFor(x => x.Article.Body).NotNull().NotEmpty();
-
-            RuleFor(x => x.Article.Title).MustAsync(
-                async (title, cancellationToken) => !await context.Articles
-                    .Where(x => x.Slug == slugifier.Generate(title))
-                    .AnyAsync(cancellationToken)
+        var article = _mapper.Map<Article>(request.Article);
+        var existingTags = await _context.Tags
+            .AsTracking()
+            .Where(
+                x => request.Article.TagList.Any(t => t == x.Name)
             )
-                .WithMessage("Slug with this title already used");
-        }
-    }
+            .ToListAsync(cancellationToken);
 
-    public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleRequest, SingleArticleResponse>
-    {
-        private readonly IAppDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ICurrentUser _currentUser;
-        private readonly ISlugifier _slugifier;
+        article.AuthorId = _currentUser.User.Id;
+        article.Slug = _slugifier.Generate(request.Article.Title);
 
-        public ArticleCreateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser, ISlugifier slugifier)
-        {
-            _context = context;
-            _mapper = mapper;
-            _currentUser = currentUser;
-            _slugifier = slugifier;
-        }
+        article.Tags = request.Article.TagList
+            .Where(x => !String.IsNullOrEmpty(x))
+            .Select(x =>
+            {
+                var tag = existingTags.FirstOrDefault(t => t.Name == x);
 
-        public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
-        {
-            var article = _mapper.Map<Article>(request.Article);
-            var existingTags = await _context.Tags
-                .AsTracking()
-                .Where(
-                    x => request.Article.TagList.Any(t => t == x.Name)
-                )
-                .ToListAsync(cancellationToken);
-
-            article.AuthorId = _currentUser.User.Id;
-            article.Slug = _slugifier.Generate(request.Article.Title);
-
-            article.Tags = request.Article.TagList
-                .Where(x => !String.IsNullOrEmpty(x))
-                .Select(x =>
+                return new ArticleTag
                 {
-                    var tag = existingTags.FirstOrDefault(t => t.Name == x);
+                    Tag = tag == null ? new Tag { Name = x } : tag
+                };
+            })
+            .ToList();
 
-                    return new ArticleTag
-                    {
-                        Tag = tag == null ? new Tag { Name = x } : tag
-                    };
-                })
-                .ToList();
+        await _context.Articles.AddAsync(article, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            await _context.Articles.AddAsync(article, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
-        }
+        return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
     }
 }

@@ -9,34 +9,33 @@ using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using MediatR;
 
-namespace Application.Features.Articles.Commands
+namespace Application.Features.Articles.Commands;
+
+public record ArticleDeleteRequest(string Slug) : IAuthorizationRequest;
+
+public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteRequest>
 {
-    public record ArticleDeleteRequest(string Slug) : IAuthorizationRequest;
+    private readonly IAppDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
-    public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteRequest>
+    public ArticleDeleteHandler(IAppDbContext context, ICurrentUser currentUser)
     {
-        private readonly IAppDbContext _context;
-        private readonly ICurrentUser _currentUser;
+        _context = context;
+        _currentUser = currentUser;
+    }
 
-        public ArticleDeleteHandler(IAppDbContext context, ICurrentUser currentUser)
+    public async Task<Unit> Handle(ArticleDeleteRequest request, CancellationToken cancellationToken)
+    {
+        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+
+        if (article.AuthorId != _currentUser.User.Id)
         {
-            _context = context;
-            _currentUser = currentUser;
+            throw new ForbiddenException();
         }
 
-        public async Task<Unit> Handle(ArticleDeleteRequest request, CancellationToken cancellationToken)
-        {
-            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        _context.Articles.Remove(article);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            if (article.AuthorId != _currentUser.User.Id)
-            {
-                throw new ForbiddenException();
-            }
-
-            _context.Articles.Remove(article);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

@@ -5,25 +5,24 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 
-namespace Application.Behaviors
+namespace Application.Behaviors;
+
+public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private readonly IValidator<TRequest> _validator;
+
+    public ValidationBehavior(IValidator<TRequest>? validator = null)
     {
-        private readonly IValidator<TRequest> _validator;
+        _validator = validator;
+    }
 
-        public ValidationBehavior(IValidator<TRequest> validator = null)
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    {
+        if (_validator != null)
         {
-            _validator = validator;
+            await _validator.ValidateAndThrowAsync(request, cancellationToken);
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            if (_validator != null)
-            {
-                await _validator.ValidateAndThrowAsync(request, cancellationToken);
-            }
-
-            return await next();
-        }
+        return await next();
     }
 }

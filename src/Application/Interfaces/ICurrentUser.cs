@@ -3,18 +3,17 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface ICurrentUser
 {
-    public interface ICurrentUser
-    {
-        User User { get; }
+    User User { get; }
 
-        long Identifier { get; }
+    long Identifier { get; }
 
-        bool IsAuthenticated { get; }
+    bool IsAuthenticated { get; }
 
-        Task SetIdentifier(long identifier);
+    Task SetIdentifier(long identifier);
 
-        Task Fresh();
-    }
+    Task Fresh();
 }

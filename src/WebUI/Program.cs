@@ -10,36 +10,35 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace WebUI
+namespace WebUI;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var host = CreateHostBuilder(args).Build();
+
+        using var scope = host.Services.CreateScope();
+
+        try
         {
-            var host = CreateHostBuilder(args).Build();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await context.Database.MigrateAsync();
+        }
+        catch (Exception ex)
+        {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-            using var scope = host.Services.CreateScope();
-
-            try
-            {
-                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                await context.Database.MigrateAsync();
-            }
-            catch (Exception ex)
-            {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-                logger.LogError(ex, "An error occured during migration");
-            }
-
-            await host.RunAsync();
+            logger.LogError(ex, "An error occured during migration");
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        await host.RunAsync();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }

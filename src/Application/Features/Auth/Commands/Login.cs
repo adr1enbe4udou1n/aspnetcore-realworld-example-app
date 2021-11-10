@@ -9,41 +9,40 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Auth.Commands
-{
-    public class LoginUserDTO
-    {
-        public string Email { get; set; }
+namespace Application.Features.Auth.Commands;
 
-        public string Password { get; set; }
+public class LoginUserDTO
+{
+    public string? Email { get; set; }
+
+    public string? Password { get; set; }
+}
+
+public record LoginUserRequest(LoginUserDTO User) : IRequest<UserResponse>;
+
+public class LoginHandler : IRequestHandler<LoginUserRequest, UserResponse>
+{
+    private readonly IAppDbContext _context;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IMapper _mapper;
+
+    public LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
+    {
+        _context = context;
+        _passwordHasher = passwordHasher;
+        _mapper = mapper;
     }
 
-    public record LoginUserRequest(LoginUserDTO User) : IRequest<UserResponse>;
-
-    public class LoginHandler : IRequestHandler<LoginUserRequest, UserResponse>
+    public async Task<UserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken)
     {
-        private readonly IAppDbContext _context;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IMapper _mapper;
+        var user = await _context.Users.Where(x => x.Email == request.User.Email)
+            .SingleOrDefaultAsync(cancellationToken);
 
-        public LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
+        if (user == null || !_passwordHasher.Check(request.User.Password, user.Password))
         {
-            _context = context;
-            _passwordHasher = passwordHasher;
-            _mapper = mapper;
+            throw new ValidationException("Bad credentials");
         }
 
-        public async Task<UserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken)
-        {
-            var user = await _context.Users.Where(x => x.Email == request.User.Email)
-                .SingleOrDefaultAsync(cancellationToken);
-
-            if (user == null || !_passwordHasher.Check(request.User.Password, user.Password))
-            {
-                throw new ValidationException("Bad credentials");
-            }
-
-            return new UserResponse(_mapper.Map<UserDTO>(user));
-        }
+        return new UserResponse(_mapper.Map<UserDTO>(user));
     }
 }

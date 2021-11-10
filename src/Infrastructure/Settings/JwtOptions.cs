@@ -1,7 +1,6 @@
-namespace Application.Infrastructure.Settings
+namespace Application.Infrastructure.Settings;
+
+public class JwtOptions
 {
-    public class JwtOptions
-    {
-        public string SecretKey { get; set; }
-    }
+    public string? SecretKey { get; set; }
 }

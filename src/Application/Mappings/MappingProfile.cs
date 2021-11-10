@@ -10,52 +10,51 @@ using Application.Features.Profiles.Queries;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Mappings
+namespace Application.Mappings;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            User currentUser = null;
+        User currentUser = null;
 
-            CreateMap<User, UserDTO>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenResolver>());
+        CreateMap<User, UserDTO>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenResolver>());
 
-            CreateMap<NewUserDTO, User>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
+        CreateMap<NewUserDTO, User>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
 
-            CreateMap<UpdateUserDTO, User>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username))
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            ;
+        CreateMap<UpdateUserDTO, User>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username))
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        ;
 
-            CreateMap<User, ProfileDTO>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? src.IsFollowedBy(currentUser) : false))
-                .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
+        CreateMap<User, ProfileDTO>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? src.IsFollowedBy(currentUser) : false))
+            .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
-            CreateMap<NewArticleDTO, Article>()
-                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+        CreateMap<NewArticleDTO, Article>()
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
 
-            CreateMap<UpdateArticleDTO, Article>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<UpdateArticleDTO, Article>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<Article, ArticleDTO>()
-                .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags
-                    .Select(t => t.Tag.Name)
-                    .OrderBy(t => t)
-                ))
-                .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
-                    src => currentUser != null ? src.FavoredUsers.Any(f => f.User.Id == currentUser.Id) : false)
-                )
-                .ForMember(dest => dest.Favorited, opt => opt.MapFrom<FavoriteResolver>())
-                .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count));
+        CreateMap<Article, ArticleDTO>()
+            .ForMember(dest => dest.TagList, opt => opt.MapFrom(src => src.Tags
+                .Select(t => t.Tag.Name)
+                .OrderBy(t => t)
+            ))
+            .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
+                src => currentUser != null ? src.FavoredUsers.Any(f => f.User.Id == currentUser.Id) : false)
+            )
+            .ForMember(dest => dest.Favorited, opt => opt.MapFrom<FavoriteResolver>())
+            .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count));
 
-            CreateMap<NewCommentDTO, Comment>()
-                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
+        CreateMap<NewCommentDTO, Comment>()
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser.Id));
 
-            CreateMap<Comment, CommentDTO>();
-        }
+        CreateMap<Comment, CommentDTO>();
     }
 }

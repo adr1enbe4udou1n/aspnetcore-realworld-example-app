@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface IPasswordHasher
 {
-    public interface IPasswordHasher
-    {
-        string Hash(string password);
-        bool Check(string password, string hash);
-    }
+    string Hash(string password);
+    bool Check(string password, string hash);
 }

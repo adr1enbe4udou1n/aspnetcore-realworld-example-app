@@ -6,25 +6,24 @@ using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Tags.Queries
+namespace Application.Features.Tags.Queries;
+
+public record TagsResponse(IEnumerable<string> Tags);
+
+public record TagsListQuery() : IRequest<TagsResponse>;
+
+public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
 {
-    public record TagsResponse(IEnumerable<string> Tags);
+    private readonly IAppDbContext _context;
 
-    public record TagsListQuery() : IRequest<TagsResponse>;
-
-    public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
+    public TagsListHandler(IAppDbContext context)
     {
-        private readonly IAppDbContext _context;
+        _context = context;
+    }
 
-        public TagsListHandler(IAppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<TagsResponse> Handle(TagsListQuery request, CancellationToken cancellationToken)
-        {
-            var tags = await _context.Tags.OrderBy(t => t.Name).AsNoTracking().ToListAsync(cancellationToken);
-            return new TagsResponse(tags.Select(t => t.Name));
-        }
+    public async Task<TagsResponse> Handle(TagsListQuery request, CancellationToken cancellationToken)
+    {
+        var tags = await _context.Tags.OrderBy(t => t.Name).AsNoTracking().ToListAsync(cancellationToken);
+        return new TagsResponse(tags.Select(t => t.Name));
     }
 }

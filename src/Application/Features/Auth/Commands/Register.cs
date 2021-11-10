@@ -9,58 +9,57 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Auth.Commands
+namespace Application.Features.Auth.Commands;
+
+public class NewUserDTO
 {
-    public class NewUserDTO
+    public string? Email { get; set; }
+
+    public string? Password { get; set; }
+
+    public string? Username { get; set; }
+}
+
+public record NewUserRequest(NewUserDTO User) : IRequest<UserResponse>;
+
+public class RegisterValidator : AbstractValidator<NewUserRequest>
+{
+    public RegisterValidator(IAppDbContext context)
     {
-        public string Email { get; set; }
+        RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
+        RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
+        RuleFor(x => x.User.Username).NotNull().NotEmpty();
 
-        public string Password { get; set; }
+        RuleFor(x => x.User.Email).MustAsync(
+            async (email, cancellationToken) => !await context.Users
+                .Where(x => x.Email == email)
+                .AnyAsync(cancellationToken)
+        )
+            .WithMessage("Email is already used");
+    }
+}
 
-        public string Username { get; set; }
+public class RegisterHandler : IRequestHandler<NewUserRequest, UserResponse>
+{
+    private readonly IAppDbContext _context;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IMapper _mapper;
+
+    public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
+    {
+        _context = context;
+        _passwordHasher = passwordHasher;
+        _mapper = mapper;
     }
 
-    public record NewUserRequest(NewUserDTO User) : IRequest<UserResponse>;
-
-    public class RegisterValidator : AbstractValidator<NewUserRequest>
+    public async Task<UserResponse> Handle(NewUserRequest request, CancellationToken cancellationToken)
     {
-        public RegisterValidator(IAppDbContext context)
-        {
-            RuleFor(x => x.User.Email).NotNull().NotEmpty().EmailAddress();
-            RuleFor(x => x.User.Password).NotNull().NotEmpty().MinimumLength(8);
-            RuleFor(x => x.User.Username).NotNull().NotEmpty();
+        var user = _mapper.Map<NewUserDTO, User>(request.User);
+        user.Password = _passwordHasher.Hash(request.User.Password);
 
-            RuleFor(x => x.User.Email).MustAsync(
-                async (email, cancellationToken) => !await context.Users
-                    .Where(x => x.Email == email)
-                    .AnyAsync(cancellationToken)
-            )
-                .WithMessage("Email is already used");
-        }
-    }
+        await _context.Users.AddAsync(user, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-    public class RegisterHandler : IRequestHandler<NewUserRequest, UserResponse>
-    {
-        private readonly IAppDbContext _context;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IMapper _mapper;
-
-        public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
-        {
-            _context = context;
-            _passwordHasher = passwordHasher;
-            _mapper = mapper;
-        }
-
-        public async Task<UserResponse> Handle(NewUserRequest request, CancellationToken cancellationToken)
-        {
-            var user = _mapper.Map<NewUserDTO, User>(request.User);
-            user.Password = _passwordHasher.Hash(request.User.Password);
-
-            await _context.Users.AddAsync(user, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return new UserResponse(_mapper.Map<UserDTO>(user));
-        }
+        return new UserResponse(_mapper.Map<UserDTO>(user));
     }
 }

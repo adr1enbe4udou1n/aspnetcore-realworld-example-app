@@ -5,36 +5,35 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Respawn;
 
-namespace Application.Tools
+namespace Application.Tools;
+
+public class DatabaseManager
 {
-    public class DatabaseManager
+    private readonly IConfiguration _configuration;
+    private readonly IAppDbContext _context;
+
+    public DatabaseManager(IConfiguration configuration, IAppDbContext context)
     {
-        private IConfiguration _configuration;
-        private readonly IAppDbContext _context;
+        _configuration = configuration;
+        _context = context;
+    }
 
-        public DatabaseManager(IConfiguration configuration, IAppDbContext context)
+    public async Task Reset()
+    {
+        await _context.Database.MigrateAsync();
+
+        using (var conn = new NpgsqlConnection(
+            _configuration.GetConnectionString("DefaultConnection")
+        ))
         {
-            _configuration = configuration;
-            _context = context;
-        }
+            await conn.OpenAsync();
 
-        public async Task Reset()
-        {
-            await _context.Database.MigrateAsync();
-
-            using (var conn = new NpgsqlConnection(
-                _configuration.GetConnectionString("DefaultConnection")
-            ))
+            var checkpoint = new Checkpoint
             {
-                await conn.OpenAsync();
-
-                var checkpoint = new Checkpoint
-                {
-                    TablesToIgnore = new[] { "__EFMigrationsHistory" },
-                    DbAdapter = DbAdapter.Postgres
-                };
-                await checkpoint.Reset(conn);
-            }
+                TablesToIgnore = new[] { "__EFMigrationsHistory" },
+                DbAdapter = DbAdapter.Postgres
+            };
+            await checkpoint.Reset(conn);
         }
     }
 }

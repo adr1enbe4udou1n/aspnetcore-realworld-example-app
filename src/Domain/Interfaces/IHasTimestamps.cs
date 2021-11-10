@@ -1,11 +1,10 @@
 using System;
 
-namespace Domain.Interfaces
-{
-    public interface IHasTimestamps
-    {
-        DateTime CreatedAt { get; set; }
+namespace Domain.Interfaces;
 
-        DateTime UpdatedAt { get; set; }
-    }
+public interface IHasTimestamps
+{
+    DateTime CreatedAt { get; set; }
+
+    DateTime UpdatedAt { get; set; }
 }

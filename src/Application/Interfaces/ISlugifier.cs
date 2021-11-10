@@ -1,7 +1,6 @@
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface ISlugifier
 {
-    public interface ISlugifier
-    {
-        string Generate(string text);
-    }
+    string Generate(string text);
 }

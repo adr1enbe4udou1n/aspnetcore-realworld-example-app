@@ -13,52 +13,51 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Comments.Queries
+namespace Application.Features.Comments.Queries;
+
+public class CommentDTO
 {
-    public class CommentDTO
+    public int Id { get; set; }
+
+    public string? Body { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
+    public ProfileDTO? Author { get; set; }
+}
+
+public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);
+
+public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse>;
+
+public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
+{
+    private readonly IAppDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
+
+    public CommentsListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
-        public int Id { get; set; }
-
-        public string Body { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime UpdatedAt { get; set; }
-
-        public ProfileDTO Author { get; set; }
+        _context = context;
+        _mapper = mapper;
+        _currentUser = currentUser;
     }
 
-    public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);
-
-    public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse>;
-
-    public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
+    public async Task<MultipleCommentsResponse> Handle(CommentsListQuery request, CancellationToken cancellationToken)
     {
-        private readonly IAppDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ICurrentUser _currentUser;
+        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        public CommentsListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
-        {
-            _context = context;
-            _mapper = mapper;
-            _currentUser = currentUser;
-        }
+        var comments = await _context.Comments
+            .Where(c => c.ArticleId == article.Id)
+            .OrderByDescending(x => x.Id)
+            .ProjectTo<CommentDTO>(_mapper.ConfigurationProvider, new
+            {
+                currentUser = _currentUser.User
+            })
+            .ToListAsync(cancellationToken);
 
-        public async Task<MultipleCommentsResponse> Handle(CommentsListQuery request, CancellationToken cancellationToken)
-        {
-            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
-
-            var comments = await _context.Comments
-                .Where(c => c.ArticleId == article.Id)
-                .OrderByDescending(x => x.Id)
-                .ProjectTo<CommentDTO>(_mapper.ConfigurationProvider, new
-                {
-                    currentUser = _currentUser.User
-                })
-                .ToListAsync(cancellationToken);
-
-            return new MultipleCommentsResponse(comments);
-        }
+        return new MultipleCommentsResponse(comments);
     }
 }

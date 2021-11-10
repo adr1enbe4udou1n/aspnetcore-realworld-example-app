@@ -1,11 +1,10 @@
 using System;
 
-namespace Application.Exceptions
+namespace Application.Exceptions;
+
+public class UnauthorizedException : Exception
 {
-    public class UnauthorizedException : Exception
+    public UnauthorizedException() : base("Not authenticated")
     {
-        public UnauthorizedException() : base("Not authenticated")
-        {
-        }
     }
 }

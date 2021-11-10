@@ -10,42 +10,41 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebUI.Handlers
-{
-    public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
-    {
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly ICurrentUser _currentUser;
+namespace WebUI.Handlers;
 
-        public TokenAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IJwtTokenGenerator jwtTokenGenerator, ICurrentUser currentUser) : base(options, logger, encoder, clock)
+public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+{
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ICurrentUser _currentUser;
+
+    public TokenAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IJwtTokenGenerator jwtTokenGenerator, ICurrentUser currentUser) : base(options, logger, encoder, clock)
+    {
+        _jwtTokenGenerator = jwtTokenGenerator;
+        _currentUser = currentUser;
+    }
+
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+        if (token == null)
         {
-            _jwtTokenGenerator = jwtTokenGenerator;
-            _currentUser = currentUser;
+            return AuthenticateResult.Fail("Token is null");
         }
 
-        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+        try
         {
-            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            await _jwtTokenGenerator.SetCurrentUserFromToken(token);
 
-            if (token == null)
-            {
-                return AuthenticateResult.Fail("Token is null");
-            }
-
-            try
-            {
-                await _jwtTokenGenerator.SetCurrentUserFromToken(token);
-
-                return AuthenticateResult.Success(
-                    new AuthenticationTicket(new ClaimsPrincipal(
-                        new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, _currentUser.User.Name) }, Scheme.Name)
-                    ), Scheme.Name)
-                );
-            }
-            catch (SecurityTokenException)
-            {
-                return AuthenticateResult.Fail("Invalid token");
-            }
+            return AuthenticateResult.Success(
+                new AuthenticationTicket(new ClaimsPrincipal(
+                    new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, _currentUser.User.Name) }, Scheme.Name)
+                ), Scheme.Name)
+            );
+        }
+        catch (SecurityTokenException)
+        {
+            return AuthenticateResult.Fail("Invalid token");
         }
     }
 }

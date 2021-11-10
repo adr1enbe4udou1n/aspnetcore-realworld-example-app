@@ -24,129 +24,127 @@ using WebUI.Converters;
 using WebUI.Filters;
 using WebUI.Handlers;
 
-namespace WebUI
+namespace WebUI;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddInfrastructure(Configuration);
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddInfrastructure(Configuration);
 
-            services.AddRouting(options => options.LowercaseUrls = true);
+        services.AddRouting(options => options.LowercaseUrls = true);
 
-            services
-                .AddControllers(opt =>
-                {
-                    opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
-                })
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.Converters.Add(new Converters.DateTimeConverter())
-                );
-
-            services.AddAuthentication("Bearer")
-                .AddScheme<AuthenticationSchemeOptions, TokenAuthenticationHandler>("Bearer", null);
-
-            services.AddAuthorization(options =>
+        services
+            .AddControllers(opt =>
             {
-                var policy = new AuthorizationPolicyBuilder("Bearer");
-                policy.RequireAuthenticatedUser();
-                options.DefaultPolicy = policy.Build();
+                opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
+            })
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new Converters.DateTimeConverter())
+            );
+
+        services.AddAuthentication("Bearer")
+            .AddScheme<AuthenticationSchemeOptions, TokenAuthenticationHandler>("Bearer", null);
+
+        services.AddAuthorization(options =>
+        {
+            var policy = new AuthorizationPolicyBuilder("Bearer");
+            policy.RequireAuthenticatedUser();
+            options.DefaultPolicy = policy.Build();
+        });
+
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Conduit API",
+                Version = "1.0.0",
+                Description = "Conduit API",
+                Contact = new OpenApiContact
+                {
+                    Name = "RealWorld",
+                    Url = new Uri("https://realworld.io"),
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "MIT License",
+                    Url = new Uri("https://opensource.org/licenses/MIT"),
+                },
             });
 
-            services.AddSwaggerGen(c =>
+            c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "Application.xml"));
+            c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "WebUI.xml"));
+
+            c.AddServer(new OpenApiServer
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Conduit API",
-                    Version = "1.0.0",
-                    Description = "Conduit API",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "RealWorld",
-                        Url = new Uri("https://realworld.io"),
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "MIT License",
-                        Url = new Uri("https://opensource.org/licenses/MIT"),
-                    },
-                });
+                Url = "/api",
+            });
 
-                c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "Application.xml"));
-                c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "WebUI.xml"));
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please insert JWT with Bearer into field",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                BearerFormat = "JWT"
+            });
 
-                c.AddServer(new OpenApiServer
-                {
-                    Url = "/api",
-                });
+            c.SupportNonNullableReferenceTypes();
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Please insert JWT with Bearer into field",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    BearerFormat = "JWT"
-                });
+            c.CustomSchemaIds(x => x.GetCustomAttributes(false)
+                .OfType<DisplayNameAttribute>()
+                .FirstOrDefault()?.DisplayName ?? x.Name.Replace("DTO", string.Empty)
+            );
 
-                c.SupportNonNullableReferenceTypes();
-
-                c.CustomSchemaIds(x => x.GetCustomAttributes(false)
-                    .OfType<DisplayNameAttribute>()
-                    .FirstOrDefault()?.DisplayName ?? x.Name.Replace("DTO", string.Empty)
-                );
-
-                c.TagActionsBy(y => new[]
-                {
+            c.TagActionsBy(y => new[]
+            {
                     y.GroupName ?? throw new InvalidOperationException()
-                });
-
-                c.DocInclusionPredicate((name, api) => true);
-
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
-
-                c.DescribeAllParametersInCamelCase();
             });
-        }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+            c.DocInclusionPredicate((name, api) => true);
+
+            c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+            c.DescribeAllParametersInCamelCase();
+        });
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Conduit v1"));
-
-            app.Map("/api", app =>
-            {
-                app.UseRouting();
-
-                app.UseCors(x => x
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                );
-
-                app.UseAuthorization();
-                app.UseAuthorization();
-
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                });
-            });
+            app.UseDeveloperExceptionPage();
         }
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Conduit v1"));
+
+        app.Map("/api", app =>
+        {
+            app.UseRouting();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+            );
+
+            app.UseAuthorization();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        });
     }
 }
-

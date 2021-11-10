@@ -4,17 +4,16 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface IAppDbContext
 {
-    public interface IAppDbContext
-    {
-        DbSet<User> Users { get; set; }
-        DbSet<Article> Articles { get; set; }
-        DbSet<Comment> Comments { get; set; }
-        DbSet<Tag> Tags { get; set; }
+    DbSet<User> Users { get; set; }
+    DbSet<Article> Articles { get; set; }
+    DbSet<Comment> Comments { get; set; }
+    DbSet<Tag> Tags { get; set; }
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
-        DatabaseFacade Database { get; }
-    }
+    DatabaseFacade Database { get; }
 }

@@ -8,50 +8,50 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Profiles
+namespace Application.IntegrationTests.Profiles;
+
+public class ProfileGetTests : TestBase
 {
-    public class ProfileGetTests : TestBase
+    public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
+    public async Task Can_Get_Profile()
     {
-        public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-        [Fact]
-        public async Task Can_Get_Profile()
+        await Context.Users.AddAsync(new User
         {
-            await Context.Users.AddAsync(new User
-            {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-                Bio = "My Bio",
-                Image = "https://i.pravatar.cc/300",
-            });
-            await Context.SaveChangesAsync();
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+            Bio = "My Bio",
+            Image = "https://i.pravatar.cc/300",
+        });
+        await Context.SaveChangesAsync();
 
-            var response = await Act(new ProfileGetQuery("John Doe"));
+        var response = await Act(new ProfileGetQuery("John Doe"));
 
-            response.Profile.Should().BeEquivalentTo(new ProfileDTO
-            {
-                Username = "John Doe",
-                Bio = "My Bio",
-                Image = "https://i.pravatar.cc/300",
-                Following = false
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_Get_Non_Existent_Profile()
+        response.Profile.Should().BeEquivalentTo(new ProfileDTO
         {
-            await this.Invoking(x => x.Act(new ProfileGetQuery("John Doe")))
-                .Should().ThrowAsync<NotFoundException>();
-        }
+            Username = "John Doe",
+            Bio = "My Bio",
+            Image = "https://i.pravatar.cc/300",
+            Following = false
+        });
+    }
 
-        [Fact]
-        public async Task Can_Get_Followed_Profile()
+    [Fact]
+    public async Task Cannot_Get_Non_Existent_Profile()
+    {
+        await this.Invoking(x => x.Act(new ProfileGetQuery("John Doe")))
+            .Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
+    public async Task Can_Get_Followed_Profile()
+    {
+        await ActingAs(new User
         {
-            await ActingAs(new User
-            {
-                Name = "John Doe",
-                Email = "john.doe@example.com",
-                Following = new List<FollowerUser>
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+            Following = new List<FollowerUser>
                 {
                     new FollowerUser
                     {
@@ -64,17 +64,16 @@ namespace Application.IntegrationTests.Profiles
                         }
                     }
                 }
-            });
+        });
 
-            var response = await Act(new ProfileGetQuery("Jane Doe"));
+        var response = await Act(new ProfileGetQuery("Jane Doe"));
 
-            response.Profile.Should().BeEquivalentTo(new ProfileDTO
-            {
-                Username = "Jane Doe",
-                Bio = "My Bio",
-                Image = "https://i.pravatar.cc/300",
-                Following = true
-            });
-        }
+        response.Profile.Should().BeEquivalentTo(new ProfileDTO
+        {
+            Username = "Jane Doe",
+            Bio = "My Bio",
+            Image = "https://i.pravatar.cc/300",
+            Following = true
+        });
     }
 }

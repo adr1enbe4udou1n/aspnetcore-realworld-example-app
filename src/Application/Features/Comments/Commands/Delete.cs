@@ -9,38 +9,37 @@ using Application.Features.Comments.Queries;
 using Application.Interfaces;
 using MediatR;
 
-namespace Application.Features.Comments.Commands
+namespace Application.Features.Comments.Commands;
+
+public record CommentDeleteRequest(string Slug, int Id) : IAuthorizationRequest;
+
+public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteRequest>
 {
-    public record CommentDeleteRequest(string Slug, int Id) : IAuthorizationRequest;
+    private readonly IAppDbContext _context;
+    private readonly ICurrentUser _currentUser;
 
-    public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteRequest>
+    public CommentDeleteHandler(IAppDbContext context, ICurrentUser currentUser)
     {
-        private readonly IAppDbContext _context;
-        private readonly ICurrentUser _currentUser;
+        _context = context;
+        _currentUser = currentUser;
+    }
 
-        public CommentDeleteHandler(IAppDbContext context, ICurrentUser currentUser)
+    public async Task<Unit> Handle(CommentDeleteRequest request, CancellationToken cancellationToken)
+    {
+        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var comment = await _context.Comments.FindAsync(
+            x => x.Id == request.Id && x.ArticleId == article.Id,
+            cancellationToken
+        );
+
+        if (article.AuthorId != _currentUser.User.Id && comment.AuthorId != _currentUser.User.Id)
         {
-            _context = context;
-            _currentUser = currentUser;
+            throw new ForbiddenException();
         }
 
-        public async Task<Unit> Handle(CommentDeleteRequest request, CancellationToken cancellationToken)
-        {
-            var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
-            var comment = await _context.Comments.FindAsync(
-                x => x.Id == request.Id && x.ArticleId == article.Id,
-                cancellationToken
-            );
+        _context.Comments.Remove(comment);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            if (article.AuthorId != _currentUser.User.Id && comment.AuthorId != _currentUser.User.Id)
-            {
-                throw new ForbiddenException();
-            }
-
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

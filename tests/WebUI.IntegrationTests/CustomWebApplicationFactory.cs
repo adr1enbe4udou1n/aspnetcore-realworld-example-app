@@ -6,21 +6,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
-namespace WebUI.IntegrationTests
+namespace WebUI.IntegrationTests;
+
+public class CustomWebApplicationFactory<TStartup>
+: WebApplicationFactory<TStartup> where TStartup : class
 {
-    public class CustomWebApplicationFactory<TStartup>
-    : WebApplicationFactory<TStartup> where TStartup : class
+    public Mock<IMediator> MediatorMock { get; private set; } = new Mock<IMediator>();
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        public Mock<IMediator> MediatorMock { get; private set; } = new Mock<IMediator>();
-
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        builder.ConfigureServices(services =>
         {
-            builder.ConfigureServices(services =>
-            {
-                var sp = services.BuildServiceProvider();
+            var sp = services.BuildServiceProvider();
 
-                services.AddScoped<IMediator>(options => MediatorMock.Object);
-            });
-        }
+            services.AddScoped<IMediator>(options => MediatorMock.Object);
+        });
     }
 }

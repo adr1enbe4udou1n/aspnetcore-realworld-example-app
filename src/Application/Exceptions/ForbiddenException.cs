@@ -1,11 +1,10 @@
 using System;
 
-namespace Application.Exceptions
+namespace Application.Exceptions;
+
+public class ForbiddenException : Exception
 {
-    public class ForbiddenException : Exception
+    public ForbiddenException() : base("Access forbidden")
     {
-        public ForbiddenException() : base("Access forbidden")
-        {
-        }
     }
 }
