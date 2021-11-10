@@ -3,7 +3,7 @@
 run:
 	dotnet run --project src/WebUI
 watch:
-	dotnet watch run --project src/WebUI
+	dotnet watch --project src/WebUI
 fresh:
 	dotnet run --project tools/Application.Tools fresh
 seed:
