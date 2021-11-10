@@ -25,7 +25,7 @@ insert_final_newline = false
 [*.{cs,vb}]
 
 # Organize usings
-dotnet_separate_import_directive_groups = true
+dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
 file_header_template = unset
 
@@ -125,6 +125,9 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:sil
 csharp_using_directive_placement = outside_namespace:silent
 
 #### C# Formatting Rules ####
+
+# Namespace preferences
+csharp_style_namespace_declarations = file_scoped:warning
 
 # New line preferences
 csharp_new_line_before_catch = true
