@@ -1,12 +1,8 @@
-using System.Collections.Generic;
 using System.Globalization;
-using System.Threading.Tasks;
 using Application.Features.Auth.Commands;
-using Application.IntegrationTests.Events;
 using Domain.Entities;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 

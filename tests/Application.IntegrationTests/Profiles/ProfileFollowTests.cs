@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Features.Profiles.Commands;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;

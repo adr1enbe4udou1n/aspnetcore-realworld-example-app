@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Features.Articles.Commands;
 using Application.Features.Comments.Commands;

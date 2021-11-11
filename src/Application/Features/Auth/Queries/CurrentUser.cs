@@ -1,8 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Entities;
 
 namespace Application.Features.Auth.Queries;
 

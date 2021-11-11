@@ -1,4 +1,3 @@
-using System.Linq;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;

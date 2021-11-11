@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Auth.Commands;

@@ -1,7 +1,5 @@
 using System.Reflection;
 using Application.Behaviors;
-using Application.Features.Auth.Commands;
-using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

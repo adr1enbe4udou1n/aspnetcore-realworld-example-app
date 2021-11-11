@@ -1,12 +1,7 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.Tools.Interfaces;
 using Bogus;
 using Domain.Entities;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Tools.Seeders;
 

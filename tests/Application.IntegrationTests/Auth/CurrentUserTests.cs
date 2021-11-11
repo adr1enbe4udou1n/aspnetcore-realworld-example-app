@@ -1,7 +1,4 @@
-using System;
-using System.Threading.Tasks;
 using Application.Exceptions;
-using Application.Features.Auth.Commands;
 using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;

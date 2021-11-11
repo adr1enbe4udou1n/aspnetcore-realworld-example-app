@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;

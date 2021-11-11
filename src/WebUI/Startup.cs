@@ -1,26 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Mime;
-using System.Reflection;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using WebUI.Converters;
 using WebUI.Filters;
 using WebUI.Handlers;
 

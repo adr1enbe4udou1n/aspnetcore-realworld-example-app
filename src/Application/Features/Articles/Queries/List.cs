@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
@@ -11,7 +5,6 @@ using Application.Support;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries;
 

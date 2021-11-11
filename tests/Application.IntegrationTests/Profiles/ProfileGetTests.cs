@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;

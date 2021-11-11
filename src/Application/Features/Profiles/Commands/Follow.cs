@@ -1,12 +1,8 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands;

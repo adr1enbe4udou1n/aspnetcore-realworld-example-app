@@ -1,10 +1,5 @@
-using System;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Features.Auth.Commands;
-using Application.Features.Auth.Queries;
 using MediatR;
 using Moq;
 using Xunit;

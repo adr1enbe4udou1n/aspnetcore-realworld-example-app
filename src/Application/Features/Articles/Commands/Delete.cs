@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Extensions;
-using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using MediatR;
 

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

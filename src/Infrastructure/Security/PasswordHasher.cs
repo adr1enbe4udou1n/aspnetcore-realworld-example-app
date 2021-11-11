@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Application.Interfaces;
 
 namespace Infrastructure.Security;

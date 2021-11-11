@@ -1,10 +1,6 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

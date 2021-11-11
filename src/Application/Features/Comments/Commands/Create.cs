@@ -1,16 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Extensions;
 using Application.Features.Comments.Queries;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Commands;
 
