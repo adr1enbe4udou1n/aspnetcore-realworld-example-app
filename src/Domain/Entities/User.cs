@@ -8,10 +8,10 @@ public class User : IHasTimestamps
     public int Id { get; set; }
 
     [Column(TypeName = "varchar(255)")]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = null!;
 
     [Column(TypeName = "varchar(255)")]
-    public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } = null!;
 
     [Column(TypeName = "varchar(255)")]
     public string? Password { get; set; }

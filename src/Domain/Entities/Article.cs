@@ -8,17 +8,17 @@ public class Article : IHasTimestamps
     public int Id { get; set; }
 
     public int AuthorId { get; set; }
-    public User Author { get; set; } = new();
+    public User Author { get; set; } = null!;
 
     [Column(TypeName = "varchar(255)")]
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; } = null!;
 
     [Column(TypeName = "varchar(255)")]
-    public string Slug { get; set; } = string.Empty;
+    public string Slug { get; set; } = null!;
 
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; set; } = null!;
 
-    public string Body { get; set; } = string.Empty;
+    public string Body { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 

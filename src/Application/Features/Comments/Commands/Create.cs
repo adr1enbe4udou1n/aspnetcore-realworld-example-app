@@ -44,11 +44,11 @@ public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentReque
 
     public async Task<SingleCommentResponse> Handle(NewCommentRequest request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.AsTracking().FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         var comment = _mapper.Map<Comment>(request.Comment);
-        comment.Author = _currentUser.User!;
-        comment.Article = article;
+        comment.AuthorId = _currentUser.User!.Id;
+        comment.ArticleId = article.Id;
 
         await _context.Comments.AddAsync(comment, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
