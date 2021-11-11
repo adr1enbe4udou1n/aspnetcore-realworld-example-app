@@ -10,7 +10,7 @@ steps:
     Jwt__SecretKey: "super secret key"
   commands:
     - sleep 10 # Wait for PostgreSQL service starting
-    - dotnet run -p targets
+    - dotnet run --project targets
 
 - name: image
   image: plugins/docker
