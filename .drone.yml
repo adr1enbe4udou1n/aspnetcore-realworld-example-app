@@ -40,7 +40,7 @@ steps:
 
 services:
 - name: db
-  image: postgres:13
+  image: postgres:14
   environment:
     POSTGRES_USER: main
     POSTGRES_PASSWORD: main
