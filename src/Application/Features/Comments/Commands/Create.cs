@@ -5,6 +5,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Commands;
 
@@ -43,11 +44,11 @@ public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentReque
 
     public async Task<SingleCommentResponse> Handle(NewCommentRequest request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var article = await _context.Articles.AsTracking().FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         var comment = _mapper.Map<Comment>(request.Comment);
-        comment.AuthorId = _currentUser.User!.Id;
-        comment.ArticleId = article.Id;
+        comment.Author = _currentUser.User!;
+        comment.Article = article;
 
         await _context.Comments.AddAsync(comment, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

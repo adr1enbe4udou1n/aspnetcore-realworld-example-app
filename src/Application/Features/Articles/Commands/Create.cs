@@ -62,7 +62,7 @@ public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleReque
             )
             .ToListAsync(cancellationToken);
 
-        article.AuthorId = _currentUser.User!.Id;
+        article.Author = _currentUser.User!;
         article.Slug = _slugifier.Generate(request.Article.Title);
 
         article.Tags = request.Article.TagList
