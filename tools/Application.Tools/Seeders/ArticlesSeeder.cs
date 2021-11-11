@@ -19,14 +19,14 @@ public class ArticlesSeeder : ISeeder
 
     public async Task Run(CancellationToken cancellationToken)
     {
-        var users = await _context.Users.ToListAsync(cancellationToken);
+        var users = await _context.Users.AsTracking().ToListAsync(cancellationToken);
 
         var articles = new Faker<Article>()
             .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))
             .RuleFor(a => a.Description, f => f.Lorem.Paragraphs(1))
             .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(5))
             .RuleFor(a => a.Author, f => f.PickRandom(users))
-            .RuleFor(a => a.CreatedAt, f => f.Date.Recent(90))
+            .RuleFor(a => a.CreatedAt, f => f.Date.Recent(90).ToUniversalTime())
             .RuleFor(a => a.FavoredUsers, f => f.PickRandom(users, f.Random.Number(5))
                 .Select(u => new ArticleFavorite { UserId = u.Id })
                 .ToList()
@@ -35,7 +35,7 @@ public class ArticlesSeeder : ISeeder
             .RuleFor(a => a.Comments, f => new Faker<Comment>()
                 .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(2))
                 .RuleFor(a => a.Author, f => f.PickRandom(users))
-                .RuleFor(a => a.CreatedAt, f => f.Date.Recent(7))
+                .RuleFor(a => a.CreatedAt, f => f.Date.Recent(7).ToUniversalTime())
                 .Generate(f.Random.Number(10))
             )
             .Generate(500);

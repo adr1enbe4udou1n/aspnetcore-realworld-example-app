@@ -4,7 +4,7 @@ name: default
 
 steps:
 - name: build
-  image: mcr.microsoft.com/dotnet/sdk:5.0
+  image: mcr.microsoft.com/dotnet/sdk:6.0
   environment:
     ConnectionStrings__DefaultConnection: "Server=db; Port=5432; User Id=main; Password=main; Database=main"
     Jwt__SecretKey: "super secret key"
