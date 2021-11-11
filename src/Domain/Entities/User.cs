@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Interfaces;
 
@@ -8,11 +7,9 @@ public class User : IHasTimestamps
 {
     public int Id { get; set; }
 
-    [Required]
     [Column(TypeName = "varchar(255)")]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
     [Column(TypeName = "varchar(255)")]
     public string Email { get; set; } = string.Empty;
 
