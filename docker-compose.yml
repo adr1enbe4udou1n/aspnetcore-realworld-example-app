@@ -1,19 +1,21 @@
 version: "3"
 services:
   db:
-    image: postgres:14
+    image: mysql:8
     environment:
-      POSTGRES_USER: main
-      POSTGRES_PASSWORD: main
-      POSTGRES_DB: main
+      MYSQL_ROOT_PASSWORD: main
+      MYSQL_USER: main
+      MYSQL_PASSWORD: main
+      MYSQL_DATABASE: main
     ports:
-      - 5433:5432
+      - 3307:3306
 
   db_test:
-    image: postgres:14
+    image: mysql:8
     environment:
-      POSTGRES_USER: main
-      POSTGRES_PASSWORD: main
-      POSTGRES_DB: main
+      MYSQL_ROOT_PASSWORD: main
+      MYSQL_USER: main
+      MYSQL_PASSWORD: main
+      MYSQL_DATABASE: main
     ports:
-      - 5434:5432
+      - 3308:3306

@@ -20,8 +20,12 @@ public static class DependencyInjection
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
             .AddDbContext<AppDbContext>(options =>
             {
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                var serverVersion = new MySqlServerVersion(new Version(8, 0, 27));
+
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                options.UseMySql(connectionString, serverVersion);
             })
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()

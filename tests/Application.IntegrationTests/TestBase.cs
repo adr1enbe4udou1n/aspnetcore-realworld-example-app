@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Npgsql;
+using MySqlConnector;
 using Respawn;
 using Xunit;
 using Xunit.Abstractions;
@@ -52,14 +52,14 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
 
     public async Task InitializeAsync()
     {
-        using (var conn = new NpgsqlConnection(_factory.Configuration.GetConnectionString("DefaultConnection")))
+        using (var conn = new MySqlConnection(_factory.Configuration.GetConnectionString("DefaultConnection")))
         {
             await conn.OpenAsync();
 
             var checkpoint = new Checkpoint
             {
                 TablesToIgnore = new[] { "__EFMigrationsHistory" },
-                DbAdapter = DbAdapter.Postgres
+                DbAdapter = DbAdapter.MySql
             };
             await checkpoint.Reset(conn);
         }

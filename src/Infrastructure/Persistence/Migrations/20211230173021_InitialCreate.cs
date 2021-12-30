@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -9,51 +10,66 @@ public partial class InitialCreate : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        migrationBuilder.AlterDatabase()
+            .Annotation("MySql:CharSet", "utf8mb4");
+
         migrationBuilder.CreateTable(
             name: "Tags",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                 Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4")
             },
             constraints: table =>
             {
                 table.PrimaryKey("PK_Tags", x => x.Id);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
             name: "Users",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                Name = table.Column<string>(type: "varchar(255)", nullable: false),
-                Email = table.Column<string>(type: "varchar(255)", nullable: false),
-                Password = table.Column<string>(type: "varchar(255)", nullable: true),
-                Bio = table.Column<string>(type: "text", nullable: true),
-                Image = table.Column<string>(type: "varchar(255)", nullable: true),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Email = table.Column<string>(type: "varchar(255)", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Password = table.Column<string>(type: "varchar(255)", nullable: true)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Bio = table.Column<string>(type: "longtext", nullable: true)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Image = table.Column<string>(type: "varchar(255)", nullable: true)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
             },
             constraints: table =>
             {
                 table.PrimaryKey("PK_Users", x => x.Id);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
             name: "Articles",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                AuthorId = table.Column<int>(type: "integer", nullable: false),
-                Title = table.Column<string>(type: "varchar(255)", nullable: false),
-                Slug = table.Column<string>(type: "varchar(255)", nullable: false),
-                Description = table.Column<string>(type: "text", nullable: false),
-                Body = table.Column<string>(type: "text", nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                AuthorId = table.Column<int>(type: "int", nullable: false),
+                Title = table.Column<string>(type: "varchar(255)", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Slug = table.Column<string>(type: "varchar(255)", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Description = table.Column<string>(type: "longtext", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Body = table.Column<string>(type: "longtext", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
             },
             constraints: table =>
             {
@@ -64,14 +80,15 @@ public partial class InitialCreate : Migration
                     principalTable: "Users",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
             name: "FollowerUser",
             columns: table => new
             {
-                FollowingId = table.Column<int>(type: "integer", nullable: false),
-                FollowerId = table.Column<int>(type: "integer", nullable: false)
+                FollowingId = table.Column<int>(type: "int", nullable: false),
+                FollowerId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
@@ -88,14 +105,15 @@ public partial class InitialCreate : Migration
                     principalTable: "Users",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Restrict);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
             name: "ArticleFavorite",
             columns: table => new
             {
-                ArticleId = table.Column<int>(type: "integer", nullable: false),
-                UserId = table.Column<int>(type: "integer", nullable: false)
+                ArticleId = table.Column<int>(type: "int", nullable: false),
+                UserId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
@@ -112,14 +130,15 @@ public partial class InitialCreate : Migration
                     principalTable: "Users",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
             name: "ArticleTag",
             columns: table => new
             {
-                ArticleId = table.Column<int>(type: "integer", nullable: false),
-                TagId = table.Column<int>(type: "integer", nullable: false)
+                ArticleId = table.Column<int>(type: "int", nullable: false),
+                TagId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
@@ -136,19 +155,21 @@ public partial class InitialCreate : Migration
                     principalTable: "Tags",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
             name: "Comments",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                ArticleId = table.Column<int>(type: "integer", nullable: false),
-                AuthorId = table.Column<int>(type: "integer", nullable: false),
-                Body = table.Column<string>(type: "text", nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                ArticleId = table.Column<int>(type: "int", nullable: false),
+                AuthorId = table.Column<int>(type: "int", nullable: false),
+                Body = table.Column<string>(type: "longtext", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
             },
             constraints: table =>
             {
@@ -165,7 +186,8 @@ public partial class InitialCreate : Migration
                     principalTable: "Users",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
-            });
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateIndex(
             name: "IX_ArticleFavorite_UserId",
