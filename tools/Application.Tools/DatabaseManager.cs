@@ -1,7 +1,7 @@
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
+using Npgsql;
 using Respawn;
 
 namespace Application.Tools;
@@ -21,7 +21,7 @@ public class DatabaseManager
     {
         await _context.Database.MigrateAsync();
 
-        using (var conn = new MySqlConnection(
+        using (var conn = new NpgsqlConnection(
             _configuration.GetConnectionString("DefaultConnection")
         ))
         {
@@ -30,7 +30,7 @@ public class DatabaseManager
             var checkpoint = new Checkpoint
             {
                 TablesToIgnore = new[] { "__EFMigrationsHistory" },
-                DbAdapter = DbAdapter.MySql
+                DbAdapter = DbAdapter.Postgres
             };
             await checkpoint.Reset(conn);
         }
