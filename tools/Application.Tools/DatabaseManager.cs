@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Respawn;
+using Respawn.Graph;
 
 namespace Application.Tools;
 
@@ -29,7 +30,7 @@ public class DatabaseManager
 
             var checkpoint = new Checkpoint
             {
-                TablesToIgnore = new[] { "__EFMigrationsHistory" },
+                TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
                 DbAdapter = DbAdapter.Postgres
             };
             await checkpoint.Reset(conn);

@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Respawn;
+using Respawn.Graph;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -58,7 +59,7 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
 
             var checkpoint = new Checkpoint
             {
-                TablesToIgnore = new[] { "__EFMigrationsHistory" },
+                TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
                 DbAdapter = DbAdapter.Postgres
             };
             await checkpoint.Reset(conn);
