@@ -3,6 +3,8 @@ using Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using Npgsql;
+using OpenTelemetry.Trace;
 using WebUI.Filters;
 using WebUI.Handlers;
 
@@ -96,6 +98,18 @@ public class Startup
             c.OperationFilter<SecurityRequirementsOperationFilter>();
 
             c.DescribeAllParametersInCamelCase();
+        });
+
+        services.AddOpenTelemetryTracing(b =>
+        {
+            b
+                .AddAspNetCoreInstrumentation()
+                .AddNpgsql()
+                .AddJaegerExporter(o =>
+                {
+                    o.AgentHost = Configuration.GetValue<string>("Jaeger:Host");
+                    o.AgentPort = Configuration.GetValue<int>("Jaeger:Port");
+                });
         });
     }
 
