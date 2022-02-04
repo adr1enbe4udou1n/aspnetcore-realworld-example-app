@@ -103,6 +103,7 @@ public class Startup
         services.AddOpenTelemetryTracing(b =>
         {
             b
+                .AddSource("ASPNET Core RealWorld")
                 .AddAspNetCoreInstrumentation()
                 .AddNpgsql()
                 .AddJaegerExporter(o =>
