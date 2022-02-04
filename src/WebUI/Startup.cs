@@ -108,6 +108,7 @@ public class Startup
                     .CreateDefault()
                     .AddService("ASPNET Core RealWorld"))
                 .AddAspNetCoreInstrumentation()
+                .AddEntityFrameworkCoreInstrumentation()
                 .AddNpgsql()
                 .AddJaegerExporter(o =>
                 {
