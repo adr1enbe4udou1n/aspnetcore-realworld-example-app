@@ -1,3 +1,4 @@
+using Application.Diagnostics;
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
@@ -66,6 +67,8 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {
+        using var mediatorActivity = Telemetry.ApplicationActivitySource.StartActivity("ArticlesListHandler.Handle");
+
         var articles = await _context.Articles
             .FilterByAuthor(request.Author)
             .FilterByTag(request.Tag)
