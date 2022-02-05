@@ -55,15 +55,13 @@ public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 
 public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
-    private readonly IAppDbContext _contextList;
-    private readonly IAppDbContext _contextCount;
+    private readonly IAppDbContextFactory _contextFactory;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticlesListHandler(IAppDbContext contextList, IAppDbContext contextCount, IMapper mapper, ICurrentUser currentUser)
+    public ArticlesListHandler(IAppDbContextFactory contextFactory, IMapper mapper, ICurrentUser currentUser)
     {
-        _contextList = contextList;
-        _contextCount = contextCount;
+        _contextFactory = contextFactory;
         _mapper = mapper;
         _currentUser = currentUser;
     }
@@ -72,7 +70,10 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
     {
         using var mediatorActivity = Telemetry.ApplicationActivitySource.StartActivity("ArticlesListHandler.Handle");
 
-        var articles = _contextList.Articles
+        using var contextList = _contextFactory.CreateDbContext();
+        using var contextCount = _contextFactory.CreateDbContext();
+
+        var articles = contextList.Articles
             .FilterByAuthor(request.Author)
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)
@@ -85,7 +86,7 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
             .Take(request.Limit)
             .ToListAsync(cancellationToken);
 
-        var count = _contextCount.Articles
+        var count = contextCount.Articles
             .FilterByAuthor(request.Author)
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)

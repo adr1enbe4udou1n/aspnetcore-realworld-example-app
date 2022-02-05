@@ -25,18 +25,16 @@ public static class DbSetExtensions
         CancellationToken cancellationToken = default
     )
     {
-        var count = source.CountAsync(cancellationToken);
-        var items = source
+        var count = await source.CountAsync(cancellationToken);
+        var items = await source
             .Skip(query.Offset)
             .Take(query.Limit)
             .ToListAsync(cancellationToken);
 
-        await Task.WhenAll(count, items);
-
         return new PagedResponse<TSource>
         {
-            Items = items.Result,
-            Total = count.Result
+            Items = items,
+            Total = count
         };
     }
 }

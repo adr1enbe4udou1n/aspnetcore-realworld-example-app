@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Application.Interfaces;
 
-public interface IAppDbContext
+public interface IAppDbContext : IDisposable
 {
     DbSet<User> Users { get; }
     DbSet<Article> Articles { get; }

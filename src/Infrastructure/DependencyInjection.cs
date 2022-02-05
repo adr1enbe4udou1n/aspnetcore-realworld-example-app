@@ -18,11 +18,12 @@ public static class DependencyInjection
     {
         return services.AddApplication()
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
-            .AddDbContext<AppDbContext>(options =>
+            .AddScoped<IAppDbContextFactory>(provider => new AppDbContextFactory(provider.GetRequiredService<IDbContextFactory<AppDbContext>>()))
+            .AddDbContextFactory<AppDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-            }, ServiceLifetime.Transient)
+            })
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
             .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
