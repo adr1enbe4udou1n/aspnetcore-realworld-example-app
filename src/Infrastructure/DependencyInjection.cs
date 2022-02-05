@@ -18,7 +18,6 @@ public static class DependencyInjection
     {
         return services.AddApplication()
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
-            .AddScoped<IAppDbContextFactory>(provider => new AppDbContextFactory(provider.GetRequiredService<IDbContextFactory<AppDbContext>>()))
             .AddDbContextFactory<AppDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

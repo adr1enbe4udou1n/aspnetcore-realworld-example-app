@@ -1,3 +1,4 @@
+using Application.Diagnostics;
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
@@ -5,7 +6,6 @@ using Application.Support;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries;
 
@@ -54,37 +54,32 @@ public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 
 public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
-    private readonly IAppDbContextFactory _contextFactory;
+    private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticlesListHandler(IAppDbContextFactory contextFactory, IMapper mapper, ICurrentUser currentUser)
+    public ArticlesListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
-        _contextFactory = contextFactory;
+        _context = context;
         _mapper = mapper;
         _currentUser = currentUser;
     }
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {
-        using var contextList = _contextFactory.CreateDbContext();
-        using var contextCount = _contextFactory.CreateDbContext();
+        using var mediatorActivity = Telemetry.ApplicationActivitySource.StartActivity("ArticlesListHandler.Handle");
 
-        var articles = contextList.Articles
-            .FilterByRequest(request)
+        var articles = await _context.Articles
+            .FilterByAuthor(request.Author)
+            .FilterByTag(request.Tag)
+            .FilterByFavoritedBy(request.Favorited)
             .OrderByDescending(x => x.Id)
             .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider, new
             {
                 currentUser = _currentUser.User
             })
-            .Skip(request.Offset)
-            .Take(request.Limit)
-            .ToListAsync(cancellationToken);
+            .PaginateAsync(request, cancellationToken);
 
-        var count = contextCount.Articles
-            .FilterByRequest(request)
-            .CountAsync(cancellationToken);
-
-        return new MultipleArticlesResponse(await articles, await count);
+        return new MultipleArticlesResponse(articles.Items, articles.Total);
     }
 }
