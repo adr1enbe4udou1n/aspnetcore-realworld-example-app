@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.Diagnostics;
+using Application.Diagnostics;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -110,6 +112,7 @@ public class Startup
                 .AddAspNetCoreInstrumentation()
                 .AddEntityFrameworkCoreInstrumentation()
                 .AddNpgsql()
+                .AddInstrumentation<ActivitySource>(() => Telemetry.ApplicationActivitySource)
                 .AddJaegerExporter(o =>
                 {
                     o.AgentHost = Configuration.GetValue<string>("Jaeger:Host");
