@@ -17,12 +17,12 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         return services.AddApplication()
-            .AddTransient<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
+            .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
             .AddDbContext<AppDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-            })
+            }, ServiceLifetime.Transient)
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
             .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
