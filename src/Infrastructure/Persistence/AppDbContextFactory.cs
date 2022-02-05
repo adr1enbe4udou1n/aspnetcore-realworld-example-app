@@ -5,7 +5,7 @@ namespace Infrastructure.Persistence;
 
 public class AppDbContextFactory : IAppDbContextFactory
 {
-    private IDbContextFactory<AppDbContext> _contextFactory;
+    private readonly IDbContextFactory<AppDbContext> _contextFactory;
 
     public AppDbContextFactory(IDbContextFactory<AppDbContext> contextFactory)
     {
