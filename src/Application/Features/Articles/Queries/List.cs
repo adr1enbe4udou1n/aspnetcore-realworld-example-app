@@ -1,4 +1,3 @@
-using Application.Diagnostics;
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
@@ -68,15 +67,11 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {
-        using var mediatorActivity = Telemetry.ApplicationActivitySource.StartActivity("ArticlesListHandler.Handle");
-
         using var contextList = _contextFactory.CreateDbContext();
         using var contextCount = _contextFactory.CreateDbContext();
 
         var articles = contextList.Articles
-            .FilterByAuthor(request.Author)
-            .FilterByTag(request.Tag)
-            .FilterByFavoritedBy(request.Favorited)
+            .FilterByRequest(request)
             .OrderByDescending(x => x.Id)
             .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider, new
             {
@@ -87,13 +82,9 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
             .ToListAsync(cancellationToken);
 
         var count = contextCount.Articles
-            .FilterByAuthor(request.Author)
-            .FilterByTag(request.Tag)
-            .FilterByFavoritedBy(request.Favorited)
+            .FilterByRequest(request)
             .CountAsync(cancellationToken);
 
-        await Task.WhenAll(count, articles);
-
-        return new MultipleArticlesResponse(articles.Result, count.Result);
+        return new MultipleArticlesResponse(await articles, await count);
     }
 }

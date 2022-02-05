@@ -1,9 +1,21 @@
+using Application.Features.Articles.Queries;
 using Domain.Entities;
 
 namespace Application.Extensions;
 
 public static class ArticleFilters
 {
+    public static IQueryable<Article> FilterByRequest(
+        this IQueryable<Article> source,
+        ArticlesListQuery request
+    )
+    {
+        return source
+            .FilterByAuthor(request.Author)
+            .FilterByTag(request.Tag)
+            .FilterByFavoritedBy(request.Favorited);
+    }
+
     public static IQueryable<Article> FilterByAuthor(
         this IQueryable<Article> source,
         string? author

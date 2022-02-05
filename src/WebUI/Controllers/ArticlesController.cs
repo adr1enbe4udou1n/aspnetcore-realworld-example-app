@@ -1,4 +1,3 @@
-using Application.Diagnostics;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using MediatR;
@@ -24,10 +23,7 @@ public class ArticlesController
     /// <returns></returns>
     [HttpGet]
     public async Task<MultipleArticlesResponse> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
-    {
-        using var mediatorActivity = Telemetry.ApplicationActivitySource.StartActivity("ArticlesController.List");
-        return await _mediator.Send(query, cancellationToken);
-    }
+        => await _mediator.Send(query, cancellationToken);
 
     /// <summary>
     /// Get recent articles from users you follow
