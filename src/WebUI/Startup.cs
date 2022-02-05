@@ -101,22 +101,25 @@ public class Startup
             c.DescribeAllParametersInCamelCase();
         });
 
-        services.AddOpenTelemetryTracing(b =>
+        if (Configuration.GetValue<bool>("Tracing:Enabled"))
         {
-            b
-                .SetResourceBuilder(ResourceBuilder
-                    .CreateDefault()
-                    .AddService("ASPNET Core RealWorld"))
-                .AddAspNetCoreInstrumentation()
-                .AddEntityFrameworkCoreInstrumentation()
-                .AddNpgsql()
-                .AddSource("ASPNET Core RealWorld")
-                .AddJaegerExporter(o =>
-                {
-                    o.AgentHost = Configuration.GetValue<string>("Jaeger:Host");
-                    o.AgentPort = Configuration.GetValue<int>("Jaeger:Port");
-                });
-        });
+            services.AddOpenTelemetryTracing(b =>
+            {
+                b
+                    .SetResourceBuilder(ResourceBuilder
+                        .CreateDefault()
+                        .AddService("ASPNET Core RealWorld"))
+                    .AddAspNetCoreInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddNpgsql()
+                    .AddSource("ASPNET Core RealWorld")
+                    .AddJaegerExporter(o =>
+                    {
+                        o.AgentHost = Configuration.GetValue<string>("Jaeger:Host");
+                        o.AgentPort = Configuration.GetValue<int>("Jaeger:Port");
+                    });
+            });
+        }
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
