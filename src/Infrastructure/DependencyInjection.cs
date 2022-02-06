@@ -21,7 +21,7 @@ public static class DependencyInjection
             .AddDbContextFactory<AppDbContext>(options =>
             {
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             })
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()

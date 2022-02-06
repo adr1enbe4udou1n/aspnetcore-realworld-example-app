@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -13,8 +13,8 @@ public partial class InitialCreate : Migration
             name: "Tags",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("SqlServer:Identity", "1, 1"),
                 Name = table.Column<string>(type: "varchar(255)", nullable: false)
             },
             constraints: table =>
@@ -26,15 +26,15 @@ public partial class InitialCreate : Migration
             name: "Users",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("SqlServer:Identity", "1, 1"),
                 Name = table.Column<string>(type: "varchar(255)", nullable: false),
                 Email = table.Column<string>(type: "varchar(255)", nullable: false),
                 Password = table.Column<string>(type: "varchar(255)", nullable: true),
-                Bio = table.Column<string>(type: "text", nullable: true),
+                Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 Image = table.Column<string>(type: "varchar(255)", nullable: true),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
             },
             constraints: table =>
             {
@@ -45,15 +45,15 @@ public partial class InitialCreate : Migration
             name: "Articles",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                AuthorId = table.Column<int>(type: "integer", nullable: false),
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("SqlServer:Identity", "1, 1"),
+                AuthorId = table.Column<int>(type: "int", nullable: false),
                 Title = table.Column<string>(type: "varchar(255)", nullable: false),
                 Slug = table.Column<string>(type: "varchar(255)", nullable: false),
-                Description = table.Column<string>(type: "text", nullable: false),
-                Body = table.Column<string>(type: "text", nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
             },
             constraints: table =>
             {
@@ -70,8 +70,8 @@ public partial class InitialCreate : Migration
             name: "FollowerUser",
             columns: table => new
             {
-                FollowingId = table.Column<int>(type: "integer", nullable: false),
-                FollowerId = table.Column<int>(type: "integer", nullable: false)
+                FollowingId = table.Column<int>(type: "int", nullable: false),
+                FollowerId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
@@ -94,8 +94,8 @@ public partial class InitialCreate : Migration
             name: "ArticleFavorite",
             columns: table => new
             {
-                ArticleId = table.Column<int>(type: "integer", nullable: false),
-                UserId = table.Column<int>(type: "integer", nullable: false)
+                ArticleId = table.Column<int>(type: "int", nullable: false),
+                UserId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
@@ -110,16 +110,15 @@ public partial class InitialCreate : Migration
                     name: "FK_ArticleFavorite_Users_UserId",
                     column: x => x.UserId,
                     principalTable: "Users",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
+                    principalColumn: "Id");
             });
 
         migrationBuilder.CreateTable(
             name: "ArticleTag",
             columns: table => new
             {
-                ArticleId = table.Column<int>(type: "integer", nullable: false),
-                TagId = table.Column<int>(type: "integer", nullable: false)
+                ArticleId = table.Column<int>(type: "int", nullable: false),
+                TagId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
@@ -142,13 +141,13 @@ public partial class InitialCreate : Migration
             name: "Comments",
             columns: table => new
             {
-                Id = table.Column<int>(type: "integer", nullable: false)
-                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                ArticleId = table.Column<int>(type: "integer", nullable: false),
-                AuthorId = table.Column<int>(type: "integer", nullable: false),
-                Body = table.Column<string>(type: "text", nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("SqlServer:Identity", "1, 1"),
+                ArticleId = table.Column<int>(type: "int", nullable: false),
+                AuthorId = table.Column<int>(type: "int", nullable: false),
+                Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
             },
             constraints: table =>
             {
@@ -163,8 +162,7 @@ public partial class InitialCreate : Migration
                     name: "FK_Comments_Users_AuthorId",
                     column: x => x.AuthorId,
                     principalTable: "Users",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
+                    principalColumn: "Id");
             });
 
         migrationBuilder.CreateIndex(
