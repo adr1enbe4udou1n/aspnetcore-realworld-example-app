@@ -1,9 +1,19 @@
 version: "3"
 services:
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: postgres:14
     environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: YourStrong@Passw0rd
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: main
+      POSTGRES_DB: main
     ports:
-      - 1433:1433
+      - 5433:5432
+
+  db_test:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: main
+      POSTGRES_DB: main
+    ports:
+      - 5434:5432
