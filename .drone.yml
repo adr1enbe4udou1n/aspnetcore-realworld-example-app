@@ -9,7 +9,7 @@ steps:
       ConnectionStrings__DefaultConnection: "Server=db;Database=main;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True"
       Jwt__SecretKey: "super secret key"
     commands:
-      - sleep 30 # Wait for SQL Server service starting
+      - sleep 10 # Wait for SQL Server service starting
       - dotnet run --project targets
 
   - name: image
