@@ -14,7 +14,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Npgsql.OpenTelemetry" Version="6.0.3" />
     <PackageReference Include="OpenTelemetry" Version="1.2.0-rc2" />
     <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-rc2" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9" />

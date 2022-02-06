@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Npgsql;
 using Respawn;
 using Respawn.Graph;
 using Xunit;
@@ -53,17 +52,11 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
 
     public async Task InitializeAsync()
     {
-        using (var conn = new NpgsqlConnection(_factory.Configuration.GetConnectionString("DefaultConnection")))
+        var checkpoint = new Checkpoint
         {
-            await conn.OpenAsync();
-
-            var checkpoint = new Checkpoint
-            {
-                TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
-                DbAdapter = DbAdapter.Postgres
-            };
-            await checkpoint.Reset(conn);
-        }
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+        };
+        await checkpoint.Reset(_factory.Configuration.GetConnectionString("DefaultConnection"));
     }
 
     private int _userId;

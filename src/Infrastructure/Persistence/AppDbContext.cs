@@ -79,6 +79,14 @@ public class AppDbContext : DbContext, IAppDbContext
                 .HasForeignKey(e => e.TagId);
         });
 
+        modelBuilder.Entity<Comment>(b =>
+        {
+            b.HasOne(e => e.Author)
+                .WithMany(e => e.Comments)
+                .HasForeignKey(e => e.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
         modelBuilder.Entity<ArticleFavorite>(b =>
         {
             b.HasKey(e => new { e.ArticleId, e.UserId });
@@ -89,7 +97,8 @@ public class AppDbContext : DbContext, IAppDbContext
 
             b.HasOne(e => e.User)
                 .WithMany(e => e.FavoriteArticles)
-                .HasForeignKey(e => e.UserId);
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<FollowerUser>(b =>
