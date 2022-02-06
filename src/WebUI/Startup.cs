@@ -3,6 +3,7 @@ using Infrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using WebUI.Filters;
@@ -109,6 +110,7 @@ public class Startup
                         .CreateDefault()
                         .AddService("ASPNET Core RealWorld"))
                     .AddAspNetCoreInstrumentation()
+                    .AddNpgsql()
                     .AddSource("ASPNET Core RealWorld")
                     .AddJaegerExporter(o =>
                     {

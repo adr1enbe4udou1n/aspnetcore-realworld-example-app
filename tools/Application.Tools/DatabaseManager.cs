@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 using Respawn;
 using Respawn.Graph;
 
@@ -21,10 +22,18 @@ public class DatabaseManager
     {
         await _context.Database.MigrateAsync();
 
-        var checkpoint = new Checkpoint
+        using (var conn = new NpgsqlConnection(
+            _configuration.GetConnectionString("DefaultConnection")
+        ))
         {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
-        };
-        await checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+            await conn.OpenAsync();
+
+            var checkpoint = new Checkpoint
+            {
+                TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+                DbAdapter = DbAdapter.Postgres
+            };
+            await checkpoint.Reset(conn);
+        }
     }
 }
