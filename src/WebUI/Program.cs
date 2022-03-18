@@ -12,21 +12,6 @@ using WebUI.Filters;
 using WebUI.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
-var host = builder.Build();
-
-using var scope = host.Services.CreateScope();
-
-try
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
-}
-catch (Exception ex)
-{
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-    logger.LogError(ex, "An error occured during migration");
-}
 
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -163,5 +148,19 @@ app.Map("/api", app =>
         endpoints.MapControllers();
     });
 });
+
+using var scope = app.Services.CreateScope();
+
+try
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await context.Database.MigrateAsync();
+}
+catch (Exception ex)
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    logger.LogError(ex, "An error occured during migration");
+}
 
 app.Run();
