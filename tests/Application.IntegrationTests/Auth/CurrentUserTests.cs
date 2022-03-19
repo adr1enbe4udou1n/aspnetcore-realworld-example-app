@@ -2,16 +2,13 @@ using Application.Exceptions;
 using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Auth;
 
 public class CurrentUserTests : TestBase
 {
-    public CurrentUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Logged_User_Can_Fetch_Infos()
     {
         await ActingAs(new User
@@ -26,7 +23,7 @@ public class CurrentUserTests : TestBase
         currentUser.User.Email.Should().Be("john.doe@example.com");
     }
 
-    [Fact]
+    [Test]
     public async Task Guest_User_Cannot_Fetch_Infos()
     {
         await this.Invoking(x => x.Act(new CurrentUserQuery()))

@@ -10,16 +10,13 @@ using Microsoft.Extensions.Logging;
 using Npgsql;
 using Respawn;
 using Respawn.Graph;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using Infrastructure;
 
 namespace Application.IntegrationTests;
 
-[Collection("DB")]
-public class TestBase : IAsyncLifetime, IClassFixture<Startup>
+public class TestBase
 {
-    private readonly ITestOutputHelper _output;
-
     protected IMediator Mediator { get; private set; }
 
     protected AppDbContext Context { get; private set; }
@@ -30,30 +27,42 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
 
     protected ICurrentUser CurrentUser { get; private set; }
 
-    private readonly Startup _factory;
+    private string _connectionString;
 
-    public TestBase(Startup factory, ITestOutputHelper output)
+    private IServiceCollection GetServices()
     {
-        _factory = factory;
-        _output = output;
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true)
+            .AddEnvironmentVariables()
+            .Build();
 
-        var provider = factory.GetApplicationServices().BuildServiceProvider();
-
-        Mediator = provider.GetRequiredService<IMediator>();
-        PasswordHasher = provider.GetRequiredService<IPasswordHasher>();
-        JwtTokenGenerator = provider.GetRequiredService<IJwtTokenGenerator>();
-        Context = provider.GetRequiredService<AppDbContext>();
-        CurrentUser = provider.GetRequiredService<ICurrentUser>();
+        var services = new ServiceCollection();
+        return services
+            .AddSingleton<IConfiguration>(configuration)
+            .AddInfrastructure(configuration);
     }
 
-    public Task DisposeAsync()
+    protected TestBase()
     {
-        return Task.CompletedTask;
+        var _provider = GetServices().BuildServiceProvider();
+
+        var configuration = _provider.GetRequiredService<IConfiguration>();
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        var appDbContext = _provider.GetRequiredService<AppDbContext>();
+        appDbContext.Database.Migrate();
+
+        Mediator = _provider.GetRequiredService<IMediator>();
+        PasswordHasher = _provider.GetRequiredService<IPasswordHasher>();
+        JwtTokenGenerator = _provider.GetRequiredService<IJwtTokenGenerator>();
+        Context = _provider.GetRequiredService<AppDbContext>();
+        CurrentUser = _provider.GetRequiredService<ICurrentUser>();
     }
 
-    public async Task InitializeAsync()
+    [SetUp]
+    public async Task RefreshDatabase()
     {
-        using (var conn = new NpgsqlConnection(_factory.Configuration.GetConnectionString("DefaultConnection")))
+        using (var conn = new NpgsqlConnection(_connectionString))
         {
             await conn.OpenAsync();
 
@@ -82,16 +91,8 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
     {
         SqlCounterLogger.ResetCounter();
 
-        var provider = _factory.GetApplicationServices()
-            .AddLogging((builder) => builder
-                .AddProvider(new SqlCounterLoggerProvider())
-                .AddXUnit(_output, options =>
-                {
-                    options.Filter = (category, level) =>
-                    {
-                        return category == DbLoggerCategory.Database.Command.Name;
-                    };
-                }))
+        var provider = GetServices()
+            .AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider()))
             .BuildServiceProvider();
 
         using var scope = provider.CreateScope();
@@ -107,7 +108,7 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
         }
         finally
         {
-            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
+            Console.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
         }
     }
 }

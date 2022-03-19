@@ -2,16 +2,13 @@ using Application.Exceptions;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Profiles;
 
 public class ProfileGetTests : TestBase
 {
-    public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Can_Get_Profile()
     {
         await Context.Users.AddAsync(new User
@@ -34,14 +31,14 @@ public class ProfileGetTests : TestBase
         });
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Get_Non_Existent_Profile()
     {
         await this.Invoking(x => x.Act(new ProfileGetQuery("John Doe")))
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Get_Followed_Profile()
     {
         await ActingAs(new User

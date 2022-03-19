@@ -4,31 +4,29 @@ using Domain.Entities;
 using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Auth;
 
 public class UpdateUserTests : TestBase
 {
-    public UpdateUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    public static IEnumerable<object[]> Data => new List<object[]>
+    private static IEnumerable<TestCaseData> InvalidInfos()
+    {
+        yield return new TestCaseData(new UpdateUserDTO
         {
-            new [] { new UpdateUserDTO {
-                Username = "John Doe",
-                Email = "john.doe",
-                Bio = "My Bio",
-            } },
-            new [] { new UpdateUserDTO {
-                Username = "",
-                Email = "john.doe@example.com",
-                Bio = "My Bio",
-            } },
-        };
+            Username = "John Doe",
+            Email = "john.doe",
+            Bio = "My Bio",
+        });
+        yield return new TestCaseData(new UpdateUserDTO
+        {
+            Username = "",
+            Email = "john.doe@example.com",
+            Bio = "My Bio",
+        });
+    }
 
-    [Theory]
-    [MemberData(nameof(Data))]
+    [Test, TestCaseSource(nameof(InvalidInfos))]
     public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDTO user)
     {
         await ActingAs(new User
@@ -41,7 +39,7 @@ public class UpdateUserTests : TestBase
             .Should().ThrowAsync<ValidationException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Logged_User_Can_Update_Infos()
     {
         await ActingAs(new User
@@ -67,7 +65,7 @@ public class UpdateUserTests : TestBase
         created.Should().NotBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task Guest_User_Cannot_Update_Infos()
     {
         await this.Invoking(x => x.Act(new UpdateUserRequest(
@@ -79,7 +77,7 @@ public class UpdateUserTests : TestBase
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Logged_User_Cannot_Update_With_Already_Used_Email()
     {
         var created = await Context.Users.AddAsync(new User

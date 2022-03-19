@@ -1,16 +1,13 @@
 using Application.Features.Tags.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Tags;
 
 public class TagsListTests : TestBase
 {
-    public TagsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Can_List_All_Tags()
     {
         await Context.Tags.AddRangeAsync(

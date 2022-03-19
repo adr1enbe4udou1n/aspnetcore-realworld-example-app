@@ -5,23 +5,20 @@ using Application.Features.Comments.Queries;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Comments;
 
 public class CommentsListTests : TestBase
 {
-    public CommentsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Cannot_List_All_Comments_Of_Non_Existent_Article()
     {
         await this.Invoking(x => x.Act(new CommentsListQuery("test-title")))
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_List_All_Comments_Of_Article()
     {
         await ActingAs(new User

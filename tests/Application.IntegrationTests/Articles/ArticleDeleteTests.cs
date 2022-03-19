@@ -4,23 +4,20 @@ using Application.Features.Comments.Commands;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Articles;
 
 public class ArticleDeleteTests : TestBase
 {
-    public ArticleDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Guest_Cannot_Delete_Article()
     {
         await this.Invoking(x => x.Act(new ArticleDeleteRequest("slug-article")))
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Delete_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -35,7 +32,7 @@ public class ArticleDeleteTests : TestBase
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Delete_Article_Of_Other_Author()
     {
         await ActingAs(new User
@@ -65,7 +62,7 @@ public class ArticleDeleteTests : TestBase
             .Should().ThrowAsync<ForbiddenException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Delete_Own_Article_With_All_Comments()
     {
         await ActingAs(new User

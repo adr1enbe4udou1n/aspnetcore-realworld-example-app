@@ -4,23 +4,20 @@ using Application.Features.Comments.Commands;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Comments;
 
 public class CommentDeleteTests : TestBase
 {
-    public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Guest_Cannot_Delete_Comment()
     {
         await this.Invoking(x => x.Act(new CommentDeleteRequest("slug-article", 1)))
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Delete_Non_Existent_Comment()
     {
         await ActingAs(new User
@@ -44,7 +41,7 @@ public class CommentDeleteTests : TestBase
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Delete_Comment_With_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -73,7 +70,7 @@ public class CommentDeleteTests : TestBase
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Delete_Comment_With_Bad_Article()
     {
         await ActingAs(new User
@@ -111,7 +108,7 @@ public class CommentDeleteTests : TestBase
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Delete_Comment_Of_Other_Author()
     {
         await ActingAs(new User
@@ -146,7 +143,7 @@ public class CommentDeleteTests : TestBase
             .Should().ThrowAsync<ForbiddenException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Delete_Own_Comment()
     {
         await ActingAs(new User
@@ -174,7 +171,7 @@ public class CommentDeleteTests : TestBase
         (await Context.Comments.AnyAsync()).Should().BeFalse();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Delete_All_Comments_Of_Own_Article()
     {
         var user = await ActingAs(new User

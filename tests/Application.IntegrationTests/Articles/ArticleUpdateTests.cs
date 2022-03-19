@@ -6,26 +6,23 @@ using Domain.Entities;
 using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Articles;
 
 public class ArticleUpdateTests : TestBase
 {
-    public ArticleUpdateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    public static IEnumerable<object[]> Data => new List<object[]>
+    private static IEnumerable<TestCaseData> InvalidArticles()
+    {
+        yield return new TestCaseData(new UpdateArticleDTO
         {
-            new [] { new UpdateArticleDTO {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "",
-            } },
-        };
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "",
+        });
+    }
 
-    [Theory]
-    [MemberData(nameof(Data))]
+    [Test, TestCaseSource(nameof(InvalidArticles))]
     public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDTO article)
     {
         await ActingAs(new User
@@ -40,7 +37,7 @@ public class ArticleUpdateTests : TestBase
             .Should().ThrowAsync<ValidationException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Update_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -61,7 +58,7 @@ public class ArticleUpdateTests : TestBase
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Guest_Cannot_Update_Article()
     {
         await this.Invoking(x => x.Act(new UpdateArticleRequest(
@@ -70,7 +67,7 @@ public class ArticleUpdateTests : TestBase
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Update_Article_Of_Other_Author()
     {
         await ActingAs(new User
@@ -107,7 +104,7 @@ public class ArticleUpdateTests : TestBase
                 .Should().ThrowAsync<ForbiddenException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Update_Own_Article()
     {
         await ActingAs(new User

@@ -7,24 +7,22 @@ using Domain.Entities;
 using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Comments;
 
 public class CommentCreateTests : TestBase
 {
-    public CommentCreateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> Data => new List<object[]>
+    private static IEnumerable<TestCaseData> InvalidComments()
+    {
+        yield return new TestCaseData(new NewCommentDTO
         {
-            new [] { new NewCommentDTO {
-                Body = "",
-            } },
-        };
+            Body = "",
+        });
+    }
 
-    [Theory]
-    [MemberData(nameof(Data))]
+    [Test, TestCaseSource(nameof(InvalidComments))]
     public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDTO comment)
     {
         await ActingAs(new User
@@ -46,7 +44,7 @@ public class CommentCreateTests : TestBase
             .Should().ThrowAsync<ValidationException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Cannot_Create_Comment_To_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -64,7 +62,7 @@ public class CommentCreateTests : TestBase
             .Should().ThrowAsync<NotFoundException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Guest_Cannot_Create_Comment()
     {
         await this.Invoking(x => x.Act(new NewCommentRequest(
@@ -73,7 +71,7 @@ public class CommentCreateTests : TestBase
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Create_Comment()
     {
         await ActingAs(new User

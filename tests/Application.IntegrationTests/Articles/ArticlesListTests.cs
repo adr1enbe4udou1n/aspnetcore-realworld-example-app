@@ -5,16 +5,13 @@ using Application.Features.Profiles.Commands;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Application.IntegrationTests.Articles;
 
 public class ArticlesListTests : TestBase
 {
-    public ArticlesListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
-
-    [Fact]
+    [Test]
     public async Task Can_Paginate_Articles()
     {
         await CreateArticles();
@@ -45,7 +42,7 @@ public class ArticlesListTests : TestBase
         );
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Filter_Articles_By_Author()
     {
         await CreateArticles();
@@ -77,7 +74,7 @@ public class ArticlesListTests : TestBase
         );
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Filter_Articles_By_Tag()
     {
         await CreateArticles();
@@ -109,7 +106,7 @@ public class ArticlesListTests : TestBase
         );
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Filter_Articles_By_Favorited()
     {
         await CreateArticles();
@@ -157,14 +154,14 @@ public class ArticlesListTests : TestBase
         );
     }
 
-    [Fact]
+    [Test]
     public async Task Guest_Cannot_Paginate_Articles_Of_Followed_Authors()
     {
         await this.Invoking(x => x.Act(new ArticlesFeedQuery()))
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
-    [Fact]
+    [Test]
     public async Task Can_Paginate_Articles_Of_Followed_Authors()
     {
         await CreateArticles();
