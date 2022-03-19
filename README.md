@@ -41,7 +41,7 @@ npx newman run postman.json --global-var "APIURL=http://localhost:5000/api" --gl
 
 ### Full test suite
 
-This project is fully tested via **NUnit**, just run `make test` for launching it. All SQL queries are automatically showed up for easy debug and easy N+1 detection.
+This project is fully tested via **NUnit**, just run `make test` for launching it. All SQL queries are automatically showed up for easy debug and easy N+1 detection and coverage rapport will be generated. Use `dotnet reportgenerator` in order to generate HTML rapport.
 
 Use `make test-watch-app` for realtime test watching, perfect for TDD.
 

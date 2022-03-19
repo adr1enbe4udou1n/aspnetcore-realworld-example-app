@@ -13,7 +13,7 @@ publish:
 format:
 	dotnet format
 test:
-	dotnet test -l:"console;verbosity=detailed"
+	dotnet test -l:"console;verbosity=detailed" --settings:.runsettings
 test-watch-app:
 	dotnet watch test --project tests/Application.IntegrationTests -l:"console;verbosity=detailed"
 test-watch-web:
