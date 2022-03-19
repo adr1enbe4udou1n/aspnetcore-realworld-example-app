@@ -5,7 +5,7 @@ using FluentAssertions;
 using FluentValidation;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Auth;
+namespace Application.IntegrationTests.Features.Auth;
 
 public class LoginTests : TestBase
 {

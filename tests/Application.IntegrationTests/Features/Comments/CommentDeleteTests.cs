@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Comments;
+namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentDeleteTests : TestBase
 {

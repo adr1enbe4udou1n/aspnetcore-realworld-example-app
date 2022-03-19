@@ -4,7 +4,7 @@ using Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Profiles;
+namespace Application.IntegrationTests.Features.Profiles;
 
 public class ProfileGetTests : TestBase
 {

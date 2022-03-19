@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Profiles;
+namespace Application.IntegrationTests.Features.Profiles;
 
 public class ProfileFollowTests : TestBase
 {

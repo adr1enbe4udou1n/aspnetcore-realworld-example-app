@@ -6,7 +6,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Auth;
+namespace Application.IntegrationTests.Features.Auth;
 
 public class RegisterTests : TestBase
 {

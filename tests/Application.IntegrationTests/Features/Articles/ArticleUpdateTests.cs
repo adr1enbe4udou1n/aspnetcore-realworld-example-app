@@ -8,7 +8,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Articles;
+namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleUpdateTests : TestBase
 {

@@ -3,7 +3,7 @@ using Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Tags;
+namespace Application.IntegrationTests.Features.Tags;
 
 public class TagsListTests : TestBase
 {

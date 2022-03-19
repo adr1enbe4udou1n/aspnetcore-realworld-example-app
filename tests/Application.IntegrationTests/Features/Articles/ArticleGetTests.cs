@@ -6,7 +6,7 @@ using Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Articles;
+namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleGetTests : TestBase
 {

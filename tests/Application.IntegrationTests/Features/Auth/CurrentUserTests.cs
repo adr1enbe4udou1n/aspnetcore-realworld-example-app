@@ -4,7 +4,7 @@ using Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Auth;
+namespace Application.IntegrationTests.Features.Auth;
 
 public class CurrentUserTests : TestBase
 {

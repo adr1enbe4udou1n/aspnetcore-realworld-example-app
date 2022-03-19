@@ -1,26 +1,24 @@
 using Application.Exceptions;
 using Application.Features.Articles.Commands;
-using Application.Features.Articles.Queries;
+using Application.Features.Comments.Commands;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Articles;
+namespace Application.IntegrationTests.Features.Articles;
 
-public class ArticleFavoriteTests : TestBase
+public class ArticleDeleteTests : TestBase
 {
     [Test]
-    public async Task Guest_Cannot_Favorite_Article()
+    public async Task Guest_Cannot_Delete_Article()
     {
-        await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
-            "slug-article", true
-        )))
+        await this.Invoking(x => x.Act(new ArticleDeleteRequest("slug-article")))
             .Should().ThrowAsync<UnauthorizedException>();
     }
 
     [Test]
-    public async Task Cannot_Favorite_Non_Existent_Article()
+    public async Task Cannot_Delete_Non_Existent_Article()
     {
         await ActingAs(new User
         {
@@ -28,14 +26,14 @@ public class ArticleFavoriteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
-            "slug-article", true
+        await this.Invoking(x => x.Act(new ArticleDeleteRequest(
+            "slug-article"
         )))
             .Should().ThrowAsync<NotFoundException>();
     }
 
     [Test]
-    public async Task Can_Favorite_Article()
+    public async Task Cannot_Delete_Article_Of_Other_Author()
     {
         await ActingAs(new User
         {
@@ -52,19 +50,20 @@ public class ArticleFavoriteTests : TestBase
             }
         ));
 
-        var response = await Act(new ArticleFavoriteRequest("test-title", true));
-
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
+        await ActingAs(new User
         {
-            Favorited = true,
-            FavoritesCount = 1,
-        }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
+            Name = "Jane Doe",
+            Email = "jane.doe@example.com",
+        });
 
-        (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
+        await this.Invoking(x => x.Act(new ArticleDeleteRequest(
+            "test-title"
+        )))
+            .Should().ThrowAsync<ForbiddenException>();
     }
 
     [Test]
-    public async Task Can_Unfavorite_Article()
+    public async Task Can_Delete_Own_Article_With_All_Comments()
     {
         await ActingAs(new User
         {
@@ -81,16 +80,19 @@ public class ArticleFavoriteTests : TestBase
             }
         ));
 
+        for (int i = 1; i <= 5; i++)
+        {
+            await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            {
+                Body = $"This is John, Test Comment {i} !",
+            }));
+        }
+
         await _mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
-        var response = await Act(new ArticleFavoriteRequest("test-title", false));
+        await Act(new ArticleDeleteRequest("test-title"));
 
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
-        {
-            Favorited = false,
-            FavoritesCount = 0,
-        }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
-
-        (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
+        (await _context.Articles.AnyAsync()).Should().BeFalse();
+        (await _context.Comments.AnyAsync()).Should().BeFalse();
     }
 }

@@ -7,7 +7,7 @@ using Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Application.IntegrationTests.Comments;
+namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentsListTests : TestBase
 {
