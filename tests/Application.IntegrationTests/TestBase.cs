@@ -1,6 +1,7 @@
 using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
+using Infrastructure;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using NUnit.Framework;
 using Respawn;
 using Respawn.Graph;
-using NUnit.Framework;
-using Infrastructure;
 
 namespace Application.IntegrationTests;
 
