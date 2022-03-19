@@ -26,13 +26,13 @@ public class LoginTests : TestBase
     [Test, TestCaseSource(nameof(InvalidCredentials))]
     public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDTO credentials)
     {
-        await Context.Users.AddAsync(new User
+        await _context.Users.AddAsync(new User
         {
             Email = "john.doe@example.com",
             Name = "John Doe",
-            Password = PasswordHasher.Hash("password"),
+            Password = _passwordHasher.Hash("password"),
         });
-        await Context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         await this.Invoking(x => x.Act(new LoginUserRequest(credentials)))
             .Should().ThrowAsync<ValidationException>();
@@ -45,10 +45,10 @@ public class LoginTests : TestBase
         {
             Email = "john.doe@example.com",
             Name = "John Doe",
-            Password = PasswordHasher.Hash("password"),
+            Password = _passwordHasher.Hash("password"),
         };
-        await Context.Users.AddAsync(user);
-        await Context.SaveChangesAsync();
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
 
         var currentUser = await Act(
             new LoginUserRequest(
@@ -63,7 +63,7 @@ public class LoginTests : TestBase
         currentUser.User.Username.Should().Be("John Doe");
         currentUser.User.Email.Should().Be("john.doe@example.com");
 
-        var payload = JwtTokenGenerator.DecodeToken(currentUser.User.Token);
+        var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
         payload["id"].Should().Be(user.Id.ToString(CultureInfo.InvariantCulture));
         payload["name"].Should().Be("John Doe");

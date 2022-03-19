@@ -10,12 +10,12 @@ public class TagsListTests : TestBase
     [Test]
     public async Task Can_List_All_Tags()
     {
-        await Context.Tags.AddRangeAsync(
+        await _context.Tags.AddRangeAsync(
             new Tag { Name = "Tag3" },
             new Tag { Name = "Tag2" },
             new Tag { Name = "Tag1" }
         );
-        await Context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         var response = await Act(new TagsListQuery());
 

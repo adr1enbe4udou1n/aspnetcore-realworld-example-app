@@ -17,15 +17,15 @@ namespace Application.IntegrationTests;
 
 public class TestBase
 {
-    protected IMediator Mediator { get; private set; }
+    protected IMediator _mediator;
 
-    protected AppDbContext Context { get; private set; }
+    protected AppDbContext _context;
 
-    protected IPasswordHasher PasswordHasher { get; private set; }
+    protected IPasswordHasher _passwordHasher;
 
-    protected IJwtTokenGenerator JwtTokenGenerator { get; private set; }
+    protected IJwtTokenGenerator _jwtTokenGenerator;
 
-    protected ICurrentUser CurrentUser { get; private set; }
+    protected ICurrentUser _currentUser;
 
     private string _connectionString;
 
@@ -52,11 +52,11 @@ public class TestBase
         var appDbContext = _provider.GetRequiredService<AppDbContext>();
         appDbContext.Database.Migrate();
 
-        Mediator = _provider.GetRequiredService<IMediator>();
-        PasswordHasher = _provider.GetRequiredService<IPasswordHasher>();
-        JwtTokenGenerator = _provider.GetRequiredService<IJwtTokenGenerator>();
-        Context = _provider.GetRequiredService<AppDbContext>();
-        CurrentUser = _provider.GetRequiredService<ICurrentUser>();
+        _mediator = _provider.GetRequiredService<IMediator>();
+        _passwordHasher = _provider.GetRequiredService<IPasswordHasher>();
+        _jwtTokenGenerator = _provider.GetRequiredService<IJwtTokenGenerator>();
+        _context = _provider.GetRequiredService<AppDbContext>();
+        _currentUser = _provider.GetRequiredService<ICurrentUser>();
     }
 
     [SetUp]
@@ -79,10 +79,10 @@ public class TestBase
 
     protected async Task<User> ActingAs(User user)
     {
-        await Context.Users.AddAsync(user);
-        await Context.SaveChangesAsync();
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
 
-        await CurrentUser.SetIdentifier(user.Id);
+        await _currentUser.SetIdentifier(user.Id);
         _userId = user.Id;
         return user;
     }

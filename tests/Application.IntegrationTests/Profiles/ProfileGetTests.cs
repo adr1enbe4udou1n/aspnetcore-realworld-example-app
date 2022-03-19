@@ -11,14 +11,14 @@ public class ProfileGetTests : TestBase
     [Test]
     public async Task Can_Get_Profile()
     {
-        await Context.Users.AddAsync(new User
+        await _context.Users.AddAsync(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
             Bio = "My Bio",
             Image = "https://i.pravatar.cc/300",
         });
-        await Context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         var response = await Act(new ProfileGetQuery("John Doe"));
 

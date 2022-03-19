@@ -53,12 +53,12 @@ public class RegisterTests : TestBase
         currentUser.User.Username.Should().Be("John Doe");
         currentUser.User.Email.Should().Be("john.doe@example.com");
 
-        var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
+        var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
         created.Should().NotBeNull();
 
-        PasswordHasher.Check("password", created!.Password!).Should().BeTrue();
+        _passwordHasher.Check("password", created!.Password!).Should().BeTrue();
 
-        var payload = JwtTokenGenerator.DecodeToken(currentUser.User.Token);
+        var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
 
         payload["id"].Should().Be(created.Id.ToString(CultureInfo.InvariantCulture));
         payload["name"].Should().Be("John Doe");
@@ -68,13 +68,13 @@ public class RegisterTests : TestBase
     [Test]
     public async Task User_Cannot_Register_Twice()
     {
-        await Context.Users.AddAsync(new User
+        await _context.Users.AddAsync(new User
         {
             Email = "john.doe@example.com",
             Name = "John Doe",
             Password = "password",
         });
-        await Context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         await this.Invoking(x => x.Act(
             new NewUserRequest(

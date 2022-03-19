@@ -76,7 +76,7 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await _mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -113,7 +113,7 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await _mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -144,6 +144,6 @@ public class ArticleUpdateTests : TestBase
             TagList = new List<string>(),
         }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-        (await Context.Articles.AnyAsync(x => x.Title == "New Title")).Should().BeTrue();
+        (await _context.Articles.AnyAsync(x => x.Title == "New Title")).Should().BeTrue();
     }
 }
