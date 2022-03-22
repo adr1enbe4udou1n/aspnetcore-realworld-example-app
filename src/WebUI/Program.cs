@@ -141,7 +141,6 @@ app.Map("/api", app =>
     );
 
     app.UseAuthorization();
-    app.UseAuthorization();
 
     app.UseEndpoints(endpoints =>
     {
