@@ -1,56 +1,30 @@
+using Application.Tools;
 using Application.Tools.Interfaces;
 using Application.Tools.Seeders;
+using Cocona;
+
 using Infrastructure;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using static Bullseye.Targets;
+using Tools.Commands;
 
-namespace Application.Tools;
+var builder = CoconaApp.CreateBuilder();
 
-class Program
-{
-    static async Task Main(string[] args)
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddScoped<DatabaseManager>()
+    .AddScoped<UsersSeeder>()
+    .AddScoped<ArticlesSeeder>()
+    .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
     {
-        var host = CreateHostBuilder(args).Build();
+            options.GetRequiredService<UsersSeeder>(),
+            options.GetRequiredService<ArticlesSeeder>()
+    });
 
-        using var scope = host.Services.CreateScope();
+var app = builder.Build();
 
-        Target("fresh", "Wipe all data from database",
-            async () =>
-            {
-                var databaseManager = scope.ServiceProvider.GetRequiredService<DatabaseManager>();
-                await databaseManager.Reset();
-            });
+app.AddSubCommand("data", x =>
+{
+    x.AddCommands<SeederCommand>();
+})
+.WithDescription("Data related commands");
 
-        Target("seed", "Seed data to database", DependsOn("fresh"),
-            async () =>
-            {
-                var token = new CancellationToken();
-
-                foreach (var seeder in scope.ServiceProvider.GetRequiredService<IEnumerable<ISeeder>>())
-                {
-                    await seeder.Run(token);
-                }
-            });
-
-        await RunTargetsAndExitAsync(args);
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureHostConfiguration(config => config.AddJsonFile("appsettings.json", true, true))
-            .ConfigureServices((_, services) =>
-            {
-                services
-                    .AddInfrastructure(_.Configuration)
-                    .AddScoped<DatabaseManager>()
-                    .AddScoped<UsersSeeder>()
-                    .AddScoped<ArticlesSeeder>()
-                    .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
-                    {
-                            options.GetRequiredService<UsersSeeder>(),
-                            options.GetRequiredService<ArticlesSeeder>()
-                    });
-            });
-}
+app.Run();

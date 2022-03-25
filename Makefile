@@ -5,9 +5,9 @@ run:
 watch:
 	@cd src/WebUI && dotnet watch
 fresh:
-	dotnet run --project tools/Application.Tools fresh
+	@cd tools/Application.Tools && dotnet run data fresh
 seed:
-	dotnet run --project tools/Application.Tools seed
+	@cd tools/Application.Tools && dotnet run data seed
 publish:
 	dotnet run --project targets
 format:
