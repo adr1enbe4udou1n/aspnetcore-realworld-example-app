@@ -19,7 +19,7 @@ public class ArticlesSeeder : ISeeder
 
     public async Task Run(CancellationToken cancellationToken)
     {
-        var users = await _context.Users.AsTracking().ToListAsync(cancellationToken);
+        var users = await _context.Users.ToListAsync(cancellationToken);
 
         var articles = new Faker<Article>()
             .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))

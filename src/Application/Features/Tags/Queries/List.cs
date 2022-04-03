@@ -19,7 +19,7 @@ public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
 
     public async Task<TagsResponse> Handle(TagsListQuery request, CancellationToken cancellationToken)
     {
-        var tags = await _context.Tags.OrderBy(t => t.Name).AsNoTracking().ToListAsync(cancellationToken);
+        var tags = await _context.Tags.OrderBy(t => t.Name).ToListAsync(cancellationToken);
         return new TagsResponse(tags.Select(t => t.Name));
     }
 }

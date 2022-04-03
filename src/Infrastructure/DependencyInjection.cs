@@ -20,7 +20,6 @@ public static class DependencyInjection
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
             .AddDbContextFactory<AppDbContext>(options =>
             {
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })
             .AddScoped<ICurrentUser, CurrentUser>()
