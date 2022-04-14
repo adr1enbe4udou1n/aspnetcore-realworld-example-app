@@ -25,7 +25,7 @@ dir =>
 Target(Format, () =>
 {
     Run("dotnet", "tool restore");
-    Run("dotnet", "dotnet-format --check");
+    Run("dotnet", "dotnet format --verify-no-changes");
 });
 
 Target(Build, DependsOn(Format), () => Run("dotnet", "build . -c Release"));

@@ -27,7 +27,7 @@ public class TestBase
 
     protected ICurrentUser _currentUser;
 
-    private string _connectionString;
+    private readonly string _connectionString;
 
     private IServiceCollection GetServices()
     {

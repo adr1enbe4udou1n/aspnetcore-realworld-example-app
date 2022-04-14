@@ -7,8 +7,8 @@ namespace Tools.Commands;
 
 public class SeederCommand
 {
-    private DatabaseManager _databaseManager;
-    private IEnumerable<ISeeder> _seeders;
+    private readonly DatabaseManager _databaseManager;
+    private readonly IEnumerable<ISeeder> _seeders;
 
     public SeederCommand(DatabaseManager databaseManager, IEnumerable<ISeeder> seeders)
     {
