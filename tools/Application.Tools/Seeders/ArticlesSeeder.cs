@@ -21,16 +21,12 @@ public class ArticlesSeeder : ISeeder
     {
         var users = await _context.Users.ToListAsync(cancellationToken);
 
-        await _context.Tags.AddRangeAsync(
-            new Faker<Tag>()
-                .RuleFor(a => a.Name, f => $"{f.Lorem.Word()}{f.UniqueIndex % 3}".TrimEnd('0'))
-                .Generate(30),
-            cancellationToken
-        );
+        var tags = new Faker<Tag>()
+            .RuleFor(a => a.Name, f => $"{f.Lorem.Word()}{f.UniqueIndex % 10}".TrimEnd('0'))
+            .Generate(30);
 
+        await _context.Tags.AddRangeAsync(tags, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
-
-        var tags = await _context.Tags.ToListAsync(cancellationToken);
 
         var articles = new Faker<Article>()
             .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))
@@ -38,10 +34,6 @@ public class ArticlesSeeder : ISeeder
             .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(5))
             .RuleFor(a => a.Author, f => f.PickRandom(users))
             .RuleFor(a => a.CreatedAt, f => f.Date.Recent(90).ToUniversalTime())
-            .RuleFor(a => a.FavoredUsers, f => f.PickRandom(users, f.Random.Number(5))
-                .Select(u => new ArticleFavorite { UserId = u.Id })
-                .ToList()
-            )
             .RuleFor(a => a.Slug, (f, a) => _slugifier.Generate(a.Title))
             .RuleFor(a => a.Comments, f => new Faker<Comment>()
                 .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(2))
@@ -53,10 +45,13 @@ public class ArticlesSeeder : ISeeder
                 .Select(t => new ArticleTag { TagId = t.Id })
                 .ToList()
             )
+            .RuleFor(a => a.FavoredUsers, f => f.PickRandom(users, f.Random.Number(5))
+                .Select(u => new ArticleFavorite { UserId = u.Id })
+                .ToList()
+            )
             .Generate(500);
 
         await _context.Articles.AddRangeAsync(articles, cancellationToken);
-
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
