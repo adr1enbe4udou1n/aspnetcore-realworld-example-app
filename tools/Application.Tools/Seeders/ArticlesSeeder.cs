@@ -21,6 +21,17 @@ public class ArticlesSeeder : ISeeder
     {
         var users = await _context.Users.ToListAsync(cancellationToken);
 
+        await _context.Tags.AddRangeAsync(
+            new Faker<Tag>()
+                .RuleFor(a => a.Name, f => $"{f.Lorem.Word()}{f.UniqueIndex % 3}".TrimEnd('0'))
+                .Generate(30),
+            cancellationToken
+        );
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        var tags = await _context.Tags.ToListAsync(cancellationToken);
+
         var articles = new Faker<Article>()
             .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))
             .RuleFor(a => a.Description, f => f.Lorem.Paragraphs(1))
@@ -38,22 +49,13 @@ public class ArticlesSeeder : ISeeder
                 .RuleFor(a => a.CreatedAt, f => f.Date.Recent(7).ToUniversalTime())
                 .Generate(f.Random.Number(10))
             )
+            .RuleFor(a => a.Tags, f => f.PickRandom(tags, f.Random.Number(3))
+                .Select(t => new ArticleTag { TagId = t.Id })
+                .ToList()
+            )
             .Generate(500);
 
         await _context.Articles.AddRangeAsync(articles, cancellationToken);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        await _context.Tags.AddRangeAsync(
-            new Faker<Tag>()
-                .RuleFor(a => a.Name, f => $"{f.Lorem.Word()} {f.UniqueIndex}")
-                .RuleFor(a => a.Articles, f => f.PickRandom(articles, f.Random.Number(10))
-                    .Select(a => new ArticleTag { ArticleId = a.Id })
-                    .ToList()
-                )
-                .Generate(100),
-            cancellationToken
-        );
 
         await _context.SaveChangesAsync(cancellationToken);
     }
