@@ -21,7 +21,7 @@ public class ArticlesController
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet(Name = "GetArticles")]
     public async Task<MultipleArticlesResponse> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
         => await _mediator.Send(query, cancellationToken);
 
@@ -32,7 +32,7 @@ public class ArticlesController
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("feed")]
+    [HttpGet("feed", Name = "GetArticlesFeed")]
     [Authorize]
     public async Task<MultipleArticlesResponse> Feed([FromQuery] ArticlesFeedQuery query, CancellationToken cancellationToken)
         => await _mediator.Send(query, cancellationToken);
@@ -44,7 +44,7 @@ public class ArticlesController
     /// <param name="slug">Slug of the article to get</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("{slug}")]
+    [HttpGet("{slug}", Name = "GetArticle")]
     public async Task<SingleArticleResponse> Get(string slug, CancellationToken cancellationToken)
         => await _mediator.Send(new ArticleGetQuery(slug), cancellationToken);
 
@@ -55,7 +55,7 @@ public class ArticlesController
     /// <param name="command">Article to create</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPost(Name = "CreateArticle")]
     [Authorize]
     public async Task<SingleArticleResponse> Create([FromBody] NewArticleRequest command, CancellationToken cancellationToken)
         => await _mediator.Send(command, cancellationToken);
@@ -68,7 +68,7 @@ public class ArticlesController
     /// <param name="command">Article to update</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPut("{slug}")]
+    [HttpPut("{slug}", Name = "UpdateArticle")]
     [Authorize]
     public async Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleBody command, CancellationToken cancellationToken)
         => await _mediator.Send(new UpdateArticleRequest(slug, command.Article), cancellationToken);
@@ -80,7 +80,7 @@ public class ArticlesController
     /// <param name="slug">Slug of the article to delete</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpDelete("{slug}")]
+    [HttpDelete("{slug}", Name = "DeleteArticle")]
     [Authorize]
     public async Task Delete(string slug, CancellationToken cancellationToken)
         => await _mediator.Send(new ArticleDeleteRequest(slug), cancellationToken);
@@ -92,7 +92,7 @@ public class ArticlesController
     /// <param name="slug">Slug of the article that you want to favorite</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("{slug}/favorite")]
+    [HttpPost("{slug}/favorite", Name = "CreateArticleFavorite")]
     [Authorize]
     [ApiExplorerSettings(GroupName = "Favorites")]
     public async Task<SingleArticleResponse> Favorite(string slug, CancellationToken cancellationToken)
@@ -105,7 +105,7 @@ public class ArticlesController
     /// <param name="slug">Slug of the article that you want to unfavorite</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpDelete("{slug}/favorite")]
+    [HttpDelete("{slug}/favorite", Name = "DeleteArticleFavorite")]
     [Authorize]
     [ApiExplorerSettings(GroupName = "Favorites")]
     public async Task<SingleArticleResponse> Unfavorite(string slug, CancellationToken cancellationToken)

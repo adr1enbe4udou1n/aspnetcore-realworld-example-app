@@ -18,7 +18,7 @@ public class TagsController
     /// <remarks>Get tags. Auth not required</remarks>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet(Name = "GetTags")]
     public async Task<TagsResponse> List(CancellationToken cancellationToken)
         => await _mediator.Send(new TagsListQuery(), cancellationToken);
 }

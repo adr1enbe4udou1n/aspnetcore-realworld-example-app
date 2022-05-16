@@ -21,7 +21,7 @@ public class ProfilesController
     /// <param name="username">Username of the profile to get</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet(Name = "GetProfileByUsername")]
     public async Task<ProfileResponse> Get(string username, CancellationToken cancellationToken)
         => await _mediator.Send(new ProfileGetQuery(username), cancellationToken);
 
@@ -32,7 +32,7 @@ public class ProfilesController
     /// <param name="username">Username of the profile you want to follow</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("follow")]
+    [HttpPost("follow", Name = "FollowUserByUsername")]
     [Authorize]
     public async Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
         => await _mediator.Send(new ProfileFollowRequest(username, true), cancellationToken);
@@ -44,7 +44,7 @@ public class ProfilesController
     /// <param name="username">Username of the profile you want to unfollow</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpDelete("follow")]
+    [HttpDelete("follow", Name = "UnfollowUserByUsername")]
     [Authorize]
     public async Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
         => await _mediator.Send(new ProfileFollowRequest(username, false), cancellationToken);

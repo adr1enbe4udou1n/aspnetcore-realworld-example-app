@@ -21,7 +21,7 @@ public class CommentsController
     /// <param name="slug">Slug of the article that you want to get comments for</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet(Name = "GetArticleComments")]
     public async Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
         => await _mediator.Send(new CommentsListQuery(slug), cancellationToken);
 
@@ -33,7 +33,7 @@ public class CommentsController
     /// <param name="command">Comment you want to create</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPost(Name = "CreateArticleComment")]
     [Authorize]
     public async Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
         => await _mediator.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
@@ -46,7 +46,7 @@ public class CommentsController
     /// <param name="commentId">ID of the comment you want to delete</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpDelete("{commentId}")]
+    [HttpDelete("{commentId}", Name = "DeleteArticleComment")]
     [Authorize]
     public async Task Delete(string slug, int commentId, CancellationToken cancellationToken)
         => await _mediator.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);

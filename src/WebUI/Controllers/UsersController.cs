@@ -20,7 +20,7 @@ public class UsersController
     /// <param name="command">Details of the new user to register</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPost(Name = "CreateUser")]
     public Task<UserResponse> Register([FromBody] NewUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 
@@ -31,7 +31,7 @@ public class UsersController
     /// <param name="command">Credentials to use</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("login")]
+    [HttpPost("login", Name = "Login")]
     public Task<UserResponse> Login([FromBody] LoginUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 }

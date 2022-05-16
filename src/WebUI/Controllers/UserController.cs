@@ -20,7 +20,7 @@ public class UserController
     /// <remarks>Gets the currently logged-in user</remarks>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet(Name = "GetCurrentUser")]
     [Authorize]
     public Task<UserResponse> Current(CancellationToken cancellationToken)
         => _mediator.Send(new CurrentUserQuery(), cancellationToken);
@@ -32,7 +32,7 @@ public class UserController
     /// <param name="command">User details to update. At least <strong>one</strong> field is required.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPut]
+    [HttpPut(Name = "UpdateUser")]
     [Authorize]
     public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
