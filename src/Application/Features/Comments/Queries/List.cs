@@ -12,7 +12,7 @@ public class CommentDTO
 {
     public int Id { get; set; }
 
-    public string? Body { get; set; }
+    public string Body { get; set; } = default!;
 
     public DateTime CreatedAt { get; set; }
 
