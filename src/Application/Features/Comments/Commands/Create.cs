@@ -5,14 +5,13 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Commands;
 
 public class NewCommentDTO
 {
 
-    public string? Body { get; set; }
+    public string Body { get; set; } = default!
 }
 
 public record SingleCommentResponse(CommentDTO Comment);
