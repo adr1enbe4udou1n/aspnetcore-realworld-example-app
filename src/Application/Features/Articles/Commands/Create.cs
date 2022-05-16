@@ -9,11 +9,11 @@ namespace Application.Features.Articles.Commands;
 
 public class NewArticleDTO
 {
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; } = default!;
 
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; set; } = default!;
 
-    public string Body { get; set; } = string.Empty;
+    public string Body { get; set; } = default!;
 
     public List<string>? TagList { get; set; }
 }

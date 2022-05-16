@@ -9,7 +9,7 @@ namespace Application.Features.Profiles.Queries;
 public class ProfileDTO
 {
 
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = default!;
 
     public string Bio { get; set; } = null!;
 

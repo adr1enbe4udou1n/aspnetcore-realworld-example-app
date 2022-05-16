@@ -5,15 +5,15 @@ namespace Application.Features.Auth.Queries;
 
 public class UserDTO
 {
-    public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } = default!;
 
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = default!;
 
-    public string Bio { get; set; } = string.Empty;
+    public string Bio { get; set; } = default!;
 
-    public string Image { get; set; } = string.Empty;
+    public string Image { get; set; } = default!;
 
-    public string Token { get; set; } = string.Empty;
+    public string Token { get; set; } = default!;
 }
 
 public record UserResponse(UserDTO User);
