@@ -9,11 +9,12 @@ namespace Application.Features.Profiles.Queries;
 public class ProfileDTO
 {
 
-    public string? Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
-    public string? Bio { get; set; }
+    public string Bio { get; set; } = null!;
 
-    public string? Image { get; set; }
+    public string Image { get; set; } = null!;
+
     public bool Following { get; set; }
 }
 

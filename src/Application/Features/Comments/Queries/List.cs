@@ -18,7 +18,7 @@ public class CommentDTO
 
     public DateTime UpdatedAt { get; set; }
 
-    public ProfileDTO? Author { get; set; }
+    public ProfileDTO Author { get; set; } = null!;
 }
 
 public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);

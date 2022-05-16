@@ -75,6 +75,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 
     c.SupportNonNullableReferenceTypes();
+    c.SchemaFilter<RequiredNotNullableSchemaFilter>();
 
     c.CustomSchemaIds(x => x.GetCustomAttributes(false)
         .OfType<DisplayNameAttribute>()

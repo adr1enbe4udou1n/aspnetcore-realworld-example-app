@@ -9,9 +9,9 @@ public class UserDTO
 
     public string Username { get; set; } = string.Empty;
 
-    public string? Bio { get; set; }
+    public string Bio { get; set; } = string.Empty;
 
-    public string? Image { get; set; }
+    public string Image { get; set; } = string.Empty;
 
     public string Token { get; set; } = string.Empty;
 }

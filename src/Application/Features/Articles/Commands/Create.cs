@@ -15,7 +15,7 @@ public class NewArticleDTO
 
     public string Body { get; set; } = string.Empty;
 
-    public List<string> TagList { get; set; } = new();
+    public List<string>? TagList { get; set; }
 }
 
 public record NewArticleRequest(NewArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
@@ -55,27 +55,31 @@ public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleReque
     public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
     {
         var article = _mapper.Map<Article>(request.Article);
-        var existingTags = await _context.Tags
-            .Where(
-                x => request.Article.TagList.Any(t => t == x.Name)
-            )
-            .ToListAsync(cancellationToken);
 
         article.Author = _currentUser.User!;
         article.Slug = _slugifier.Generate(request.Article.Title);
 
-        article.Tags = request.Article.TagList
-            .Where(x => !String.IsNullOrEmpty(x))
-            .Select(x =>
-            {
-                var tag = existingTags.FirstOrDefault(t => t.Name == x);
+        if (request.Article.TagList != null)
+        {
+            var existingTags = await _context.Tags
+                .Where(
+                    x => request.Article.TagList.Any(t => t == x.Name)
+                )
+                .ToListAsync(cancellationToken);
 
-                return new ArticleTag
+            article.Tags = request.Article.TagList
+                .Where(x => !String.IsNullOrEmpty(x))
+                .Select(x =>
                 {
-                    Tag = tag == null ? new Tag { Name = x } : tag
-                };
-            })
-            .ToList();
+                    var tag = existingTags.FirstOrDefault(t => t.Name == x);
+
+                    return new ArticleTag
+                    {
+                        Tag = tag == null ? new Tag { Name = x } : tag
+                    };
+                })
+                .ToList();
+        }
 
         await _context.Articles.AddAsync(article, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

@@ -25,7 +25,7 @@ public class ArticleDTO
 
     public IEnumerable<string>? TagList { get; set; }
 
-    public ProfileDTO? Author { get; set; }
+    public ProfileDTO Author { get; set; } = null!;
 
     public bool Favorited { get; set; }
 
