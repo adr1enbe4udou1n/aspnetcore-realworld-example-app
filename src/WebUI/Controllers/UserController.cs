@@ -32,7 +32,7 @@ public class UserController
     /// <param name="command">User details to update. At least <strong>one</strong> field is required.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPut(Name = "UpdateUser")]
+    [HttpPut(Name = "UpdateCurrentUser")]
     [Authorize]
     public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
