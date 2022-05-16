@@ -11,7 +11,7 @@ namespace Application.Features.Comments.Commands;
 public class NewCommentDTO
 {
 
-    public string Body { get; set; } = default!
+    public string Body { get; set; } = default!;
 }
 
 public record SingleCommentResponse(CommentDTO Comment);
