@@ -57,6 +57,8 @@ public class ArticlesController
     /// <returns></returns>
     [HttpPost(Name = "CreateArticle")]
     [Authorize]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public async Task<SingleArticleResponse> Create([FromBody] NewArticleRequest command, CancellationToken cancellationToken)
         => await _mediator.Send(command, cancellationToken);
 
@@ -70,6 +72,8 @@ public class ArticlesController
     /// <returns></returns>
     [HttpPut("{slug}", Name = "UpdateArticle")]
     [Authorize]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public async Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleBody command, CancellationToken cancellationToken)
         => await _mediator.Send(new UpdateArticleRequest(slug, command.Article), cancellationToken);
 

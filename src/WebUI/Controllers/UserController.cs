@@ -34,6 +34,8 @@ public class UserController
     /// <returns></returns>
     [HttpPut(Name = "UpdateCurrentUser")]
     [Authorize]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 }

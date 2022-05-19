@@ -35,6 +35,8 @@ public class CommentsController
     /// <returns></returns>
     [HttpPost(Name = "CreateArticleComment")]
     [Authorize]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public async Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
         => await _mediator.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
 

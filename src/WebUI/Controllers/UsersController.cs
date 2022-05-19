@@ -21,6 +21,8 @@ public class UsersController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost(Name = "CreateUser")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Register([FromBody] NewUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 
@@ -32,6 +34,8 @@ public class UsersController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("login", Name = "Login")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Login([FromBody] LoginUserRequest command, CancellationToken cancellationToken)
         => _mediator.Send(command, cancellationToken);
 }
