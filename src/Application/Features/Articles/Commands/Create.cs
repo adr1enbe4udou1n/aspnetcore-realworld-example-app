@@ -69,6 +69,7 @@ public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleReque
 
             article.Tags = request.Article.TagList
                 .Where(x => !String.IsNullOrEmpty(x))
+                .Distinct()
                 .Select(x =>
                 {
                     var tag = existingTags.FirstOrDefault(t => t.Name == x);
