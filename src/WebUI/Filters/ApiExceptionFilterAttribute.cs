@@ -1,5 +1,4 @@
 using Application.Exceptions;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -20,12 +19,10 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
         if (context.Exception is ValidationException)
         {
-            context.Result = new ObjectResult(
-                new ProblemDetails
-                {
-                    Status = StatusCodes.Status400BadRequest,
-                    Title = context.Exception.Message,
-                }
+            context.Result = new BadRequestObjectResult(
+                new ValidationProblemDetails(
+                    ((ValidationException)context.Exception).Errors
+                )
             );
 
             return;

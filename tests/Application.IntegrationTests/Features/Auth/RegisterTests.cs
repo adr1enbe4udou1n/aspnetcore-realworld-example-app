@@ -1,8 +1,8 @@
 using System.Globalization;
+using Application.Exceptions;
 using Application.Features.Auth.Commands;
 using Domain.Entities;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -86,7 +86,7 @@ public class RegisterTests : TestBase
                 }
             )))
                 .Should().ThrowAsync<ValidationException>()
-                .Where(e => e.Errors.First(x => x.PropertyName == "User.Email")
-                    .ErrorMessage == "Email is already used");
+                .Where(e => e.Errors.First(x => x.Key == "User.Email")
+                    .Value.Contains("Email is already used"));
     }
 }

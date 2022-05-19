@@ -4,7 +4,6 @@ using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 

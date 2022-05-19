@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using ValidationException = Application.Exceptions.ValidationException;
 
 namespace Application.Behaviors;
 
@@ -16,7 +17,14 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     {
         if (_validator != null)
         {
-            await _validator.ValidateAndThrowAsync(request, cancellationToken);
+            var context = new ValidationContext<TRequest>(request);
+
+            var validationResult = await _validator.ValidateAsync(context, cancellationToken);
+
+            if (validationResult.Errors.Any())
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
         }
 
         return await next();
