@@ -8,6 +8,7 @@ namespace WebUI.Controllers;
 
 [Route("[controller]/celeb_{username}")]
 [ApiExplorerSettings(GroupName = "Profile")]
+[Authorize]
 public class ProfilesController
 {
     private readonly IMediator _mediator;
@@ -22,6 +23,7 @@ public class ProfilesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(Name = "GetProfileByUsername")]
+    [AllowAnonymous]
     public async Task<ProfileResponse> Get(string username, CancellationToken cancellationToken)
         => await _mediator.Send(new ProfileGetQuery(username), cancellationToken);
 
@@ -33,7 +35,6 @@ public class ProfilesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("follow", Name = "FollowUserByUsername")]
-    [Authorize]
     public async Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
         => await _mediator.Send(new ProfileFollowRequest(username, true), cancellationToken);
 
@@ -45,7 +46,6 @@ public class ProfilesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete("follow", Name = "UnfollowUserByUsername")]
-    [Authorize]
     public async Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
         => await _mediator.Send(new ProfileFollowRequest(username, false), cancellationToken);
 }

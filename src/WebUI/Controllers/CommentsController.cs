@@ -8,6 +8,7 @@ namespace WebUI.Controllers;
 
 [Route("articles/{slug}/[controller]")]
 [ApiExplorerSettings(GroupName = "Comments")]
+[Authorize]
 public class CommentsController
 {
     private readonly IMediator _mediator;
@@ -22,6 +23,7 @@ public class CommentsController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(Name = "GetArticleComments")]
+    [AllowAnonymous]
     public async Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
         => await _mediator.Send(new CommentsListQuery(slug), cancellationToken);
 
@@ -34,7 +36,6 @@ public class CommentsController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost(Name = "CreateArticleComment")]
-    [Authorize]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public async Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
@@ -49,7 +50,6 @@ public class CommentsController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete("{commentId}", Name = "DeleteArticleComment")]
-    [Authorize]
     public async Task Delete(string slug, int commentId, CancellationToken cancellationToken)
         => await _mediator.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
 }

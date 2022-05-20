@@ -8,6 +8,7 @@ namespace WebUI.Controllers.Users;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
+[Authorize]
 public class UserController
 {
     private readonly IMediator _mediator;
@@ -21,7 +22,6 @@ public class UserController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(Name = "GetCurrentUser")]
-    [Authorize]
     public Task<UserResponse> Current(CancellationToken cancellationToken)
         => _mediator.Send(new CurrentUserQuery(), cancellationToken);
 
@@ -33,7 +33,6 @@ public class UserController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut(Name = "UpdateCurrentUser")]
-    [Authorize]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
