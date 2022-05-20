@@ -27,9 +27,6 @@ public class CurrentUser : ICurrentUser
 
     public async Task Fresh()
     {
-        User = await _context.Users
-            .Include(u => u.Following)
-            .Include(u => u.Followers)
-            .Where(x => x.Id == Identifier).SingleOrDefaultAsync();
+        User = await _context.Users.Where(x => x.Id == Identifier).SingleOrDefaultAsync();
     }
 }

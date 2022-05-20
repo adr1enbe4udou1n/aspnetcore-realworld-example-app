@@ -25,6 +25,7 @@ public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, SingleArticleR
     {
         var article = await _context.Articles
             .Include(x => x.Author)
+            .ThenInclude(x => x.Followers)
             .Include(x => x.FavoredUsers)
             .Include(x => x.Tags)
             .ThenInclude(x => x.Tag)

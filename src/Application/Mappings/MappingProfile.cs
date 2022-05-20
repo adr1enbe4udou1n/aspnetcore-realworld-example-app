@@ -30,7 +30,7 @@ public class MappingProfile : Profile
 
         CreateMap<User, ProfileDTO>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? src.IsFollowedBy(currentUser) : false))
+            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? currentUser.IsFollowing(src) : false))
             .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
         CreateMap<NewArticleDTO, Article>()
