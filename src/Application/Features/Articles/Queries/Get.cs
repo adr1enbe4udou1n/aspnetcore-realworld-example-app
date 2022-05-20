@@ -14,18 +14,21 @@ public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, SingleArticleR
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
-    public ArticleGetHandler(IAppDbContext context, IMapper mapper)
+    public ArticleGetHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
         _context = context;
         _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     public async Task<SingleArticleResponse> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
     {
+        await _currentUser.LoadFollowing();
+
         var article = await _context.Articles
             .Include(x => x.Author)
-            .ThenInclude(x => x.Followers)
             .Include(x => x.FavoredUsers)
             .Include(x => x.Tags)
             .ThenInclude(x => x.Tag)

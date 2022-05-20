@@ -13,4 +13,6 @@ public interface ICurrentUser
     Task SetIdentifier(long identifier);
 
     Task Fresh();
+
+    Task LoadFollowing();
 }

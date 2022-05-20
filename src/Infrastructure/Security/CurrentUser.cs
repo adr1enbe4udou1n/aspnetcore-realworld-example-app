@@ -29,4 +29,17 @@ public class CurrentUser : ICurrentUser
     {
         User = await _context.Users.Where(x => x.Id == Identifier).SingleOrDefaultAsync();
     }
+
+    public async Task LoadFollowing()
+    {
+        if (User != null)
+        {
+            await _context.Entry(User).Collection(u => u.Following).LoadAsync();
+        }
+    }
+
+    public Task LoadFollowers()
+    {
+        throw new NotImplementedException();
+    }
 }
