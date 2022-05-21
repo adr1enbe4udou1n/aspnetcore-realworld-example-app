@@ -25,6 +25,9 @@ public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuer
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
     {
+        await _currentUser.LoadFollowing();
+        await _currentUser.LoadFavoriteArticles();
+
         var articles = await _context.Articles
             .HasAuthorsFollowedBy(_currentUser.User!)
             .OrderByDescending(x => x.Id)

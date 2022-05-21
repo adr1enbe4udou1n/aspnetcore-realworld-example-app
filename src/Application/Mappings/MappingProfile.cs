@@ -33,8 +33,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? currentUser.IsFollowing(src) : false))
             .ForMember(dest => dest.Following, opt => opt.MapFrom<FollowingResolver>());
 
-        CreateMap<NewArticleDTO, Article>()
-            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser!.Id));
+        CreateMap<NewArticleDTO, Article>();
 
         CreateMap<UpdateArticleDTO, Article>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -45,14 +44,12 @@ public class MappingProfile : Profile
                 .OrderBy(t => t)
             ))
             .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
-                src => currentUser != null ? src.FavoredUsers.Any(f => f.User.Id == currentUser.Id) : false)
+                src => currentUser != null ? currentUser.HasFavorite(src) : false)
             )
             .ForMember(dest => dest.Favorited, opt => opt.MapFrom<FavoriteResolver>())
             .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count));
 
-        CreateMap<NewCommentDTO, Comment>()
-            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => currentUser!.Id));
-
+        CreateMap<NewCommentDTO, Comment>();
         CreateMap<Comment, CommentDTO>();
     }
 }

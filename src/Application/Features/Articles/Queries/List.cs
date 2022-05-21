@@ -67,6 +67,7 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {
         await _currentUser.LoadFollowing();
+        await _currentUser.LoadFavoriteArticles();
 
         var articles = await _context.Articles
             .FilterByAuthor(request.Author)

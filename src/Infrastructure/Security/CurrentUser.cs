@@ -38,8 +38,11 @@ public class CurrentUser : ICurrentUser
         }
     }
 
-    public Task LoadFollowers()
+    public async Task LoadFavoriteArticles()
     {
-        throw new NotImplementedException();
+        if (User != null)
+        {
+            await _context.Entry(User).Collection(u => u.FavoriteArticles).LoadAsync();
+        }
     }
 }

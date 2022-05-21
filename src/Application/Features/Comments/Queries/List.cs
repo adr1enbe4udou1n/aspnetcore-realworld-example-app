@@ -40,6 +40,8 @@ public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCo
 
     public async Task<MultipleCommentsResponse> Handle(CommentsListQuery request, CancellationToken cancellationToken)
     {
+        await _currentUser.LoadFollowing();
+
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         var comments = await _context.Comments

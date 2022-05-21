@@ -15,4 +15,5 @@ public interface ICurrentUser
     Task Fresh();
 
     Task LoadFollowing();
+    Task LoadFavoriteArticles();
 }

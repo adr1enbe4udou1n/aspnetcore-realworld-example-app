@@ -184,7 +184,8 @@ public class ArticlesListTests : TestBase
             Body = "Test Body",
             Author = new ProfileDTO
             {
-                Username = "John Doe"
+                Username = "John Doe",
+                Following = true
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
         }, options => options
