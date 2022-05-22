@@ -46,6 +46,7 @@ public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCo
 
         var comments = await _context.Comments
             .Where(c => c.ArticleId == article.Id)
+            .OrderByDescending(x => x.Id)
             .ProjectTo<CommentDTO>(_mapper.ConfigurationProvider, new
             {
                 currentUser = _currentUser.User
