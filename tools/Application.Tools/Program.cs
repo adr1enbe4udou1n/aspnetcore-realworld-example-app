@@ -1,4 +1,3 @@
-using Application.Tools;
 using Application.Tools.Interfaces;
 using Application.Tools.Seeders;
 using Cocona;
@@ -10,7 +9,6 @@ using Tools.Commands;
 var builder = CoconaApp.CreateBuilder();
 
 builder.Services.AddInfrastructure(builder.Configuration)
-    .AddScoped<DatabaseManager>()
     .AddScoped<UsersSeeder>()
     .AddScoped<ArticlesSeeder>()
     .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
@@ -21,10 +19,10 @@ builder.Services.AddInfrastructure(builder.Configuration)
 
 var app = builder.Build();
 
-app.AddSubCommand("data", x =>
+app.AddSubCommand("db", x =>
 {
     x.AddCommands<SeederCommand>();
 })
-.WithDescription("Data related commands");
+.WithDescription("DB related commands");
 
 app.Run();

@@ -1,6 +1,7 @@
 using System.Globalization;
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Auth.Commands;
+using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,8 @@ public class RegisterTests : TestBase
     [Test, TestCaseSource(nameof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDTO user)
     {
-        await this.Invoking(x => x.Act(new NewUserRequest(user)))
-            .Should().ThrowAsync<ValidationException>()
-            .Where(e => e.Errors.Any());
+        var response = await Act(HttpMethod.Post, "/users", new NewUserRequest(user));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -48,7 +48,7 @@ public class RegisterTests : TestBase
             Password = "password",
         });
 
-        var currentUser = await Act(request);
+        var currentUser = await Act<UserResponse>(HttpMethod.Post, "/users", request);
 
         currentUser.User.Username.Should().Be("John Doe");
         currentUser.User.Email.Should().Be("john.doe@example.com");
@@ -76,7 +76,8 @@ public class RegisterTests : TestBase
         });
         await _context.SaveChangesAsync();
 
-        await this.Invoking(x => x.Act(
+        var response = await Act(
+            HttpMethod.Post, "/users",
             new NewUserRequest(
                 new NewUserDTO
                 {
@@ -84,9 +85,7 @@ public class RegisterTests : TestBase
                     Username = "John Doe",
                     Password = "password",
                 }
-            )))
-                .Should().ThrowAsync<ValidationException>()
-                .Where(e => e.Errors.First(x => x.Key == "User.Email")
-                    .Value.Contains("Email is already used"));
+            ));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

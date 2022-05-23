@@ -17,7 +17,7 @@ public class TagsListTests : TestBase
         );
         await _context.SaveChangesAsync();
 
-        var response = await Act(new TagsListQuery());
+        var response = await Act<TagsResponse>(HttpMethod.Get, "/tags");
 
         response.Tags.Should().Equal("Tag1", "Tag2", "Tag3");
     }

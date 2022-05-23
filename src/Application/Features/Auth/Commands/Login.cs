@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using AutoMapper;
@@ -36,7 +37,7 @@ public class LoginHandler : IRequestHandler<LoginUserRequest, UserResponse>
 
         if (user == null || user.Password == null || !_passwordHasher.Check(request.User.Password, user.Password))
         {
-            throw new ValidationException("Bad credentials");
+            throw new Exceptions.ValidationException("Bad credentials");
         }
 
         return new UserResponse(_mapper.Map<UserDTO>(user));

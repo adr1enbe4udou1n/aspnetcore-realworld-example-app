@@ -1,8 +1,9 @@
 using System.Globalization;
+using System.Net;
 using Application.Features.Auth.Commands;
+using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using FluentValidation;
 using NUnit.Framework;
 
 namespace Application.IntegrationTests.Features.Auth;
@@ -34,8 +35,8 @@ public class LoginTests : TestBase
         });
         await _context.SaveChangesAsync();
 
-        await this.Invoking(x => x.Act(new LoginUserRequest(credentials)))
-            .Should().ThrowAsync<ValidationException>();
+        var response = await Act(HttpMethod.Post, "/users/login", new LoginUserRequest(credentials));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -50,7 +51,8 @@ public class LoginTests : TestBase
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
-        var currentUser = await Act(
+        var currentUser = await Act<UserResponse>(
+            HttpMethod.Post, "/users/login",
             new LoginUserRequest(
                 new LoginUserDTO
                 {

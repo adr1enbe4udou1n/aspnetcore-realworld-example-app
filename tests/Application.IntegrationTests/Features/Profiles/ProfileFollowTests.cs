@@ -1,5 +1,4 @@
-using Application.Exceptions;
-using Application.Features.Profiles.Commands;
+using System.Net;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
@@ -13,8 +12,8 @@ public class ProfileFollowTests : TestBase
     [Test]
     public async Task Guest_Cannot_Follow_Profile()
     {
-        await this.Invoking(x => x.Act(new ProfileFollowRequest("john", true)))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Post, "/profiles/celeb_john/follow");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -40,7 +39,7 @@ public class ProfileFollowTests : TestBase
         );
         await _context.SaveChangesAsync();
 
-        var response = await Act(new ProfileFollowRequest("Jane Doe", true));
+        var response = await Act<ProfileResponse>(HttpMethod.Post, "/profiles/celeb_Jane Doe/follow");
 
         response.Profile.Should().BeEquivalentTo(new ProfileDTO
         {
@@ -81,7 +80,7 @@ public class ProfileFollowTests : TestBase
                 }
         });
 
-        var response = await Act(new ProfileFollowRequest("Jane Doe", false));
+        var response = await Act<ProfileResponse>(HttpMethod.Delete, "/profiles/celeb_Jane Doe/follow");
 
         response.Profile.Should().BeEquivalentTo(new ProfileDTO
         {

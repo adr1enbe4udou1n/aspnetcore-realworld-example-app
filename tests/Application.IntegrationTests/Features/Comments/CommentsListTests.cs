@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Comments.Commands;
 using Application.Features.Comments.Queries;
@@ -14,8 +14,8 @@ public class CommentsListTests : TestBase
     [Test]
     public async Task Cannot_List_All_Comments_Of_Non_Existent_Article()
     {
-        await this.Invoking(x => x.Act(new CommentsListQuery("test-title")))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Get, "/articles/test-title/comments");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class CommentsListTests : TestBase
             }));
         }
 
-        var response = await Act(new CommentsListQuery("test-title"));
+        var response = await Act<MultipleCommentsResponse>(HttpMethod.Get, "/articles/test-title/comments");
 
         response.Comments.Count().Should().Be(10);
 

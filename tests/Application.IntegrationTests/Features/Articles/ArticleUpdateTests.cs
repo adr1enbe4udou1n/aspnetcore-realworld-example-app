@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Queries;
@@ -30,10 +30,8 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new UpdateArticleRequest(
-            "test-title", article
-        )))
-            .Should().ThrowAsync<ValidationException>();
+        var response = await Act(HttpMethod.Put, "/articles/test-title", new UpdateArticleBody(article));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -45,25 +43,24 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new UpdateArticleRequest(
-            "slug-article",
+        var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
             new UpdateArticleDTO
             {
                 Title = "New Title",
                 Description = "New Description",
                 Body = "New Body",
             }
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
     public async Task Guest_Cannot_Update_Article()
     {
-        await this.Invoking(x => x.Act(new UpdateArticleRequest(
-            "slug-article", new UpdateArticleDTO()
-        )))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
+            new UpdateArticleDTO()
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -90,17 +87,17 @@ public class ArticleUpdateTests : TestBase
             Email = "jane.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(
-            new UpdateArticleRequest(
-                "test-title",
+        var response = await Act(
+            HttpMethod.Put, "/articles/test-title",
+            new UpdateArticleBody(
                 new UpdateArticleDTO
                 {
                     Title = "New Title",
                     Description = "New Description",
                     Body = "New Body",
                 }
-            )))
-                .Should().ThrowAsync<ForbiddenException>();
+            ));
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     [Test]
@@ -121,14 +118,15 @@ public class ArticleUpdateTests : TestBase
             }
         ));
 
-        var response = await Act(new UpdateArticleRequest(
-            "test-title",
-            new UpdateArticleDTO
-            {
-                Title = "New Title",
-                Description = "New Description",
-            }
-        ));
+        var response = await Act<SingleArticleResponse>(HttpMethod.Put, "/articles/test-title",
+            new UpdateArticleBody(
+                new UpdateArticleDTO
+                {
+                    Title = "New Title",
+                    Description = "New Description",
+                }
+            )
+        );
 
         response.Article.Should().BeEquivalentTo(new ArticleDTO
         {

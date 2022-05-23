@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Queries;
@@ -57,17 +57,19 @@ public class ArticleCreateTests : TestBase
             }
         ));
 
-        await this.Invoking(x => x.Act(new NewArticleRequest(article)))
-            .Should().ThrowAsync<ValidationException>();
+        var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(article));
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Test]
     public async Task Guest_Cannot_Create_Article()
     {
-        await this.Invoking(x => x.Act(new NewArticleRequest(
+        var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(
             new NewArticleDTO()
-        )))
-            .Should().ThrowAsync<UnauthorizedException>();
+        ));
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -87,7 +89,8 @@ public class ArticleCreateTests : TestBase
         });
         await _context.SaveChangesAsync();
 
-        var response = await Act(
+        var response = await Act<SingleArticleResponse>(
+            HttpMethod.Post, "/articles",
             new NewArticleRequest(
                 new NewArticleDTO
                 {

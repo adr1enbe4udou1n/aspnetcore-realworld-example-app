@@ -4,10 +4,12 @@ run:
 	dotnet run --project src/WebUI
 watch:
 	@cd src/WebUI && dotnet watch
+migrate:
+	@cd tools/Application.Tools && dotnet run db migrate
 fresh:
-	@cd tools/Application.Tools && dotnet run data fresh
+	@cd tools/Application.Tools && dotnet run db fresh
 seed:
-	@cd tools/Application.Tools && dotnet run data seed
+	@cd tools/Application.Tools && dotnet run db seed
 publish:
 	dotnet run --project targets
 format:

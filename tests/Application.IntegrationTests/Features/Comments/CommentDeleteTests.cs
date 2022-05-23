@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Comments.Commands;
 using Domain.Entities;
@@ -13,8 +13,8 @@ public class CommentDeleteTests : TestBase
     [Test]
     public async Task Guest_Cannot_Delete_Comment()
     {
-        await this.Invoking(x => x.Act(new CommentDeleteRequest("slug-article", 1)))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Delete, "/articles/test-title/comments/1");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -35,10 +35,8 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        await this.Invoking(x => x.Act(new CommentDeleteRequest(
-            "test-title", 1
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Delete, "/articles/test-title/comments/1");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -59,15 +57,13 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var response = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
 
-        await this.Invoking(x => x.Act(new CommentDeleteRequest(
-            "slug-article", response.Comment.Id
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{r.Comment.Id}");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -97,15 +93,15 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var response = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
 
-        await this.Invoking(x => x.Act(new CommentDeleteRequest(
-            "other-title", response.Comment.Id
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{r.Comment.Id}", new CommentDeleteRequest(
+            "other-title", r.Comment.Id
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -126,7 +122,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var response = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
@@ -137,10 +133,8 @@ public class CommentDeleteTests : TestBase
             Email = "jane.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new CommentDeleteRequest(
-            "test-title", response.Comment.Id
-        )))
-            .Should().ThrowAsync<ForbiddenException>();
+        var response = await Act(HttpMethod.Delete, $"/articles/test-title/comments/{r.Comment.Id}");
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     [Test]
@@ -166,7 +160,7 @@ public class CommentDeleteTests : TestBase
             Body = "Thank you !",
         }));
 
-        await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
+        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
 
         (await _context.Comments.AnyAsync()).Should().BeFalse();
     }
@@ -205,9 +199,7 @@ public class CommentDeleteTests : TestBase
             Body = "Thank you John !",
         }));
 
-        await _currentUser.SetIdentifier(user.Id);
-
-        await Act(new CommentDeleteRequest("test-title", response.Comment.Id));
+        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
 
         (await _context.Comments.CountAsync()).Should().Be(1);
     }

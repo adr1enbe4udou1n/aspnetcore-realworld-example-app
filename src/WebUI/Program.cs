@@ -1,9 +1,7 @@
 using System.ComponentModel;
 using Infrastructure;
-using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using OpenTelemetry.Resources;
@@ -150,18 +148,20 @@ app.Map("/api", app =>
     });
 });
 
-using var scope = app.Services.CreateScope();
+// using var scope = app.Services.CreateScope();
 
-try
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
-}
-catch (Exception ex)
-{
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+// try
+// {
+//     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     await context.Database.MigrateAsync();
+// }
+// catch (Exception ex)
+// {
+//     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-    logger.LogError(ex, "An error occured during migration");
-}
+//     logger.LogError(ex, "An error occured during migration");
+// }
 
 app.Run();
+
+public partial class Program { }

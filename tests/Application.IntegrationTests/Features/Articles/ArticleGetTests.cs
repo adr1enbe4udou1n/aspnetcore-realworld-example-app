@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Queries;
@@ -19,10 +19,8 @@ public class ArticleGetTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new ArticleGetQuery(
-            "slug-article"
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Get, "/articles/slug-article");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -46,7 +44,7 @@ public class ArticleGetTests : TestBase
             }
         ));
 
-        var response = await Act(new ArticleGetQuery("test-title"));
+        var response = await Act<SingleArticleResponse>(HttpMethod.Get, "/articles/test-title");
 
         response.Article.Should().BeEquivalentTo(new ArticleDTO
         {

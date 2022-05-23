@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Comments.Commands;
 using Domain.Entities;
@@ -13,8 +13,8 @@ public class ArticleDeleteTests : TestBase
     [Test]
     public async Task Guest_Cannot_Delete_Article()
     {
-        await this.Invoking(x => x.Act(new ArticleDeleteRequest("slug-article")))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Delete, "/articles/slug-article");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -26,10 +26,8 @@ public class ArticleDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new ArticleDeleteRequest(
-            "slug-article"
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Delete, "/articles/slug-article");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -56,10 +54,8 @@ public class ArticleDeleteTests : TestBase
             Email = "jane.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new ArticleDeleteRequest(
-            "test-title"
-        )))
-            .Should().ThrowAsync<ForbiddenException>();
+        var response = await Act(HttpMethod.Delete, "/articles/test-title");
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     [Test]
@@ -90,7 +86,7 @@ public class ArticleDeleteTests : TestBase
 
         await _mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
-        await Act(new ArticleDeleteRequest("test-title"));
+        await Act(HttpMethod.Delete, "/articles/test-title");
 
         (await _context.Articles.AnyAsync()).Should().BeFalse();
         (await _context.Comments.AnyAsync()).Should().BeFalse();

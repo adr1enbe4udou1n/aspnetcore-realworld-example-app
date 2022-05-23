@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Comments.Commands;
 using Application.Features.Comments.Queries;
@@ -39,8 +39,8 @@ public class CommentCreateTests : TestBase
             }
         ));
 
-        await this.Invoking(x => x.Act(new NewCommentRequest("test-title", comment)))
-            .Should().ThrowAsync<ValidationException>();
+        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(comment));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -52,22 +52,22 @@ public class CommentCreateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new NewCommentRequest(
-            "slug-article", new NewCommentDTO
+        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
+            new NewCommentDTO
             {
                 Body = "Test Body",
             }
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
     public async Task Guest_Cannot_Create_Comment()
     {
-        await this.Invoking(x => x.Act(new NewCommentRequest(
-            "slug-article", new NewCommentDTO()
-        )))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
+            new NewCommentDTO()
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -90,7 +90,7 @@ public class CommentCreateTests : TestBase
             }
         ));
 
-        var response = await Act(new NewCommentRequest("test-title", new NewCommentDTO
+        var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(new NewCommentDTO
         {
             Body = "Thank you !",
         }));

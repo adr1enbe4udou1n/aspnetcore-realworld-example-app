@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Domain.Entities;
@@ -13,10 +13,8 @@ public class ArticleFavoriteTests : TestBase
     [Test]
     public async Task Guest_Cannot_Favorite_Article()
     {
-        await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
-            "slug-article", true
-        )))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Post, "/articles/slug-article/favorite");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -28,10 +26,8 @@ public class ArticleFavoriteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new ArticleFavoriteRequest(
-            "slug-article", true
-        )))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Post, "/articles/slug-article/favorite");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -52,7 +48,7 @@ public class ArticleFavoriteTests : TestBase
             }
         ));
 
-        var response = await Act(new ArticleFavoriteRequest("test-title", true));
+        var response = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles/test-title/favorite");
 
         response.Article.Should().BeEquivalentTo(new ArticleDTO
         {
@@ -83,7 +79,7 @@ public class ArticleFavoriteTests : TestBase
 
         await _mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
-        var response = await Act(new ArticleFavoriteRequest("test-title", false));
+        var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 
         response.Article.Should().BeEquivalentTo(new ArticleDTO
         {

@@ -1,11 +1,10 @@
+using System.Net.Http.Json;
 using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
-using Infrastructure;
 using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -29,86 +28,132 @@ public class TestBase
 
     private readonly string _connectionString;
 
-    private IServiceCollection GetServices()
-    {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", true, true)
-            .AddEnvironmentVariables()
-            .Build();
-
-        var services = new ServiceCollection();
-        return services
-            .AddSingleton<IConfiguration>(configuration)
-            .AddInfrastructure(configuration);
-    }
-
     protected TestBase()
     {
-        var _provider = GetServices().BuildServiceProvider();
+        _connectionString = "Server=localhost;Port=5434;User Id=main;Password=main;Database=main;";
 
-        var configuration = _provider.GetRequiredService<IConfiguration>();
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        Environment.SetEnvironmentVariable(
+            "ConnectionStrings__DefaultConnection",
+            _connectionString
+        );
+        Environment.SetEnvironmentVariable("Jwt__SecretKey", "super secret key");
 
-        var appDbContext = _provider.GetRequiredService<AppDbContext>();
-        appDbContext.Database.Migrate();
+        var application = new ConduitApiApplicationFactory();
 
-        _mediator = _provider.GetRequiredService<IMediator>();
-        _passwordHasher = _provider.GetRequiredService<IPasswordHasher>();
-        _jwtTokenGenerator = _provider.GetRequiredService<IJwtTokenGenerator>();
-        _context = _provider.GetRequiredService<AppDbContext>();
-        _currentUser = _provider.GetRequiredService<ICurrentUser>();
+        var scope = application.Services.CreateScope();
+
+        _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        _currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
+        _passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
+
+        _context.Database.Migrate();
     }
 
     [SetUp]
     public async Task RefreshDatabase()
     {
-        using (var conn = new NpgsqlConnection(_connectionString))
-        {
-            await conn.OpenAsync();
+        using var conn = new NpgsqlConnection(_connectionString);
 
-            var checkpoint = new Checkpoint
-            {
-                TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
-                DbAdapter = DbAdapter.Postgres
-            };
-            await checkpoint.Reset(conn);
-        }
+        await conn.OpenAsync();
+
+        var checkpoint = new Checkpoint
+        {
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+            DbAdapter = DbAdapter.Postgres
+        };
+        await checkpoint.Reset(conn);
     }
 
-    private int _userId;
+    private string? _token = null;
 
     protected async Task<User> ActingAs(User user)
     {
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
+        _token = _jwtTokenGenerator.CreateToken(user);
         await _currentUser.SetIdentifier(user.Id);
-        _userId = user.Id;
         return user;
     }
 
-    protected async Task<TResponse> Act<TResponse>(IRequest<TResponse> request)
+    private HttpClient GetClient()
     {
         SqlCounterLogger.ResetCounter();
 
-        var provider = GetServices()
-            .AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider()))
-            .BuildServiceProvider();
+        var application = new ConduitApiApplicationFactory().WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                services.AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider()));
+            });
+        });
 
-        using var scope = provider.CreateScope();
+        var client = application.CreateClient();
 
-        var currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        await currentUser.SetIdentifier(_userId);
+        if (_token != null)
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Token {_token}");
+        }
 
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        return client;
+    }
+
+
+    protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestUri)
+    {
+        var client = GetClient();
 
         try
         {
-            return await mediator.Send<TResponse>(request);
+            return await client.SendAsync(new HttpRequestMessage(method, $"/api{requestUri}"));
         }
         finally
         {
             Console.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
         }
+    }
+
+    protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestUri, object value)
+    {
+        var client = GetClient();
+
+        try
+        {
+            if (value != null)
+            {
+                switch (method.Method)
+                {
+                    case "POST":
+                        return await client.PostAsJsonAsync($"/api{requestUri}", value);
+                    case "PUT":
+                        return await client.PutAsJsonAsync($"/api{requestUri}", value);
+                }
+            }
+            return await client.SendAsync(new HttpRequestMessage(method, $"/api{requestUri}"));
+        }
+        finally
+        {
+            Console.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
+        }
+    }
+
+    protected async Task<T> Act<T>(HttpMethod method, string requestUri)
+    {
+        var response = await Act(method, requestUri);
+
+        response.EnsureSuccessStatusCode();
+
+        return (await response.Content.ReadFromJsonAsync<T>())!;
+    }
+
+    protected async Task<T> Act<T>(HttpMethod method, string requestUri, object value)
+    {
+        var response = await Act(method, requestUri, value);
+
+        response.EnsureSuccessStatusCode();
+
+        return (await response.Content.ReadFromJsonAsync<T>())!;
     }
 }

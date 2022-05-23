@@ -1,5 +1,6 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Auth.Commands;
+using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +35,8 @@ public class UpdateUserTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(new UpdateUserRequest(user)))
-            .Should().ThrowAsync<ValidationException>();
+        var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(user));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Test]
@@ -53,7 +54,7 @@ public class UpdateUserTests : TestBase
             Bio = "My Bio"
         });
 
-        var currentUser = await Act(request);
+        var currentUser = await Act<UserResponse>(HttpMethod.Put, "/user", request);
 
         currentUser.User.Username.Should().Be("John Doe");
         currentUser.User.Email.Should().Be("jane.doe@example.com");
@@ -67,13 +68,13 @@ public class UpdateUserTests : TestBase
     [Test]
     public async Task Guest_User_Cannot_Update_Infos()
     {
-        await this.Invoking(x => x.Act(new UpdateUserRequest(
+        var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(
             new UpdateUserDTO
             {
                 Email = "jane.doe@example.com"
             }
-        )))
-            .Should().ThrowAsync<UnauthorizedException>();
+        ));
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -92,15 +93,14 @@ public class UpdateUserTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await this.Invoking(x => x.Act(
+        var response = await Act(
+            HttpMethod.Put, "/user",
             new UpdateUserRequest(
                 new UpdateUserDTO
                 {
                     Email = "jane.doe@example.com",
                 }
-            )))
-                .Should().ThrowAsync<ValidationException>()
-                .Where(e => e.Errors.First(x => x.Key == "User.Email")
-                    .Value.Contains("Email is already used"));
+            ));
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

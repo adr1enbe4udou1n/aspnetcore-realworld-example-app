@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Articles.Commands;
 using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Commands;
@@ -16,11 +16,7 @@ public class ArticlesListTests : TestBase
     {
         await CreateArticles();
 
-        var response = await Act(new ArticlesListQuery
-        {
-            Limit = 30,
-            Offset = 10
-        });
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=30&offset=10");
 
         response.Articles.Count().Should().Be(20);
         response.ArticlesCount.Should().Be(50);
@@ -47,12 +43,7 @@ public class ArticlesListTests : TestBase
     {
         await CreateArticles();
 
-        var response = await Act(new ArticlesListQuery
-        {
-            Limit = 10,
-            Offset = 0,
-            Author = "John"
-        });
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&author=John");
 
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);
@@ -79,12 +70,7 @@ public class ArticlesListTests : TestBase
     {
         await CreateArticles();
 
-        var response = await Act(new ArticlesListQuery
-        {
-            Limit = 10,
-            Offset = 0,
-            Tag = "Tag Jane Doe",
-        });
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&tag=Tag Jane Doe");
 
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(20);
@@ -125,12 +111,7 @@ public class ArticlesListTests : TestBase
             await _mediator.Send(new ArticleFavoriteRequest(a, true));
         }
 
-        var response = await Act(new ArticlesListQuery
-        {
-            Limit = 10,
-            Offset = 0,
-            Favorited = "Jane",
-        });
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&favorited=Jane");
 
         response.Articles.Count().Should().Be(5);
         response.ArticlesCount.Should().Be(5);
@@ -157,8 +138,8 @@ public class ArticlesListTests : TestBase
     [Test]
     public async Task Guest_Cannot_Paginate_Articles_Of_Followed_Authors()
     {
-        await this.Invoking(x => x.Act(new ArticlesFeedQuery()))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Get, "/articles/feed");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Test]
@@ -168,11 +149,7 @@ public class ArticlesListTests : TestBase
 
         await _mediator.Send(new ProfileFollowRequest("John Doe", true));
 
-        var response = await Act(new ArticlesFeedQuery
-        {
-            Limit = 10,
-            Offset = 0
-        });
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles/feed?limit=10&offset=0");
 
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);

@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
@@ -17,16 +17,17 @@ public class CurrentUserTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var currentUser = await Act(new CurrentUserQuery());
+        var response = await Act<UserResponse>(HttpMethod.Get, "/user");
 
-        currentUser.User.Username.Should().Be("John Doe");
-        currentUser.User.Email.Should().Be("john.doe@example.com");
+        response.User.Username.Should().Be("John Doe");
+        response.User.Email.Should().Be("john.doe@example.com");
     }
 
     [Test]
     public async Task Guest_User_Cannot_Fetch_Infos()
     {
-        await this.Invoking(x => x.Act(new CurrentUserQuery()))
-            .Should().ThrowAsync<UnauthorizedException>();
+        var response = await Act(HttpMethod.Get, "/user");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }

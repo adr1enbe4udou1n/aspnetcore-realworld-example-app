@@ -1,4 +1,4 @@
-using Application.Exceptions;
+using System.Net;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
@@ -20,7 +20,7 @@ public class ProfileGetTests : TestBase
         });
         await _context.SaveChangesAsync();
 
-        var response = await Act(new ProfileGetQuery("John Doe"));
+        var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_John Doe");
 
         response.Profile.Should().BeEquivalentTo(new ProfileDTO
         {
@@ -34,8 +34,8 @@ public class ProfileGetTests : TestBase
     [Test]
     public async Task Cannot_Get_Non_Existent_Profile()
     {
-        await this.Invoking(x => x.Act(new ProfileGetQuery("John Doe")))
-            .Should().ThrowAsync<NotFoundException>();
+        var response = await Act(HttpMethod.Get, "/profiles/celeb_John Doe");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Test]
@@ -60,7 +60,7 @@ public class ProfileGetTests : TestBase
                 }
         });
 
-        var response = await Act(new ProfileGetQuery("Jane Doe"));
+        var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_Jane Doe");
 
         response.Profile.Should().BeEquivalentTo(new ProfileDTO
         {
