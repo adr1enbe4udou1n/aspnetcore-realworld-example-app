@@ -148,20 +148,6 @@ app.Map("/api", app =>
     });
 });
 
-// using var scope = app.Services.CreateScope();
-
-// try
-// {
-//     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//     await context.Database.MigrateAsync();
-// }
-// catch (Exception ex)
-// {
-//     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-//     logger.LogError(ex, "An error occured during migration");
-// }
-
 app.Run();
 
 public partial class Program { }
