@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Swashbuckle.AspNetCore.Filters;
 using WebUI.Filters;
 using WebUI.Handlers;
 
@@ -65,7 +66,7 @@ builder.Services.AddSwaggerGen(c =>
         Url = "/api",
     });
 
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
         Description = "Please insert JWT with Bearer into field",
