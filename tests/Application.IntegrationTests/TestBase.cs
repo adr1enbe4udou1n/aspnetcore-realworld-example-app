@@ -30,12 +30,10 @@ public class TestBase
 
     protected TestBase()
     {
-        _connectionString = "Server=localhost;Port=5434;User Id=main;Password=main;Database=main;";
+        _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+            ?? "Server=localhost;Port=5434;User Id=main;Password=main;Database=main;";
 
-        Environment.SetEnvironmentVariable(
-            "ConnectionStrings__DefaultConnection",
-            _connectionString
-        );
+        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", _connectionString);
         Environment.SetEnvironmentVariable("Jwt__SecretKey", "super secret key");
 
         var application = new ConduitApiApplicationFactory();
