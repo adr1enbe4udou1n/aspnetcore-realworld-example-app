@@ -19,11 +19,13 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
         if (context.Exception is ValidationException)
         {
-            context.Result = new BadRequestObjectResult(
-                new ValidationProblemDetails(
-                    ((ValidationException)context.Exception).Errors
-                )
+            var exception = (ValidationException)context.Exception;
+            var validation = new ValidationProblemDetails(
+                exception.Errors
             );
+            validation.Title = exception.Message;
+
+            context.Result = new BadRequestObjectResult(validation);
 
             return;
         }
