@@ -15,7 +15,7 @@ steps:
     image: plugins/docker
     settings:
       registry: registry.okami101.io
-      repo: registry.okami101.io/adr1enbe4udou1n/aspnet-realworld
+      repo: registry.okami101.io/adr1enbe4udou1n/aspnet-core-realworld
       tags: latest
       username:
         from_secret: registry_username
