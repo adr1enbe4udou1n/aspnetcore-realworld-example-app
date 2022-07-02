@@ -32,4 +32,9 @@
     <InternalsVisibleTo Include="Application.IntegrationTests" />
   </ItemGroup>
 
+  <Target Name="PostClean" AfterTargets="Clean">
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
+
 </Project>

@@ -25,4 +25,9 @@
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
+  <Target Name="PostClean" AfterTargets="Clean">
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
+
 </Project>
