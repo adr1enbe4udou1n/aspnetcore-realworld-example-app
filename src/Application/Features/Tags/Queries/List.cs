@@ -10,9 +10,9 @@ public record TagsListQuery() : IRequest<TagsResponse>;
 
 public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
 {
-    private readonly IAppDbContext _context;
+    private readonly IAppRoDbContext _context;
 
-    public TagsListHandler(IAppDbContext context)
+    public TagsListHandler(IAppRoDbContext context)
     {
         _context = context;
     }

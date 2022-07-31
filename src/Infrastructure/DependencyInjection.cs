@@ -22,6 +22,14 @@ public static class DependencyInjection
             {
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })
+            .AddScoped<IAppRoDbContext>(provider => provider.GetRequiredService<AppRoDbContext>())
+            .AddDbContextFactory<AppRoDbContext>(options =>
+            {
+                options.UseNpgsql(
+                    configuration.GetConnectionString("DefaultRoConnection") ??
+                    configuration.GetConnectionString("DefaultConnection")
+                );
+            })
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
             .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
