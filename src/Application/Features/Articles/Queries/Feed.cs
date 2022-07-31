@@ -12,11 +12,11 @@ public class ArticlesFeedQuery : PagedQuery, IAuthorizationRequest<MultipleArtic
 
 public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuery, MultipleArticlesResponse>
 {
-    private readonly IAppRoDbContext _context;
+    private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticlesFeedHandler(IAppRoDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public ArticlesFeedHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
         _context = context;
         _mapper = mapper;

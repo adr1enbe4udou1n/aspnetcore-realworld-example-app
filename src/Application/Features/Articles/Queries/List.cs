@@ -53,11 +53,11 @@ public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 
 public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
-    private readonly IAppRoDbContext _context;
+    private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticlesListHandler(IAppRoDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public ArticlesListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
         _context = context;
         _mapper = mapper;

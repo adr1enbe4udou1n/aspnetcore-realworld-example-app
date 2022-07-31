@@ -27,11 +27,11 @@ public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse
 
 public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
 {
-    private readonly IAppRoDbContext _context;
+    private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public CommentsListHandler(IAppRoDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public CommentsListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
         _context = context;
         _mapper = mapper;
