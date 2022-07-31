@@ -1,24 +1,42 @@
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-        ChangeTracker.StateChanged += UpdateTimestamps;
-        ChangeTracker.Tracked += UpdateTimestamps;
-    }
+    private string _roConnectionString;
+    private HttpContext _httpContext;
 
     public DbSet<User> Users => Set<User>();
 
     public DbSet<Article> Articles => Set<Article>();
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration, IHttpContextAccessor httpContextAccessor) : base(options)
+    {
+        _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
+        _httpContext = httpContextAccessor.HttpContext;
+
+        ChangeTracker.StateChanged += UpdateTimestamps;
+        ChangeTracker.Tracked += UpdateTimestamps;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        if (_roConnectionString != null && _httpContext.Request.Method == "GET")
+        {
+            optionsBuilder.UseNpgsql(_roConnectionString);
+        }
+    }
 
     private void UpdateTimestamps(object? sender, EntityEntryEventArgs e)
     {
