@@ -35,11 +35,13 @@ public class SeederCommand
 
         await conn.OpenAsync();
 
-        await Respawner.CreateAsync(conn, new RespawnerOptions
+        var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
         {
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
             DbAdapter = DbAdapter.Postgres
         });
+
+        await respawner.ResetAsync(conn);
     }
 
     [Command("seed", Description = "Fake data")]
