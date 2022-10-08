@@ -35,12 +35,11 @@ public class SeederCommand
 
         await conn.OpenAsync();
 
-        var checkpoint = new Checkpoint
+        await Respawner.CreateAsync(conn, new RespawnerOptions
         {
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
             DbAdapter = DbAdapter.Postgres
-        };
-        await checkpoint.Reset(conn);
+        });
     }
 
     [Command("seed", Description = "Fake data")]
