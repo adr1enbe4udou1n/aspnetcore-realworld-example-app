@@ -18,7 +18,7 @@ public class MappingProfile : Profile
 
         CreateMap<User, UserDTO>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Token, opt => opt.MapFrom<JwtTokenResolver>());
+            .AfterMap<SetTokenAction>();
 
         CreateMap<NewUserDTO, User>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
@@ -30,7 +30,8 @@ public class MappingProfile : Profile
 
         CreateMap<User, ProfileDTO>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? currentUser.IsFollowing(src) : false));
+            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? currentUser.IsFollowing(src) : false))
+            .AfterMap<SetIsFollowingAction>();
 
         CreateMap<NewArticleDTO, Article>();
 
@@ -45,7 +46,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
                 src => currentUser != null ? currentUser.HasFavorite(src) : false)
             )
-            .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count));
+            .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count))
+            .AfterMap<SetHasFavoritedAction>();
 
         CreateMap<NewCommentDTO, Comment>();
         CreateMap<Comment, CommentDTO>();

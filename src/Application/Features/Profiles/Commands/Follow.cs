@@ -45,9 +45,6 @@ public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowReque
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ProfileResponse(_mapper.Map<ProfileDTO>(user, opts => opts.AfterMap((src, dest) =>
-        {
-            dest.Following = _currentUser.IsAuthenticated && _currentUser.User!.IsFollowing(user);
-        })));
+        return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
     }
 }

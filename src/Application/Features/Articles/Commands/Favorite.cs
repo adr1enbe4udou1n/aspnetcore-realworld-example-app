@@ -45,9 +45,6 @@ public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavori
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article, opts => opts.AfterMap((src, dest) =>
-        {
-            dest.Favorited = _currentUser.IsAuthenticated && _currentUser.User!.HasFavorite(article);
-        })));
+        return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
     }
 }
