@@ -11,7 +11,7 @@ namespace Infrastructure.Persistence;
 public class AppDbContext : DbContext, IAppDbContext
 {
     private string _roConnectionString;
-    private HttpContext _httpContext;
+    private HttpContext? _httpContext = null;
 
     public DbSet<User> Users => Set<User>();
 
@@ -19,10 +19,10 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration, IHttpContextAccessor httpContextAccessor) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration, IHttpContextAccessor? httpContextAccessor = null) : base(options)
     {
         _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
-        _httpContext = httpContextAccessor.HttpContext;
+        _httpContext = httpContextAccessor?.HttpContext;
 
         ChangeTracker.StateChanged += UpdateTimestamps;
         ChangeTracker.Tracked += UpdateTimestamps;
@@ -32,7 +32,7 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         base.OnConfiguring(optionsBuilder);
 
-        if (_roConnectionString != null && _httpContext.Request.Method == "GET")
+        if (_roConnectionString != null && _httpContext?.Request.Method == "GET")
         {
             optionsBuilder.UseNpgsql(_roConnectionString);
         }

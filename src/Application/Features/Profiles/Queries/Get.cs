@@ -26,11 +26,13 @@ public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileRespons
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
-    public ProfileGetHandler(IAppDbContext context, IMapper mapper)
+    public ProfileGetHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
     {
         _context = context;
         _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
@@ -39,6 +41,9 @@ public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileRespons
             .Include(u => u.Followers)
             .FindAsync(x => x.Name == request.Username, cancellationToken);
 
-        return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
+        return new ProfileResponse(_mapper.Map<ProfileDTO>(user, opts => opts.AfterMap((src, dest) =>
+        {
+            dest.Following = _currentUser.IsAuthenticated && _currentUser.User!.IsFollowing(user);
+        })));
     }
 }
