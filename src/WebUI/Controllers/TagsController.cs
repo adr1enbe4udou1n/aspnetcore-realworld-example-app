@@ -8,9 +8,9 @@ namespace WebUI.Controllers;
 [ApiExplorerSettings(GroupName = "Tags")]
 public class TagsController
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public TagsController(IMediator mediator) => _mediator = mediator;
+    public TagsController(ISender sender) => _sender = sender;
 
     /// <summary>
     /// Get tags
@@ -20,5 +20,5 @@ public class TagsController
     /// <returns></returns>
     [HttpGet(Name = "GetTags")]
     public async Task<TagsResponse> List(CancellationToken cancellationToken)
-        => await _mediator.Send(new TagsListQuery(), cancellationToken);
+        => await _sender.Send(new TagsListQuery(), cancellationToken);
 }

@@ -9,9 +9,9 @@ namespace WebUI.Controllers.Users;
 [ApiExplorerSettings(GroupName = "User and Authentication")]
 public class UsersController
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public UsersController(IMediator mediator) => _mediator = mediator;
+    public UsersController(ISender sender) => _sender = sender;
 
     /// <summary>
     /// Register a new user
@@ -24,7 +24,7 @@ public class UsersController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Register([FromBody] NewUserRequest command, CancellationToken cancellationToken)
-        => _mediator.Send(command, cancellationToken);
+        => _sender.Send(command, cancellationToken);
 
     /// <summary>
     /// Existing user login
@@ -37,5 +37,5 @@ public class UsersController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Login([FromBody] LoginUserRequest command, CancellationToken cancellationToken)
-        => _mediator.Send(command, cancellationToken);
+        => _sender.Send(command, cancellationToken);
 }

@@ -11,9 +11,9 @@ namespace WebUI.Controllers;
 [Authorize]
 public class CommentsController
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public CommentsController(IMediator mediator) => _mediator = mediator;
+    public CommentsController(ISender sender) => _sender = sender;
 
     /// <summary>
     /// Get comments for an article
@@ -25,7 +25,7 @@ public class CommentsController
     [HttpGet(Name = "GetArticleComments")]
     [AllowAnonymous]
     public async Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
-        => await _mediator.Send(new CommentsListQuery(slug), cancellationToken);
+        => await _sender.Send(new CommentsListQuery(slug), cancellationToken);
 
     /// <summary>
     /// Create a comment for an article
@@ -39,7 +39,7 @@ public class CommentsController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public async Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
-        => await _mediator.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
+        => await _sender.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
 
     /// <summary>
     /// Delete a comment for an article
@@ -51,5 +51,5 @@ public class CommentsController
     /// <returns></returns>
     [HttpDelete("{commentId}", Name = "DeleteArticleComment")]
     public async Task Delete(string slug, int commentId, CancellationToken cancellationToken)
-        => await _mediator.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
+        => await _sender.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
 }

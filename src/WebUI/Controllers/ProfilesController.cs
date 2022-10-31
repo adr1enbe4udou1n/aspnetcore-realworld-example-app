@@ -11,9 +11,9 @@ namespace WebUI.Controllers;
 [Authorize]
 public class ProfilesController
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public ProfilesController(IMediator mediator) => _mediator = mediator;
+    public ProfilesController(ISender sender) => _sender = sender;
 
     /// <summary>
     /// Get a profile
@@ -25,7 +25,7 @@ public class ProfilesController
     [HttpGet(Name = "GetProfileByUsername")]
     [AllowAnonymous]
     public async Task<ProfileResponse> Get(string username, CancellationToken cancellationToken)
-        => await _mediator.Send(new ProfileGetQuery(username), cancellationToken);
+        => await _sender.Send(new ProfileGetQuery(username), cancellationToken);
 
     /// <summary>
     /// Follow a user
@@ -36,7 +36,7 @@ public class ProfilesController
     /// <returns></returns>
     [HttpPost("follow", Name = "FollowUserByUsername")]
     public async Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
-        => await _mediator.Send(new ProfileFollowRequest(username, true), cancellationToken);
+        => await _sender.Send(new ProfileFollowRequest(username, true), cancellationToken);
 
     /// <summary>
     /// Unfollow a user
@@ -47,5 +47,5 @@ public class ProfilesController
     /// <returns></returns>
     [HttpDelete("follow", Name = "UnfollowUserByUsername")]
     public async Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
-        => await _mediator.Send(new ProfileFollowRequest(username, false), cancellationToken);
+        => await _sender.Send(new ProfileFollowRequest(username, false), cancellationToken);
 }
