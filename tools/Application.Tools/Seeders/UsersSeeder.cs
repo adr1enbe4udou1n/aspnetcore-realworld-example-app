@@ -33,9 +33,9 @@ public class UsersSeeder : ISeeder
         users.ForEach(u =>
         {
             var f = new Faker();
-            u.Followers = f.PickRandom(users, f.Random.Number(5))
-                .Select(u => new FollowerUser { FollowerId = u.Id })
-                .ToList();
+            f.PickRandom(users, f.Random.Number(5))
+                .ToList()
+                .ForEach(follower => u.Follow(follower));
         });
         await _context.SaveChangesAsync(cancellationToken);
     }

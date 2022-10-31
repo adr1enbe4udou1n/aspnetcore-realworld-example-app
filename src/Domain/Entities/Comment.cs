@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class Comment : IHasTimestamps
 {
-    public int Id { get; set; }
+    public int Id { get; private set; }
 
     public int ArticleId { get; set; }
     public Article Article { get; set; } = null!;

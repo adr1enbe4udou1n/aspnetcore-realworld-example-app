@@ -10,7 +10,7 @@ namespace Application.Features.Comments.Queries;
 
 public class CommentDTO
 {
-    public int Id { get; set; }
+    public int Id { get; private set; }
 
     public string Body { get; set; } = default!;
 

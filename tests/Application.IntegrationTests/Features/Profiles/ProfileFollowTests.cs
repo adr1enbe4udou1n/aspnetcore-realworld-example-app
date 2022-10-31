@@ -55,30 +55,26 @@ public class ProfileFollowTests : TestBase
     [Test]
     public async Task Can_Unfollow_Profile()
     {
-        await ActingAs(new User
+        var user = new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
-            Following = new List<FollowerUser>
-                {
-                    new FollowerUser
-                    {
-                        Following = new User
-                        {
-                            Name = "Jane Doe",
-                            Email = "jane.doe@example.com",
-                        }
-                    },
-                    new FollowerUser
-                    {
-                        Following = new User
-                        {
-                            Name = "Alice",
-                            Email = "alice@example.com",
-                        }
-                    }
-                }
-        });
+        };
+
+        user.AddFollowing(
+            new User
+            {
+                Name = "Jane Doe",
+                Email = "jane.doe@example.com",
+            },
+            new User
+            {
+                Name = "Alice",
+                Email = "alice@example.com",
+            }
+        );
+
+        await ActingAs(user);
 
         var response = await Act<ProfileResponse>(HttpMethod.Delete, "/profiles/celeb_Jane Doe/follow");
 

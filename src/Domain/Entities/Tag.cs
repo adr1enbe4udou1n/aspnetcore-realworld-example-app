@@ -4,10 +4,12 @@ namespace Domain.Entities;
 
 public class Tag
 {
-    public int Id { get; set; }
+    private readonly List<ArticleTag> _articles = new();
+
+    public int Id { get; private set; }
 
     [Column(TypeName = "varchar(255)")]
     public string Name { get; set; } = null!;
 
-    public List<ArticleTag> Articles { get; set; } = new();
+    public IReadOnlyCollection<ArticleTag> Articles => _articles;
 }

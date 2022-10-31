@@ -5,7 +5,13 @@ namespace Domain.Entities;
 
 public class User : IHasTimestamps
 {
-    public int Id { get; set; }
+    private readonly List<Article> _articles = new();
+    private readonly List<ArticleFavorite> _favoriteArticles = new();
+    private readonly List<Comment> _comments = new();
+    private readonly List<FollowerUser> _following = new();
+    private readonly List<FollowerUser> _followers = new();
+
+    public int Id { get; private set; }
 
     [Column(TypeName = "varchar(255)")]
     public string Name { get; set; } = null!;
@@ -25,15 +31,15 @@ public class User : IHasTimestamps
 
     public DateTime UpdatedAt { get; set; }
 
-    public List<Article> Articles { get; set; } = new();
+    public IReadOnlyCollection<Article> Articles => _articles;
 
-    public List<ArticleFavorite> FavoriteArticles { get; set; } = new();
+    public IReadOnlyCollection<ArticleFavorite> FavoriteArticles => _favoriteArticles;
 
-    public List<Comment> Comments { get; set; } = new();
+    public IReadOnlyCollection<Comment> Comments => _comments;
 
-    public List<FollowerUser> Following { get; set; } = new();
+    public IReadOnlyCollection<FollowerUser> Following => _following;
 
-    public List<FollowerUser> Followers { get; set; } = new();
+    public IReadOnlyCollection<FollowerUser> Followers => _followers;
 
     public bool IsFollowing(User user)
     {
@@ -48,5 +54,26 @@ public class User : IHasTimestamps
     public bool HasFavorite(Article article)
     {
         return FavoriteArticles.Any(f => f.ArticleId == article.Id);
+    }
+
+    public void Follow(User user)
+    {
+        if (!IsFollowedBy(user))
+        {
+            _followers.Add(new FollowerUser { Follower = user });
+        }
+    }
+
+    public void Unfollow(User user)
+    {
+        if (IsFollowedBy(user))
+        {
+            _followers.RemoveAll(x => x.FollowerId == user.Id);
+        }
+    }
+
+    public void AddFollowing(params User[] users)
+    {
+        _following.AddRange(users.Select(x => new FollowerUser { Following = x }).ToList());
     }
 }

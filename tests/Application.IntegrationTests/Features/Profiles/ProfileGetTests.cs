@@ -41,24 +41,23 @@ public class ProfileGetTests : TestBase
     [Test]
     public async Task Can_Get_Followed_Profile()
     {
-        await ActingAs(new User
+        var user = new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
-            Following = new List<FollowerUser>
-                {
-                    new FollowerUser
-                    {
-                        Following = new User
-                        {
-                            Name = "Jane Doe",
-                            Email = "jane.doe@example.com",
-                            Bio = "My Bio",
-                            Image = "https://i.pravatar.cc/300",
-                        }
-                    }
-                }
-        });
+        };
+
+        user.AddFollowing(
+            new User
+            {
+                Name = "Jane Doe",
+                Email = "jane.doe@example.com",
+                Bio = "My Bio",
+                Image = "https://i.pravatar.cc/300",
+            }
+        );
+
+        await ActingAs(user);
 
         var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_Jane Doe");
 

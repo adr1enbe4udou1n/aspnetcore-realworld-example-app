@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands;
@@ -30,17 +29,11 @@ public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavori
 
         if (request.Favorite)
         {
-            if (!article.IsFavoritedBy(_currentUser.User!))
-            {
-                article.FavoredUsers.Add(new ArticleFavorite { User = _currentUser.User! });
-            }
+            article.Favorite(_currentUser.User!);
         }
         else
         {
-            if (article.IsFavoritedBy(_currentUser.User!))
-            {
-                article.FavoredUsers.RemoveAll(x => x.UserId == _currentUser.User!.Id);
-            }
+            article.Unfavorite(_currentUser.User!);
         }
 
         await _context.SaveChangesAsync(cancellationToken);

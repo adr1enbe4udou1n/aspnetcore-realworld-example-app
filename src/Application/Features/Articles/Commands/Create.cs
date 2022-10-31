@@ -67,19 +67,7 @@ public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleReque
                 )
                 .ToListAsync(cancellationToken);
 
-            article.Tags = request.Article.TagList
-                .Where(x => !String.IsNullOrEmpty(x))
-                .Distinct()
-                .Select(x =>
-                {
-                    var tag = existingTags.FirstOrDefault(t => t.Name == x);
-
-                    return new ArticleTag
-                    {
-                        Tag = tag == null ? new Tag { Name = x } : tag
-                    };
-                })
-                .ToList();
+            article.AddTags(existingTags, request.Article.TagList);
         }
 
         await _context.Articles.AddAsync(article, cancellationToken);

@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands;
@@ -30,17 +29,11 @@ public class ProfileGetHandler : IAuthorizationRequestHandler<ProfileFollowReque
 
         if (request.Follow)
         {
-            if (!user.IsFollowedBy(_currentUser.User!))
-            {
-                user.Followers.Add(new FollowerUser { Follower = _currentUser.User! });
-            }
+            user.Follow(_currentUser.User!);
         }
         else
         {
-            if (user.IsFollowedBy(_currentUser.User!))
-            {
-                user.Followers.RemoveAll(x => x.FollowerId == _currentUser.User!.Id);
-            }
+            user.Unfollow(_currentUser.User!);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
