@@ -39,20 +39,17 @@ public class RegisterValidator : AbstractValidator<NewUserRequest>
 public class RegisterHandler : IRequestHandler<NewUserRequest, UserResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IPasswordHasher _passwordHasher;
     private readonly IMapper _mapper;
 
-    public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
+    public RegisterHandler(IAppDbContext context, IMapper mapper)
     {
         _context = context;
-        _passwordHasher = passwordHasher;
         _mapper = mapper;
     }
 
     public async Task<UserResponse> Handle(NewUserRequest request, CancellationToken cancellationToken)
     {
         var user = _mapper.Map<NewUserDTO, User>(request.User);
-        user.Password = _passwordHasher.Hash(request.User.Password);
 
         await _context.Users.AddAsync(user, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

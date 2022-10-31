@@ -32,13 +32,11 @@ public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentReque
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
-    private readonly ICurrentUser _currentUser;
 
-    public CommentCreateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public CommentCreateHandler(IAppDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
-        _currentUser = currentUser;
     }
 
     public async Task<SingleCommentResponse> Handle(NewCommentRequest request, CancellationToken cancellationToken)
@@ -46,7 +44,6 @@ public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentReque
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         var comment = _mapper.Map<Comment>(request.Comment);
-        comment.AuthorId = _currentUser.User!.Id;
         comment.ArticleId = article.Id;
 
         await _context.Comments.AddAsync(comment, cancellationToken);

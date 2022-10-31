@@ -41,23 +41,16 @@ public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleReque
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
-    private readonly ICurrentUser _currentUser;
-    private readonly ISlugifier _slugifier;
 
-    public ArticleCreateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser, ISlugifier slugifier)
+    public ArticleCreateHandler(IAppDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
-        _currentUser = currentUser;
-        _slugifier = slugifier;
     }
 
     public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
     {
         var article = _mapper.Map<Article>(request.Article);
-
-        article.Author = _currentUser.User!;
-        article.Slug = _slugifier.Generate(request.Article.Title);
 
         if (request.Article.TagList != null)
         {

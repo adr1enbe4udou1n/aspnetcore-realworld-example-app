@@ -21,7 +21,8 @@ public class MappingProfile : Profile
             .AfterMap<SetTokenAction>();
 
         CreateMap<NewUserDTO, User>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username))
+            .AfterMap<NewUserAction>();
 
         CreateMap<UpdateUserDTO, User>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username))
@@ -33,7 +34,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? currentUser.IsFollowing(src) : false))
             .AfterMap<SetIsFollowingAction>();
 
-        CreateMap<NewArticleDTO, Article>();
+        CreateMap<NewArticleDTO, Article>()
+            .AfterMap<NewArticleAction>();
 
         CreateMap<UpdateArticleDTO, Article>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -49,7 +51,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count))
             .AfterMap<SetHasFavoritedAction>();
 
-        CreateMap<NewCommentDTO, Comment>();
+        CreateMap<NewCommentDTO, Comment>()
+            .AfterMap<NewCommentAction>();
+
         CreateMap<Comment, CommentDTO>();
     }
 }
