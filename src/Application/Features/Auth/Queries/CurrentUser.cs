@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 
 namespace Application.Features.Auth.Queries;
@@ -18,9 +19,9 @@ public class UserDTO
 
 public record UserResponse(UserDTO User);
 
-public record CurrentUserQuery() : IAuthorizationRequest<UserResponse>;
+public record CurrentUserQuery() : IQuery<UserResponse>;
 
-public class CurrentUserHandler : IAuthorizationRequestHandler<CurrentUserQuery, UserResponse>
+public class CurrentUserHandler : IQueryHandler<CurrentUserQuery, UserResponse>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;

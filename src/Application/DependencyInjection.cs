@@ -13,7 +13,7 @@ public static class DependencyInjection
         return services.AddAutoMapper(Assembly.GetExecutingAssembly())
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddMediatR(Assembly.GetExecutingAssembly())
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>))
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(QueryBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
     }

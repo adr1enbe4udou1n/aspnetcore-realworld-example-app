@@ -1,14 +1,15 @@
 using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands;
 
-public record ArticleFavoriteRequest(string Slug, bool Favorite) : IAuthorizationRequest<SingleArticleResponse>;
+public record ArticleFavoriteRequest(string Slug, bool Favorite) : ICommand<SingleArticleResponse>;
 
-public class ArticleFavoriteHandler : IAuthorizationRequestHandler<ArticleFavoriteRequest, SingleArticleResponse>
+public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

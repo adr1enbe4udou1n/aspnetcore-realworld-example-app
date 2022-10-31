@@ -12,6 +12,8 @@ public interface IAppDbContext : IDisposable
     DbSet<Comment> Comments { get; }
     DbSet<Tag> Tags { get; }
 
+    void UseRoConnection();
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     DatabaseFacade Database { get; }

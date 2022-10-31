@@ -1,7 +1,7 @@
 using Application.Extensions;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Queries;
@@ -20,9 +20,9 @@ public class ProfileDTO
 
 public record ProfileResponse(ProfileDTO Profile);
 
-public record ProfileGetQuery(string Username) : IRequest<ProfileResponse>;
+public record ProfileGetQuery(string Username) : IQuery<ProfileResponse>;
 
-public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileResponse>
+public class ProfileGetHandler : IQueryHandler<ProfileGetQuery, ProfileResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

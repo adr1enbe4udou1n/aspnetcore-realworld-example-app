@@ -1,14 +1,14 @@
 using Application.Interfaces;
-using MediatR;
+using Application.Interfaces.Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Tags.Queries;
 
 public record TagsResponse(IEnumerable<string> Tags);
 
-public record TagsListQuery() : IRequest<TagsResponse>;
+public record TagsListQuery() : IQuery<TagsResponse>;
 
-public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
+public class TagsListHandler : IQueryHandler<TagsListQuery, TagsResponse>
 {
     private readonly IAppDbContext _context;
 

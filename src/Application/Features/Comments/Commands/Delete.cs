@@ -1,13 +1,14 @@
 using Application.Exceptions;
 using Application.Extensions;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using MediatR;
 
 namespace Application.Features.Comments.Commands;
 
-public record CommentDeleteRequest(string Slug, int Id) : IAuthorizationRequest;
+public record CommentDeleteRequest(string Slug, int Id) : ICommand;
 
-public class CommentDeleteHandler : IAuthorizationRequestHandler<CommentDeleteRequest>
+public class CommentDeleteHandler : ICommandHandler<CommentDeleteRequest>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

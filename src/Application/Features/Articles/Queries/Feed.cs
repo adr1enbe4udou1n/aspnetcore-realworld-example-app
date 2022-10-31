@@ -1,16 +1,17 @@
 using Application.Extensions;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using Application.Support;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
 namespace Application.Features.Articles.Queries;
 
-public class ArticlesFeedQuery : PagedQuery, IAuthorizationRequest<MultipleArticlesResponse>
+public class ArticlesFeedQuery : PagedQuery, IQuery<MultipleArticlesResponse>
 {
 }
 
-public class ArticlesFeedHandler : IAuthorizationRequestHandler<ArticlesFeedQuery, MultipleArticlesResponse>
+public class ArticlesFeedHandler : IQueryHandler<ArticlesFeedQuery, MultipleArticlesResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

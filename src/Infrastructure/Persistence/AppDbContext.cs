@@ -1,7 +1,6 @@
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +9,7 @@ namespace Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-    private string _roConnectionString;
-    private HttpContext? _httpContext = null;
+    private readonly string _roConnectionString;
 
     public DbSet<User> Users => Set<User>();
 
@@ -19,22 +17,18 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration, IHttpContextAccessor? httpContextAccessor = null) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
     {
         _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
-        _httpContext = httpContextAccessor?.HttpContext;
-
         ChangeTracker.StateChanged += UpdateTimestamps;
         ChangeTracker.Tracked += UpdateTimestamps;
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public void UseRoConnection()
     {
-        base.OnConfiguring(optionsBuilder);
-
-        if (_roConnectionString != null && _httpContext?.Request.Method == "GET")
+        if (_roConnectionString != null)
         {
-            optionsBuilder.UseNpgsql(_roConnectionString);
+            Database.SetConnectionString(_roConnectionString);
         }
     }
 

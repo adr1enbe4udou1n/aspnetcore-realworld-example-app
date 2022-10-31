@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Application.Extensions;
 using Application.Features.Comments.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -18,7 +19,7 @@ public record SingleCommentResponse(CommentDTO Comment);
 
 [DisplayName("NewCommentRequest")]
 public record NewCommentBody(NewCommentDTO Comment);
-public record NewCommentRequest(string Slug, NewCommentDTO Comment) : IAuthorizationRequest<SingleCommentResponse>;
+public record NewCommentRequest(string Slug, NewCommentDTO Comment) : ICommand<SingleCommentResponse>;
 
 public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
 {
@@ -28,7 +29,7 @@ public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
     }
 }
 
-public class CommentCreateHandler : IAuthorizationRequestHandler<NewCommentRequest, SingleCommentResponse>
+public class CommentCreateHandler : ICommandHandler<NewCommentRequest, SingleCommentResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

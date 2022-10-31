@@ -1,5 +1,6 @@
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -18,7 +19,7 @@ public class NewArticleDTO
     public List<string>? TagList { get; set; }
 }
 
-public record NewArticleRequest(NewArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
+public record NewArticleRequest(NewArticleDTO Article) : ICommand<SingleArticleResponse>;
 
 public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
 {
@@ -37,7 +38,7 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
     }
 }
 
-public class ArticleCreateHandler : IAuthorizationRequestHandler<NewArticleRequest, SingleArticleResponse>
+public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

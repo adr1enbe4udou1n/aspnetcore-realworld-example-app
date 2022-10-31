@@ -1,5 +1,6 @@
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -15,7 +16,7 @@ public class UpdateUserDTO
     public string? Image { get; set; }
 }
 
-public record UpdateUserRequest(UpdateUserDTO User) : IAuthorizationRequest<UserResponse>;
+public record UpdateUserRequest(UpdateUserDTO User) : ICommand<UserResponse>;
 
 public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
 {
@@ -37,7 +38,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
     }
 }
 
-public class UpdateUserHandler : IAuthorizationRequestHandler<UpdateUserRequest, UserResponse>
+public class UpdateUserHandler : ICommandHandler<UpdateUserRequest, UserResponse>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IAppDbContext _context;

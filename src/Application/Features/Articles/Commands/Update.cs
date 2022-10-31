@@ -3,6 +3,7 @@ using Application.Exceptions;
 using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -18,7 +19,7 @@ public class UpdateArticleDTO
 
 [DisplayName("UpdateArticleRequest")]
 public record UpdateArticleBody(UpdateArticleDTO Article);
-public record UpdateArticleRequest(string Slug, UpdateArticleDTO Article) : IAuthorizationRequest<SingleArticleResponse>;
+public record UpdateArticleRequest(string Slug, UpdateArticleDTO Article) : ICommand<SingleArticleResponse>;
 
 public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
 {
@@ -30,7 +31,7 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
     }
 }
 
-public class ArticleUpdateHandler : IAuthorizationRequestHandler<UpdateArticleRequest, SingleArticleResponse>
+public class ArticleUpdateHandler : ICommandHandler<UpdateArticleRequest, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

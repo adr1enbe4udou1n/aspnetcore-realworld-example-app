@@ -1,13 +1,14 @@
 using Application.Exceptions;
 using Application.Extensions;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using MediatR;
 
 namespace Application.Features.Articles.Commands;
 
-public record ArticleDeleteRequest(string Slug) : IAuthorizationRequest;
+public record ArticleDeleteRequest(string Slug) : ICommand;
 
-public class ArticleDeleteHandler : IAuthorizationRequestHandler<ArticleDeleteRequest>
+public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteRequest>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

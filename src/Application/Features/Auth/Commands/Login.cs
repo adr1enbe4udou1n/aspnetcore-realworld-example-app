@@ -1,9 +1,8 @@
-using Application.Exceptions;
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands;
@@ -15,9 +14,9 @@ public class LoginUserDTO
     public string Password { get; set; } = default!;
 }
 
-public record LoginUserRequest(LoginUserDTO User) : IRequest<UserResponse>;
+public record LoginUserRequest(LoginUserDTO User) : ICommand<UserResponse>;
 
-public class LoginHandler : IRequestHandler<LoginUserRequest, UserResponse>
+public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;

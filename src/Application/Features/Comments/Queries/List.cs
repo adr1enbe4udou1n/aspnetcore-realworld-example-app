@@ -1,9 +1,9 @@
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Queries;
@@ -23,9 +23,9 @@ public class CommentDTO
 
 public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);
 
-public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse>;
+public record CommentsListQuery(string Slug) : IQuery<MultipleCommentsResponse>;
 
-public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
+public class CommentsListHandler : IQueryHandler<CommentsListQuery, MultipleCommentsResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

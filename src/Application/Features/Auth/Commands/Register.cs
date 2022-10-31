@@ -1,9 +1,9 @@
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands;
@@ -17,7 +17,7 @@ public class NewUserDTO
     public string Username { get; set; } = default!;
 }
 
-public record NewUserRequest(NewUserDTO User) : IRequest<UserResponse>;
+public record NewUserRequest(NewUserDTO User) : ICommand<UserResponse>;
 
 public class RegisterValidator : AbstractValidator<NewUserRequest>
 {
@@ -36,7 +36,7 @@ public class RegisterValidator : AbstractValidator<NewUserRequest>
     }
 }
 
-public class RegisterHandler : IRequestHandler<NewUserRequest, UserResponse>
+public class RegisterHandler : ICommandHandler<NewUserRequest, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

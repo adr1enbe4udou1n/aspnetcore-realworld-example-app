@@ -1,10 +1,10 @@
 using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using Application.Support;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 
 namespace Application.Features.Articles.Queries;
 
@@ -33,7 +33,7 @@ public class ArticleDTO
 
 public record MultipleArticlesResponse(IEnumerable<ArticleDTO> Articles, int ArticlesCount);
 
-public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
+public class ArticlesListQuery : PagedQuery, IQuery<MultipleArticlesResponse>
 {
     /// <summary>
     /// Filter by author (username)
@@ -51,7 +51,7 @@ public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
     public string? Tag { get; set; }
 }
 
-public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
+public class ArticlesListHandler : IQueryHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;

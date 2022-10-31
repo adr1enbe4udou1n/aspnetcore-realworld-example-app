@@ -1,16 +1,16 @@
 using Application.Extensions;
 using Application.Interfaces;
+using Application.Interfaces.Mediator;
 using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries;
 
 public record SingleArticleResponse(ArticleDTO Article);
 
-public record ArticleGetQuery(string Slug) : IRequest<SingleArticleResponse>;
+public record ArticleGetQuery(string Slug) : IQuery<SingleArticleResponse>;
 
-public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
+public class ArticleGetHandler : IQueryHandler<ArticleGetQuery, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IMapper _mapper;
