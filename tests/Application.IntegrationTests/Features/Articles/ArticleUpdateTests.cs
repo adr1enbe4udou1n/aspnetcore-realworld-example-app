@@ -5,23 +5,29 @@ using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleUpdateTests : TestBase
 {
-    private static IEnumerable<TestCaseData> InvalidArticles()
+    public ArticleUpdateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    public static IEnumerable<object[]> InvalidArticles()
     {
-        yield return new TestCaseData(new UpdateArticleDTO
+        yield return new object[]
         {
-            Title = "Test Title",
-            Description = "Test Description",
-            Body = "",
-        });
+            new UpdateArticleDTO
+            {
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "",
+            }
+        };
     }
 
-    [Test, TestCaseSource(nameof(InvalidArticles))]
+    [Theory, MemberData(nameof(InvalidArticles))]
     public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDTO article)
     {
         await ActingAs(new User
@@ -34,7 +40,7 @@ public class ArticleUpdateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Update_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -54,7 +60,7 @@ public class ArticleUpdateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Guest_Cannot_Update_Article()
     {
         var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
@@ -63,7 +69,7 @@ public class ArticleUpdateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Update_Article_Of_Other_Author()
     {
         await ActingAs(new User
@@ -100,7 +106,7 @@ public class ArticleUpdateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Update_Own_Article()
     {
         await ActingAs(new User

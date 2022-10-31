@@ -4,27 +4,36 @@ using Application.Features.Auth.Commands;
 using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Auth;
 
 public class LoginTests : TestBase
 {
-    private static IEnumerable<TestCaseData> InvalidCredentials()
+    public LoginTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    public static IEnumerable<object[]> InvalidCredentials()
     {
-        yield return new TestCaseData(new LoginUserDTO
+        yield return new object[]
         {
-            Email = "jane.doe@example.com",
-            Password = "password",
-        });
-        yield return new TestCaseData(new LoginUserDTO
+            new LoginUserDTO
+            {
+                Email = "jane.doe@example.com",
+                Password = "password",
+            },
+        };
+        yield return new object[]
         {
-            Email = "john.doe@example.com",
-            Password = "badpassword",
-        });
+            new LoginUserDTO
+            {
+                Email = "john.doe@example.com",
+                Password = "badpassword",
+            }
+        };
     }
 
-    [Test, TestCaseSource(nameof(InvalidCredentials))]
+    [Theory, MemberData(nameof(InvalidCredentials))]
     public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDTO credentials)
     {
         await _context.Users.AddAsync(new User
@@ -39,7 +48,7 @@ public class LoginTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+    [Fact]
     public async Task User_Can_Login()
     {
         var user = new User

@@ -5,41 +5,56 @@ using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleCreateTests : TestBase
 {
-    private static IEnumerable<TestCaseData> InvalidArticles()
+    public ArticleCreateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    public static IEnumerable<object[]> InvalidArticles()
     {
-        yield return new TestCaseData(new NewArticleDTO
+        yield return new object[]
         {
-            Title = "",
-            Description = "Test Description",
-            Body = "Test Body",
-        });
-        yield return new TestCaseData(new NewArticleDTO
+            new NewArticleDTO
+            {
+                Title = "",
+                Description = "Test Description",
+                Body = "Test Body",
+            },
+        };
+        yield return new object[]
         {
-            Title = "Test Title",
-            Description = "",
-            Body = "Test Body",
-        });
-        yield return new TestCaseData(new NewArticleDTO
+            new NewArticleDTO
+            {
+                Title = "Test Title",
+                Description = "",
+                Body = "Test Body",
+            },
+        };
+        yield return new object[]
         {
-            Title = "Test Title",
-            Description = "Test Description",
-            Body = "",
-        });
-        yield return new TestCaseData(new NewArticleDTO
+            new NewArticleDTO
+            {
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "",
+            },
+        };
+        yield return new object[]
         {
-            Title = "Existing Title",
-            Description = "Test Description",
-            Body = "Test Body",
-        });
+            new NewArticleDTO
+            {
+                Title = "Existing Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            },
+        };
     }
 
-    [Test, TestCaseSource(nameof(InvalidArticles))]
+    [Theory, MemberData(nameof(InvalidArticles))]
     public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDTO article)
     {
         await ActingAs(new User
@@ -62,7 +77,7 @@ public class ArticleCreateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+    [Fact]
     public async Task Guest_Cannot_Create_Article()
     {
         var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(
@@ -72,7 +87,7 @@ public class ArticleCreateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Create_Article()
     {
         await ActingAs(new User

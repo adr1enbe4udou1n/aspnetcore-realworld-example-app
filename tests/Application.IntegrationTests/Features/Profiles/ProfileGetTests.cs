@@ -2,13 +2,16 @@ using System.Net;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Profiles;
 
 public class ProfileGetTests : TestBase
 {
-    [Test]
+    public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
     public async Task Can_Get_Profile()
     {
         await _context.Users.AddAsync(new User
@@ -31,14 +34,14 @@ public class ProfileGetTests : TestBase
         });
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Get_Non_Existent_Profile()
     {
         var response = await Act(HttpMethod.Get, "/profiles/celeb_John Doe");
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Get_Followed_Profile()
     {
         var user = new User

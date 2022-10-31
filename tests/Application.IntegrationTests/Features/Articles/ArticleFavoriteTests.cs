@@ -4,20 +4,23 @@ using Application.Features.Articles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleFavoriteTests : TestBase
 {
-    [Test]
+    public ArticleFavoriteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
     public async Task Guest_Cannot_Favorite_Article()
     {
         var response = await Act(HttpMethod.Post, "/articles/slug-article/favorite");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Favorite_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -30,7 +33,7 @@ public class ArticleFavoriteTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Favorite_Article()
     {
         await ActingAs(new User
@@ -59,7 +62,7 @@ public class ArticleFavoriteTests : TestBase
         (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Unfavorite_Article()
     {
         await ActingAs(new User

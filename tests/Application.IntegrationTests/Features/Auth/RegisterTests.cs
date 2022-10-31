@@ -5,40 +5,52 @@ using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Auth;
 
 public class RegisterTests : TestBase
 {
-    private static IEnumerable<TestCaseData> InvalidRegisters()
+    public RegisterTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    public static IEnumerable<object[]> InvalidRegisters()
     {
-        yield return new TestCaseData(new NewUserDTO
+        yield return new object[]
         {
-            Email = "john.doe",
-            Username = "John Doe",
-            Password = "password",
-        });
-        yield return new TestCaseData(new NewUserDTO
+            new NewUserDTO
+            {
+                Email = "john.doe",
+                Username = "John Doe",
+                Password = "password",
+            },
+        };
+        yield return new object[]
         {
-            Email = "john.doe@example.com",
-        });
-        yield return new TestCaseData(new NewUserDTO
+            new NewUserDTO
+            {
+                Email = "john.doe@example.com",
+            },
+        };
+        yield return new object[]
         {
-            Email = "john.doe@example.com",
-            Username = "John Doe",
-            Password = "pass",
-        });
+            new NewUserDTO
+            {
+                Email = "john.doe@example.com",
+                Username = "John Doe",
+                Password = "pass",
+            }
+        };
     }
 
-    [Test, TestCaseSource(nameof(InvalidRegisters))]
+    [Theory, MemberData(nameof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDTO user)
     {
         var response = await Act(HttpMethod.Post, "/users", new NewUserRequest(user));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+    [Fact]
     public async Task User_Can_Register()
     {
         var request = new NewUserRequest(new NewUserDTO
@@ -65,7 +77,7 @@ public class RegisterTests : TestBase
         payload["email"].Should().Be("john.doe@example.com");
     }
 
-    [Test]
+    [Fact]
     public async Task User_Cannot_Register_Twice()
     {
         await _context.Users.AddAsync(new User

@@ -4,17 +4,18 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
-using NUnit.Framework;
 using Respawn;
 using Respawn.Graph;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests;
 
-public class TestBase
+[Collection("DB")]
+public class TestBase : IAsyncLifetime, IClassFixture<Startup>
 {
     protected IMediator _mediator;
 
@@ -26,30 +27,25 @@ public class TestBase
 
     protected ICurrentUser _currentUser;
 
+    private readonly ITestOutputHelper _output;
+
     private readonly string _connectionString;
 
-    protected TestBase()
+    protected TestBase(Startup factory, ITestOutputHelper output)
     {
-        _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-            ?? "Server=localhost;Port=5434;User Id=main;Password=main;Database=main;";
+        _output = output;
 
-        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", _connectionString);
-        Environment.SetEnvironmentVariable("Jwt__SecretKey", "super secret key");
+        _connectionString = factory.ConnectionString;
 
-        var application = new ConduitApiApplicationFactory();
-
-        var scope = application.Services.CreateScope();
+        var scope = factory.Application.Services.CreateScope();
 
         _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         _currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
         _passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
         _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
-
-        _context.Database.Migrate();
     }
 
-    [SetUp]
     public async Task RefreshDatabase()
     {
         using var conn = new NpgsqlConnection(_connectionString);
@@ -110,7 +106,7 @@ public class TestBase
         }
         finally
         {
-            Console.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
+            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
         }
     }
 
@@ -134,7 +130,7 @@ public class TestBase
         }
         finally
         {
-            Console.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
+            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
         }
     }
 
@@ -154,5 +150,15 @@ public class TestBase
         response.EnsureSuccessStatusCode();
 
         return (await response.Content.ReadFromJsonAsync<T>())!;
+    }
+
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await RefreshDatabase();
     }
 }

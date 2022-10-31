@@ -6,22 +6,27 @@ using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentCreateTests : TestBase
 {
+    public CommentCreateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
 
-    private static IEnumerable<TestCaseData> InvalidComments()
+    public static IEnumerable<object[]> InvalidComments()
     {
-        yield return new TestCaseData(new NewCommentDTO
+        yield return new object[]
         {
-            Body = "",
-        });
+            new NewCommentDTO
+            {
+                Body = "",
+            }
+        };
     }
 
-    [Test, TestCaseSource(nameof(InvalidComments))]
+    [Theory, MemberData(nameof(InvalidComments))]
     public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDTO comment)
     {
         await ActingAs(new User
@@ -43,7 +48,7 @@ public class CommentCreateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Create_Comment_To_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -61,7 +66,7 @@ public class CommentCreateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Guest_Cannot_Create_Comment()
     {
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
@@ -70,7 +75,7 @@ public class CommentCreateTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Create_Comment()
     {
         await ActingAs(new User

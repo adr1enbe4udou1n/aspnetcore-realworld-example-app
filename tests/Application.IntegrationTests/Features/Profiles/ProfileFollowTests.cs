@@ -3,20 +3,23 @@ using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Profiles;
 
 public class ProfileFollowTests : TestBase
 {
-    [Test]
+    public ProfileFollowTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
     public async Task Guest_Cannot_Follow_Profile()
     {
         var response = await Act(HttpMethod.Post, "/profiles/celeb_john/follow");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Follow_Profile()
     {
         await ActingAs(new User
@@ -52,7 +55,7 @@ public class ProfileFollowTests : TestBase
             .Should().BeTrue();
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Unfollow_Profile()
     {
         var user = new User

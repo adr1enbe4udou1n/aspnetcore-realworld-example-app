@@ -4,29 +4,38 @@ using Application.Features.Auth.Queries;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Auth;
 
 public class UpdateUserTests : TestBase
 {
-    private static IEnumerable<TestCaseData> InvalidInfos()
+    public UpdateUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    public static IEnumerable<object[]> InvalidInfos()
     {
-        yield return new TestCaseData(new UpdateUserDTO
+        yield return new object[]
         {
-            Username = "John Doe",
-            Email = "john.doe",
-            Bio = "My Bio",
-        });
-        yield return new TestCaseData(new UpdateUserDTO
+            new UpdateUserDTO
+            {
+                Username = "John Doe",
+                Email = "john.doe",
+                Bio = "My Bio",
+            },
+        };
+        yield return new object[]
         {
-            Username = "",
-            Email = "john.doe@example.com",
-            Bio = "My Bio",
-        });
+            new UpdateUserDTO
+            {
+                Username = "",
+                Email = "john.doe@example.com",
+                Bio = "My Bio",
+            }
+        };
     }
 
-    [Test, TestCaseSource(nameof(InvalidInfos))]
+    [Theory, MemberData(nameof(InvalidInfos))]
     public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDTO user)
     {
         await ActingAs(new User
@@ -39,7 +48,7 @@ public class UpdateUserTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+    [Fact]
     public async Task Logged_User_Can_Update_Infos()
     {
         await ActingAs(new User
@@ -65,7 +74,7 @@ public class UpdateUserTests : TestBase
         created.Should().NotBeNull();
     }
 
-    [Test]
+    [Fact]
     public async Task Guest_User_Cannot_Update_Infos()
     {
         var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(
@@ -77,7 +86,7 @@ public class UpdateUserTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Logged_User_Cannot_Update_With_Already_Used_Email()
     {
         var created = await _context.Users.AddAsync(new User

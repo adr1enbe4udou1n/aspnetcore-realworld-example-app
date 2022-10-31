@@ -4,13 +4,16 @@ using Application.Features.Articles.Queries;
 using Application.Features.Profiles.Queries;
 using Domain.Entities;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleGetTests : TestBase
 {
-    [Test]
+    public ArticleGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
     public async Task Cannot_Get_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -23,7 +26,7 @@ public class ArticleGetTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Get_Article()
     {
         await ActingAs(new User

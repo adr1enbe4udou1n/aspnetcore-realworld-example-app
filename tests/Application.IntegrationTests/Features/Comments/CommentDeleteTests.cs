@@ -4,20 +4,23 @@ using Application.Features.Comments.Commands;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentDeleteTests : TestBase
 {
-    [Test]
+    public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+
+    [Fact]
     public async Task Guest_Cannot_Delete_Comment()
     {
         var response = await Act(HttpMethod.Delete, "/articles/test-title/comments/1");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Delete_Non_Existent_Comment()
     {
         await ActingAs(new User
@@ -39,7 +42,7 @@ public class CommentDeleteTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Delete_Comment_With_Non_Existent_Article()
     {
         await ActingAs(new User
@@ -66,7 +69,7 @@ public class CommentDeleteTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Delete_Comment_With_Bad_Article()
     {
         await ActingAs(new User
@@ -104,7 +107,7 @@ public class CommentDeleteTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Test]
+    [Fact]
     public async Task Cannot_Delete_Comment_Of_Other_Author()
     {
         await ActingAs(new User
@@ -137,7 +140,7 @@ public class CommentDeleteTests : TestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Delete_Own_Comment()
     {
         await ActingAs(new User
@@ -165,7 +168,7 @@ public class CommentDeleteTests : TestBase
         (await _context.Comments.AnyAsync()).Should().BeFalse();
     }
 
-    [Test]
+    [Fact]
     public async Task Can_Delete_All_Comments_Of_Own_Article()
     {
         var user = await ActingAs(new User
