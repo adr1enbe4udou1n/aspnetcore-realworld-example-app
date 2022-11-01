@@ -2,7 +2,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Comment : IHasTimestamps
+public class Comment : IAuditableEntity
 {
     public int Id { get; private set; }
 

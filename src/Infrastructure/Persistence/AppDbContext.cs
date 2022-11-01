@@ -1,8 +1,7 @@
 using Application.Interfaces;
 using Domain.Entities;
-using Domain.Interfaces;
+using Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Persistence;
@@ -10,6 +9,7 @@ namespace Infrastructure.Persistence;
 public class AppDbContext : DbContext, IAppDbContext
 {
     private readonly string _roConnectionString;
+    private static readonly AuditableInterceptor _auditableInterceptor = new AuditableInterceptor();
 
     public DbSet<User> Users => Set<User>();
 
@@ -20,8 +20,11 @@ public class AppDbContext : DbContext, IAppDbContext
     public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
     {
         _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
-        ChangeTracker.StateChanged += UpdateTimestamps;
-        ChangeTracker.Tracked += UpdateTimestamps;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_auditableInterceptor);
     }
 
     public void UseRoConnection()
@@ -29,29 +32,6 @@ public class AppDbContext : DbContext, IAppDbContext
         if (_roConnectionString != null)
         {
             Database.SetConnectionString(_roConnectionString);
-        }
-    }
-
-    private void UpdateTimestamps(object? sender, EntityEntryEventArgs e)
-    {
-        if (e.Entry.Entity is IHasTimestamps entity)
-        {
-            switch (e.Entry.State)
-            {
-                case EntityState.Added:
-                    if (entity.CreatedAt == default)
-                    {
-                        entity.CreatedAt = DateTime.UtcNow;
-                    }
-                    entity.UpdatedAt = entity.CreatedAt;
-                    break;
-                case EntityState.Modified:
-                    if (entity.UpdatedAt == default)
-                    {
-                        entity.UpdatedAt = DateTime.UtcNow;
-                    }
-                    break;
-            }
         }
     }
 

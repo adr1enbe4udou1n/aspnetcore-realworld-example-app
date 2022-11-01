@@ -3,7 +3,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class User : IHasTimestamps
+public class User : IAuditableEntity
 {
     private readonly List<Article> _articles = new();
     private readonly List<ArticleFavorite> _favoriteArticles = new();

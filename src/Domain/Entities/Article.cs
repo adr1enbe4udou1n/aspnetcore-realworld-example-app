@@ -3,7 +3,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Article : IHasTimestamps
+public class Article : IAuditableEntity
 {
     private readonly List<Comment> _comments = new();
     private readonly List<ArticleTag> _tags = new();

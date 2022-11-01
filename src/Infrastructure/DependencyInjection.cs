@@ -18,7 +18,7 @@ public static class DependencyInjection
     {
         return services.AddApplication()
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
-            .AddDbContextFactory<AppDbContext>((provider, options) =>
+            .AddDbContextFactory<AppDbContext>((options) =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })

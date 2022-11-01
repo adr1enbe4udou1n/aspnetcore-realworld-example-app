@@ -1,6 +1,6 @@
 namespace Domain.Interfaces;
 
-public interface IHasTimestamps
+public interface IAuditableEntity
 {
     DateTime CreatedAt { get; set; }
 
