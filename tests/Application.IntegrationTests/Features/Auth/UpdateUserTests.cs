@@ -11,7 +11,7 @@ namespace Application.IntegrationTests.Features.Auth;
 
 public class UpdateUserTests : TestBase
 {
-    public UpdateUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public UpdateUserTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     public static IEnumerable<object[]> InvalidInfos()
     {

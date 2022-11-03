@@ -11,7 +11,7 @@ namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleFavoriteTests : TestBase
 {
-    public ArticleFavoriteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ArticleFavoriteTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Favorite_Article()

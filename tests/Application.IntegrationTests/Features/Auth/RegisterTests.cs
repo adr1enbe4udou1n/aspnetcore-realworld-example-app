@@ -12,7 +12,7 @@ namespace Application.IntegrationTests.Features.Auth;
 
 public class RegisterTests : TestBase
 {
-    public RegisterTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public RegisterTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     public static IEnumerable<object[]> InvalidRegisters()
     {

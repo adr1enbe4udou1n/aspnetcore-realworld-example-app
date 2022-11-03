@@ -12,7 +12,7 @@ namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticlesListTests : TestBase
 {
-    public ArticlesListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ArticlesListTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Can_Paginate_Articles()

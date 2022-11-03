@@ -9,7 +9,7 @@ namespace Application.IntegrationTests.Features.Profiles;
 
 public class ProfileGetTests : TestBase
 {
-    public ProfileGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ProfileGetTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Can_Get_Profile()

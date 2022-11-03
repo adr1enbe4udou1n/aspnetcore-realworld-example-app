@@ -11,7 +11,7 @@ namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleDeleteTests : TestBase
 {
-    public ArticleDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ArticleDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Delete_Article()

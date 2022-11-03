@@ -2,10 +2,9 @@ using System.Net.Http.Json;
 using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
-using Infrastructure.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Npgsql;
 using Respawn;
 using Respawn.Graph;
@@ -15,40 +14,37 @@ using Xunit.Abstractions;
 namespace Application.IntegrationTests;
 
 [Collection("DB")]
-public class TestBase : IAsyncLifetime, IClassFixture<Startup>
+public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
 {
     protected IMediator _mediator;
 
-    protected AppDbContext _context;
+    protected IAppDbContext _context;
 
     protected IPasswordHasher _passwordHasher;
 
     protected IJwtTokenGenerator _jwtTokenGenerator;
 
     protected ICurrentUser _currentUser;
-
+    private readonly HttpClient _client;
     private readonly ITestOutputHelper _output;
 
-    private readonly string _connectionString;
-
-    protected TestBase(Startup factory, ITestOutputHelper output)
+    protected TestBase(ConduitApiFactory factory, ITestOutputHelper output)
     {
+        _client = factory.CreateClient();
         _output = output;
 
-        _connectionString = factory.ConnectionString;
+        var scope = factory.Services.CreateScope();
 
-        var scope = factory.Application.Services.CreateScope();
-
-        _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
         _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         _currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
         _passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
         _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
     }
 
-    public async Task RefreshDatabase()
+    private async Task RefreshDatabase()
     {
-        using var conn = new NpgsqlConnection(_connectionString);
+        using var conn = new NpgsqlConnection(_context.Database.GetDbConnection().ConnectionString);
 
         await conn.OpenAsync();
 
@@ -60,6 +56,10 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
 
         await respawner.ResetAsync(conn);
     }
+
+    public async Task InitializeAsync() => await RefreshDatabase();
+
+    public Task DisposeAsync() => Task.CompletedTask;
 
     private string? _token = null;
 
@@ -77,24 +77,13 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
     {
         SqlCounterLogger.ResetCounter();
 
-        var application = new ConduitApiApplicationFactory().WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
-            {
-                services.AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider()));
-            });
-        });
-
-        var client = application.CreateClient();
-
         if (_token != null)
         {
-            client.DefaultRequestHeaders.Add("Authorization", $"Token {_token}");
+            _client.DefaultRequestHeaders.Add("Authorization", $"Token {_token}");
         }
 
-        return client;
+        return _client;
     }
-
 
     protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestUri)
     {
@@ -150,15 +139,5 @@ public class TestBase : IAsyncLifetime, IClassFixture<Startup>
         response.EnsureSuccessStatusCode();
 
         return (await response.Content.ReadFromJsonAsync<T>())!;
-    }
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await RefreshDatabase();
     }
 }

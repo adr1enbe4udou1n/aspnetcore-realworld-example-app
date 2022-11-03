@@ -12,7 +12,7 @@ namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentsListTests : TestBase
 {
-    public CommentsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public CommentsListTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Cannot_List_All_Comments_Of_Non_Existent_Article()

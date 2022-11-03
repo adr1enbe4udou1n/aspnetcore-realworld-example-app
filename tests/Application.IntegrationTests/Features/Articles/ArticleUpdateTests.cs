@@ -12,7 +12,7 @@ namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleUpdateTests : TestBase
 {
-    public ArticleUpdateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ArticleUpdateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     public static IEnumerable<object[]> InvalidArticles()
     {

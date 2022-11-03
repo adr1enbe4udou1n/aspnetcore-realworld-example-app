@@ -10,7 +10,7 @@ namespace Application.IntegrationTests.Features.Profiles;
 
 public class ProfileFollowTests : TestBase
 {
-    public ProfileFollowTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ProfileFollowTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Follow_Profile()

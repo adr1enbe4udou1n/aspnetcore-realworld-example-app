@@ -11,7 +11,7 @@ namespace Application.IntegrationTests.Features.Auth;
 
 public class LoginTests : TestBase
 {
-    public LoginTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public LoginTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     public static IEnumerable<object[]> InvalidCredentials()
     {

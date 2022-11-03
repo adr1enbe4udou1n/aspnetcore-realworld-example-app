@@ -11,7 +11,7 @@ namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentDeleteTests : TestBase
 {
-    public CommentDeleteTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public CommentDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Delete_Comment()

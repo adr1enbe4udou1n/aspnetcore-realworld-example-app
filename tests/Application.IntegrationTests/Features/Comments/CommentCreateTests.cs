@@ -13,7 +13,7 @@ namespace Application.IntegrationTests.Features.Comments;
 
 public class CommentCreateTests : TestBase
 {
-    public CommentCreateTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public CommentCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     public static IEnumerable<object[]> InvalidComments()
     {

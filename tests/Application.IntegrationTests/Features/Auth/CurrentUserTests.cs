@@ -9,7 +9,7 @@ namespace Application.IntegrationTests.Features.Auth;
 
 public class CurrentUserTests : TestBase
 {
-    public CurrentUserTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public CurrentUserTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Logged_User_Can_Fetch_Infos()

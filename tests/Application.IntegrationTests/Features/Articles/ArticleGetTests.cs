@@ -11,7 +11,7 @@ namespace Application.IntegrationTests.Features.Articles;
 
 public class ArticleGetTests : TestBase
 {
-    public ArticleGetTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public ArticleGetTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Cannot_Get_Non_Existent_Article()

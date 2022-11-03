@@ -12,11 +12,13 @@ public interface IAppDbContext : IDisposable
     DbSet<Comment> Comments { get; }
     DbSet<Tag> Tags { get; }
 
+    EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
+
+    DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
     void UseRoConnection();
 
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     DatabaseFacade Database { get; }
-
-    EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 }

@@ -8,7 +8,7 @@ namespace Application.IntegrationTests.Features.Tags;
 
 public class TagsListTests : TestBase
 {
-    public TagsListTests(Startup factory, ITestOutputHelper output) : base(factory, output) { }
+    public TagsListTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Can_List_All_Tags()
