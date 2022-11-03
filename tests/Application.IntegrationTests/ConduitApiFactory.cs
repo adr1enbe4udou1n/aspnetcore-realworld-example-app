@@ -5,24 +5,30 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Npgsql;
+using Respawn;
+using Respawn.Graph;
 
 namespace Application.IntegrationTests;
 
 public class ConduitApiFactory : WebApplicationFactory<Program>
 {
+    private readonly IAppDbContext _context;
+    private string _connectionString;
+
     public ConduitApiFactory()
     {
-        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+        _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
             ?? "Server=localhost;Port=5434;User Id=main;Password=main;Database=main;";
 
-        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", connectionString);
+        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", _connectionString);
         Environment.SetEnvironmentVariable("Jwt__SecretKey", "super secret key");
 
         var scope = Services.CreateScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+        _context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
-        context.Database.Migrate();
+        _context.Database.Migrate();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -31,5 +37,20 @@ public class ConduitApiFactory : WebApplicationFactory<Program>
         {
             services.AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider()));
         });
+    }
+
+    public async Task RefreshDatabase()
+    {
+        using var conn = new NpgsqlConnection(_connectionString);
+
+        await conn.OpenAsync();
+
+        var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
+        {
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+            DbAdapter = DbAdapter.Postgres
+        });
+
+        await respawner.ResetAsync(conn);
     }
 }

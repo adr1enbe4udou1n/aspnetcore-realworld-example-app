@@ -3,11 +3,7 @@ using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
-using Respawn;
-using Respawn.Graph;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,11 +22,13 @@ public class TestBase : IAsyncLifetime
 
     protected ICurrentUser _currentUser;
     private readonly HttpClient _client;
+    private readonly Func<Task> _refreshDatabase;
     private readonly ITestOutputHelper _output;
 
     protected TestBase(ConduitApiFactory factory, ITestOutputHelper output)
     {
         _client = factory.CreateClient();
+        _refreshDatabase = factory.RefreshDatabase;
         _output = output;
 
         var scope = factory.Services.CreateScope();
@@ -42,22 +40,7 @@ public class TestBase : IAsyncLifetime
         _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
     }
 
-    private async Task RefreshDatabase()
-    {
-        using var conn = new NpgsqlConnection(_context.Database.GetDbConnection().ConnectionString);
-
-        await conn.OpenAsync();
-
-        var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
-        {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
-            DbAdapter = DbAdapter.Postgres
-        });
-
-        await respawner.ResetAsync(conn);
-    }
-
-    public async Task InitializeAsync() => await RefreshDatabase();
+    public Task InitializeAsync() => _refreshDatabase();
 
     public Task DisposeAsync() => Task.CompletedTask;
 
