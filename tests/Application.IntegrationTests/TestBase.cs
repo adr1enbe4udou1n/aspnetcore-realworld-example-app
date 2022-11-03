@@ -13,8 +13,8 @@ using Xunit.Abstractions;
 
 namespace Application.IntegrationTests;
 
-[Collection("DB")]
-public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
+[Collection("Test collection")]
+public class TestBase : IAsyncLifetime
 {
     protected IMediator _mediator;
 
