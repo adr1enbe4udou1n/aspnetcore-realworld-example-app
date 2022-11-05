@@ -1,5 +1,5 @@
 using Application.IntegrationTests.Events;
-using Application.Interfaces;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,7 @@ namespace Application.IntegrationTests;
 
 public class ConduitApiFactory : WebApplicationFactory<Program>
 {
-    private readonly IAppDbContext _context;
+    private readonly AppDbContext _context;
     private string _connectionString;
 
     public ConduitApiFactory()
@@ -26,7 +26,7 @@ public class ConduitApiFactory : WebApplicationFactory<Program>
 
         var scope = Services.CreateScope();
 
-        _context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+        _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         _context.Database.Migrate();
     }

@@ -1,12 +1,13 @@
 using Application.Interfaces;
 using Domain.Entities;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Infrastructure.Security;
 
 public class CurrentUser : ICurrentUser
 {
-    private readonly IAppDbContext _context;
+    private readonly AppDbContext _context;
 
     public long Identifier { get; private set; }
 
@@ -14,7 +15,7 @@ public class CurrentUser : ICurrentUser
 
     public bool IsAuthenticated { get => User != null; }
 
-    public CurrentUser(IAppDbContext context)
+    public CurrentUser(AppDbContext context)
     {
         _context = context;
     }

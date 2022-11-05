@@ -1,7 +1,6 @@
-
-using Application.Interfaces;
 using Application.Tools.Interfaces;
 using Cocona;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Respawn;
@@ -11,10 +10,10 @@ namespace Tools.Commands;
 
 public class SeederCommand
 {
-    private readonly IAppDbContext _context;
+    private readonly AppDbContext _context;
     private readonly IEnumerable<ISeeder> _seeders;
 
-    public SeederCommand(IAppDbContext context, IEnumerable<ISeeder> seeders)
+    public SeederCommand(AppDbContext context, IEnumerable<ISeeder> seeders)
     {
         _context = context;
         _seeders = seeders;
