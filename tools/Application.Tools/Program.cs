@@ -1,28 +1,26 @@
 using Application.Tools.Interfaces;
 using Application.Tools.Seeders;
-using Cocona;
 
 using Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Tools.Commands;
 
-var builder = CoconaApp.CreateBuilder();
+var builder = ConsoleApp.CreateBuilder(args);
 
-builder.Services.AddInfrastructure(builder.Configuration)
-    .AddScoped<UsersSeeder>()
-    .AddScoped<ArticlesSeeder>()
-    .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
-    {
-            options.GetRequiredService<UsersSeeder>(),
-            options.GetRequiredService<ArticlesSeeder>()
-    });
+builder.ConfigureServices((ctx, services) =>
+{
+    services.AddInfrastructure(ctx.Configuration)
+        .AddScoped<UsersSeeder>()
+        .AddScoped<ArticlesSeeder>()
+        .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
+        {
+                options.GetRequiredService<UsersSeeder>(),
+                options.GetRequiredService<ArticlesSeeder>()
+        });
+});
 
 var app = builder.Build();
 
-app.AddSubCommand("db", x =>
-{
-    x.AddCommands<SeederCommand>();
-})
-.WithDescription("DB related commands");
+app.AddSubCommands<SeederCommand>();
 
 app.Run();

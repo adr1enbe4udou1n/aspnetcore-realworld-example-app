@@ -1,5 +1,4 @@
 using Application.Tools.Interfaces;
-using Cocona;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -8,7 +7,9 @@ using Respawn.Graph;
 
 namespace Tools.Commands;
 
-public class SeederCommand
+
+[Command("db")]
+public class SeederCommand : ConsoleAppBase, IAsyncDisposable
 {
     private readonly AppDbContext _context;
     private readonly IEnumerable<ISeeder> _seeders;
@@ -19,13 +20,13 @@ public class SeederCommand
         _seeders = seeders;
     }
 
-    [Command("migrate", Description = "Migrate database")]
+    [Command("migrate", "Migrate database")]
     public async Task Migrate()
     {
         await _context.Database.MigrateAsync();
     }
 
-    [Command("fresh", Description = "Wipe data")]
+    [Command("fresh", "Wipe data")]
     public async Task FreshData()
     {
         await Migrate();
@@ -43,7 +44,7 @@ public class SeederCommand
         await respawner.ResetAsync(conn);
     }
 
-    [Command("seed", Description = "Fake data")]
+    [Command("seed", "Fake data")]
     public async Task SeedData()
     {
         await Migrate();
@@ -55,5 +56,10 @@ public class SeederCommand
         {
             await seeder.Run(token);
         }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _context.DisposeAsync();
     }
 }
