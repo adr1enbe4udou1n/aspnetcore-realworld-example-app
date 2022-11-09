@@ -44,7 +44,7 @@ Target(Publish, DependsOn(Test),
     project =>
     {
         Run("dotnet",
-            $"publish {project} -c Release -f net6.0 -o ./publish --no-restore --no-build --verbosity=normal");
+            $"publish {project} -c Release -f net7.0 -o ./publish --no-restore --no-build --verbosity=normal");
     });
 
 Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
