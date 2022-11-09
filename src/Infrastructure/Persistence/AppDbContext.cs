@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-    private readonly string _roConnectionString;
+    private readonly string? _roConnectionString;
     private static readonly AuditableInterceptor _auditableInterceptor = new AuditableInterceptor();
 
     public DbSet<User> Users => Set<User>();
