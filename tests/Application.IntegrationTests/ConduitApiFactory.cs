@@ -14,7 +14,7 @@ namespace Application.IntegrationTests;
 public class ConduitApiFactory : WebApplicationFactory<Program>
 {
     private readonly AppDbContext _context;
-    private string _connectionString;
+    private readonly string _connectionString;
 
     public ConduitApiFactory()
     {
