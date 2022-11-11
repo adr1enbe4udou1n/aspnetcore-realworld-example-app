@@ -61,7 +61,7 @@ public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArt
                 )
                 .ToListAsync(cancellationToken);
 
-            article.AddTags(existingTags, request.Article.TagList);
+            article.AddTags(existingTags, request.Article.TagList.ToArray());
         }
 
         await _context.Articles.AddAsync(article, cancellationToken);

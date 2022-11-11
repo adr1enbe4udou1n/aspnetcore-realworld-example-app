@@ -41,6 +41,12 @@ public class Article : IAuditableEntity
     {
         return FavoredUsers.Any(f => f.UserId == user.Id);
     }
+
+    public void AddComment(Comment comment)
+    {
+        _comments.Add(comment);
+    }
+
     public void Favorite(User user)
     {
         if (!IsFavoritedBy(user))
@@ -57,7 +63,12 @@ public class Article : IAuditableEntity
         }
     }
 
-    public void AddTags(List<Tag> existingTags, List<string> newTags)
+    public void AddTag(Tag tag)
+    {
+        _tags.Add(new ArticleTag { Tag = tag });
+    }
+
+    public void AddTags(IEnumerable<Tag> existingTags, params string[] newTags)
     {
         _tags.AddRange(
             newTags

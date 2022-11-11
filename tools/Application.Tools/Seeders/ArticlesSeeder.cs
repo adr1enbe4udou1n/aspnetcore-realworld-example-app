@@ -35,21 +35,33 @@ public class ArticlesSeeder : ISeeder
             .RuleFor(a => a.Author, f => f.PickRandom(users))
             .RuleFor(a => a.CreatedAt, f => f.Date.Recent(90).ToUniversalTime())
             .RuleFor(a => a.Slug, (f, a) => _slugifier.Generate(a.Title))
-            .RuleFor(a => a.Comments, f => new Faker<Comment>()
+            .Generate(500);
+
+        foreach (var article in articles)
+        {
+            var f = new Faker();
+            var comments = new Faker<Comment>()
                 .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(2))
                 .RuleFor(a => a.Author, f => f.PickRandom(users))
                 .RuleFor(a => a.CreatedAt, f => f.Date.Recent(7).ToUniversalTime())
-                .Generate(f.Random.Number(10))
-            )
-            .RuleFor(a => a.Tags, f => f.PickRandom(tags, f.Random.Number(3))
-                .Select(t => new ArticleTag { TagId = t.Id })
-                .ToList()
-            )
-            .RuleFor(a => a.FavoredUsers, f => f.PickRandom(users, f.Random.Number(5))
-                .Select(u => new ArticleFavorite { UserId = u.Id })
-                .ToList()
-            )
-            .Generate(500);
+                .Generate(f.Random.Number(10)
+            );
+
+            foreach (var comment in comments)
+            {
+                article.AddComment(comment);
+            }
+
+            foreach (var tag in f.PickRandom(tags, f.Random.Number(3)))
+            {
+                article.AddTag(tag);
+            }
+
+            foreach (var user in f.PickRandom(users, f.Random.Number(5)))
+            {
+                article.Favorite(user);
+            }
+        }
 
         await _context.Articles.AddRangeAsync(articles, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
