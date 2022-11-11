@@ -18,10 +18,6 @@
     <PackageReference Include="ConsoleAppFramework" Version="4.2.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
   <Target Name="PostClean" AfterTargets="Clean">
     <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
     <RemoveDir Directories="$(BaseOutputPath)" />
