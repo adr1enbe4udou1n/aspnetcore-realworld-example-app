@@ -24,7 +24,7 @@ public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationSc
 
         if (token == null)
         {
-            return AuthenticateResult.Fail("Token is null");
+            return AuthenticateResult.NoResult();
         }
 
         try
