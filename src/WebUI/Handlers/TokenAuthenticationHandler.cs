@@ -31,16 +31,16 @@ public class TokenAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         {
             await _jwtTokenGenerator.SetCurrentUserFromToken(token);
 
-            if (_currentUser.User != null)
+            if (_currentUser.User == null)
             {
-                return AuthenticateResult.Success(
-                    new AuthenticationTicket(new ClaimsPrincipal(
-                        new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, _currentUser.User.Name) }, Scheme.Name)
-                    ), Scheme.Name)
-                );
+                return AuthenticateResult.Fail("Unknown user");
             }
 
-            return AuthenticateResult.Fail("Unknown user");
+            return AuthenticateResult.Success(
+                new AuthenticationTicket(new ClaimsPrincipal(
+                    new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, _currentUser.User.Name) }, Scheme.Name)
+                ), Scheme.Name)
+            );
         }
         catch (SecurityTokenException)
         {
