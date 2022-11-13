@@ -79,7 +79,7 @@ public class ArticleDeleteTests : TestBase
             }
         ));
 
-        for (int i = 1; i <= 5; i++)
+        for (var i = 1; i <= 5; i++)
         {
             await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {

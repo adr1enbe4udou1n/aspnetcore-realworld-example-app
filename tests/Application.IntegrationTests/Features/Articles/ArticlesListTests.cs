@@ -196,7 +196,7 @@ public class ArticlesListTests : TestBase
 
         var articles = new List<string>();
 
-        for (int i = 1; i <= count; i++)
+        for (var i = 1; i <= count; i++)
         {
             articles.Add($"{author.Name} - Test Title {i}");
         }

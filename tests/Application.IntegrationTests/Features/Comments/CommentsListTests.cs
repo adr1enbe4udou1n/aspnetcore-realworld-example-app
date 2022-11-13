@@ -43,7 +43,7 @@ public class CommentsListTests : TestBase
 
         var comments = new List<string>();
 
-        for (int i = 1; i <= 5; i++)
+        for (var i = 1; i <= 5; i++)
         {
             comments.Add($"Test Comment {i}");
         }
