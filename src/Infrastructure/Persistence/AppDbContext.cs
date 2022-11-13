@@ -9,7 +9,7 @@ namespace Infrastructure.Persistence;
 public class AppDbContext : DbContext, IAppDbContext
 {
     private readonly string? _roConnectionString;
-    private static readonly AuditableInterceptor _auditableInterceptor = new AuditableInterceptor();
+    private static readonly AuditableInterceptor AuditableInterceptor = new();
 
     public DbSet<User> Users => Set<User>();
 
@@ -24,7 +24,7 @@ public class AppDbContext : DbContext, IAppDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(_auditableInterceptor);
+        optionsBuilder.AddInterceptors(AuditableInterceptor);
     }
 
     public void UseRoConnection()

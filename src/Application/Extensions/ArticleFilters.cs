@@ -9,11 +9,11 @@ public static class ArticleFilters
         string? author
     )
     {
-        if (!string.IsNullOrEmpty(author))
+        if (string.IsNullOrEmpty(author))
         {
-            return source.Where(a => a.Author.Name.Contains(author));
+            return source;
         }
-        return source;
+        return source.Where(a => a.Author.Name.Contains(author));
     }
 
     public static IQueryable<Article> HasAuthorsFollowedBy(
@@ -41,10 +41,10 @@ public static class ArticleFilters
         string? favoritedBy
     )
     {
-        if (!string.IsNullOrEmpty(favoritedBy))
+        if (string.IsNullOrEmpty(favoritedBy))
         {
-            return source.Where(a => a.FavoredUsers.Any(t => t.User.Name.Contains(favoritedBy)));
+            return source;
         }
-        return source;
+        return source.Where(a => a.FavoredUsers.Any(t => t.User.Name.Contains(favoritedBy)));
     }
 }

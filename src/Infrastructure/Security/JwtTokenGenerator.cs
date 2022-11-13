@@ -19,7 +19,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
     {
         if (options.CurrentValue.SecretKey == null)
         {
-            throw new ArgumentNullException("You must set a JWT secret key");
+            throw new ArgumentException("You must set a JWT secret key");
         }
 
         _secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.CurrentValue.SecretKey));
@@ -55,7 +55,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             ValidateIssuer = false,
             ValidateAudience = false,
             ClockSkew = TimeSpan.Zero
-        }, out SecurityToken validatedToken);
+        }, out var validatedToken);
 
         var jwtToken = (JwtSecurityToken)validatedToken;
         return jwtToken.Claims

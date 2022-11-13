@@ -89,7 +89,7 @@ public class UpdateUserTests : TestBase
     [Fact]
     public async Task Logged_User_Cannot_Update_With_Already_Used_Email()
     {
-        var created = await _context.Users.AddAsync(new User
+        await _context.Users.AddAsync(new User
         {
             Name = "John Doe",
             Email = "jane.doe@example.com"

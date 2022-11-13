@@ -16,6 +16,6 @@ public class SetIsFollowingAction : IMappingAction<User, ProfileDTO>
 
     public void Process(User source, ProfileDTO destination, ResolutionContext context)
     {
-        destination.Following = _currentUser.User != null ? _currentUser.User.IsFollowing(source) : false;
+        destination.Following = _currentUser.User != null && _currentUser.User.IsFollowing(source);
     }
 }

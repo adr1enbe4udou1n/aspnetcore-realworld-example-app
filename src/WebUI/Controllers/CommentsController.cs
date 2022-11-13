@@ -13,7 +13,10 @@ public class CommentsController
 {
     private readonly ISender _sender;
 
-    public CommentsController(ISender sender) => _sender = sender;
+    public CommentsController(ISender sender)
+    {
+        _sender = sender;
+    }
 
     /// <summary>
     /// Get comments for an article
@@ -25,7 +28,9 @@ public class CommentsController
     [HttpGet(Name = "GetArticleComments")]
     [AllowAnonymous]
     public Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
-        => _sender.Send(new CommentsListQuery(slug), cancellationToken);
+    {
+        return _sender.Send(new CommentsListQuery(slug), cancellationToken);
+    }
 
     /// <summary>
     /// Create a comment for an article
@@ -39,7 +44,9 @@ public class CommentsController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
-        => _sender.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
+    {
+        return _sender.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
+    }
 
     /// <summary>
     /// Delete a comment for an article
@@ -51,5 +58,7 @@ public class CommentsController
     /// <returns></returns>
     [HttpDelete("{commentId}", Name = "DeleteArticleComment")]
     public Task Delete(string slug, int commentId, CancellationToken cancellationToken)
-        => _sender.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
+    {
+        return _sender.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
+    }
 }

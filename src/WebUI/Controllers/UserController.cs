@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers.Users;
+namespace WebUI.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
@@ -13,7 +13,10 @@ public class UserController
 {
     private readonly ISender _sender;
 
-    public UserController(ISender sender) => _sender = sender;
+    public UserController(ISender sender)
+    {
+        _sender = sender;
+    }
 
     /// <summary>
     /// Get current user
@@ -23,7 +26,9 @@ public class UserController
     /// <returns></returns>
     [HttpGet(Name = "GetCurrentUser")]
     public Task<UserResponse> Current(CancellationToken cancellationToken)
-        => _sender.Send(new CurrentUserQuery(), cancellationToken);
+    {
+        return _sender.Send(new CurrentUserQuery(), cancellationToken);
+    }
 
     /// <summary>
     /// Update current user
@@ -36,5 +41,7 @@ public class UserController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
-        => _sender.Send(command, cancellationToken);
+    {
+        return _sender.Send(command, cancellationToken);
+    }
 }

@@ -58,8 +58,9 @@ public class SeederCommand : ConsoleAppBase, IAsyncDisposable
         }
     }
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        await _context.DisposeAsync();
+        GC.SuppressFinalize(this);
+        return _context.DisposeAsync();
     }
 }

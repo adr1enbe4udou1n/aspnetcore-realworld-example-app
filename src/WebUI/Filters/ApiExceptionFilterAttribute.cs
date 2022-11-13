@@ -17,13 +17,14 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             return;
         }
 
-        if (context.Exception is ValidationException)
+        if (context.Exception is ValidationException exception)
         {
-            var exception = (ValidationException)context.Exception;
             var validation = new ValidationProblemDetails(
                 exception.Errors
-            );
-            validation.Title = exception.Message;
+            )
+            {
+                Title = exception.Message
+            };
 
             context.Result = new BadRequestObjectResult(validation);
 

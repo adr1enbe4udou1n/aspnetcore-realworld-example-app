@@ -17,6 +17,6 @@ public class SetHasFavoritedAction : IMappingAction<Article, ArticleDTO>
 
     public void Process(Article source, ArticleDTO destination, ResolutionContext context)
     {
-        destination.Favorited = _currentUser.User != null ? _currentUser.User.HasFavorite(source) : false;
+        destination.Favorited = _currentUser.User != null && _currentUser.User.HasFavorite(source);
     }
 }

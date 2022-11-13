@@ -3,7 +3,7 @@ using Application.Features.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers.Users;
+namespace WebUI.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
@@ -11,7 +11,10 @@ public class UsersController
 {
     private readonly ISender _sender;
 
-    public UsersController(ISender sender) => _sender = sender;
+    public UsersController(ISender sender)
+    {
+        _sender = sender;
+    }
 
     /// <summary>
     /// Register a new user
@@ -24,7 +27,9 @@ public class UsersController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Register([FromBody] NewUserRequest command, CancellationToken cancellationToken)
-        => _sender.Send(command, cancellationToken);
+    {
+        return _sender.Send(command, cancellationToken);
+    }
 
     /// <summary>
     /// Existing user login
@@ -37,5 +42,7 @@ public class UsersController
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
     public Task<UserResponse> Login([FromBody] LoginUserRequest command, CancellationToken cancellationToken)
-        => _sender.Send(command, cancellationToken);
+    {
+        return _sender.Send(command, cancellationToken);
+    }
 }

@@ -26,7 +26,7 @@ public class ArticlesSeeder : ISeeder
             .Generate(30);
 
         await _context.Tags.AddRangeAsync(tags, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        _ = await _context.SaveChangesAsync(cancellationToken);
 
         var articles = new Faker<Article>()
             .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))

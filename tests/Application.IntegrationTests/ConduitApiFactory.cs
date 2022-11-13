@@ -33,10 +33,7 @@ public class ConduitApiFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureServices(services =>
-        {
-            services.AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider()));
-        });
+        builder.ConfigureServices(services => services.AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider())));
     }
 
     public async Task RefreshDatabase()

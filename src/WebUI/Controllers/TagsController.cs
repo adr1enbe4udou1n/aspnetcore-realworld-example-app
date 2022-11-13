@@ -10,7 +10,10 @@ public class TagsController
 {
     private readonly ISender _sender;
 
-    public TagsController(ISender sender) => _sender = sender;
+    public TagsController(ISender sender)
+    {
+        _sender = sender;
+    }
 
     /// <summary>
     /// Get tags
@@ -20,5 +23,7 @@ public class TagsController
     /// <returns></returns>
     [HttpGet(Name = "GetTags")]
     public Task<TagsResponse> List(CancellationToken cancellationToken)
-        => _sender.Send(new TagsListQuery(), cancellationToken);
+    {
+        return _sender.Send(new TagsListQuery(), cancellationToken);
+    }
 }

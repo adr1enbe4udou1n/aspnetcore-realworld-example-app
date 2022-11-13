@@ -171,7 +171,7 @@ public class CommentDeleteTests : TestBase
     [Fact]
     public async Task Can_Delete_All_Comments_Of_Own_Article()
     {
-        var user = await ActingAs(new User
+        await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",

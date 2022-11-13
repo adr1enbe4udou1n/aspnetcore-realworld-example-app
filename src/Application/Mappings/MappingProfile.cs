@@ -31,7 +31,7 @@ public class MappingProfile : Profile
 
         CreateMap<User, ProfileDTO>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null ? currentUser.IsFollowing(src) : false))
+            .ForMember(dest => dest.Following, opt => opt.MapFrom(src => currentUser != null && currentUser.IsFollowing(src)))
             .AfterMap<SetIsFollowingAction>();
 
         CreateMap<NewArticleDTO, Article>()
@@ -46,7 +46,7 @@ public class MappingProfile : Profile
                 .OrderBy(t => t)
             ))
             .ForMember(dest => dest.Favorited, opt => opt.MapFrom(
-                src => currentUser != null ? currentUser.HasFavorite(src) : false)
+                src => currentUser != null && currentUser.HasFavorite(src))
             )
             .ForMember(dest => dest.FavoritesCount, opt => opt.MapFrom(src => src.FavoredUsers.Count))
             .AfterMap<SetHasFavoritedAction>();
