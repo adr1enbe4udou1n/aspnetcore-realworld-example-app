@@ -24,8 +24,8 @@ public class ArticlesController
     /// <returns></returns>
     [HttpGet(Name = "GetArticles")]
     [AllowAnonymous]
-    public async Task<MultipleArticlesResponse> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
-        => await _sender.Send(query, cancellationToken);
+    public Task<MultipleArticlesResponse> List([FromQuery] ArticlesListQuery query, CancellationToken cancellationToken)
+        => _sender.Send(query, cancellationToken);
 
     /// <summary>
     /// Get recent articles from users you follow
@@ -35,8 +35,8 @@ public class ArticlesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("feed", Name = "GetArticlesFeed")]
-    public async Task<MultipleArticlesResponse> Feed([FromQuery] ArticlesFeedQuery query, CancellationToken cancellationToken)
-        => await _sender.Send(query, cancellationToken);
+    public Task<MultipleArticlesResponse> Feed([FromQuery] ArticlesFeedQuery query, CancellationToken cancellationToken)
+        => _sender.Send(query, cancellationToken);
 
     /// <summary>
     /// Get an article
@@ -47,8 +47,8 @@ public class ArticlesController
     /// <returns></returns>
     [HttpGet("{slug}", Name = "GetArticle")]
     [AllowAnonymous]
-    public async Task<SingleArticleResponse> Get(string slug, CancellationToken cancellationToken)
-        => await _sender.Send(new ArticleGetQuery(slug), cancellationToken);
+    public Task<SingleArticleResponse> Get(string slug, CancellationToken cancellationToken)
+        => _sender.Send(new ArticleGetQuery(slug), cancellationToken);
 
     /// <summary>
     /// Create an article
@@ -60,8 +60,8 @@ public class ArticlesController
     [HttpPost(Name = "CreateArticle")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public async Task<SingleArticleResponse> Create([FromBody] NewArticleRequest command, CancellationToken cancellationToken)
-        => await _sender.Send(command, cancellationToken);
+    public Task<SingleArticleResponse> Create([FromBody] NewArticleRequest command, CancellationToken cancellationToken)
+        => _sender.Send(command, cancellationToken);
 
     /// <summary>
     /// Update an article
@@ -74,8 +74,8 @@ public class ArticlesController
     [HttpPut("{slug}", Name = "UpdateArticle")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public async Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleBody command, CancellationToken cancellationToken)
-        => await _sender.Send(new UpdateArticleRequest(slug, command.Article), cancellationToken);
+    public Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleBody command, CancellationToken cancellationToken)
+        => _sender.Send(new UpdateArticleRequest(slug, command.Article), cancellationToken);
 
     /// <summary>
     /// Delete an article
@@ -85,8 +85,8 @@ public class ArticlesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete("{slug}", Name = "DeleteArticle")]
-    public async Task Delete(string slug, CancellationToken cancellationToken)
-        => await _sender.Send(new ArticleDeleteRequest(slug), cancellationToken);
+    public Task Delete(string slug, CancellationToken cancellationToken)
+        => _sender.Send(new ArticleDeleteRequest(slug), cancellationToken);
 
     /// <summary>
     /// Favorite an article
@@ -97,8 +97,8 @@ public class ArticlesController
     /// <returns></returns>
     [HttpPost("{slug}/favorite", Name = "CreateArticleFavorite")]
     [ApiExplorerSettings(GroupName = "Favorites")]
-    public async Task<SingleArticleResponse> Favorite(string slug, CancellationToken cancellationToken)
-        => await _sender.Send(new ArticleFavoriteRequest(slug, true), cancellationToken);
+    public Task<SingleArticleResponse> Favorite(string slug, CancellationToken cancellationToken)
+        => _sender.Send(new ArticleFavoriteRequest(slug, true), cancellationToken);
 
     /// <summary>
     /// Unfavorite an article
@@ -109,6 +109,6 @@ public class ArticlesController
     /// <returns></returns>
     [HttpDelete("{slug}/favorite", Name = "DeleteArticleFavorite")]
     [ApiExplorerSettings(GroupName = "Favorites")]
-    public async Task<SingleArticleResponse> Unfavorite(string slug, CancellationToken cancellationToken)
-        => await _sender.Send(new ArticleFavoriteRequest(slug, false), cancellationToken);
+    public Task<SingleArticleResponse> Unfavorite(string slug, CancellationToken cancellationToken)
+        => _sender.Send(new ArticleFavoriteRequest(slug, false), cancellationToken);
 }

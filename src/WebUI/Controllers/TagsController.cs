@@ -19,6 +19,6 @@ public class TagsController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet(Name = "GetTags")]
-    public async Task<TagsResponse> List(CancellationToken cancellationToken)
-        => await _sender.Send(new TagsListQuery(), cancellationToken);
+    public Task<TagsResponse> List(CancellationToken cancellationToken)
+        => _sender.Send(new TagsListQuery(), cancellationToken);
 }

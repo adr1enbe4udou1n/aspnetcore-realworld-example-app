@@ -24,8 +24,8 @@ public class CommentsController
     /// <returns></returns>
     [HttpGet(Name = "GetArticleComments")]
     [AllowAnonymous]
-    public async Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
-        => await _sender.Send(new CommentsListQuery(slug), cancellationToken);
+    public Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
+        => _sender.Send(new CommentsListQuery(slug), cancellationToken);
 
     /// <summary>
     /// Create a comment for an article
@@ -38,8 +38,8 @@ public class CommentsController
     [HttpPost(Name = "CreateArticleComment")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public async Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
-        => await _sender.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
+    public Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
+        => _sender.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
 
     /// <summary>
     /// Delete a comment for an article
@@ -50,6 +50,6 @@ public class CommentsController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete("{commentId}", Name = "DeleteArticleComment")]
-    public async Task Delete(string slug, int commentId, CancellationToken cancellationToken)
-        => await _sender.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
+    public Task Delete(string slug, int commentId, CancellationToken cancellationToken)
+        => _sender.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
 }

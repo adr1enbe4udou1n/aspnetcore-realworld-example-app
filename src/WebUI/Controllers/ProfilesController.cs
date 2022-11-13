@@ -24,8 +24,8 @@ public class ProfilesController
     /// <returns></returns>
     [HttpGet(Name = "GetProfileByUsername")]
     [AllowAnonymous]
-    public async Task<ProfileResponse> Get(string username, CancellationToken cancellationToken)
-        => await _sender.Send(new ProfileGetQuery(username), cancellationToken);
+    public Task<ProfileResponse> Get(string username, CancellationToken cancellationToken)
+        => _sender.Send(new ProfileGetQuery(username), cancellationToken);
 
     /// <summary>
     /// Follow a user
@@ -35,8 +35,8 @@ public class ProfilesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("follow", Name = "FollowUserByUsername")]
-    public async Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
-        => await _sender.Send(new ProfileFollowRequest(username, true), cancellationToken);
+    public Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
+        => _sender.Send(new ProfileFollowRequest(username, true), cancellationToken);
 
     /// <summary>
     /// Unfollow a user
@@ -46,6 +46,6 @@ public class ProfilesController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete("follow", Name = "UnfollowUserByUsername")]
-    public async Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
-        => await _sender.Send(new ProfileFollowRequest(username, false), cancellationToken);
+    public Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
+        => _sender.Send(new ProfileFollowRequest(username, false), cancellationToken);
 }
