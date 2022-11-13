@@ -80,7 +80,7 @@ public class Article : IAuditableEntity
 
                     return new ArticleTag
                     {
-                        Tag = tag == null ? new Tag { Name = x } : tag
+                        Tag = tag ?? new Tag { Name = x }
                     };
                 })
                 .ToList()
