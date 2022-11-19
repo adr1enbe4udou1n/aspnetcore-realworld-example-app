@@ -7,6 +7,7 @@ using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Swashbuckle.AspNetCore.Filters;
+using WebUI.Extensions;
 using WebUI.Filters;
 using WebUI.Handlers;
 
@@ -21,6 +22,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services
     .AddControllers(opt =>
     {
+        opt.UseRoutePrefix("api");
         opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
     })
     .AddJsonOptions(options =>
@@ -131,23 +133,18 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "api";
 });
 
-app.Map("/api", app =>
-{
-    app.UseRouting();
+app.UseRouting();
 
-    app.UseCors(x => x
-        .AllowAnyOrigin()
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-    );
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+);
 
-    app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers();
-    });
-});
+app.MapControllers();
 
 app.Run();
 
