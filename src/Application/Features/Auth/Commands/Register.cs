@@ -1,7 +1,6 @@
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -39,21 +38,28 @@ public class RegisterValidator : AbstractValidator<NewUserRequest>
 public class RegisterHandler : ICommandHandler<NewUserRequest, UserResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public RegisterHandler(IAppDbContext context, IMapper mapper)
+    public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
     {
         _context = context;
-        _mapper = mapper;
+        _passwordHasher = passwordHasher;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<UserResponse> Handle(NewUserRequest request, CancellationToken cancellationToken)
     {
-        var user = _mapper.Map<NewUserDTO, User>(request.User);
+        var user = new User
+        {
+            Name = request.User.Username,
+            Email = request.User.Email,
+            Password = _passwordHasher.Hash(request.User.Password)
+        };
 
         await _context.Users.AddAsync(user, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UserResponse(_mapper.Map<UserDTO>(user));
+        return new UserResponse(new UserDTO(user, _jwtTokenGenerator));
     }
 }

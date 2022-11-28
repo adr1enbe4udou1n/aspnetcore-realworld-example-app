@@ -1,8 +1,6 @@
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
-using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,21 +40,27 @@ public class UpdateUserHandler : ICommandHandler<UpdateUserRequest, UserResponse
 {
     private readonly ICurrentUser _currentUser;
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IMapper mapper)
+    public UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IJwtTokenGenerator jwtTokenGenerator)
     {
         _currentUser = currentUser;
         _context = context;
-        _mapper = mapper;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<UserResponse> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        var user = _mapper.Map<UpdateUserDTO, User>(request.User, _currentUser.User!);
+        var user = _currentUser.User!;
+
+        user.Name = request.User.Username ?? user.Name;
+        user.Email = request.User.Email ?? user.Email;
+        user.Bio = request.User.Bio ?? user.Bio;
+        user.Image = request.User.Image ?? user.Image;
+
         _context.Users.Update(user);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UserResponse(_mapper.Map<UserDTO>(user));
+        return new UserResponse(new UserDTO(user, _jwtTokenGenerator));
     }
 }

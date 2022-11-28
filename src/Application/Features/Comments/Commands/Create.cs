@@ -3,7 +3,6 @@ using Application.Extensions;
 using Application.Features.Comments.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 
@@ -32,24 +31,28 @@ public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
 public class CommentCreateHandler : ICommandHandler<NewCommentRequest, SingleCommentResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
-    public CommentCreateHandler(IAppDbContext context, IMapper mapper)
+    public CommentCreateHandler(IAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
-        _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     public async Task<SingleCommentResponse> Handle(NewCommentRequest request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        var comment = _mapper.Map<Comment>(request.Comment);
-        comment.ArticleId = article.Id;
+        var comment = new Comment
+        {
+            Body = request.Comment.Body,
+            Article = article,
+            Author = _currentUser.User!
+        };
 
         await _context.Comments.AddAsync(comment, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleCommentResponse(_mapper.Map<CommentDTO>(comment));
+        return new SingleCommentResponse(new CommentDTO(comment, _currentUser.User));
     }
 }

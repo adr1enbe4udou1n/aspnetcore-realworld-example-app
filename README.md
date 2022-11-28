@@ -20,8 +20,6 @@ This project use **PostgreSQL** as main database provider. You can run it easily
 
 Two databases will spin up, one for normal development and one dedicated for integrations tests. Indeed In-Memory testing are poorly suitable for real integrations tests for me. See [Avoid In-Memory Databases for Tests](https://jimmybogard.com/avoid-in-memory-databases-for-tests/).
 
-Besides there is no support for cascading foreign keys and no support for Automapper Projection feature. Of course the big con of real database testing is no parallel support so far slower, **7s** (real db) vs **1s** (parallelized in memory db) in my machine.
-
 ### Run app
 
 ```sh

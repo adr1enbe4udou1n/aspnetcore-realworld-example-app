@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands;
@@ -12,13 +11,11 @@ public record ArticleFavoriteRequest(string Slug, bool Favorite) : ICommand<Sing
 public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticleFavoriteHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public ArticleFavoriteHandler(IAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
-        _mapper = mapper;
         _currentUser = currentUser;
     }
 
@@ -39,6 +36,6 @@ public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, Si
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
+        return new SingleArticleResponse(new ArticleDTO(article, _currentUser.User));
     }
 }

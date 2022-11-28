@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands;
@@ -12,13 +11,11 @@ public record ProfileFollowRequest(string Username, bool Follow) : ICommand<Prof
 public class ProfileGetHandler : ICommandHandler<ProfileFollowRequest, ProfileResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ProfileGetHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
-        _mapper = mapper;
         _currentUser = currentUser;
     }
 
@@ -39,6 +36,6 @@ public class ProfileGetHandler : ICommandHandler<ProfileFollowRequest, ProfileRe
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ProfileResponse(_mapper.Map<ProfileDTO>(user));
+        return new ProfileResponse(new ProfileDTO(user, _currentUser.User));
     }
 }

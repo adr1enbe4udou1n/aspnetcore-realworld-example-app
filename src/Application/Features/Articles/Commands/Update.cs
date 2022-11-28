@@ -4,8 +4,6 @@ using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
-using Domain.Entities;
 using FluentValidation;
 
 namespace Application.Features.Articles.Commands;
@@ -34,13 +32,11 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
 public class ArticleUpdateHandler : ICommandHandler<UpdateArticleRequest, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticleUpdateHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public ArticleUpdateHandler(IAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
-        _mapper = mapper;
         _currentUser = currentUser;
     }
 
@@ -53,11 +49,13 @@ public class ArticleUpdateHandler : ICommandHandler<UpdateArticleRequest, Single
             throw new ForbiddenException();
         }
 
-        article = _mapper.Map<UpdateArticleDTO, Article>(request.Article, article);
+        article.Title = request.Article.Title ?? article.Title;
+        article.Description = request.Article.Description ?? article.Description;
+        article.Body = request.Article.Body ?? article.Body;
 
         _context.Articles.Update(article);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
+        return new SingleArticleResponse(new ArticleDTO(article, _currentUser.User));
     }
 }

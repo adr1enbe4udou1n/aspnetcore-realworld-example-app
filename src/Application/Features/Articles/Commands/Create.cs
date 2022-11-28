@@ -1,7 +1,6 @@
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -41,17 +40,26 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
 public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
+    private readonly ISlugifier _slugifier;
 
-    public ArticleCreateHandler(IAppDbContext context, IMapper mapper)
+    public ArticleCreateHandler(IAppDbContext context, ICurrentUser currentUser, ISlugifier slugifier)
     {
         _context = context;
-        _mapper = mapper;
+        _currentUser = currentUser;
+        _slugifier = slugifier;
     }
 
     public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
     {
-        var article = _mapper.Map<Article>(request.Article);
+        var article = new Article
+        {
+            Title = request.Article.Title,
+            Description = request.Article.Description,
+            Body = request.Article.Body,
+            Author = _currentUser.User!,
+            Slug = _slugifier.Generate(request.Article.Title)
+        };
 
         if (request.Article.TagList != null)
         {
@@ -67,6 +75,6 @@ public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArt
         await _context.Articles.AddAsync(article, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(_mapper.Map<ArticleDTO>(article));
+        return new SingleArticleResponse(new ArticleDTO(article, _currentUser.User));
     }
 }

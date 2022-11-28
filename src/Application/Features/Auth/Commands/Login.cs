@@ -1,7 +1,6 @@
 using Application.Features.Auth.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,13 +19,13 @@ public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IMapper _mapper;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IMapper mapper)
+    public LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
     {
         _context = context;
         _passwordHasher = passwordHasher;
-        _mapper = mapper;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<UserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken)
@@ -39,6 +38,6 @@ public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
             throw new Exceptions.ValidationException("Bad credentials");
         }
 
-        return new UserResponse(_mapper.Map<UserDTO>(user));
+        return new UserResponse(new UserDTO(user, _jwtTokenGenerator));
     }
 }

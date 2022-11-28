@@ -3,13 +3,31 @@ using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
 using Application.Support;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries;
 
 public class ArticleDTO
 {
+    public ArticleDTO()
+    {
+    }
+
+    public ArticleDTO(Article article, User? currentUser)
+    {
+        Slug = article.Slug;
+        Title = article.Title;
+        Description = article.Description;
+        Body = article.Body;
+        TagList = article.Tags.Select(t => t.Tag.Name).OrderBy(t => t);
+        CreatedAt = article.CreatedAt;
+        UpdatedAt = article.UpdatedAt;
+        Favorited = currentUser != null && currentUser.HasFavorite(article);
+        FavoritesCount = article.FavoredUsers.Count;
+        Author = new ProfileDTO(article.Author, currentUser);
+    }
+
     public string Title { get; set; } = default!;
 
     public string Slug { get; set; } = default!;
@@ -54,13 +72,11 @@ public class ArticlesListQuery : PagedQuery, IQuery<MultipleArticlesResponse>
 public class ArticlesListHandler : IQueryHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
     private readonly IAppDbContext _context;
-    private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
 
-    public ArticlesListHandler(IAppDbContext context, IMapper mapper, ICurrentUser currentUser)
+    public ArticlesListHandler(IAppDbContext context, ICurrentUser currentUser)
     {
         _context = context;
-        _mapper = mapper;
         _currentUser = currentUser;
     }
 
@@ -70,14 +86,15 @@ public class ArticlesListHandler : IQueryHandler<ArticlesListQuery, MultipleArti
         await _currentUser.LoadFavoriteArticles();
 
         var articles = await _context.Articles
+            .Include(a => a.Author)
+            .Include(a => a.Tags)
+            .ThenInclude(t => t.Tag)
+            .Include(a => a.FavoredUsers)
             .FilterByAuthor(request.Author)
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)
             .OrderByDescending(x => x.Id)
-            .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider, new
-            {
-                currentUser = _currentUser.User
-            })
+            .Select(a => new ArticleDTO(a, _currentUser.User))
             .PaginateAsync(request, cancellationToken);
 
         return new MultipleArticlesResponse(articles.Items, articles.Total);

@@ -10,7 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        return services.AddAutoMapper(Assembly.GetExecutingAssembly())
+        return services
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(QueryBehavior<,>))
