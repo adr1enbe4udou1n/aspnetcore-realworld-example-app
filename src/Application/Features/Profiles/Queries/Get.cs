@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Queries;
 
@@ -47,7 +46,6 @@ public class ProfileGetHandler : IQueryHandler<ProfileGetQuery, ProfileResponse>
     public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
-            .Include(u => u.Followers)
             .FindAsync(x => x.Name == request.Username, cancellationToken);
 
         return new ProfileResponse(new ProfileDTO(user, _currentUser.User));

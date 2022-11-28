@@ -20,7 +20,9 @@ public static class DependencyInjection
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
             .AddDbContextFactory<AppDbContext>((options) =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                options
+                    .UseLazyLoadingProxies()
+                    .UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()

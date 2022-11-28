@@ -13,7 +13,7 @@ public class Article : IAuditableEntity
 
     public int AuthorId { get; set; }
 
-    public User Author { get; set; } = null!;
+    public virtual User Author { get; set; } = null!;
 
 
     [Column(TypeName = "varchar(255)")]
@@ -31,11 +31,11 @@ public class Article : IAuditableEntity
 
     public DateTime UpdatedAt { get; set; }
 
-    public IReadOnlyCollection<Comment> Comments => _comments;
+    public virtual IReadOnlyCollection<Comment> Comments => _comments;
 
-    public IReadOnlyCollection<ArticleTag> Tags => _tags;
+    public virtual IReadOnlyCollection<ArticleTag> Tags => _tags;
 
-    public IReadOnlyCollection<ArticleFavorite> FavoredUsers => _favoredUsers;
+    public virtual IReadOnlyCollection<ArticleFavorite> FavoredUsers => _favoredUsers;
 
     public bool IsFavoritedBy(User user)
     {

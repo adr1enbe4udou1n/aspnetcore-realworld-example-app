@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Profiles.Commands;
 
@@ -22,7 +21,6 @@ public class ProfileGetHandler : ICommandHandler<ProfileFollowRequest, ProfileRe
     public async Task<ProfileResponse> Handle(ProfileFollowRequest request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
-            .Include(u => u.Followers)
             .FindAsync(x => x.Name == request.Username, cancellationToken);
 
         if (request.Follow)

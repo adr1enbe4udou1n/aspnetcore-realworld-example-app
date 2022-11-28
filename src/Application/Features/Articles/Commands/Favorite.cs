@@ -2,7 +2,6 @@ using Application.Extensions;
 using Application.Features.Articles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands;
 
@@ -22,7 +21,6 @@ public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, Si
     public async Task<SingleArticleResponse> Handle(ArticleFavoriteRequest request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles
-            .Include(x => x.FavoredUsers)
             .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         if (request.Favorite)

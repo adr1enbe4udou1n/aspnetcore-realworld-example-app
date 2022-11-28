@@ -11,5 +11,5 @@ public class Tag
     [Column(TypeName = "varchar(255)")]
     public string Name { get; set; } = null!;
 
-    public IReadOnlyCollection<ArticleTag> Articles => _articles;
+    public virtual IReadOnlyCollection<ArticleTag> Articles => _articles;
 }

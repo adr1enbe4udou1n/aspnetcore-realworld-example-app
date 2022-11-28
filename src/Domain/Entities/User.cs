@@ -31,15 +31,15 @@ public class User : IAuditableEntity
 
     public DateTime UpdatedAt { get; set; }
 
-    public IReadOnlyCollection<Article> Articles => _articles;
+    public virtual IReadOnlyCollection<Article> Articles => _articles;
 
-    public IReadOnlyCollection<ArticleFavorite> FavoriteArticles => _favoriteArticles;
+    public virtual IReadOnlyCollection<ArticleFavorite> FavoriteArticles => _favoriteArticles;
 
-    public IReadOnlyCollection<Comment> Comments => _comments;
+    public virtual IReadOnlyCollection<Comment> Comments => _comments;
 
-    public IReadOnlyCollection<FollowerUser> Following => _following;
+    public virtual IReadOnlyCollection<FollowerUser> Following => _following;
 
-    public IReadOnlyCollection<FollowerUser> Followers => _followers;
+    public virtual IReadOnlyCollection<FollowerUser> Followers => _followers;
 
     public bool IsFollowing(User user)
     {
