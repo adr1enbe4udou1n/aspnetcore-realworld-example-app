@@ -60,6 +60,6 @@ public class RegisterHandler : ICommandHandler<NewUserRequest, UserResponse>
         await _context.Users.AddAsync(user, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UserResponse(new UserDTO(user, _jwtTokenGenerator));
+        return new UserResponse(user.Map(_jwtTokenGenerator));
     }
 }

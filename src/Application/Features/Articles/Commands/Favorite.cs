@@ -34,6 +34,6 @@ public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, Si
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(new ArticleDTO(article, _currentUser.User));
+        return new SingleArticleResponse(article.Map(_currentUser.User));
     }
 }

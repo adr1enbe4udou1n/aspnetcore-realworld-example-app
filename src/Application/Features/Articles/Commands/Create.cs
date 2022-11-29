@@ -75,6 +75,6 @@ public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArt
         await _context.Articles.AddAsync(article, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(new ArticleDTO(article, _currentUser.User));
+        return new SingleArticleResponse(article.Map(_currentUser.User));
     }
 }

@@ -1,4 +1,5 @@
 using Application.Extensions;
+using Application.Features.Auth.Queries;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
@@ -34,6 +35,6 @@ public class ProfileGetHandler : ICommandHandler<ProfileFollowRequest, ProfileRe
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ProfileResponse(new ProfileDTO(user, _currentUser.User));
+        return new ProfileResponse(user.MapToProfile(_currentUser.User));
     }
 }

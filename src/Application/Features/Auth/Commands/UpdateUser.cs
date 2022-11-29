@@ -61,6 +61,6 @@ public class UpdateUserHandler : ICommandHandler<UpdateUserRequest, UserResponse
         _context.Users.Update(user);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UserResponse(new UserDTO(user, _jwtTokenGenerator));
+        return new UserResponse(user.Map(_jwtTokenGenerator));
     }
 }

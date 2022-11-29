@@ -1,3 +1,4 @@
+using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
 using Domain.Entities;
@@ -6,19 +7,6 @@ namespace Application.Features.Auth.Queries;
 
 public class UserDTO
 {
-    public UserDTO()
-    {
-    }
-
-    public UserDTO(User user, IJwtTokenGenerator jwtTokenGenerator)
-    {
-        Email = user.Email;
-        Token = jwtTokenGenerator.CreateToken(user);
-        Username = user.Name;
-        Bio = user.Bio!;
-        Image = user.Image!;
-    }
-
     public string Email { get; set; } = default!;
 
     public string Username { get; set; } = default!;
@@ -28,6 +16,32 @@ public class UserDTO
     public string Image { get; set; } = default!;
 
     public string Token { get; set; } = default!;
+}
+
+public static class UserMapper
+{
+    public static UserDTO Map(this User user, IJwtTokenGenerator jwtTokenGenerator)
+    {
+        return new()
+        {
+            Email = user.Email,
+            Token = jwtTokenGenerator.CreateToken(user),
+            Username = user.Name,
+            Bio = user.Bio!,
+            Image = user.Image!,
+        };
+    }
+
+    public static ProfileDTO MapToProfile(this User user, User? currentUser)
+    {
+        return new()
+        {
+            Username = user.Name,
+            Bio = user.Bio,
+            Image = user.Image,
+            Following = currentUser != null && currentUser.IsFollowing(user),
+        };
+    }
 }
 
 public record UserResponse(UserDTO User);
@@ -48,7 +62,7 @@ public class CurrentUserHandler : IQueryHandler<CurrentUserQuery, UserResponse>
     public Task<UserResponse> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
     {
         return Task.FromResult(new UserResponse(
-            new UserDTO(_currentUser.User!, _jwtTokenGenerator)
+            _currentUser.User!.Map(_jwtTokenGenerator)
         ));
     }
 }

@@ -53,6 +53,6 @@ public class CommentCreateHandler : ICommandHandler<NewCommentRequest, SingleCom
         await _context.Comments.AddAsync(comment, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new SingleCommentResponse(new CommentDTO(comment, _currentUser.User));
+        return new SingleCommentResponse(comment.Map(_currentUser.User));
     }
 }

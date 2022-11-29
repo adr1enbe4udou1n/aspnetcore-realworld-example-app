@@ -1,53 +1,10 @@
 using Application.Extensions;
-using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
 using Application.Support;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries;
-
-public class ArticleDTO
-{
-    public ArticleDTO()
-    {
-    }
-
-    public ArticleDTO(Article article, User? currentUser)
-    {
-        Slug = article.Slug;
-        Title = article.Title;
-        Description = article.Description;
-        Body = article.Body;
-        TagList = article.Tags.Select(t => t.Tag.Name).OrderBy(t => t);
-        CreatedAt = article.CreatedAt;
-        UpdatedAt = article.UpdatedAt;
-        Favorited = currentUser != null && currentUser.HasFavorite(article);
-        FavoritesCount = article.FavoredUsers.Count;
-        Author = new ProfileDTO(article.Author, currentUser);
-    }
-
-    public string Title { get; set; } = default!;
-
-    public string Slug { get; set; } = default!;
-
-    public string Description { get; set; } = default!;
-
-    public string Body { get; set; } = default!;
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
-
-    public IEnumerable<string> TagList { get; set; } = default!;
-
-    public ProfileDTO Author { get; set; } = null!;
-
-    public bool Favorited { get; set; }
-
-    public int FavoritesCount { get; set; }
-}
 
 public record MultipleArticlesResponse(IEnumerable<ArticleDTO> Articles, int ArticlesCount);
 
@@ -94,7 +51,7 @@ public class ArticlesListHandler : IQueryHandler<ArticlesListQuery, MultipleArti
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)
             .OrderByDescending(x => x.Id)
-            .Select(a => new ArticleDTO(a, _currentUser.User))
+            .Select(a => a.Map(_currentUser.User))
             .PaginateAsync(request, cancellationToken);
 
         return new MultipleArticlesResponse(articles.Items, articles.Total);

@@ -33,7 +33,7 @@ public class ArticlesFeedHandler : IQueryHandler<ArticlesFeedQuery, MultipleArti
             .Include(a => a.FavoredUsers)
             .HasAuthorsFollowedBy(_currentUser.User!)
             .OrderByDescending(x => x.Id)
-            .Select(a => new ArticleDTO(a, _currentUser.User))
+            .Select(a => a.Map(_currentUser.User))
             .PaginateAsync(request, cancellationToken);
 
         return new MultipleArticlesResponse(articles.Items, articles.Total);

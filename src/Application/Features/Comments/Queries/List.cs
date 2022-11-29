@@ -1,4 +1,5 @@
 using Application.Extensions;
+using Application.Features.Auth.Queries;
 using Application.Features.Profiles.Queries;
 using Application.Interfaces;
 using Application.Interfaces.Mediator;
@@ -9,20 +10,7 @@ namespace Application.Features.Comments.Queries;
 
 public class CommentDTO
 {
-    public CommentDTO()
-    {
-    }
-
-    public CommentDTO(Comment comment, User? user)
-    {
-        Id = comment.Id;
-        Body = comment.Body;
-        CreatedAt = comment.CreatedAt;
-        UpdatedAt = comment.UpdatedAt;
-        Author = new ProfileDTO(comment.Author, user);
-    }
-
-    public int Id { get; private set; }
+    public int Id { get; set; }
 
     public string Body { get; set; } = default!;
 
@@ -31,6 +19,21 @@ public class CommentDTO
     public DateTime UpdatedAt { get; set; }
 
     public ProfileDTO Author { get; set; } = null!;
+}
+
+public static class CommentMapper
+{
+    public static CommentDTO Map(this Comment comment, User? user)
+    {
+        return new()
+        {
+            Id = comment.Id,
+            Body = comment.Body,
+            CreatedAt = comment.CreatedAt,
+            UpdatedAt = comment.UpdatedAt,
+            Author = comment.Author.MapToProfile(user),
+        };
+    }
 }
 
 public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);
@@ -58,7 +61,7 @@ public class CommentsListHandler : IQueryHandler<CommentsListQuery, MultipleComm
             .Include(c => c.Author)
             .Where(c => c.ArticleId == article.Id)
             .OrderByDescending(x => x.Id)
-            .Select(c => new CommentDTO(c, _currentUser.User))
+            .Select(c => c.Map(_currentUser.User))
             .ToListAsync(cancellationToken);
 
         return new MultipleCommentsResponse(comments);

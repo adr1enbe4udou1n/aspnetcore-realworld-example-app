@@ -38,6 +38,6 @@ public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
             throw new Exceptions.ValidationException("Bad credentials");
         }
 
-        return new UserResponse(new UserDTO(user, _jwtTokenGenerator));
+        return new UserResponse(user.Map(_jwtTokenGenerator));
     }
 }
