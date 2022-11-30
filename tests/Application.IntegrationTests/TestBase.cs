@@ -1,9 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
+using System.Text;
 using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -40,11 +43,17 @@ public class TestBase : IAsyncLifetime
         _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
     }
 
-    public Task InitializeAsync() => _refreshDatabase();
+    public Task InitializeAsync()
+    {
+        return _refreshDatabase();
+    }
 
-    public Task DisposeAsync() => Task.CompletedTask;
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
-    private string? _token = null;
+    private string? _token;
 
     protected async Task<User> ActingAs(User user)
     {
@@ -96,6 +105,8 @@ public class TestBase : IAsyncLifetime
                         return await client.PostAsJsonAsync($"/api{requestUri}", value);
                     case "PUT":
                         return await client.PutAsJsonAsync($"/api{requestUri}", value);
+                    default:
+                        break;
                 }
             }
             return await client.SendAsync(new HttpRequestMessage(method, $"/api{requestUri}"));
@@ -122,5 +133,24 @@ public class TestBase : IAsyncLifetime
         response.EnsureSuccessStatusCode();
 
         return (await response.Content.ReadFromJsonAsync<T>())!;
+    }
+
+    protected static IDictionary<string, string> DecodeToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        tokenHandler.ValidateToken(token, new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("super secret key")
+            ),
+        }, out var validatedToken);
+
+        var jwtToken = (JwtSecurityToken)validatedToken;
+        return jwtToken.Claims
+            .GroupBy(c => c.Type)
+            .ToDictionary(group => group.Key, group => group.Last().Value);
     }
 }

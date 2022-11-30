@@ -74,9 +74,9 @@ public class LoginTests : TestBase
         currentUser.User.Username.Should().Be("John Doe");
         currentUser.User.Email.Should().Be("john.doe@example.com");
 
-        var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
+        var payload = DecodeToken(currentUser.User.Token);
 
-        payload["id"].Should().Be(user.Id.ToString(CultureInfo.InvariantCulture));
+        payload["sub"].Should().Be(user.Id.ToString(CultureInfo.InvariantCulture));
         payload["name"].Should().Be("John Doe");
         payload["email"].Should().Be("john.doe@example.com");
     }

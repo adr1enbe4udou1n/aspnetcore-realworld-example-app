@@ -70,9 +70,9 @@ public class RegisterTests : TestBase
 
         _passwordHasher.Check("password", created!.Password!).Should().BeTrue();
 
-        var payload = _jwtTokenGenerator.DecodeToken(currentUser.User.Token);
+        var payload = DecodeToken(currentUser.User.Token);
 
-        payload["id"].Should().Be(created.Id.ToString(CultureInfo.InvariantCulture));
+        payload["sub"].Should().Be(created.Id.ToString(CultureInfo.InvariantCulture));
         payload["name"].Should().Be("John Doe");
         payload["email"].Should().Be("john.doe@example.com");
     }

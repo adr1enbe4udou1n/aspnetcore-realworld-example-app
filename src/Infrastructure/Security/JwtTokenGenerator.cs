@@ -2,9 +2,9 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Infrastructure.Settings;
 using Application.Interfaces;
 using Domain.Entities;
+using Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,60 +13,38 @@ namespace Infrastructure.Security;
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
     private readonly ICurrentUser _currentUser;
-    private readonly SymmetricSecurityKey _secret;
+    private readonly JwtOptions _jwtOptions;
 
     public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, ICurrentUser currentUser)
     {
-        if (options.CurrentValue.SecretKey == null)
-        {
-            throw new ArgumentException("You must set a JWT secret key");
-        }
-
-        _secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.CurrentValue.SecretKey));
         _currentUser = currentUser;
+        _jwtOptions = options.CurrentValue;
     }
 
     public string CreateToken(User user)
     {
+        if (_jwtOptions.SecretKey == null)
+        {
+            throw new ArgumentException("You must set a JWT secret key");
+        }
+
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] {
-                    new Claim("id", user.Id.ToString(CultureInfo.InvariantCulture)),
-                    new Claim("name", user.Name),
-                    new Claim("email", user.Email)
-                }),
+            Issuer = _jwtOptions.Issuer,
+            Audience = _jwtOptions.Audience,
+            Subject = new ClaimsIdentity(new Claim[] {
+                new(JwtRegisteredClaimNames.Sub, user.Id.ToString(CultureInfo.InvariantCulture)),
+                new(JwtRegisteredClaimNames.Name, user.Name),
+                new(JwtRegisteredClaimNames.Email, user.Email)
+            }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(
-                _secret, SecurityAlgorithms.HmacSha256Signature
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+                SecurityAlgorithms.HmacSha256Signature
             )
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
-    }
-
-    public IDictionary<string, string> DecodeToken(string token)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        tokenHandler.ValidateToken(token, new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = _secret,
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ClockSkew = TimeSpan.Zero
-        }, out var validatedToken);
-
-        var jwtToken = (JwtSecurityToken)validatedToken;
-        return jwtToken.Claims
-            .GroupBy(c => c.Type)
-            .ToDictionary(group => group.Key, group => group.Last().Value);
-    }
-
-    public async Task SetCurrentUserFromToken(string token)
-    {
-        var userId = long.Parse(DecodeToken(token)["id"], CultureInfo.InvariantCulture);
-
-        await _currentUser.SetIdentifier(userId);
     }
 }

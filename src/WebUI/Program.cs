@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using Infrastructure;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using OpenTelemetry.Resources;
@@ -9,7 +8,7 @@ using OpenTelemetry.Trace;
 using Swashbuckle.AspNetCore.Filters;
 using WebUI.Extensions;
 using WebUI.Filters;
-using WebUI.Handlers;
+using WebUI.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,15 +28,11 @@ builder.Services
         options.JsonSerializerOptions.Converters.Add(new WebUI.Converters.DateTimeConverter())
     );
 
-builder.Services.AddAuthentication("Bearer")
-    .AddScheme<AuthenticationSchemeOptions, TokenAuthenticationHandler>("Bearer", null);
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
-builder.Services.AddAuthorization(options =>
-{
-    var policy = new AuthorizationPolicyBuilder("Bearer");
-    policy.RequireAuthenticatedUser();
-    options.DefaultPolicy = policy.Build();
-});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

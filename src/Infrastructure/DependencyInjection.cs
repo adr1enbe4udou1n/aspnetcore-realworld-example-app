@@ -1,7 +1,5 @@
 
 using Application;
-using Application.Infrastructure.Security;
-using Application.Infrastructure.Settings;
 using Application.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Security;
@@ -27,7 +25,6 @@ public static class DependencyInjection
             .AddScoped<ICurrentUser, CurrentUser>()
             .AddScoped<IPasswordHasher, PasswordHasher>()
             .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
-                .Configure<JwtOptions>(configuration.GetSection("Jwt"))
             .AddScoped<ISlugHelper, SlugHelper>()
             .AddScoped<ISlugifier, Slugifier>();
     }

@@ -3,7 +3,7 @@ using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Infrastructure.Security;
+namespace Infrastructure.Security;
 
 public class CurrentUser : ICurrentUser
 {
@@ -13,7 +13,7 @@ public class CurrentUser : ICurrentUser
 
     public User? User { get; private set; }
 
-    public bool IsAuthenticated { get => User != null; }
+    public bool IsAuthenticated => User != null;
 
     public CurrentUser(AppDbContext context)
     {
