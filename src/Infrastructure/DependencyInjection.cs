@@ -2,10 +2,10 @@
 using Application;
 using Application.Interfaces;
 using Infrastructure.Persistence;
-using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Scrutor;
 using Slugify;
 
 namespace Infrastructure;
@@ -22,10 +22,16 @@ public static class DependencyInjection
                     .UseLazyLoadingProxies()
                     .UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })
-            .AddScoped<ICurrentUser, CurrentUser>()
-            .AddScoped<IPasswordHasher, PasswordHasher>()
-            .AddScoped<IJwtTokenGenerator, JwtTokenGenerator>()
-            .AddScoped<ISlugHelper, SlugHelper>()
-            .AddScoped<ISlugifier, Slugifier>();
+            .Scan(
+                selector => selector
+                    .FromAssemblies(
+                        typeof(DependencyInjection).Assembly,
+                        typeof(SlugHelper).Assembly
+                    )
+                    .AddClasses()
+                    .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime()
+            );
     }
 }
