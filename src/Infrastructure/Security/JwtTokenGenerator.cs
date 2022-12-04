@@ -5,8 +5,10 @@ using System.Text;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Options;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Infrastructure.Security;
 
@@ -14,11 +16,13 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 {
     private readonly ICurrentUser _currentUser;
     private readonly JwtOptions _jwtOptions;
+    private readonly HttpContext? _httpContext;
 
-    public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, ICurrentUser currentUser)
+    public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, ICurrentUser currentUser, IHttpContextAccessor httpContextAccessor)
     {
         _currentUser = currentUser;
         _jwtOptions = options.CurrentValue;
+        _httpContext = httpContextAccessor.HttpContext;
     }
 
     public string CreateToken(User user)
@@ -44,7 +48,20 @@ public class JwtTokenGenerator : IJwtTokenGenerator
                 SecurityAlgorithms.HmacSha256Signature
             )
         };
+
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        var response = tokenHandler.WriteToken(token);
+
+        _httpContext?.Response.Cookies.Append(
+            JwtBearerDefaults.AuthenticationScheme,
+            response,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = tokenDescriptor.Expires,
+            }
+        );
+
+        return response;
     }
 }
