@@ -5,10 +5,10 @@ using System.Text;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Infrastructure.Security;
 
