@@ -1,5 +1,6 @@
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using OpenTelemetry;
 using WebUI.Extensions;
 using WebUI.Filters;
 using WebUI.OptionsSetup;
@@ -33,7 +34,8 @@ builder.Services
 builder.Services
     .ConfigureOptions<TracerOptionsSetup>()
     .ConfigureOptions<TracerProviderBuilderSetup>()
-    .AddOpenTelemetryTracing();
+    .AddOpenTelemetry()
+    .WithTracing();
 
 var app = builder.Build();
 
