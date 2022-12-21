@@ -10,8 +10,6 @@ public interface IAppDbContext : IDisposable
     DbSet<Comment> Comments { get; }
     DbSet<Tag> Tags { get; }
 
-    DbSet<TEntity> Set<TEntity>() where TEntity : class;
-
     void UseRoConnection();
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

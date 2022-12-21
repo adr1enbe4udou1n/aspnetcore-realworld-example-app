@@ -4,6 +4,7 @@ using System.Text;
 using Application.IntegrationTests.Events;
 using Application.Interfaces;
 using Domain.Entities;
+using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -15,10 +16,8 @@ namespace Application.IntegrationTests;
 [Collection("Test collection")]
 public class TestBase : IAsyncLifetime
 {
+    protected AppDbContext Context { get; }
     protected IMediator Mediator { get; }
-
-    protected IAppDbContext Context { get; }
-
     protected IPasswordHasher PasswordHasher { get; }
 
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
@@ -35,7 +34,7 @@ public class TestBase : IAsyncLifetime
 
         var scope = factory.Services.CreateScope();
 
-        Context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+        Context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         Mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         _currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
         PasswordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
