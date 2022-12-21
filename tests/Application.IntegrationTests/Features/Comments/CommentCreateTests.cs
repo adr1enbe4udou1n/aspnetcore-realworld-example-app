@@ -35,7 +35,7 @@ public class CommentCreateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -86,7 +86,7 @@ public class CommentCreateTests : TestBase
             Image = "https://i.pravatar.cc/300"
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -111,6 +111,6 @@ public class CommentCreateTests : TestBase
             },
         }, options => options.Excluding(x => x.Id).Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-        (await _context.Comments.AnyAsync()).Should().BeTrue();
+        (await Context.Comments.AnyAsync()).Should().BeTrue();
     }
 }

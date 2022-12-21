@@ -13,12 +13,12 @@ public class TagsListTests : TestBase
     [Fact]
     public async Task Can_List_All_Tags()
     {
-        await _context.Tags.AddRangeAsync(
+        await Context.Tags.AddRangeAsync(
             new Tag { Name = "Tag3" },
             new Tag { Name = "Tag2" },
             new Tag { Name = "Tag1" }
         );
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
 
         var response = await Act<TagsResponse>(HttpMethod.Get, "/tags");
 

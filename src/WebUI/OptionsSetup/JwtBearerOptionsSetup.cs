@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Globalization;
+using System.Security.Claims;
 using System.Text;
 using Application.Interfaces;
 using Infrastructure.Options;
@@ -33,7 +34,7 @@ public class JwtBearerOptionsSetup : IPostConfigureOptions<JwtBearerOptions>
                 if (userId != null)
                 {
                     var currentUser = context.HttpContext.RequestServices.GetRequiredService<ICurrentUser>();
-                    await currentUser.SetIdentifier(Convert.ToInt32(userId));
+                    await currentUser.SetIdentifier(Convert.ToInt32(userId, CultureInfo.InvariantCulture));
                 }
             },
             OnMessageReceived = context =>

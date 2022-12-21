@@ -70,7 +70,7 @@ public class UpdateUserTests : TestBase
         currentUser.User.Bio.Should().Be("My Bio");
         currentUser.User.Image.Should().BeNull();
 
-        var created = await _context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
+        var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
         created.Should().NotBeNull();
     }
 
@@ -89,12 +89,12 @@ public class UpdateUserTests : TestBase
     [Fact]
     public async Task Logged_User_Cannot_Update_With_Already_Used_Email()
     {
-        await _context.Users.AddAsync(new User
+        await Context.Users.AddAsync(new User
         {
             Name = "John Doe",
             Email = "jane.doe@example.com"
         });
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
 
         await ActingAs(new User
         {

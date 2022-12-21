@@ -28,7 +28,7 @@ public class ProfileFollowTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _context.Users.AddRangeAsync(
+        await Context.Users.AddRangeAsync(
             new User
             {
                 Name = "Jane Doe",
@@ -40,7 +40,7 @@ public class ProfileFollowTests : TestBase
                 Email = "alice@example.com",
             }
         );
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
 
         var response = await Act<ProfileResponse>(HttpMethod.Post, "/profiles/celeb_Jane Doe/follow");
 
@@ -50,8 +50,8 @@ public class ProfileFollowTests : TestBase
             Following = true
         });
 
-        (await _context.Set<FollowerUser>().CountAsync()).Should().Be(1);
-        (await _context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Jane Doe"))
+        (await Context.Set<FollowerUser>().CountAsync()).Should().Be(1);
+        (await Context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Jane Doe"))
             .Should().BeTrue();
     }
 
@@ -87,8 +87,8 @@ public class ProfileFollowTests : TestBase
             Following = false
         });
 
-        (await _context.Set<FollowerUser>().CountAsync()).Should().Be(1);
-        (await _context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Alice"))
+        (await Context.Set<FollowerUser>().CountAsync()).Should().Be(1);
+        (await Context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Alice"))
             .Should().BeTrue();
     }
 }

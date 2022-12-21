@@ -36,13 +36,13 @@ public class LoginTests : TestBase
     [Theory, MemberData(nameof(InvalidCredentials))]
     public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDTO credentials)
     {
-        await _context.Users.AddAsync(new User
+        await Context.Users.AddAsync(new User
         {
             Email = "john.doe@example.com",
             Name = "John Doe",
-            Password = _passwordHasher.Hash("password"),
+            Password = PasswordHasher.Hash("password"),
         });
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
 
         var response = await Act(HttpMethod.Post, "/users/login", new LoginUserRequest(credentials));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -55,10 +55,10 @@ public class LoginTests : TestBase
         {
             Email = "john.doe@example.com",
             Name = "John Doe",
-            Password = _passwordHasher.Hash("password"),
+            Password = PasswordHasher.Hash("password"),
         };
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        await Context.Users.AddAsync(user);
+        await Context.SaveChangesAsync();
 
         var currentUser = await Act<UserResponse>(
             HttpMethod.Post, "/users/login",

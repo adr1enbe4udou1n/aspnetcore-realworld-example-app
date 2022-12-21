@@ -32,7 +32,7 @@ public class CommentsListTests : TestBase
             Image = "https://i.pravatar.cc/300"
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -50,7 +50,7 @@ public class CommentsListTests : TestBase
 
         foreach (var c in comments)
         {
-            await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = $"This is John, {c} !",
             }));
@@ -66,7 +66,7 @@ public class CommentsListTests : TestBase
 
         foreach (var c in comments)
         {
-            await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = $"This is Jane, {c} !",
             }));

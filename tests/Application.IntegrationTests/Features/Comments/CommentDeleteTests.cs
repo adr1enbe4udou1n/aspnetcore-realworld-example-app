@@ -29,7 +29,7 @@ public class CommentDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -51,7 +51,7 @@ public class CommentDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -60,7 +60,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var r = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
@@ -78,7 +78,7 @@ public class CommentDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -87,7 +87,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Other Title",
@@ -96,7 +96,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var r = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
@@ -116,7 +116,7 @@ public class CommentDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -125,7 +125,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var r = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
@@ -149,7 +149,7 @@ public class CommentDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -158,14 +158,14 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var response = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
 
         await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
 
-        (await _context.Comments.AnyAsync()).Should().BeFalse();
+        (await Context.Comments.AnyAsync()).Should().BeFalse();
     }
 
     [Fact]
@@ -177,7 +177,7 @@ public class CommentDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -186,7 +186,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you !",
         }));
@@ -197,13 +197,13 @@ public class CommentDeleteTests : TestBase
             Email = "jane.doe@example.com",
         });
 
-        var response = await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
         {
             Body = "Thank you John !",
         }));
 
         await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
 
-        (await _context.Comments.CountAsync()).Should().Be(1);
+        (await Context.Comments.CountAsync()).Should().Be(1);
     }
 }

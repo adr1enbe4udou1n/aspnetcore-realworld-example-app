@@ -14,14 +14,14 @@ public class ProfileGetTests : TestBase
     [Fact]
     public async Task Can_Get_Profile()
     {
-        await _context.Users.AddAsync(new User
+        await Context.Users.AddAsync(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
             Bio = "My Bio",
             Image = "https://i.pravatar.cc/300",
         });
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
 
         var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_John Doe");
 

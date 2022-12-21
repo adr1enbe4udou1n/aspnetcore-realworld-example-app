@@ -42,7 +42,7 @@ public class ArticleDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -70,7 +70,7 @@ public class ArticleDeleteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -81,17 +81,17 @@ public class ArticleDeleteTests : TestBase
 
         for (var i = 1; i <= 5; i++)
         {
-            await _mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
             {
                 Body = $"This is John, Test Comment {i} !",
             }));
         }
 
-        await _mediator.Send(new ArticleFavoriteRequest("test-title", true));
+        await Mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
         await Act(HttpMethod.Delete, "/articles/test-title");
 
-        (await _context.Articles.AnyAsync()).Should().BeFalse();
-        (await _context.Comments.AnyAsync()).Should().BeFalse();
+        (await Context.Articles.AnyAsync()).Should().BeFalse();
+        (await Context.Comments.AnyAsync()).Should().BeFalse();
     }
 }

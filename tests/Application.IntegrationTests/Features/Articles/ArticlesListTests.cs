@@ -111,7 +111,7 @@ public class ArticlesListTests : TestBase
 
         foreach (var a in articles)
         {
-            await _mediator.Send(new ArticleFavoriteRequest(a, true));
+            await Mediator.Send(new ArticleFavoriteRequest(a, true));
         }
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&favorited=Jane");
@@ -150,7 +150,7 @@ public class ArticlesListTests : TestBase
     {
         await CreateArticles();
 
-        await _mediator.Send(new ProfileFollowRequest("John Doe", true));
+        await Mediator.Send(new ProfileFollowRequest("John Doe", true));
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles/feed?limit=10&offset=0");
 
@@ -203,7 +203,7 @@ public class ArticlesListTests : TestBase
 
         foreach (var a in articles)
         {
-            await _mediator.Send(new NewArticleRequest(
+            await Mediator.Send(new NewArticleRequest(
                 new NewArticleDTO
                 {
                     Title = a,

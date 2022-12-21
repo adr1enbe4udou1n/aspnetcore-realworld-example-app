@@ -37,7 +37,7 @@ public class ArticleGetTests : TestBase
             Image = "https://i.pravatar.cc/300"
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",

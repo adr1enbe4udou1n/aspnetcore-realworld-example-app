@@ -63,7 +63,7 @@ public class ArticleCreateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Existing Title",
@@ -98,11 +98,11 @@ public class ArticleCreateTests : TestBase
             Image = "https://i.pravatar.cc/300"
         });
 
-        await _context.Tags.AddAsync(new Tag
+        await Context.Tags.AddAsync(new Tag
         {
             Name = "Existing Tag"
         });
-        await _context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
 
         var response = await Act<SingleArticleResponse>(
             HttpMethod.Post, "/articles",
@@ -132,7 +132,7 @@ public class ArticleCreateTests : TestBase
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
         }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
 
-        (await _context.Articles.AnyAsync()).Should().BeTrue();
-        (await _context.Tags.CountAsync()).Should().Be(3);
+        (await Context.Articles.AnyAsync()).Should().BeTrue();
+        (await Context.Tags.CountAsync()).Should().Be(3);
     }
 }

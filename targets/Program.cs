@@ -46,3 +46,5 @@ Target(publish, DependsOn(test),
 
 Target("default", DependsOn(publish), () => Console.WriteLine("Done!"));
 await RunTargetsAndExitAsync(args);
+
+internal sealed partial class Program { }

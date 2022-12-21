@@ -15,15 +15,14 @@ namespace Application.IntegrationTests;
 [Collection("Test collection")]
 public class TestBase : IAsyncLifetime
 {
-    protected IMediator _mediator;
+    protected IMediator Mediator { get; }
 
-    protected IAppDbContext _context;
+    protected IAppDbContext Context { get; }
 
-    protected IPasswordHasher _passwordHasher;
+    protected IPasswordHasher PasswordHasher { get; }
 
-    protected IJwtTokenGenerator _jwtTokenGenerator;
-
-    protected ICurrentUser _currentUser;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ICurrentUser _currentUser;
     private readonly HttpClient _client;
     private readonly Func<Task> _refreshDatabase;
     private readonly ITestOutputHelper _output;
@@ -36,10 +35,10 @@ public class TestBase : IAsyncLifetime
 
         var scope = factory.Services.CreateScope();
 
-        _context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
-        _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        Context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+        Mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         _currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        _passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        PasswordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
         _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
     }
 
@@ -57,8 +56,8 @@ public class TestBase : IAsyncLifetime
 
     protected async Task<User> ActingAs(User user)
     {
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        await Context.Users.AddAsync(user);
+        await Context.SaveChangesAsync();
 
         _token = _jwtTokenGenerator.CreateToken(user);
         await _currentUser.SetIdentifier(user.Id);

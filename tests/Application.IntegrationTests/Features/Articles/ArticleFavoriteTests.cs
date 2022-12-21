@@ -42,7 +42,7 @@ public class ArticleFavoriteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -59,7 +59,7 @@ public class ArticleFavoriteTests : TestBase
             FavoritesCount = 1,
         }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
 
-        (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
+        (await Context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class ArticleFavoriteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await _mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleRequest(
             new NewArticleDTO
             {
                 Title = "Test Title",
@@ -80,7 +80,7 @@ public class ArticleFavoriteTests : TestBase
             }
         ));
 
-        await _mediator.Send(new ArticleFavoriteRequest("test-title", true));
+        await Mediator.Send(new ArticleFavoriteRequest("test-title", true));
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 
@@ -90,6 +90,6 @@ public class ArticleFavoriteTests : TestBase
             FavoritesCount = 0,
         }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
 
-        (await _context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
+        (await Context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
     }
 }
