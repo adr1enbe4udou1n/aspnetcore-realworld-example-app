@@ -1,11 +1,20 @@
+using System.Runtime.Serialization;
 using FluentValidation.Results;
 
 namespace Application.Exceptions;
 
+[Serializable]
 public class ValidationException : Exception
 {
+    public IDictionary<string, string[]> Errors { get; }
+
     public ValidationException(string message = "One or more validation failures have occurred.")
         : base(message)
+    {
+        Errors = new Dictionary<string, string[]>();
+    }
+
+    protected ValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
         Errors = new Dictionary<string, string[]>();
     }
@@ -16,6 +25,4 @@ public class ValidationException : Exception
             .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
             .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
     }
-
-    public IDictionary<string, string[]> Errors { get; }
 }

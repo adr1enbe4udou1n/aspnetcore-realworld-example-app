@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands;
 
-public class UpdateUserDTO
+public class UpdateUserDto
 {
     public string? Username { get; set; }
     public string? Email { get; set; }
@@ -14,7 +14,7 @@ public class UpdateUserDTO
     public string? Image { get; set; }
 }
 
-public record UpdateUserRequest(UpdateUserDTO User) : ICommand<UserResponse>;
+public record UpdateUserRequest(UpdateUserDto User) : ICommand<UserResponse>;
 
 public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
 {

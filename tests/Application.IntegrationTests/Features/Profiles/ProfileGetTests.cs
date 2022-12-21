@@ -25,7 +25,7 @@ public class ProfileGetTests : TestBase
 
         var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_John Doe");
 
-        response.Profile.Should().BeEquivalentTo(new ProfileDTO
+        response.Profile.Should().BeEquivalentTo(new ProfileDto
         {
             Username = "John Doe",
             Bio = "My Bio",
@@ -64,7 +64,7 @@ public class ProfileGetTests : TestBase
 
         var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_Jane Doe");
 
-        response.Profile.Should().BeEquivalentTo(new ProfileDTO
+        response.Profile.Should().BeEquivalentTo(new ProfileDto
         {
             Username = "Jane Doe",
             Bio = "My Bio",

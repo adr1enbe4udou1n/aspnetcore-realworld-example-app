@@ -43,7 +43,7 @@ public class ArticleFavoriteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -53,7 +53,7 @@ public class ArticleFavoriteTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles/test-title/favorite");
 
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
+        response.Article.Should().BeEquivalentTo(new ArticleDto
         {
             Favorited = true,
             FavoritesCount = 1,
@@ -72,7 +72,7 @@ public class ArticleFavoriteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -84,7 +84,7 @@ public class ArticleFavoriteTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
+        response.Article.Should().BeEquivalentTo(new ArticleDto
         {
             Favorited = false,
             FavoritesCount = 0,

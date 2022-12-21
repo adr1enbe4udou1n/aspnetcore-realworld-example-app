@@ -7,7 +7,7 @@ using Domain.Entities;
 
 namespace Application.Features.Articles.Queries;
 
-public class ArticleDTO
+public class ArticleDto
 {
     public string Title { get; set; } = default!;
 
@@ -23,7 +23,7 @@ public class ArticleDTO
 
     public IEnumerable<string> TagList { get; set; } = default!;
 
-    public ProfileDTO Author { get; set; } = null!;
+    public ProfileDto Author { get; set; } = null!;
 
     public bool Favorited { get; set; }
 
@@ -32,7 +32,7 @@ public class ArticleDTO
 
 public static class ArticleMapper
 {
-    public static ArticleDTO Map(this Article article, User? currentUser)
+    public static ArticleDto Map(this Article article, User? currentUser)
     {
         return new()
         {
@@ -50,7 +50,7 @@ public static class ArticleMapper
     }
 }
 
-public record SingleArticleResponse(ArticleDTO Article);
+public record SingleArticleResponse(ArticleDto Article);
 
 public record ArticleGetQuery(string Slug) : IQuery<SingleArticleResponse>;
 

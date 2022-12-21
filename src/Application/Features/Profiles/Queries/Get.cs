@@ -5,7 +5,7 @@ using Application.Interfaces.Mediator;
 
 namespace Application.Features.Profiles.Queries;
 
-public class ProfileDTO
+public class ProfileDto
 {
     public string Username { get; set; } = default!;
 
@@ -16,7 +16,7 @@ public class ProfileDTO
     public bool Following { get; set; }
 }
 
-public record ProfileResponse(ProfileDTO Profile);
+public record ProfileResponse(ProfileDto Profile);
 
 public record ProfileGetQuery(string Username) : IQuery<ProfileResponse>;
 

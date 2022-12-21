@@ -25,4 +25,7 @@ app.AddSubCommands<SeederCommand>();
 
 app.Run();
 
-internal sealed partial class Program { }
+public partial class Program
+{
+    protected Program() { }
+}

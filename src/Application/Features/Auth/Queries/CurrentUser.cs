@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Application.Features.Auth.Queries;
 
-public class UserDTO
+public class UserDto
 {
     public string Email { get; set; } = default!;
 
@@ -20,7 +20,7 @@ public class UserDTO
 
 public static class UserMapper
 {
-    public static UserDTO Map(this User user, IJwtTokenGenerator jwtTokenGenerator)
+    public static UserDto Map(this User user, IJwtTokenGenerator jwtTokenGenerator)
     {
         return new()
         {
@@ -32,7 +32,7 @@ public static class UserMapper
         };
     }
 
-    public static ProfileDTO MapToProfile(this User user, User? currentUser)
+    public static ProfileDto MapToProfile(this User user, User? currentUser)
     {
         return new()
         {
@@ -44,7 +44,7 @@ public static class UserMapper
     }
 }
 
-public record UserResponse(UserDTO User);
+public record UserResponse(UserDto User);
 
 public record CurrentUserQuery() : IQuery<UserResponse>;
 

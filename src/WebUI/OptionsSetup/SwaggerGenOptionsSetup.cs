@@ -9,24 +9,16 @@ namespace WebUI.OptionsSetup;
 
 public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
 {
+    private readonly IConfiguration _configuration;
+
+    public SwaggerGenOptionsSetup(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public void Configure(SwaggerGenOptions options)
     {
-        options.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "Conduit API",
-            Version = "1.0.0",
-            Description = "Conduit API",
-            Contact = new OpenApiContact
-            {
-                Name = "RealWorld",
-                Url = new Uri("https://realworld.io"),
-            },
-            License = new OpenApiLicense
-            {
-                Name = "MIT License",
-                Url = new Uri("https://opensource.org/licenses/MIT"),
-            },
-        });
+        options.SwaggerDoc("v1", _configuration.GetSection("OpenApiInfo").Get<OpenApiInfo>());
 
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Application.xml"));
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "WebUI.xml"));
@@ -50,7 +42,7 @@ public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
 
         options.CustomSchemaIds(x => x.GetCustomAttributes(false)
             .OfType<DisplayNameAttribute>()
-            .FirstOrDefault()?.DisplayName ?? x.Name.Replace("DTO", string.Empty)
+            .FirstOrDefault()?.DisplayName ?? x.Name.Replace("Dto", string.Empty)
         );
 
         options.TagActionsBy(y => new[]

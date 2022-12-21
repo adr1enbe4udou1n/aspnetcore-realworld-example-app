@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Queries;
 
-public record MultipleArticlesResponse(IEnumerable<ArticleDTO> Articles, int ArticlesCount);
+public record MultipleArticlesResponse(IEnumerable<ArticleDto> Articles, int ArticlesCount);
 
 public class ArticlesListQuery : PagedQuery, IQuery<MultipleArticlesResponse>
 {

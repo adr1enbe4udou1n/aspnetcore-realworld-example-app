@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Articles.Commands;
 
-public class NewArticleDTO
+public class NewArticleDto
 {
     public string Title { get; set; } = default!;
 
@@ -18,7 +18,7 @@ public class NewArticleDTO
     public List<string>? TagList { get; set; }
 }
 
-public record NewArticleRequest(NewArticleDTO Article) : ICommand<SingleArticleResponse>;
+public record NewArticleRequest(NewArticleDto Article) : ICommand<SingleArticleResponse>;
 
 public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
 {

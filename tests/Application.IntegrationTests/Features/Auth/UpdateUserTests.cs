@@ -17,7 +17,7 @@ public class UpdateUserTests : TestBase
     {
         yield return new object[]
         {
-            new UpdateUserDTO
+            new UpdateUserDto
             {
                 Username = "John Doe",
                 Email = "john.doe",
@@ -26,7 +26,7 @@ public class UpdateUserTests : TestBase
         };
         yield return new object[]
         {
-            new UpdateUserDTO
+            new UpdateUserDto
             {
                 Username = "",
                 Email = "john.doe@example.com",
@@ -36,7 +36,7 @@ public class UpdateUserTests : TestBase
     }
 
     [Theory, MemberData(nameof(InvalidInfos))]
-    public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDTO user)
+    public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDto user)
     {
         await ActingAs(new User
         {
@@ -57,7 +57,7 @@ public class UpdateUserTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var request = new UpdateUserRequest(new UpdateUserDTO
+        var request = new UpdateUserRequest(new UpdateUserDto
         {
             Email = "jane.doe@example.com",
             Bio = "My Bio"
@@ -78,7 +78,7 @@ public class UpdateUserTests : TestBase
     public async Task Guest_User_Cannot_Update_Infos()
     {
         var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(
-            new UpdateUserDTO
+            new UpdateUserDto
             {
                 Email = "jane.doe@example.com"
             }
@@ -105,7 +105,7 @@ public class UpdateUserTests : TestBase
         var response = await Act(
             HttpMethod.Put, "/user",
             new UpdateUserRequest(
-                new UpdateUserDTO
+                new UpdateUserDto
                 {
                     Email = "jane.doe@example.com",
                 }

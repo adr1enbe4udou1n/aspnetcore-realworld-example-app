@@ -8,7 +8,7 @@ using FluentValidation;
 
 namespace Application.Features.Articles.Commands;
 
-public class UpdateArticleDTO
+public class UpdateArticleDto
 {
     public string? Title { get; set; }
     public string? Description { get; set; }
@@ -16,8 +16,8 @@ public class UpdateArticleDTO
 }
 
 [DisplayName("UpdateArticleRequest")]
-public record UpdateArticleBody(UpdateArticleDTO Article);
-public record UpdateArticleRequest(string Slug, UpdateArticleDTO Article) : ICommand<SingleArticleResponse>;
+public record UpdateArticleBody(UpdateArticleDto Article);
+public record UpdateArticleRequest(string Slug, UpdateArticleDto Article) : ICommand<SingleArticleResponse>;
 
 public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
 {

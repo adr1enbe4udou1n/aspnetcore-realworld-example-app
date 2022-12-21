@@ -43,7 +43,7 @@ public class ArticleDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -71,7 +71,7 @@ public class ArticleDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -81,7 +81,7 @@ public class ArticleDeleteTests : TestBase
 
         for (var i = 1; i <= 5; i++)
         {
-            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
             {
                 Body = $"This is John, Test Comment {i} !",
             }));

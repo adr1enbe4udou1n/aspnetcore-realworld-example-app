@@ -30,7 +30,7 @@ public class CommentDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -52,7 +52,7 @@ public class CommentDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -60,7 +60,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
         {
             Body = "Thank you !",
         }));
@@ -79,7 +79,7 @@ public class CommentDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -88,7 +88,7 @@ public class CommentDeleteTests : TestBase
         ));
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Other Title",
                 Description = "Test Description",
@@ -96,7 +96,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
         {
             Body = "Thank you !",
         }));
@@ -117,7 +117,7 @@ public class CommentDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -125,7 +125,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var r = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
         {
             Body = "Thank you !",
         }));
@@ -150,7 +150,7 @@ public class CommentDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -158,7 +158,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
         {
             Body = "Thank you !",
         }));
@@ -178,7 +178,7 @@ public class CommentDeleteTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -186,7 +186,7 @@ public class CommentDeleteTests : TestBase
             }
         ));
 
-        await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
         {
             Body = "Thank you !",
         }));
@@ -197,7 +197,7 @@ public class CommentDeleteTests : TestBase
             Email = "jane.doe@example.com",
         });
 
-        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+        var response = await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
         {
             Body = "Thank you John !",
         }));

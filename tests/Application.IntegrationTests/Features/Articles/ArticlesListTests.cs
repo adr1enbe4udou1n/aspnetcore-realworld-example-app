@@ -24,12 +24,12 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(20);
         response.ArticlesCount.Should().Be(50);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDTO
+        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
         {
             Title = "Jane Doe - Test Title 10",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "Jane Doe"
             },
@@ -51,12 +51,12 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDTO
+        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe"
             },
@@ -78,12 +78,12 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(20);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDTO
+        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
         {
             Title = "Jane Doe - Test Title 20",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "Jane Doe"
             },
@@ -119,12 +119,12 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(5);
         response.ArticlesCount.Should().Be(5);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDTO
+        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
         {
             Title = "John Doe - Test Title 16",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe"
             },
@@ -157,12 +157,12 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDTO
+        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe",
                 Following = true
@@ -204,7 +204,7 @@ public class ArticlesListTests : TestBase
         foreach (var a in articles)
         {
             await Mediator.Send(new NewArticleRequest(
-                new NewArticleDTO
+                new NewArticleDto
                 {
                     Title = a,
                     Description = "Test Description",

@@ -2,6 +2,6 @@ using MediatR;
 
 namespace Application.Interfaces.Mediator;
 
-public interface IQuery<TResponse> : IRequest<TResponse>
+public interface IQuery<out TResponse> : IRequest<TResponse>
 {
 }

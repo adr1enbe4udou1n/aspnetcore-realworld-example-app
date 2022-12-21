@@ -12,13 +12,12 @@ Target(clean,
 ForEach("publish", "**/bin", "**/obj"),
 dir =>
 {
-    foreach (var d in Glob.Directories(".", dir))
+    foreach (var d in from d in Glob.Directories(".", dir)
+                      where Directory.Exists(d)
+                      select d)
     {
-        if (Directory.Exists(d))
-        {
-            Console.WriteLine($"Cleaning {d}");
-            Directory.Delete(d, true);
-        }
+        Console.WriteLine($"Cleaning {d}");
+        Directory.Delete(d, true);
     }
 });
 
@@ -47,4 +46,7 @@ Target(publish, DependsOn(test),
 Target("default", DependsOn(publish), () => Console.WriteLine("Done!"));
 await RunTargetsAndExitAsync(args);
 
-internal sealed partial class Program { }
+public partial class Program
+{
+    protected Program() { }
+}

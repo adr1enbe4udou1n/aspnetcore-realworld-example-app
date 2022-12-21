@@ -18,7 +18,7 @@ public class ArticleCreateTests : TestBase
     {
         yield return new object[]
         {
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "",
                 Description = "Test Description",
@@ -27,7 +27,7 @@ public class ArticleCreateTests : TestBase
         };
         yield return new object[]
         {
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "",
@@ -36,7 +36,7 @@ public class ArticleCreateTests : TestBase
         };
         yield return new object[]
         {
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -45,7 +45,7 @@ public class ArticleCreateTests : TestBase
         };
         yield return new object[]
         {
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Existing Title",
                 Description = "Test Description",
@@ -55,7 +55,7 @@ public class ArticleCreateTests : TestBase
     }
 
     [Theory, MemberData(nameof(InvalidArticles))]
-    public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDTO article)
+    public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDto article)
     {
         await ActingAs(new User
         {
@@ -64,7 +64,7 @@ public class ArticleCreateTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Existing Title",
                 Description = "Test Description",
@@ -81,7 +81,7 @@ public class ArticleCreateTests : TestBase
     public async Task Guest_Cannot_Create_Article()
     {
         var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(
-            new NewArticleDTO()
+            new NewArticleDto()
         ));
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -107,7 +107,7 @@ public class ArticleCreateTests : TestBase
         var response = await Act<SingleArticleResponse>(
             HttpMethod.Post, "/articles",
             new NewArticleRequest(
-                new NewArticleDTO
+                new NewArticleDto
                 {
                     Title = "Test Article",
                     Description = "Test Description",
@@ -117,13 +117,13 @@ public class ArticleCreateTests : TestBase
             )
         );
 
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
+        response.Article.Should().BeEquivalentTo(new ArticleDto
         {
             Title = "Test Article",
             Description = "Test Description",
             Body = "Test Body",
             Slug = "test-article",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe",
                 Bio = "My Bio",

@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands;
 
-public class LoginUserDTO
+public class LoginUserDto
 {
     public string Email { get; set; } = default!;
 
     public string Password { get; set; } = default!;
 }
 
-public record LoginUserRequest(LoginUserDTO User) : ICommand<UserResponse>;
+public record LoginUserRequest(LoginUserDto User) : ICommand<UserResponse>;
 
 public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
 {

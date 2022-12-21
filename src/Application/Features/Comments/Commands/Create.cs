@@ -8,17 +8,17 @@ using FluentValidation;
 
 namespace Application.Features.Comments.Commands;
 
-public class NewCommentDTO
+public class NewCommentDto
 {
 
     public string Body { get; set; } = default!;
 }
 
-public record SingleCommentResponse(CommentDTO Comment);
+public record SingleCommentResponse(CommentDto Comment);
 
 [DisplayName("NewCommentRequest")]
-public record NewCommentBody(NewCommentDTO Comment);
-public record NewCommentRequest(string Slug, NewCommentDTO Comment) : ICommand<SingleCommentResponse>;
+public record NewCommentBody(NewCommentDto Comment);
+public record NewCommentRequest(string Slug, NewCommentDto Comment) : ICommand<SingleCommentResponse>;
 
 public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
 {

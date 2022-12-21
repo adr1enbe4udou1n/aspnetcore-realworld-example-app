@@ -33,7 +33,7 @@ public class CommentsListTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -50,7 +50,7 @@ public class CommentsListTests : TestBase
 
         foreach (var c in comments)
         {
-            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
             {
                 Body = $"This is John, {c} !",
             }));
@@ -66,7 +66,7 @@ public class CommentsListTests : TestBase
 
         foreach (var c in comments)
         {
-            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDTO
+            await Mediator.Send(new NewCommentRequest("test-title", new NewCommentDto
             {
                 Body = $"This is Jane, {c} !",
             }));
@@ -76,10 +76,10 @@ public class CommentsListTests : TestBase
 
         response.Comments.Count().Should().Be(10);
 
-        response.Comments.First().Should().BeEquivalentTo(new CommentDTO
+        response.Comments.First().Should().BeEquivalentTo(new CommentDto
         {
             Body = "This is Jane, Test Comment 5 !",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "Jane Doe",
                 Bio = "My Bio",

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.IntegrationTests.Events;
 
-public class SqlCounterLoggerProvider : ILoggerProvider
+public sealed class SqlCounterLoggerProvider : ILoggerProvider
 {
     public SqlCounterLoggerProvider()
     {

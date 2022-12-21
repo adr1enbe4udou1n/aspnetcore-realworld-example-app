@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Auth.Commands;
 
-public class NewUserDTO
+public class NewUserDto
 {
     public string Email { get; set; } = default!;
 
@@ -16,7 +16,7 @@ public class NewUserDTO
     public string Username { get; set; } = default!;
 }
 
-public record NewUserRequest(NewUserDTO User) : ICommand<UserResponse>;
+public record NewUserRequest(NewUserDto User) : ICommand<UserResponse>;
 
 public class RegisterValidator : AbstractValidator<NewUserRequest>
 {

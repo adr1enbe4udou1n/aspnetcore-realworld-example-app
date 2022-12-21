@@ -19,7 +19,7 @@ public class CommentCreateTests : TestBase
     {
         yield return new object[]
         {
-            new NewCommentDTO
+            new NewCommentDto
             {
                 Body = "",
             }
@@ -27,7 +27,7 @@ public class CommentCreateTests : TestBase
     }
 
     [Theory, MemberData(nameof(InvalidComments))]
-    public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDTO comment)
+    public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDto comment)
     {
         await ActingAs(new User
         {
@@ -36,7 +36,7 @@ public class CommentCreateTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -58,7 +58,7 @@ public class CommentCreateTests : TestBase
         });
 
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
-            new NewCommentDTO
+            new NewCommentDto
             {
                 Body = "Test Body",
             }
@@ -70,7 +70,7 @@ public class CommentCreateTests : TestBase
     public async Task Guest_Cannot_Create_Comment()
     {
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
-            new NewCommentDTO()
+            new NewCommentDto()
         ));
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -87,7 +87,7 @@ public class CommentCreateTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -95,15 +95,15 @@ public class CommentCreateTests : TestBase
             }
         ));
 
-        var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(new NewCommentDTO
+        var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(new NewCommentDto
         {
             Body = "Thank you !",
         }));
 
-        response.Comment.Should().BeEquivalentTo(new CommentDTO
+        response.Comment.Should().BeEquivalentTo(new CommentDto
         {
             Body = "Thank you !",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe",
                 Bio = "My Bio",

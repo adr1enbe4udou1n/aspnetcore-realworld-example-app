@@ -18,7 +18,7 @@ public class RegisterTests : TestBase
     {
         yield return new object[]
         {
-            new NewUserDTO
+            new NewUserDto
             {
                 Email = "john.doe",
                 Username = "John Doe",
@@ -27,14 +27,14 @@ public class RegisterTests : TestBase
         };
         yield return new object[]
         {
-            new NewUserDTO
+            new NewUserDto
             {
                 Email = "john.doe@example.com",
             },
         };
         yield return new object[]
         {
-            new NewUserDTO
+            new NewUserDto
             {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
@@ -44,7 +44,7 @@ public class RegisterTests : TestBase
     }
 
     [Theory, MemberData(nameof(InvalidRegisters))]
-    public async Task User_Cannot_Register_With_Invalid_Data(NewUserDTO user)
+    public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {
         var response = await Act(HttpMethod.Post, "/users", new NewUserRequest(user));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -53,7 +53,7 @@ public class RegisterTests : TestBase
     [Fact]
     public async Task User_Can_Register()
     {
-        var request = new NewUserRequest(new NewUserDTO
+        var request = new NewUserRequest(new NewUserDto
         {
             Email = "john.doe@example.com",
             Username = "John Doe",
@@ -91,7 +91,7 @@ public class RegisterTests : TestBase
         var response = await Act(
             HttpMethod.Post, "/users",
             new NewUserRequest(
-                new NewUserDTO
+                new NewUserDto
                 {
                     Email = "john.doe@example.com",
                     Username = "John Doe",

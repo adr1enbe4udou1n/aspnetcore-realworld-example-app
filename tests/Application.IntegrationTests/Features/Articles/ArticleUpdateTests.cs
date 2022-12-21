@@ -18,7 +18,7 @@ public class ArticleUpdateTests : TestBase
     {
         yield return new object[]
         {
-            new UpdateArticleDTO
+            new UpdateArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -28,7 +28,7 @@ public class ArticleUpdateTests : TestBase
     }
 
     [Theory, MemberData(nameof(InvalidArticles))]
-    public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDTO article)
+    public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDto article)
     {
         await ActingAs(new User
         {
@@ -50,7 +50,7 @@ public class ArticleUpdateTests : TestBase
         });
 
         var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
-            new UpdateArticleDTO
+            new UpdateArticleDto
             {
                 Title = "New Title",
                 Description = "New Description",
@@ -64,7 +64,7 @@ public class ArticleUpdateTests : TestBase
     public async Task Guest_Cannot_Update_Article()
     {
         var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
-            new UpdateArticleDTO()
+            new UpdateArticleDto()
         ));
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -79,7 +79,7 @@ public class ArticleUpdateTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -96,7 +96,7 @@ public class ArticleUpdateTests : TestBase
         var response = await Act(
             HttpMethod.Put, "/articles/test-title",
             new UpdateArticleBody(
-                new UpdateArticleDTO
+                new UpdateArticleDto
                 {
                     Title = "New Title",
                     Description = "New Description",
@@ -116,7 +116,7 @@ public class ArticleUpdateTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -126,7 +126,7 @@ public class ArticleUpdateTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Put, "/articles/test-title",
             new UpdateArticleBody(
-                new UpdateArticleDTO
+                new UpdateArticleDto
                 {
                     Title = "New Title",
                     Description = "New Description",
@@ -134,13 +134,13 @@ public class ArticleUpdateTests : TestBase
             )
         );
 
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
+        response.Article.Should().BeEquivalentTo(new ArticleDto
         {
             Title = "New Title",
             Description = "New Description",
             Body = "Test Body",
             Slug = "test-title",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe",
             },

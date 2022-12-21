@@ -17,7 +17,7 @@ public class LoginTests : TestBase
     {
         yield return new object[]
         {
-            new LoginUserDTO
+            new LoginUserDto
             {
                 Email = "jane.doe@example.com",
                 Password = "password",
@@ -25,7 +25,7 @@ public class LoginTests : TestBase
         };
         yield return new object[]
         {
-            new LoginUserDTO
+            new LoginUserDto
             {
                 Email = "john.doe@example.com",
                 Password = "badpassword",
@@ -34,7 +34,7 @@ public class LoginTests : TestBase
     }
 
     [Theory, MemberData(nameof(InvalidCredentials))]
-    public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDTO credentials)
+    public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDto credentials)
     {
         await Context.Users.AddAsync(new User
         {
@@ -63,7 +63,7 @@ public class LoginTests : TestBase
         var currentUser = await Act<UserResponse>(
             HttpMethod.Post, "/users/login",
             new LoginUserRequest(
-                new LoginUserDTO
+                new LoginUserDto
                 {
                     Email = "john.doe@example.com",
                     Password = "password",

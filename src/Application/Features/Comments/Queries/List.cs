@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Queries;
 
-public class CommentDTO
+public class CommentDto
 {
     public int Id { get; set; }
 
@@ -18,12 +18,12 @@ public class CommentDTO
 
     public DateTime UpdatedAt { get; set; }
 
-    public ProfileDTO Author { get; set; } = null!;
+    public ProfileDto Author { get; set; } = null!;
 }
 
 public static class CommentMapper
 {
-    public static CommentDTO Map(this Comment comment, User? user)
+    public static CommentDto Map(this Comment comment, User? user)
     {
         return new()
         {
@@ -36,7 +36,7 @@ public static class CommentMapper
     }
 }
 
-public record MultipleCommentsResponse(IEnumerable<CommentDTO> Comments);
+public record MultipleCommentsResponse(IEnumerable<CommentDto> Comments);
 
 public record CommentsListQuery(string Slug) : IQuery<MultipleCommentsResponse>;
 

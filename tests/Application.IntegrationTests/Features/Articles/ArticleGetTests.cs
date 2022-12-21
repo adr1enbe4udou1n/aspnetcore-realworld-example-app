@@ -38,7 +38,7 @@ public class ArticleGetTests : TestBase
         });
 
         await Mediator.Send(new NewArticleRequest(
-            new NewArticleDTO
+            new NewArticleDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -49,13 +49,13 @@ public class ArticleGetTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Get, "/articles/test-title");
 
-        response.Article.Should().BeEquivalentTo(new ArticleDTO
+        response.Article.Should().BeEquivalentTo(new ArticleDto
         {
             Title = "Test Title",
             Description = "Test Description",
             Body = "Test Body",
             Slug = "test-title",
-            Author = new ProfileDTO
+            Author = new ProfileDto
             {
                 Username = "John Doe",
                 Bio = "My Bio",
