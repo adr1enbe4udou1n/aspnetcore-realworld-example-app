@@ -24,3 +24,5 @@ var app = builder.Build();
 app.AddSubCommands<SeederCommand>();
 
 app.Run();
+
+internal sealed partial class Program { }
