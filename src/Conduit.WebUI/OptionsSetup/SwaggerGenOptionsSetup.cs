@@ -20,8 +20,8 @@ public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
     {
         options.SwaggerDoc("v1", _configuration.GetSection("OpenApiInfo").Get<OpenApiInfo>());
 
-        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Application.xml"));
-        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "WebUI.xml"));
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Conduit.Application.xml"));
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Conduit.WebUI.xml"));
 
         options.AddServer(new OpenApiServer
         {
