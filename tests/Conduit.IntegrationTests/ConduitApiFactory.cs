@@ -1,5 +1,5 @@
-using Conduit.IntegrationTests.Events;
 using Conduit.Infrastructure.Persistence;
+using Conduit.IntegrationTests.Events;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

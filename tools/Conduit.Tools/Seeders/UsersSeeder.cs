@@ -1,7 +1,7 @@
-using Conduit.Tools.Interfaces;
 using Bogus;
-using Conduit.Domain.Entities;
 using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
+using Conduit.Tools.Interfaces;
 
 namespace Conduit.Tools.Seeders;
 

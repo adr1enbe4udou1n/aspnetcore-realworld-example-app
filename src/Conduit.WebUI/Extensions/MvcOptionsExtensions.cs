@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using Conduit.WebUI.Conventions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.WebUI.Extensions;
 

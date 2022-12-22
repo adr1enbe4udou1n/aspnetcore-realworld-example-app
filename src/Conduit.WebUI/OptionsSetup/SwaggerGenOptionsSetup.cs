@@ -1,9 +1,9 @@
 using System.ComponentModel;
+using Conduit.WebUI.Filters;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Conduit.WebUI.Filters;
 
 namespace Conduit.WebUI.OptionsSetup;
 

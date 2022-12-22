@@ -1,5 +1,5 @@
-using Conduit.Tools.Interfaces;
 using Conduit.Infrastructure.Persistence;
+using Conduit.Tools.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Respawn;

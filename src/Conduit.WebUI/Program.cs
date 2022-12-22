@@ -1,9 +1,9 @@
 using Conduit.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using OpenTelemetry;
 using Conduit.WebUI.Extensions;
 using Conduit.WebUI.Filters;
 using Conduit.WebUI.OptionsSetup;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 

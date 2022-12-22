@@ -1,8 +1,8 @@
-using Conduit.Tools.Interfaces;
 using Bogus;
-using Conduit.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
+using Conduit.Tools.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Tools.Seeders;
 
