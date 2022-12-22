@@ -1,11 +1,11 @@
 using System.Net;
-using Application.Features.Auth.Queries;
-using Domain.Entities;
+using Conduit.Application.Features.Auth.Queries;
+using Conduit.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Features.Auth;
+namespace Conduit.IntegrationTests.Features.Auth;
 
 public class CurrentUserTests : TestBase
 {

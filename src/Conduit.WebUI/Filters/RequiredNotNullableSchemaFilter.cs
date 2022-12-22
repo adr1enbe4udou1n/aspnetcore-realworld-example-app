@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace WebUI.Filters;
+namespace Conduit.WebUI.Filters;
 
 public class RequiredNotNullableSchemaFilter : ISchemaFilter
 {

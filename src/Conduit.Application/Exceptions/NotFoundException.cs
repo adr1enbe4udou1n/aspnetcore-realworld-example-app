@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Application.Exceptions;
+namespace Conduit.Application.Exceptions;
 
 [Serializable]
 public class NotFoundException : Exception

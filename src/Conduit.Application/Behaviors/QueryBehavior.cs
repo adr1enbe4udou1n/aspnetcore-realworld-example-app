@@ -1,8 +1,8 @@
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 using MediatR;
 
-namespace Application.Behaviors;
+namespace Conduit.Application.Behaviors;
 
 public class QueryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {

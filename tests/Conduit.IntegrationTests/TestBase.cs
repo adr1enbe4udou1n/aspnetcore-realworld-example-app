@@ -1,17 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Text;
-using Application.IntegrationTests.Events;
-using Application.Interfaces;
-using Domain.Entities;
-using Infrastructure.Persistence;
+using Conduit.IntegrationTests.Events;
+using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
+using Conduit.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests;
+namespace Conduit.IntegrationTests;
 
 [Collection("Test collection")]
 public class TestBase : IAsyncLifetime

@@ -1,8 +1,8 @@
-using Domain.Interfaces;
+using Conduit.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Infrastructure.Interceptors;
+namespace Conduit.Infrastructure.Interceptors;
 
 public class AuditableInterceptor : SaveChangesInterceptor
 {

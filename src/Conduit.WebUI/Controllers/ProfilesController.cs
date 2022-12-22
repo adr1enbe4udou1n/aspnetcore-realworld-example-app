@@ -1,10 +1,10 @@
-using Application.Features.Profiles.Commands;
-using Application.Features.Profiles.Queries;
+using Conduit.Application.Features.Profiles.Commands;
+using Conduit.Application.Features.Profiles.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers;
+namespace Conduit.WebUI.Controllers;
 
 [Route("[controller]/celeb_{username}")]
 [ApiExplorerSettings(GroupName = "Profile")]

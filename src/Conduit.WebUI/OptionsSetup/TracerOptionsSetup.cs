@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using WebUI.Options;
+using Conduit.WebUI.Options;
 
-namespace WebUI.OptionsSetup;
+namespace Conduit.WebUI.OptionsSetup;
 
 public class TracerOptionsSetup : IConfigureOptions<TracerOptions>
 {

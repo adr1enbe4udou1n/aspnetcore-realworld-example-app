@@ -1,7 +1,7 @@
 using System.Runtime.Serialization;
 using FluentValidation.Results;
 
-namespace Application.Exceptions;
+namespace Conduit.Application.Exceptions;
 
 [Serializable]
 public class ValidationException : Exception

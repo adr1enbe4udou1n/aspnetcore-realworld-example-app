@@ -1,6 +1,6 @@
-using Domain.Entities;
+using Conduit.Domain.Entities;
 
-namespace Application.Interfaces;
+namespace Conduit.Application.Interfaces;
 
 public interface IJwtTokenGenerator
 {

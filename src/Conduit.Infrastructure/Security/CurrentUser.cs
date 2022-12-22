@@ -1,9 +1,9 @@
-using Application.Interfaces;
-using Domain.Entities;
-using Infrastructure.Persistence;
+using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
+using Conduit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Security;
+namespace Conduit.Infrastructure.Security;
 
 public class CurrentUser : ICurrentUser
 {

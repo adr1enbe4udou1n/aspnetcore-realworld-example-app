@@ -1,11 +1,11 @@
 using System.Net;
-using Application.Features.Profiles.Queries;
-using Domain.Entities;
+using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Features.Profiles;
+namespace Conduit.IntegrationTests.Features.Profiles;
 
 public class ProfileGetTests : TestBase
 {

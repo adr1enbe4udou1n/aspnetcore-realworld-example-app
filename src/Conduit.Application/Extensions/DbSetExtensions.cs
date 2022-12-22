@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
-using Application.Exceptions;
-using Application.Support;
+using Conduit.Application.Exceptions;
+using Conduit.Application.Support;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Extensions;
+namespace Conduit.Application.Extensions;
 
 public static class DbSetExtensions
 {

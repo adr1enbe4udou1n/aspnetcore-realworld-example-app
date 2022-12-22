@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Application.IntegrationTests;
+namespace Conduit.IntegrationTests;
 
 [CollectionDefinition("Test collection")]
 public class SharedTestCollectionFixture : ICollectionFixture<ConduitApiFactory>

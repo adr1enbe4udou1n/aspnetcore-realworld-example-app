@@ -1,10 +1,10 @@
-using Application.Exceptions;
-using Application.Extensions;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Exceptions;
+using Conduit.Application.Extensions;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 using MediatR;
 
-namespace Application.Features.Comments.Commands;
+namespace Conduit.Application.Features.Comments.Commands;
 
 public record CommentDeleteRequest(string Slug, int Id) : ICommand;
 

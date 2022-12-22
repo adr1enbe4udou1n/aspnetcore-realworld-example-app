@@ -1,9 +1,9 @@
-using Application.Features.Profiles.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
-using Domain.Entities;
+using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
+using Conduit.Domain.Entities;
 
-namespace Application.Features.Auth.Queries;
+namespace Conduit.Application.Features.Auth.Queries;
 
 public class UserDto
 {

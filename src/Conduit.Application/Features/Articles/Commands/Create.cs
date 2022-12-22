@@ -1,11 +1,11 @@
-using Application.Features.Articles.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
-using Domain.Entities;
+using Conduit.Application.Features.Articles.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
+using Conduit.Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Articles.Commands;
+namespace Conduit.Application.Features.Articles.Commands;
 
 public class NewArticleDto
 {

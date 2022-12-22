@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Application.Support;
+namespace Conduit.Application.Support;
 
 public class PagedQuery
 {

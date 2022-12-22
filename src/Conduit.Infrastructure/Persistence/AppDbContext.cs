@@ -1,10 +1,10 @@
-using Application.Interfaces;
-using Domain.Entities;
-using Infrastructure.Interceptors;
+using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
+using Conduit.Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Infrastructure.Persistence;
+namespace Conduit.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {

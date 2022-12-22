@@ -1,8 +1,8 @@
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Tags.Queries;
+namespace Conduit.Application.Features.Tags.Queries;
 
 public record TagsResponse(IEnumerable<string> Tags);
 

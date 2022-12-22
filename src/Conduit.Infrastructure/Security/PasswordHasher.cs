@@ -1,6 +1,6 @@
-using Application.Interfaces;
+using Conduit.Application.Interfaces;
 
-namespace Infrastructure.Security;
+namespace Conduit.Infrastructure.Security;
 
 public class PasswordHasher : IPasswordHasher
 {

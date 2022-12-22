@@ -1,6 +1,6 @@
-using Domain.Entities;
+using Conduit.Domain.Entities;
 
-namespace Application.Extensions;
+namespace Conduit.Application.Extensions;
 
 public static class ArticleFilters
 {

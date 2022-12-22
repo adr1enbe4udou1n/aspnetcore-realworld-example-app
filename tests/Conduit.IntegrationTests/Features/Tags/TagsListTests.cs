@@ -1,10 +1,10 @@
-using Application.Features.Tags.Queries;
-using Domain.Entities;
+using Conduit.Application.Features.Tags.Queries;
+using Conduit.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Features.Tags;
+namespace Conduit.IntegrationTests.Features.Tags;
 
 public class TagsListTests : TestBase
 {

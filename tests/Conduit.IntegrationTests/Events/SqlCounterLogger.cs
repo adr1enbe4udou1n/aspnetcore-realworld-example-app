@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.IntegrationTests.Events;
+namespace Conduit.IntegrationTests.Events;
 
 public class SqlCounterLogger : ILogger
 {

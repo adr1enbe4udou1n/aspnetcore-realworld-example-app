@@ -1,11 +1,11 @@
-using Application.Features.Auth.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
-using Domain.Entities;
+using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
+using Conduit.Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Auth.Commands;
+namespace Conduit.Application.Features.Auth.Commands;
 
 public class NewUserDto
 {

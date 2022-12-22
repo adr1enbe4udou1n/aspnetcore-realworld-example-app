@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Application.IntegrationTests.Events;
+namespace Conduit.IntegrationTests.Events;
 
 public sealed class SqlCounterLoggerProvider : ILoggerProvider
 {

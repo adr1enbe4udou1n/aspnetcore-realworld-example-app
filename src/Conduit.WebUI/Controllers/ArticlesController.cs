@@ -1,10 +1,10 @@
-using Application.Features.Articles.Commands;
-using Application.Features.Articles.Queries;
+using Conduit.Application.Features.Articles.Commands;
+using Conduit.Application.Features.Articles.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers;
+namespace Conduit.WebUI.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "Articles")]

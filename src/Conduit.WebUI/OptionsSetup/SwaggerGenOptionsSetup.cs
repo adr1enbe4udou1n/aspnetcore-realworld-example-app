@@ -3,9 +3,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using WebUI.Filters;
+using Conduit.WebUI.Filters;
 
-namespace WebUI.OptionsSetup;
+namespace Conduit.WebUI.OptionsSetup;
 
 public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
 {

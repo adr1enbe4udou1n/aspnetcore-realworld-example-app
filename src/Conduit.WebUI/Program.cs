@@ -1,9 +1,9 @@
-using Infrastructure;
+using Conduit.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using OpenTelemetry;
-using WebUI.Extensions;
-using WebUI.Filters;
-using WebUI.OptionsSetup;
+using Conduit.WebUI.Extensions;
+using Conduit.WebUI.Filters;
+using Conduit.WebUI.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,7 @@ builder.Services
         opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
     })
     .AddJsonOptions(options =>
-        options.JsonSerializerOptions.Converters.Add(new WebUI.Converters.DateTimeConverter())
+        options.JsonSerializerOptions.Converters.Add(new Conduit.WebUI.Converters.DateTimeConverter())
     );
 
 builder.Services

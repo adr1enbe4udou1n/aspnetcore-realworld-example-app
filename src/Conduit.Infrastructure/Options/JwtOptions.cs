@@ -1,4 +1,4 @@
-namespace Infrastructure.Options;
+namespace Conduit.Infrastructure.Options;
 
 public class JwtOptions
 {

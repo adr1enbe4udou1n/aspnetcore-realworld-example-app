@@ -2,9 +2,9 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using WebUI.Options;
+using Conduit.WebUI.Options;
 
-namespace WebUI.OptionsSetup;
+namespace Conduit.WebUI.OptionsSetup;
 
 public class TracerProviderBuilderSetup : IPostConfigureOptions<TracerProviderBuilder>
 {

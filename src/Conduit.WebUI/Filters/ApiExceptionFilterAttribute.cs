@@ -1,8 +1,8 @@
-using Application.Exceptions;
+using Conduit.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace WebUI.Filters;
+namespace Conduit.WebUI.Filters;
 
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {

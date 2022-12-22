@@ -1,14 +1,14 @@
 
-using Application;
-using Application.Interfaces;
-using Infrastructure.Persistence;
+using Conduit.Application;
+using Conduit.Application.Interfaces;
+using Conduit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
 using Slugify;
 
-namespace Infrastructure;
+namespace Conduit.Infrastructure;
 
 public static class DependencyInjection
 {

@@ -1,5 +1,5 @@
-using Application.IntegrationTests.Events;
-using Infrastructure.Persistence;
+using Conduit.IntegrationTests.Events;
+using Conduit.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using Npgsql;
 using Respawn;
 using Respawn.Graph;
 
-namespace Application.IntegrationTests;
+namespace Conduit.IntegrationTests;
 
 public class ConduitApiFactory : WebApplicationFactory<Program>
 {

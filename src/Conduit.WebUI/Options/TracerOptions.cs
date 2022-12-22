@@ -1,4 +1,4 @@
-namespace WebUI.Options;
+namespace Conduit.WebUI.Options;
 
 public class TracerOptions
 {

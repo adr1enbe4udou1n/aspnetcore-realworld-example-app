@@ -1,12 +1,12 @@
 using System.ComponentModel;
-using Application.Exceptions;
-using Application.Extensions;
-using Application.Features.Articles.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Exceptions;
+using Conduit.Application.Extensions;
+using Conduit.Application.Features.Articles.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 using FluentValidation;
 
-namespace Application.Features.Articles.Commands;
+namespace Conduit.Application.Features.Articles.Commands;
 
 public class UpdateArticleDto
 {

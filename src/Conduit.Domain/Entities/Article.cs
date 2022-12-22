@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Interfaces;
+using Conduit.Domain.Interfaces;
 
-namespace Domain.Entities;
+namespace Conduit.Domain.Entities;
 
 public class Article : IAuditableEntity
 {

@@ -1,7 +1,7 @@
-using Domain.Entities;
+using Conduit.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Interfaces;
+namespace Conduit.Application.Interfaces;
 
 public interface IAppDbContext : IDisposable
 {

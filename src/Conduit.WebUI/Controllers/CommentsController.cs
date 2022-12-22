@@ -1,10 +1,10 @@
-using Application.Features.Comments.Commands;
-using Application.Features.Comments.Queries;
+using Conduit.Application.Features.Comments.Commands;
+using Conduit.Application.Features.Comments.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers;
+namespace Conduit.WebUI.Controllers;
 
 [Route("articles/{slug}/[controller]")]
 [ApiExplorerSettings(GroupName = "Comments")]

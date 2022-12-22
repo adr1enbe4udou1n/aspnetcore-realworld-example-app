@@ -1,10 +1,10 @@
-using Application.Interfaces;
-using Application.Tools.Interfaces;
+using Conduit.Tools.Interfaces;
 using Bogus;
-using Domain.Entities;
+using Conduit.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Conduit.Application.Interfaces;
 
-namespace Application.Tools.Seeders;
+namespace Conduit.Tools.Seeders;
 
 public class ArticlesSeeder : ISeeder
 {

@@ -1,14 +1,14 @@
 using System.Net;
-using Application.Features.Articles.Commands;
-using Application.Features.Articles.Queries;
-using Application.Features.Profiles.Queries;
-using Domain.Entities;
+using Conduit.Application.Features.Articles.Commands;
+using Conduit.Application.Features.Articles.Queries;
+using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Features.Articles;
+namespace Conduit.IntegrationTests.Features.Articles;
 
 public class ArticleCreateTests : TestBase
 {

@@ -1,15 +1,15 @@
 using System.Net;
-using Application.Features.Articles.Commands;
-using Application.Features.Comments.Commands;
-using Application.Features.Comments.Queries;
-using Application.Features.Profiles.Queries;
-using Domain.Entities;
+using Conduit.Application.Features.Articles.Commands;
+using Conduit.Application.Features.Comments.Commands;
+using Conduit.Application.Features.Comments.Queries;
+using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Application.IntegrationTests.Features.Comments;
+namespace Conduit.IntegrationTests.Features.Comments;
 
 public class CommentCreateTests : TestBase
 {

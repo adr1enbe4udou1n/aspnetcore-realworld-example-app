@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Application.Diagnostics;
+namespace Conduit.Application.Diagnostics;
 
 public static class Telemetry
 {

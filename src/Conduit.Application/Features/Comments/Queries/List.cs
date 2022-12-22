@@ -1,12 +1,12 @@
-using Application.Extensions;
-using Application.Features.Auth.Queries;
-using Application.Features.Profiles.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
-using Domain.Entities;
+using Conduit.Application.Extensions;
+using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
+using Conduit.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Comments.Queries;
+namespace Conduit.Application.Features.Comments.Queries;
 
 public class CommentDto
 {

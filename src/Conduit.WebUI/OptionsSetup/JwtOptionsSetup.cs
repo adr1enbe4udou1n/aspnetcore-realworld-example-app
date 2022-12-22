@@ -1,7 +1,7 @@
-﻿using Infrastructure.Options;
+﻿using Conduit.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 
-namespace WebUI.OptionsSetup;
+namespace Conduit.WebUI.OptionsSetup;
 
 public class JwtOptionsSetup : IConfigureOptions<JwtOptions>
 {

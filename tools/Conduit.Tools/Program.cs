@@ -1,7 +1,7 @@
-using Application.Tools.Interfaces;
-using Application.Tools.Seeders;
+using Conduit.Tools.Interfaces;
+using Conduit.Tools.Seeders;
 
-using Infrastructure;
+using Conduit.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Tools.Commands;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities;
+namespace Conduit.Domain.Entities;
 
 public class Tag
 {

@@ -1,4 +1,4 @@
-namespace Domain.Interfaces;
+namespace Conduit.Domain.Interfaces;
 
 public interface IAuditableEntity
 {

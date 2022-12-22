@@ -1,7 +1,7 @@
-using Application.Interfaces;
+using Conduit.Application.Interfaces;
 using Slugify;
 
-namespace Infrastructure.Security;
+namespace Conduit.Infrastructure.Security;
 
 public class Slugifier : ISlugifier
 {

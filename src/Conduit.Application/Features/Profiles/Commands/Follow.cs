@@ -1,10 +1,10 @@
-using Application.Extensions;
-using Application.Features.Auth.Queries;
-using Application.Features.Profiles.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Extensions;
+using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 
-namespace Application.Features.Profiles.Commands;
+namespace Conduit.Application.Features.Profiles.Commands;
 
 public record ProfileFollowRequest(string Username, bool Follow) : ICommand<ProfileResponse>;
 

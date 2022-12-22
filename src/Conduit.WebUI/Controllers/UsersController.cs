@@ -1,9 +1,9 @@
-using Application.Features.Auth.Commands;
-using Application.Features.Auth.Queries;
+using Conduit.Application.Features.Auth.Commands;
+using Conduit.Application.Features.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers;
+namespace Conduit.WebUI.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]

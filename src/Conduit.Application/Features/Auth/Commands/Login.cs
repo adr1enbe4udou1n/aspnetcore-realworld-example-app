@@ -1,10 +1,10 @@
-using Application.Features.Auth.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Auth.Commands;
+namespace Conduit.Application.Features.Auth.Commands;
 
 public class LoginUserDto
 {

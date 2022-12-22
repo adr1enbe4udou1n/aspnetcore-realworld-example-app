@@ -1,12 +1,12 @@
 using System.ComponentModel;
-using Application.Extensions;
-using Application.Features.Comments.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
-using Domain.Entities;
+using Conduit.Application.Extensions;
+using Conduit.Application.Features.Comments.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
+using Conduit.Domain.Entities;
 using FluentValidation;
 
-namespace Application.Features.Comments.Commands;
+namespace Conduit.Application.Features.Comments.Commands;
 
 public class NewCommentDto
 {

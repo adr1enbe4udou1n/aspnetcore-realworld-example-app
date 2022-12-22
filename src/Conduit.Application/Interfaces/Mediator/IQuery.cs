@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Application.Interfaces.Mediator;
+namespace Conduit.Application.Interfaces.Mediator;
 
 public interface IQuery<out TResponse> : IRequest<TResponse>
 {

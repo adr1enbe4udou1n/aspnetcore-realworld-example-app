@@ -1,4 +1,4 @@
-namespace Application.Tools.Interfaces;
+namespace Conduit.Tools.Interfaces;
 
 public interface ISeeder
 {

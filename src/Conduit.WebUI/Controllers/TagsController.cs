@@ -1,8 +1,8 @@
-using Application.Features.Tags.Queries;
+using Conduit.Application.Features.Tags.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebUI.Controllers;
+namespace Conduit.WebUI.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "Tags")]

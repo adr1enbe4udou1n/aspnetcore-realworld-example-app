@@ -1,9 +1,9 @@
-using Application.Extensions;
-using Application.Features.Auth.Queries;
-using Application.Interfaces;
-using Application.Interfaces.Mediator;
+using Conduit.Application.Extensions;
+using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 
-namespace Application.Features.Profiles.Queries;
+namespace Conduit.Application.Features.Profiles.Queries;
 
 public class ProfileDto
 {
