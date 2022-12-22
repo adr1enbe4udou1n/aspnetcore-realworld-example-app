@@ -25,10 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
-    <ProjectReference Include="..\..\src\Application\Application.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\WebUI\WebUI.csproj" />
+    <ProjectReference Include="..\..\src\Conduit.Domain\Conduit.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Conduit.Application\Conduit.Application.csproj" />
+    <ProjectReference Include="..\..\src\Conduit.Infrastructure\Conduit.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Conduit.WebUI\Conduit.WebUI.csproj" />
   </ItemGroup>
 
   <Target Name="PostClean" AfterTargets="Clean">

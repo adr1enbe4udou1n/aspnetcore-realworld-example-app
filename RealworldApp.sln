@@ -5,23 +5,23 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F582C5D6-E17D-43CC-A963-46B13115403D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "src\WebUI\WebUI.csproj", "{2187B136-C69F-4BE5-B0AD-E25BE7CDD1B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.WebUI", "src\Conduit.WebUI\Conduit.WebUI.csproj", "{2187B136-C69F-4BE5-B0AD-E25BE7CDD1B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2752FCD3-A5E3-489E-8939-5D2844B804E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTests", "tests\Application.IntegrationTests\Application.IntegrationTests.csproj", "{78F51821-2ADD-4841-ADA2-DA587BCC6E2E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.IntegrationTests", "tests\Conduit.IntegrationTests\Conduit.IntegrationTests.csproj", "{78F51821-2ADD-4841-ADA2-DA587BCC6E2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{C1D3519B-0E90-4F3C-B9C0-D4648E3C58E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Application", "src\Conduit.Application\Conduit.Application.csproj", "{C1D3519B-0E90-4F3C-B9C0-D4648E3C58E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{C6984EE0-582B-480B-9CD8-CC61F7AB0F3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Domain", "src\Conduit.Domain\Conduit.Domain.csproj", "{C6984EE0-582B-480B-9CD8-CC61F7AB0F3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{EC9ACB2B-1DC9-4A52-8828-6DA72882B534}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Infrastructure", "src\Conduit.Infrastructure\Conduit.Infrastructure.csproj", "{EC9ACB2B-1DC9-4A52-8828-6DA72882B534}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "targets", "targets\targets.csproj", "{0B7D0E85-5CCB-487B-9B30-643F58FF2693}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{4E69D3CB-2696-4DB7-B0D4-07647ED39819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Tools", "tools\Application.Tools\Application.Tools.csproj", "{E5D3A974-3BE0-4A73-B83A-E46523904A68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Tools", "tools\Conduit.Tools\Conduit.Tools.csproj", "{E5D3A974-3BE0-4A73-B83A-E46523904A68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

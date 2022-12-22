@@ -1,15 +1,15 @@
 .PHONY: publish
 
 run:
-	dotnet run --project src/WebUI
+	dotnet run --project src/Conduit.WebUI
 watch:
-	@cd src/WebUI && dotnet watch
+	@cd src/Conduit.WebUI && dotnet watch
 migrate:
-	@cd tools/Application.Tools && dotnet run db migrate
+	@cd tools/Conduit.Tools && dotnet run db migrate
 fresh:
-	@cd tools/Application.Tools && dotnet run db fresh
+	@cd tools/Conduit.Tools && dotnet run db fresh
 seed:
-	@cd tools/Application.Tools && dotnet run db seed
+	@cd tools/Conduit.Tools && dotnet run db seed
 publish:
 	dotnet run --project targets
 format:
@@ -19,10 +19,10 @@ test:
 test-watch-app:
 	dotnet watch test --project tests/Application.IntegrationTests -l:"console;verbosity=detailed"
 test-watch-web:
-	dotnet watch test --project tests/WebUI.IntegrationTests
+	dotnet watch test --project tests/Conduit.IntegrationTests
 migrations-add:
-	dotnet ef migrations add --project src/Infrastructure -s src/WebUI -o Persistence/Migrations $(name)
+	dotnet ef migrations add --project src/Conduit.Infrastructure -s src/Conduit.WebUI -o Persistence/Migrations $(name)
 migrations-remove:
-	dotnet ef migrations remove --project src/Infrastructure -s src/WebUI
+	dotnet ef migrations remove --project src/Conduit.Infrastructure -s src/Conduit.WebUI
 db-update:
-	dotnet ef database update --project src/Infrastructure -s src/WebUI $(name)
+	dotnet ef database update --project src/Conduit.Infrastructure -s src/Conduit.WebUI $(name)

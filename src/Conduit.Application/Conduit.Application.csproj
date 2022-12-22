@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Conduit.Domain\Conduit.Domain.csproj" />
   </ItemGroup>
 
   <Target Name="PostClean" AfterTargets="Clean">

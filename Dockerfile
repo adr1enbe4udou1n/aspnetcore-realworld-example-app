@@ -13,4 +13,4 @@ USER app
 ENV ASPNETCORE_URLS=http://+:8080
 
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "WebUI.dll"]
+ENTRYPOINT ["dotnet", "Conduit.WebUI.dll"]

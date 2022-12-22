@@ -39,7 +39,7 @@ Target(test, DependsOn(build),
     });
 
 Target(publish, DependsOn(test),
-    ForEach("src/WebUI", "tools/Application.Tools"),
+    ForEach("src/Conduit.WebUI", "tools/Conduit.Tools"),
     project => Run("dotnet",
             $"publish {project} -c Release -f net7.0 -o ./publish --no-restore --no-build --verbosity=normal"));
 

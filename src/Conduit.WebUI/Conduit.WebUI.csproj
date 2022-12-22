@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Conduit.Application\Conduit.Application.csproj" />
+    <ProjectReference Include="..\Conduit.Infrastructure\Conduit.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
