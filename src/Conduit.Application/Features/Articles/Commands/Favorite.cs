@@ -5,9 +5,9 @@ using Conduit.Application.Interfaces.Mediator;
 
 namespace Conduit.Application.Features.Articles.Commands;
 
-public record ArticleFavoriteRequest(string Slug, bool Favorite) : ICommand<SingleArticleResponse>;
+public record ArticleFavoriteCommand(string Slug, bool Favorite) : ICommand<SingleArticleResponse>;
 
-public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, SingleArticleResponse>
+public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteCommand, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -18,7 +18,7 @@ public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteRequest, Si
         _currentUser = currentUser;
     }
 
-    public async Task<SingleArticleResponse> Handle(ArticleFavoriteRequest request, CancellationToken cancellationToken)
+    public async Task<SingleArticleResponse> Handle(ArticleFavoriteCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles
             .FindAsync(x => x.Slug == request.Slug, cancellationToken);

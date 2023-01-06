@@ -46,14 +46,14 @@ public class RegisterTests : TestBase
     [Theory, MemberData(nameof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {
-        var response = await Act(HttpMethod.Post, "/users", new NewUserRequest(user));
+        var response = await Act(HttpMethod.Post, "/users", new NewUserCommand(user));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
     public async Task User_Can_Register()
     {
-        var request = new NewUserRequest(new NewUserDto
+        var request = new NewUserCommand(new NewUserDto
         {
             Email = "john.doe@example.com",
             Username = "John Doe",
@@ -90,7 +90,7 @@ public class RegisterTests : TestBase
 
         var response = await Act(
             HttpMethod.Post, "/users",
-            new NewUserRequest(
+            new NewUserCommand(
                 new NewUserDto
                 {
                     Email = "john.doe@example.com",

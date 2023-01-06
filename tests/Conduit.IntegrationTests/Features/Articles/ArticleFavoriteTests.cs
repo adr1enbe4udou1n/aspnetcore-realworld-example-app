@@ -42,7 +42,7 @@ public class ArticleFavoriteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -71,7 +71,7 @@ public class ArticleFavoriteTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -80,7 +80,7 @@ public class ArticleFavoriteTests : TestBase
             }
         ));
 
-        await Mediator.Send(new ArticleFavoriteRequest("test-title", true));
+        await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 

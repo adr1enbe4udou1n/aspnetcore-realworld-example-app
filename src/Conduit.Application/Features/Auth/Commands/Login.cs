@@ -13,9 +13,10 @@ public class LoginUserDto
     public string Password { get; set; } = default!;
 }
 
-public record LoginUserRequest(LoginUserDto User) : ICommand<UserResponse>;
+public record LoginUserRequest(LoginUserDto User);
+public record LoginUserCommand(LoginUserDto User) : ICommand<UserResponse>;
 
-public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
+public class LoginHandler : ICommandHandler<LoginUserCommand, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
@@ -28,7 +29,7 @@ public class LoginHandler : ICommandHandler<LoginUserRequest, UserResponse>
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public async Task<UserResponse> Handle(LoginUserRequest request, CancellationToken cancellationToken)
+    public async Task<UserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users.Where(x => x.Email == request.User.Email)
             .SingleOrDefaultAsync(cancellationToken);

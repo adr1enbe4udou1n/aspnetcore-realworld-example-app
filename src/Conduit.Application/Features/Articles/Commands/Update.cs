@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Articles.Queries;
@@ -15,11 +14,10 @@ public class UpdateArticleDto
     public string? Body { get; set; }
 }
 
-[DisplayName("UpdateArticleRequest")]
-public record UpdateArticleBody(UpdateArticleDto Article);
-public record UpdateArticleRequest(string Slug, UpdateArticleDto Article) : ICommand<SingleArticleResponse>;
+public record UpdateArticleRequest(UpdateArticleDto Article);
+public record UpdateArticleCommand(string Slug, UpdateArticleDto Article) : ICommand<SingleArticleResponse>;
 
-public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
+public class ArticleUpdateValidator : AbstractValidator<UpdateArticleCommand>
 {
     public ArticleUpdateValidator()
     {
@@ -29,7 +27,7 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleRequest>
     }
 }
 
-public class ArticleUpdateHandler : ICommandHandler<UpdateArticleRequest, SingleArticleResponse>
+public class ArticleUpdateHandler : ICommandHandler<UpdateArticleCommand, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -40,7 +38,7 @@ public class ArticleUpdateHandler : ICommandHandler<UpdateArticleRequest, Single
         _currentUser = currentUser;
     }
 
-    public async Task<SingleArticleResponse> Handle(UpdateArticleRequest request, CancellationToken cancellationToken)
+    public async Task<SingleArticleResponse> Handle(UpdateArticleCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 

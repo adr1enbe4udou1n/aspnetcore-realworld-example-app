@@ -44,7 +44,7 @@ public class UpdateUserTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(user));
+        var response = await Act(HttpMethod.Put, "/user", new UpdateUserCommand(user));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -57,7 +57,7 @@ public class UpdateUserTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var request = new UpdateUserRequest(new UpdateUserDto
+        var request = new UpdateUserCommand(new UpdateUserDto
         {
             Email = "jane.doe@example.com",
             Bio = "My Bio"
@@ -77,7 +77,7 @@ public class UpdateUserTests : TestBase
     [Fact]
     public async Task Guest_User_Cannot_Update_Infos()
     {
-        var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(
+        var response = await Act(HttpMethod.Put, "/user", new UpdateUserCommand(
             new UpdateUserDto
             {
                 Email = "jane.doe@example.com"
@@ -104,7 +104,7 @@ public class UpdateUserTests : TestBase
 
         var response = await Act(
             HttpMethod.Put, "/user",
-            new UpdateUserRequest(
+            new UpdateUserCommand(
                 new UpdateUserDto
                 {
                     Email = "jane.doe@example.com",

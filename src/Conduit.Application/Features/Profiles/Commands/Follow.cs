@@ -6,9 +6,9 @@ using Conduit.Application.Interfaces.Mediator;
 
 namespace Conduit.Application.Features.Profiles.Commands;
 
-public record ProfileFollowRequest(string Username, bool Follow) : ICommand<ProfileResponse>;
+public record ProfileFollowCommand(string Username, bool Follow) : ICommand<ProfileResponse>;
 
-public class ProfileGetHandler : ICommandHandler<ProfileFollowRequest, ProfileResponse>
+public class ProfileGetHandler : ICommandHandler<ProfileFollowCommand, ProfileResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -19,7 +19,7 @@ public class ProfileGetHandler : ICommandHandler<ProfileFollowRequest, ProfileRe
         _currentUser = currentUser;
     }
 
-    public async Task<ProfileResponse> Handle(ProfileFollowRequest request, CancellationToken cancellationToken)
+    public async Task<ProfileResponse> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
             .FindAsync(x => x.Name == request.Username, cancellationToken);

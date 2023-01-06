@@ -63,15 +63,15 @@ public class ArticlesController
     /// Create an article
     /// </summary>
     /// <remarks>Create an article. Auth is required</remarks>
-    /// <param name="command">Article to create</param>
+    /// <param name="request">Article to create</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost(Name = "CreateArticle")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public Task<SingleArticleResponse> Create([FromBody] NewArticleRequest command, CancellationToken cancellationToken)
+    public Task<SingleArticleResponse> Create([FromBody] NewArticleRequest request, CancellationToken cancellationToken)
     {
-        return _sender.Send(command, cancellationToken);
+        return _sender.Send(new NewArticleCommand(request.Article), cancellationToken);
     }
 
     /// <summary>
@@ -79,15 +79,15 @@ public class ArticlesController
     /// </summary>
     /// <remarks>Update an article. Auth is required</remarks>
     /// <param name="slug">Slug of the article to update</param>
-    /// <param name="command">Article to update</param>
+    /// <param name="request">Article to update</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("{slug}", Name = "UpdateArticle")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleBody command, CancellationToken cancellationToken)
+    public Task<SingleArticleResponse> Update(string slug, [FromBody] UpdateArticleRequest request, CancellationToken cancellationToken)
     {
-        return _sender.Send(new UpdateArticleRequest(slug, command.Article), cancellationToken);
+        return _sender.Send(new UpdateArticleCommand(slug, request.Article), cancellationToken);
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class ArticlesController
     [HttpDelete("{slug}", Name = "DeleteArticle")]
     public Task Delete(string slug, CancellationToken cancellationToken)
     {
-        return _sender.Send(new ArticleDeleteRequest(slug), cancellationToken);
+        return _sender.Send(new ArticleDeleteCommand(slug), cancellationToken);
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ public class ArticlesController
     [ApiExplorerSettings(GroupName = "Favorites")]
     public Task<SingleArticleResponse> Favorite(string slug, CancellationToken cancellationToken)
     {
-        return _sender.Send(new ArticleFavoriteRequest(slug, true), cancellationToken);
+        return _sender.Send(new ArticleFavoriteCommand(slug, true), cancellationToken);
     }
 
     /// <summary>
@@ -128,6 +128,6 @@ public class ArticlesController
     [ApiExplorerSettings(GroupName = "Favorites")]
     public Task<SingleArticleResponse> Unfavorite(string slug, CancellationToken cancellationToken)
     {
-        return _sender.Send(new ArticleFavoriteRequest(slug, false), cancellationToken);
+        return _sender.Send(new ArticleFavoriteCommand(slug, false), cancellationToken);
     }
 }

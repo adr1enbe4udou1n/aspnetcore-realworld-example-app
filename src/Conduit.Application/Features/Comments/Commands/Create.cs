@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Comments.Queries;
 using Conduit.Application.Interfaces;
@@ -16,11 +15,10 @@ public class NewCommentDto
 
 public record SingleCommentResponse(CommentDto Comment);
 
-[DisplayName("NewCommentRequest")]
-public record NewCommentBody(NewCommentDto Comment);
-public record NewCommentRequest(string Slug, NewCommentDto Comment) : ICommand<SingleCommentResponse>;
+public record NewCommentRequest(NewCommentDto Comment);
+public record NewCommentCommand(string Slug, NewCommentDto Comment) : ICommand<SingleCommentResponse>;
 
-public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
+public class CommentCreateValidator : AbstractValidator<NewCommentCommand>
 {
     public CommentCreateValidator()
     {
@@ -28,7 +26,7 @@ public class CommentCreateValidator : AbstractValidator<NewCommentRequest>
     }
 }
 
-public class CommentCreateHandler : ICommandHandler<NewCommentRequest, SingleCommentResponse>
+public class CommentCreateHandler : ICommandHandler<NewCommentCommand, SingleCommentResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -39,7 +37,7 @@ public class CommentCreateHandler : ICommandHandler<NewCommentRequest, SingleCom
         _currentUser = currentUser;
     }
 
-    public async Task<SingleCommentResponse> Handle(NewCommentRequest request, CancellationToken cancellationToken)
+    public async Task<SingleCommentResponse> Handle(NewCommentCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 

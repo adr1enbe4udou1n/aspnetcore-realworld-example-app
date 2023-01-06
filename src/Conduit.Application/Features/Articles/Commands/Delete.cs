@@ -6,9 +6,9 @@ using MediatR;
 
 namespace Conduit.Application.Features.Articles.Commands;
 
-public record ArticleDeleteRequest(string Slug) : ICommand;
+public record ArticleDeleteCommand(string Slug) : ICommand;
 
-public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteRequest>
+public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteCommand>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -19,7 +19,7 @@ public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteRequest>
         _currentUser = currentUser;
     }
 
-    public async Task<Unit> Handle(ArticleDeleteRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 

@@ -16,9 +16,10 @@ public class NewUserDto
     public string Username { get; set; } = default!;
 }
 
-public record NewUserRequest(NewUserDto User) : ICommand<UserResponse>;
+public record NewUserRequest(NewUserDto User);
+public record NewUserCommand(NewUserDto User) : ICommand<UserResponse>;
 
-public class RegisterValidator : AbstractValidator<NewUserRequest>
+public class RegisterValidator : AbstractValidator<NewUserCommand>
 {
     public RegisterValidator(IAppDbContext context)
     {
@@ -35,7 +36,7 @@ public class RegisterValidator : AbstractValidator<NewUserRequest>
     }
 }
 
-public class RegisterHandler : ICommandHandler<NewUserRequest, UserResponse>
+public class RegisterHandler : ICommandHandler<NewUserCommand, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
@@ -48,7 +49,7 @@ public class RegisterHandler : ICommandHandler<NewUserRequest, UserResponse>
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public async Task<UserResponse> Handle(NewUserRequest request, CancellationToken cancellationToken)
+    public async Task<UserResponse> Handle(NewUserCommand request, CancellationToken cancellationToken)
     {
         var user = new User
         {

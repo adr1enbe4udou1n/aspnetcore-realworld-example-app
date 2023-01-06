@@ -44,7 +44,7 @@ public class LoginTests : TestBase
         });
         await Context.SaveChangesAsync();
 
-        var response = await Act(HttpMethod.Post, "/users/login", new LoginUserRequest(credentials));
+        var response = await Act(HttpMethod.Post, "/users/login", new LoginUserCommand(credentials));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -62,7 +62,7 @@ public class LoginTests : TestBase
 
         var currentUser = await Act<UserResponse>(
             HttpMethod.Post, "/users/login",
-            new LoginUserRequest(
+            new LoginUserCommand(
                 new LoginUserDto
                 {
                     Email = "john.doe@example.com",

@@ -42,7 +42,7 @@ public class ProfilesController
     [HttpPost("follow", Name = "FollowUserByUsername")]
     public Task<ProfileResponse> Follow(string username, CancellationToken cancellationToken)
     {
-        return _sender.Send(new ProfileFollowRequest(username, true), cancellationToken);
+        return _sender.Send(new ProfileFollowCommand(username, true), cancellationToken);
     }
 
     /// <summary>
@@ -55,6 +55,6 @@ public class ProfilesController
     [HttpDelete("follow", Name = "UnfollowUserByUsername")]
     public Task<ProfileResponse> Unfollow(string username, CancellationToken cancellationToken)
     {
-        return _sender.Send(new ProfileFollowRequest(username, false), cancellationToken);
+        return _sender.Send(new ProfileFollowCommand(username, false), cancellationToken);
     }
 }

@@ -35,7 +35,7 @@ public class CommentCreateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -44,7 +44,7 @@ public class CommentCreateTests : TestBase
             }
         ));
 
-        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(comment));
+        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(comment));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -57,7 +57,7 @@ public class CommentCreateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
+        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(
             new NewCommentDto
             {
                 Body = "Test Body",
@@ -69,7 +69,7 @@ public class CommentCreateTests : TestBase
     [Fact]
     public async Task Guest_Cannot_Create_Comment()
     {
-        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(
+        var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(
             new NewCommentDto()
         ));
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -86,7 +86,7 @@ public class CommentCreateTests : TestBase
             Image = "https://i.pravatar.cc/300"
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -95,7 +95,7 @@ public class CommentCreateTests : TestBase
             }
         ));
 
-        var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentBody(new NewCommentDto
+        var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(new NewCommentDto
         {
             Body = "Thank you !",
         }));

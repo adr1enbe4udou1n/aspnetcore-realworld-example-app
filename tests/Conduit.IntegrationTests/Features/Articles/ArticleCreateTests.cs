@@ -63,7 +63,7 @@ public class ArticleCreateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Existing Title",
@@ -72,7 +72,7 @@ public class ArticleCreateTests : TestBase
             }
         ));
 
-        var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(article));
+        var response = await Act(HttpMethod.Post, "/articles", new NewArticleCommand(article));
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -80,7 +80,7 @@ public class ArticleCreateTests : TestBase
     [Fact]
     public async Task Guest_Cannot_Create_Article()
     {
-        var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(
+        var response = await Act(HttpMethod.Post, "/articles", new NewArticleCommand(
             new NewArticleDto()
         ));
 
@@ -106,7 +106,7 @@ public class ArticleCreateTests : TestBase
 
         var response = await Act<SingleArticleResponse>(
             HttpMethod.Post, "/articles",
-            new NewArticleRequest(
+            new NewArticleCommand(
                 new NewArticleDto
                 {
                     Title = "Test Article",

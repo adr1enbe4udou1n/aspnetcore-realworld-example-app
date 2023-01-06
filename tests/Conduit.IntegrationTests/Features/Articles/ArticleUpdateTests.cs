@@ -36,7 +36,7 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var response = await Act(HttpMethod.Put, "/articles/test-title", new UpdateArticleBody(article));
+        var response = await Act(HttpMethod.Put, "/articles/test-title", new UpdateArticleRequest(article));
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -49,7 +49,7 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
+        var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleRequest(
             new UpdateArticleDto
             {
                 Title = "New Title",
@@ -63,7 +63,7 @@ public class ArticleUpdateTests : TestBase
     [Fact]
     public async Task Guest_Cannot_Update_Article()
     {
-        var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleBody(
+        var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleRequest(
             new UpdateArticleDto()
         ));
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -78,7 +78,7 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -95,7 +95,7 @@ public class ArticleUpdateTests : TestBase
 
         var response = await Act(
             HttpMethod.Put, "/articles/test-title",
-            new UpdateArticleBody(
+            new UpdateArticleRequest(
                 new UpdateArticleDto
                 {
                     Title = "New Title",
@@ -115,7 +115,7 @@ public class ArticleUpdateTests : TestBase
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleRequest(
+        await Mediator.Send(new NewArticleCommand(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -125,7 +125,7 @@ public class ArticleUpdateTests : TestBase
         ));
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Put, "/articles/test-title",
-            new UpdateArticleBody(
+            new UpdateArticleRequest(
                 new UpdateArticleDto
                 {
                     Title = "New Title",

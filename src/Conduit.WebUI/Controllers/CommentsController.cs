@@ -37,15 +37,15 @@ public class CommentsController
     /// </summary>
     /// <remarks>Create a comment for an article. Auth is required</remarks>
     /// <param name="slug">Slug of the article that you want to create a comment for</param>
-    /// <param name="command">Comment you want to create</param>
+    /// <param name="request">Comment you want to create</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost(Name = "CreateArticleComment")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentBody command, CancellationToken cancellationToken)
+    public Task<SingleCommentResponse> Create(string slug, [FromBody] NewCommentRequest request, CancellationToken cancellationToken)
     {
-        return _sender.Send(new NewCommentRequest(slug, command.Comment), cancellationToken);
+        return _sender.Send(new NewCommentCommand(slug, request.Comment), cancellationToken);
     }
 
     /// <summary>
@@ -59,6 +59,6 @@ public class CommentsController
     [HttpDelete("{commentId}", Name = "DeleteArticleComment")]
     public Task Delete(string slug, int commentId, CancellationToken cancellationToken)
     {
-        return _sender.Send(new CommentDeleteRequest(slug, commentId), cancellationToken);
+        return _sender.Send(new CommentDeleteCommand(slug, commentId), cancellationToken);
     }
 }

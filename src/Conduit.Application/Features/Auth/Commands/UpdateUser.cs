@@ -14,9 +14,10 @@ public class UpdateUserDto
     public string? Image { get; set; }
 }
 
-public record UpdateUserRequest(UpdateUserDto User) : ICommand<UserResponse>;
+public record UpdateUserRequest(UpdateUserDto User);
+public record UpdateUserCommand(UpdateUserDto User) : ICommand<UserResponse>;
 
-public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
+public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
 {
     public UpdateUserValidator(ICurrentUser currentUser, IAppDbContext context)
     {
@@ -36,7 +37,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
     }
 }
 
-public class UpdateUserHandler : ICommandHandler<UpdateUserRequest, UserResponse>
+public class UpdateUserHandler : ICommandHandler<UpdateUserCommand, UserResponse>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IAppDbContext _context;
@@ -49,7 +50,7 @@ public class UpdateUserHandler : ICommandHandler<UpdateUserRequest, UserResponse
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public async Task<UserResponse> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
+    public async Task<UserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         var user = _currentUser.User!;
 

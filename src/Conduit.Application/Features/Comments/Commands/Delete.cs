@@ -6,9 +6,9 @@ using MediatR;
 
 namespace Conduit.Application.Features.Comments.Commands;
 
-public record CommentDeleteRequest(string Slug, int Id) : ICommand;
+public record CommentDeleteCommand(string Slug, int Id) : ICommand;
 
-public class CommentDeleteHandler : ICommandHandler<CommentDeleteRequest>
+public class CommentDeleteHandler : ICommandHandler<CommentDeleteCommand>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -19,7 +19,7 @@ public class CommentDeleteHandler : ICommandHandler<CommentDeleteRequest>
         _currentUser = currentUser;
     }
 
-    public async Task<Unit> Handle(CommentDeleteRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
         var comment = await _context.Comments.FindAsync(

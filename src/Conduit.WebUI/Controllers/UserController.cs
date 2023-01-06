@@ -34,14 +34,14 @@ public class UserController
     /// Update current user
     /// </summary>
     /// <remarks>Updated user information for current user</remarks>
-    /// <param name="command">User details to update. At least <strong>one</strong> field is required.</param>
+    /// <param name="request">User details to update. At least <strong>one</strong> field is required.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut(Name = "UpdateCurrentUser")]
     [ProducesResponseType(200)]
     [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-    public Task<UserResponse> Update([FromBody] UpdateUserRequest command, CancellationToken cancellationToken)
+    public Task<UserResponse> Update([FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        return _sender.Send(command, cancellationToken);
+        return _sender.Send(new UpdateUserCommand(request.User), cancellationToken);
     }
 }

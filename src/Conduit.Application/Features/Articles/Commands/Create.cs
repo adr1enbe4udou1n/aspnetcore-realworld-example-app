@@ -18,9 +18,10 @@ public class NewArticleDto
     public List<string>? TagList { get; set; }
 }
 
-public record NewArticleRequest(NewArticleDto Article) : ICommand<SingleArticleResponse>;
+public record NewArticleRequest(NewArticleDto Article);
+public record NewArticleCommand(NewArticleDto Article) : ICommand<SingleArticleResponse>;
 
-public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
+public class ArticleCreateValidator : AbstractValidator<NewArticleCommand>
 {
     public ArticleCreateValidator(IAppDbContext context, ISlugifier slugifier)
     {
@@ -37,7 +38,7 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleRequest>
     }
 }
 
-public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArticleResponse>
+public class ArticleCreateHandler : ICommandHandler<NewArticleCommand, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -50,7 +51,7 @@ public class ArticleCreateHandler : ICommandHandler<NewArticleRequest, SingleArt
         _slugifier = slugifier;
     }
 
-    public async Task<SingleArticleResponse> Handle(NewArticleRequest request, CancellationToken cancellationToken)
+    public async Task<SingleArticleResponse> Handle(NewArticleCommand request, CancellationToken cancellationToken)
     {
         var article = new Article
         {
