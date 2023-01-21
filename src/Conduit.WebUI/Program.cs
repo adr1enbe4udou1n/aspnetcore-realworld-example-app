@@ -1,4 +1,5 @@
 using Conduit.Infrastructure;
+using Conduit.Infrastructure.Persistence;
 using Conduit.WebUI.Extensions;
 using Conduit.WebUI.Filters;
 using Conduit.WebUI.OptionsSetup;
@@ -19,6 +20,10 @@ builder.Services
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new Conduit.WebUI.Converters.DateTimeConverter())
     );
+
+builder.Services
+    .AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
 
 builder.Services
     .ConfigureOptions<JwtOptionsSetup>()
@@ -67,6 +72,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 
 app.Run();
 
