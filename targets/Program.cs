@@ -27,7 +27,11 @@ Target(format, () =>
     Run("dotnet", "format --verify-no-changes");
 });
 
-Target(build, DependsOn(format), () => Run("dotnet", "build . -c Release"));
+Target(build, DependsOn(format), () =>
+{
+    Run("dotnet", "restore --locked-mode");
+    Run("dotnet", "build . -c Release");
+});
 
 Target(test, DependsOn(build),
     () =>
