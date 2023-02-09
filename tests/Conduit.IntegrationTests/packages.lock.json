@@ -1908,7 +1908,6 @@
       "conduit.webui": {
         "type": "Project",
         "dependencies": {
-          "Conduit.Application": "[1.0.0, )",
           "Conduit.Infrastructure": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore.Design": "[7.0.2, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[7.0.2, )",
