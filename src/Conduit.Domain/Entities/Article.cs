@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using Conduit.Domain.Interfaces;
 
 namespace Conduit.Domain.Entities;
@@ -16,11 +16,11 @@ public class Article : IAuditableEntity
     public virtual User Author { get; set; } = null!;
 
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string Title { get; set; } = null!;
 
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string Slug { get; set; } = null!;
 
     public string Description { get; set; } = null!;

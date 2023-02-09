@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Conduit.Domain.Entities;
 
@@ -8,7 +8,7 @@ public class Tag
 
     public int Id { get; private set; }
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string Name { get; set; } = null!;
 
     public virtual IReadOnlyCollection<ArticleTag> Articles => _articles;

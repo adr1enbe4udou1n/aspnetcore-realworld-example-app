@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using Conduit.Domain.Interfaces;
 
 namespace Conduit.Domain.Entities;
@@ -13,18 +13,18 @@ public class User : IAuditableEntity
 
     public int Id { get; private set; }
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string Name { get; set; } = null!;
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string Email { get; set; } = null!;
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string? Password { get; set; }
 
     public string? Bio { get; set; }
 
-    [Column(TypeName = "varchar(255)")]
+    [MaxLength(255)]
     public string? Image { get; set; }
 
     public DateTime CreatedAt { get; set; }
