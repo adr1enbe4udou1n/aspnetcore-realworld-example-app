@@ -10,9 +10,9 @@
       },
       "FluentAssertions": {
         "type": "Direct",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "Z+alhbX6FreF+buZlOpP4jt93wofAdAzyUngcDNHYcuVsDUh/rjIB9WcqXctxffh4XZ3xUG/Ew4UgULSP/kUZg==",
+        "requested": "[6.10.0, )",
+        "resolved": "6.10.0",
+        "contentHash": "Da3YsiRDnOHKBfxutjnupL1rOX0K/jnG6crn5AgwukeqZ/yi+HNCOFshic01ke0ztZFWzpfQMXH8fO9aAbG0Gw==",
         "dependencies": {
           "System.Configuration.ConfigurationManager": "4.4.0"
         }
@@ -793,28 +793,28 @@
       },
       "OpenTelemetry": {
         "type": "Transitive",
-        "resolved": "1.4.0-rc.3",
-        "contentHash": "TrkzzzJBKRc0Zi8E8GRly1aluvl+LUyiM3LeEhAZ6SZv9LCQAY3DDTV0PrhA0GHMvlgNA0pnUq3wx5+BfFtY8g==",
+        "resolved": "1.4.0-rc.4",
+        "contentHash": "Wz4WLE52S1In4PTYEflp7VImvX0kHMeOb5FeCjJ1+LD3UwukG1a7dqouPAPIcPVagEDHaM2H+T803bhyyzHpfg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Configuration": "3.1.0",
-          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.4.0-rc.3"
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.4.0-rc.4"
         }
       },
       "OpenTelemetry.Api": {
         "type": "Transitive",
-        "resolved": "1.4.0-rc.3",
-        "contentHash": "3So6UJ7E6+2SgzusaaZG/QMqMDtvIKEbdrvDTzb382kk02SbaCON36tmd0mFa5TOKFtnFXyGmjC7uv2n2hCNtw==",
+        "resolved": "1.4.0-rc.4",
+        "contentHash": "LIMpE2cunBxyAvC9mMrbTKEPaI/k06l1AlDeEKRvpir7lYwje5x7FygVRZI/N0fjJQw4V5h+qxqSpgZMw4nuFg==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "7.0.0"
         }
       },
       "OpenTelemetry.Api.ProviderBuilderExtensions": {
         "type": "Transitive",
-        "resolved": "1.4.0-rc.3",
-        "contentHash": "WVvJwWyxgHBqMlNwsvS0PI31mvWwtL6Pd8Bh0KJkuM2gJW2D24n92uq+NfZpeMbuCZf8DUfvtuaUfv8xP5+jJg==",
+        "resolved": "1.4.0-rc.4",
+        "contentHash": "w6lwCQF632rGpybvuZ7TGdjJ20Y6dIm9BNE6RYFo5XkpmLsZCQUlvSmg5Uf0ksjueYl5/EqpogWklfnx3IWBmw==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.0",
-          "OpenTelemetry.Api": "1.4.0-rc.3"
+          "OpenTelemetry.Api": "1.4.0-rc.4"
         }
       },
       "OpenTelemetry.Exporter.Jaeger": {
@@ -828,19 +828,19 @@
       },
       "OpenTelemetry.Extensions.Hosting": {
         "type": "Transitive",
-        "resolved": "1.4.0-rc.3",
-        "contentHash": "+ySXZT4KXPLHI5RTL1w4hwz0NBSkREiqJ38Jd9kormdqO0GWiMv7+HxF1Qh4zAvqJ5Mv0gX4YWUoBcsmWhb3kQ==",
+        "resolved": "1.4.0-rc.4",
+        "contentHash": "7F4b7baoDpKdKDyj5VVv2JypdEaQg5es59tOfdi+9eXLJYvFILsgo4y7jFRKNHFakYhyTHlHRv/E2dr1KtDBLg==",
         "dependencies": {
           "Microsoft.Extensions.Hosting.Abstractions": "2.1.0",
-          "OpenTelemetry": "1.4.0-rc.3"
+          "OpenTelemetry": "1.4.0-rc.4"
         }
       },
       "OpenTelemetry.Instrumentation.AspNetCore": {
         "type": "Transitive",
-        "resolved": "1.0.0-rc9.12",
-        "contentHash": "Q5FVgkiy4O4H58MzF00H7SmkGkuD29pQv4iJ6zDDOnUbZLzWFESPQ1hmGa+zQmQTbbFxUGrW8c0RTP7TCeoJRw==",
+        "resolved": "1.0.0-rc9.13",
+        "contentHash": "Ho57T9oaMss67u7U3xqEP6FevFSNK4JRxBxQRkDwI5IrPela9JwDaj4zsgHgeg6GpgsO98BoBeCapHswvmmuuw==",
         "dependencies": {
-          "OpenTelemetry": "1.4.0-rc.3"
+          "OpenTelemetry": "1.4.0-rc.4"
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
@@ -1913,8 +1913,8 @@
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[7.0.2, )",
           "Npgsql.OpenTelemetry": "[7.0.1, )",
           "OpenTelemetry.Exporter.Jaeger": "[1.3.2, )",
-          "OpenTelemetry.Extensions.Hosting": "[1.4.0-rc.3, )",
-          "OpenTelemetry.Instrumentation.AspNetCore": "[1.0.0-rc9.12, )",
+          "OpenTelemetry.Extensions.Hosting": "[1.4.0-rc.4, )",
+          "OpenTelemetry.Instrumentation.AspNetCore": "[1.0.0-rc9.13, )",
           "Swashbuckle.AspNetCore": "[6.5.0, )",
           "Swashbuckle.AspNetCore.Filters": "[7.0.6, )"
         }
