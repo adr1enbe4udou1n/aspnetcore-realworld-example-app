@@ -9,11 +9,7 @@ public class CurrentUser : ICurrentUser
 {
     private readonly AppDbContext _context;
 
-    public long Identifier { get; private set; }
-
     public User? User { get; private set; }
-
-    public bool IsAuthenticated => User != null;
 
     public CurrentUser(AppDbContext context)
     {
@@ -22,13 +18,7 @@ public class CurrentUser : ICurrentUser
 
     public async Task SetIdentifier(long identifier)
     {
-        Identifier = identifier;
-        await Fresh();
-    }
-
-    public async Task Fresh()
-    {
-        User = await _context.Users.Where(x => x.Id == Identifier).SingleOrDefaultAsync();
+        User = await _context.Users.Where(x => x.Id == identifier).SingleOrDefaultAsync();
     }
 
     public async Task LoadFollowing()

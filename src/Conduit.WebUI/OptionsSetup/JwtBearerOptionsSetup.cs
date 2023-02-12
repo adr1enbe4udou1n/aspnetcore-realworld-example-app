@@ -29,12 +29,17 @@ public class JwtBearerOptionsSetup : IPostConfigureOptions<JwtBearerOptions>
         {
             OnTokenValidated = async context =>
             {
+                var currentUser = context.HttpContext.RequestServices.GetRequiredService<ICurrentUser>();
                 var userId = context.Principal?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 if (userId != null)
                 {
-                    var currentUser = context.HttpContext.RequestServices.GetRequiredService<ICurrentUser>();
                     await currentUser.SetIdentifier(Convert.ToInt32(userId, CultureInfo.InvariantCulture));
+                }
+
+                if (currentUser.User == null)
+                {
+                    context.Fail("User unknown.");
                 }
             },
             OnMessageReceived = context =>
