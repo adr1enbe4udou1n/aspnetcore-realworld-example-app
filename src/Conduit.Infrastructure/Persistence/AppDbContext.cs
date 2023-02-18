@@ -1,9 +1,8 @@
-using System.Data;
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 using Conduit.Infrastructure.Interceptors;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace Conduit.Infrastructure.Persistence;
@@ -37,9 +36,24 @@ public class AppDbContext : DbContext, IAppDbContext
         }
     }
 
-    public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    public async Task<TResponse> UseTransactionAsync<TResponse>(RequestHandlerDelegate<TResponse> request, CancellationToken cancellationToken = default)
     {
-        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
+        TResponse result;
+        using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            result = await request();
+
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
+        }
+
+        return result;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

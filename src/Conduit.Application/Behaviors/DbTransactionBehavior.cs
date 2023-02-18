@@ -14,22 +14,6 @@ public class DbTransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        TResponse result;
-
-        using var _transaction = await _context.BeginTransactionAsync(cancellationToken);
-
-        try
-        {
-            result = await next();
-
-            _transaction.Commit();
-        }
-        catch (Exception)
-        {
-            _transaction.Rollback();
-            throw;
-        }
-
-        return result;
+        return await _context.UseTransactionAsync(next, cancellationToken);
     }
 }
