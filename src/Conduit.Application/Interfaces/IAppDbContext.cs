@@ -1,5 +1,4 @@
 using Conduit.Domain.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Interfaces;
@@ -15,5 +14,5 @@ public interface IAppDbContext : IDisposable
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
-    Task<TResponse> UseTransactionAsync<TResponse>(RequestHandlerDelegate<TResponse> request, CancellationToken cancellationToken = default);
+    Task<TResponse> UseTransactionAsync<TResponse>(Func<Task<TResponse>> expression, CancellationToken cancellationToken = default);
 }
