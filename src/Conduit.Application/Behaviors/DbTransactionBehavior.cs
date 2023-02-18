@@ -15,11 +15,11 @@ public class DbTransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (request is ICommand<TResponse>)
+        if (request is IQuery<TResponse>)
         {
-            return await _context.UseTransactionAsync(next, cancellationToken);
+            return await next();
         }
 
-        return await next();
+        return await _context.UseTransactionAsync(next, cancellationToken);
     }
 }
