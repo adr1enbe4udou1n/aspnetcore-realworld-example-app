@@ -14,6 +14,7 @@ public static class DependencyInjection
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(QueryBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
     }
 }

@@ -1,6 +1,7 @@
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 using Conduit.Infrastructure.Interceptors;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -35,23 +36,24 @@ public class AppDbContext : DbContext, IAppDbContext
         }
     }
 
-    public async Task<TResponse> UseTransactionAsync<TResponse>(Func<Task<TResponse>> expression, CancellationToken cancellationToken = default)
+    public async Task<TResponse> UseTransactionAsync<TResponse>(RequestHandlerDelegate<TResponse> request, CancellationToken cancellationToken = default)
     {
+        TResponse result;
         using var transaction = await Database.BeginTransactionAsync(cancellationToken);
 
         try
         {
-            var result = await expression();
+            result = await request();
 
             await transaction.CommitAsync(cancellationToken);
-
-            return result;
         }
         catch (Exception)
         {
             await transaction.RollbackAsync(cancellationToken);
             throw;
         }
+
+        return result;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
