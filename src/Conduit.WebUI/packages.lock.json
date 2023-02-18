@@ -151,8 +151,8 @@
       },
       "Microsoft.AspNetCore.Authentication.JwtBearer": {
         "type": "Transitive",
-        "resolved": "7.0.2",
-        "contentHash": "sErKh1ZM3Ye1Lib8aWjexf1M5Ne0wptmR8Rr2p/7w1bXyi0kSHnYsVjdEsZGKHE12wNu+g3Zu6TLsKAVEyGYNw==",
+        "resolved": "7.0.3",
+        "contentHash": "LoWGXSI5P67sjTVEcUf0u37Ms9t/jEUyW462M6CAOfs48Gug2InaBXkt+dUYxkwtD4+WH4blafqF9Es2SrBBEw==",
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.15.1"
         }
@@ -186,11 +186,11 @@
       },
       "Microsoft.EntityFrameworkCore.Proxies": {
         "type": "Transitive",
-        "resolved": "7.0.2",
-        "contentHash": "1mQBLHP8rYaIL39Z/oe9g+fJOyR+QWrF2jMIuRDX+qnSZtHDW3nPTrVl+KpTj8G5irMCwYrUgFWf1sx37ugnrA==",
+        "resolved": "7.0.3",
+        "contentHash": "mmyeZypfeFxo7Jl5fF9X0eEjTjegq1nr8R/hzFJFBdZ9D2sOESQcdcLMhhr6bnBdSqxz5jGq6FjGo9PdKlOYvA==",
         "dependencies": {
           "Castle.Core": "5.1.0",
-          "Microsoft.EntityFrameworkCore": "7.0.2"
+          "Microsoft.EntityFrameworkCore": "7.0.3"
         }
       },
       "Microsoft.EntityFrameworkCore.Relational": {
@@ -419,13 +419,13 @@
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
         "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "8txq2CsPWvWO4azZSBmKLKmYsL6dkGrarX2hJZY0Djx6uWZJGH9W0OTE1oHqn+aC5L+xrzyS+TM3kiKw2gdXuA==",
+        "resolved": "7.0.3",
+        "contentHash": "3iVz7vcPAZt6iBSjJ8XyjtIP19jilNOJqTiTCs2UHWhpTyP+FbNhnzCBE/oyD3n49McmmenjKpva+yTy7q1z/g==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "[7.0.1, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.1, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Relational": "[7.0.1, 8.0.0)",
-          "Npgsql": "7.0.1"
+          "Microsoft.EntityFrameworkCore": "[7.0.3, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.3, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[7.0.3, 8.0.0)",
+          "Npgsql": "7.0.2"
         }
       },
       "OpenTelemetry": {
@@ -576,10 +576,10 @@
         "dependencies": {
           "BCrypt.Net-Next": "[4.0.3, )",
           "Conduit.Application": "[1.0.0, )",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "[7.0.2, )",
-          "Microsoft.EntityFrameworkCore.Proxies": "[7.0.2, )",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "[7.0.3, )",
+          "Microsoft.EntityFrameworkCore.Proxies": "[7.0.3, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[7.0.0, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.1, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.3, )",
           "Scrutor": "[4.2.1, )",
           "Slugify.Core": "[3.0.0, )"
         }

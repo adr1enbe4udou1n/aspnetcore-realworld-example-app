@@ -1,3 +1,4 @@
+using System.Data;
 using Conduit.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,4 +14,6 @@ public interface IAppDbContext : IDisposable
     void UseRoConnection();
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
 }

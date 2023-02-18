@@ -1,7 +1,9 @@
+using System.Data;
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 using Conduit.Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace Conduit.Infrastructure.Persistence;
@@ -33,6 +35,11 @@ public class AppDbContext : DbContext, IAppDbContext
         {
             Database.SetConnectionString(_roConnectionString);
         }
+    }
+
+    public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
