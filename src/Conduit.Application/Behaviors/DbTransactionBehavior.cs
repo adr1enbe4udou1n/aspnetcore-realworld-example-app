@@ -1,4 +1,5 @@
 using Conduit.Application.Interfaces;
+using Conduit.Application.Interfaces.Mediator;
 using MediatR;
 
 namespace Conduit.Application.Behaviors;
@@ -14,6 +15,11 @@ public class DbTransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        return await _context.UseTransactionAsync(next, cancellationToken);
+        if (request is ICommand<TResponse>)
+        {
+            return await _context.UseTransactionAsync(next, cancellationToken);
+        }
+
+        return await next();
     }
 }
