@@ -14,13 +14,11 @@ namespace Conduit.Infrastructure.Security;
 
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
-    private readonly ICurrentUser _currentUser;
     private readonly JwtOptions _jwtOptions;
     private readonly HttpContext? _httpContext;
 
-    public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, ICurrentUser currentUser, IHttpContextAccessor httpContextAccessor)
+    public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContextAccessor httpContextAccessor)
     {
-        _currentUser = currentUser;
         _jwtOptions = options.CurrentValue;
         _httpContext = httpContextAccessor.HttpContext;
     }
