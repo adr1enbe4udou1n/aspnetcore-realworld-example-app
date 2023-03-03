@@ -3,7 +3,7 @@ using Conduit.Application.Features.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Conduit.WebUI.Controllers;
+namespace Conduit.Presentation.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]

@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Conduit.WebUI.Filters;
+namespace Conduit.Presentation.Filters;
 
 public class PathPrefixDocumentFilter : IDocumentFilter
 {

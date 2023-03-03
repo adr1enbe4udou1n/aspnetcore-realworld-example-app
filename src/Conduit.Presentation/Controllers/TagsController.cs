@@ -2,7 +2,7 @@ using Conduit.Application.Features.Tags.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Conduit.WebUI.Controllers;
+namespace Conduit.Presentation.Controllers;
 
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "Tags")]

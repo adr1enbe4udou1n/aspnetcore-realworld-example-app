@@ -1,11 +1,13 @@
 using System.ComponentModel;
-using Conduit.WebUI.Filters;
+using Conduit.Presentation.Filters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Conduit.WebUI.OptionsSetup;
+namespace Conduit.Presentation.OptionsSetup;
 
 public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
 {
@@ -22,7 +24,7 @@ public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
         options.DocumentFilter<PathPrefixDocumentFilter>("api");
 
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Conduit.Application.xml"));
-        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Conduit.WebUI.xml"));
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Conduit.Presentation.xml"));
 
         options.AddServer(new OpenApiServer
         {

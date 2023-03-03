@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace Conduit.WebUI.Conventions;
+namespace Conduit.Presentation.Conventions;
 
 public class RoutePrefixConvention : IApplicationModelConvention
 {

@@ -1,5 +1,3 @@
-
-using Conduit.Application;
 using Conduit.Application.Interfaces;
 using Conduit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +12,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddApplication()
+        return services
             .AddHttpContextAccessor()
             .AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>())
             .AddDbContextFactory<AppDbContext>((options) =>

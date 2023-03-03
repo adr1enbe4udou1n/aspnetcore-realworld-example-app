@@ -1874,17 +1874,24 @@
           "Slugify.Core": "[4.0.1, )"
         }
       },
+      "conduit.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Conduit.Application": "[1.0.0, )",
+          "Swashbuckle.AspNetCore": "[6.5.0, )",
+          "Swashbuckle.AspNetCore.Filters": "[7.0.6, )"
+        }
+      },
       "conduit.webui": {
         "type": "Project",
         "dependencies": {
           "Conduit.Infrastructure": "[1.0.0, )",
+          "Conduit.Presentation": "[1.0.0, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[7.0.3, )",
           "Npgsql.OpenTelemetry": "[7.0.2, )",
           "OpenTelemetry.Exporter.Jaeger": "[1.4.0, )",
           "OpenTelemetry.Extensions.Hosting": "[1.4.0, )",
-          "OpenTelemetry.Instrumentation.AspNetCore": "[1.0.0-rc9.14, )",
-          "Swashbuckle.AspNetCore": "[6.5.0, )",
-          "Swashbuckle.AspNetCore.Filters": "[7.0.6, )"
+          "OpenTelemetry.Instrumentation.AspNetCore": "[1.0.0-rc9.14, )"
         }
       }
     }

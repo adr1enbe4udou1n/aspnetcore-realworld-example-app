@@ -1,25 +1,17 @@
+using Conduit.Application;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Persistence;
-using Conduit.WebUI.Extensions;
-using Conduit.WebUI.Filters;
+using Conduit.Presentation;
 using Conduit.WebUI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services
+    .AddApplication()
     .AddInfrastructure(builder.Configuration)
-    .AddRouting(options => options.LowercaseUrls = true)
-    .AddControllers(opt =>
-    {
-        opt.UseRoutePrefix("api");
-        opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
-    })
-    .AddJsonOptions(options =>
-        options.JsonSerializerOptions.Converters.Add(new Conduit.WebUI.Converters.DateTimeConverter())
-    );
+    .AddPresentation();
 
 builder.Services
     .AddHealthChecks()
@@ -28,13 +20,8 @@ builder.Services
 builder.Services
     .ConfigureOptions<JwtOptionsSetup>()
     .ConfigureOptions<JwtBearerOptionsSetup>()
-    .ConfigureOptions<SwaggerGenOptionsSetup>()
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
-
-builder.Services
-    .AddEndpointsApiExplorer()
-    .AddSwaggerGen();
 
 builder.Services
     .ConfigureOptions<TracerOptionsSetup>()

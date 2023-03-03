@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Conduit.WebUI.Converters;
+namespace Conduit.Presentation.Converters;
 
 public class DateTimeConverter : JsonConverter<DateTime>
 {

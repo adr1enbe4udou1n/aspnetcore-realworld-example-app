@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Conduit.WebUI.Controllers;
+namespace Conduit.Presentation.Controllers;
 
 [Route("articles/{slug}/[controller]")]
 [ApiExplorerSettings(GroupName = "Comments")]

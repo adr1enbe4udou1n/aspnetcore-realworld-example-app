@@ -1,7 +1,7 @@
-using Conduit.WebUI.Conventions;
+using Conduit.Presentation.Conventions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Conduit.WebUI.Extensions;
+namespace Conduit.Presentation.Extensions;
 
 public static class MvcOptionsExtensions
 {
