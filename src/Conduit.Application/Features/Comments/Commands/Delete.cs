@@ -2,7 +2,6 @@ using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
-using MediatR;
 
 namespace Conduit.Application.Features.Comments.Commands;
 
@@ -19,7 +18,7 @@ public class CommentDeleteHandler : ICommandHandler<CommentDeleteCommand>
         _currentUser = currentUser;
     }
 
-    public async Task<Unit> Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
+    public async Task Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
         var comment = await _context.Comments.FindAsync(
@@ -34,7 +33,5 @@ public class CommentDeleteHandler : ICommandHandler<CommentDeleteCommand>
 
         _context.Comments.Remove(comment);
         await _context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

@@ -2,7 +2,6 @@ using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
-using MediatR;
 
 namespace Conduit.Application.Features.Articles.Commands;
 
@@ -19,7 +18,7 @@ public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteCommand>
         _currentUser = currentUser;
     }
 
-    public async Task<Unit> Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
     {
         var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
@@ -30,7 +29,5 @@ public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteCommand>
 
         _context.Articles.Remove(article);
         await _context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
