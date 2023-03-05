@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
-public record NewCommentRequest(NewCommentDto Comment);
-
 [Route("articles/{slug}/[controller]")]
 [ApiExplorerSettings(GroupName = "Comments")]
 [Authorize]
@@ -64,3 +62,5 @@ public class CommentsController
         return _sender.Send(new CommentDeleteCommand(slug, commentId), cancellationToken);
     }
 }
+
+public record NewCommentRequest(NewCommentDto Comment);

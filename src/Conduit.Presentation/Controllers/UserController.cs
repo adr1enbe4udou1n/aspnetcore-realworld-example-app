@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
-public record UpdateUserRequest(UpdateUserDto User);
-
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
 [Authorize]
@@ -47,3 +45,5 @@ public class UserController
         return _sender.Send(new UpdateUserCommand(request.User), cancellationToken);
     }
 }
+
+public record UpdateUserRequest(UpdateUserDto User);

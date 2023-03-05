@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
-public record NewArticleRequest(NewArticleDto Article);
-public record UpdateArticleRequest(UpdateArticleDto Article);
-
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "Articles")]
 [Authorize]
@@ -134,3 +131,6 @@ public class ArticlesController
         return _sender.Send(new ArticleFavoriteCommand(slug, false), cancellationToken);
     }
 }
+
+public record NewArticleRequest(NewArticleDto Article);
+public record UpdateArticleRequest(UpdateArticleDto Article);

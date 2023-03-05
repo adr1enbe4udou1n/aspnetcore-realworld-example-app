@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
-public record LoginUserRequest(LoginUserDto User);
-public record NewUserRequest(NewUserDto User);
-
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
 public class UsersController
@@ -49,3 +46,6 @@ public class UsersController
         return _sender.Send(new LoginUserCommand(request.User), cancellationToken);
     }
 }
+
+public record LoginUserRequest(LoginUserDto User);
+public record NewUserRequest(NewUserDto User);
