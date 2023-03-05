@@ -14,7 +14,6 @@ public class UpdateUserDto
     public string? Image { get; set; }
 }
 
-public record UpdateUserRequest(UpdateUserDto User);
 public record UpdateUserCommand(UpdateUserDto User) : ICommand<UserResponse>;
 
 public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>

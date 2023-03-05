@@ -15,7 +15,6 @@ public class NewCommentDto
 
 public record SingleCommentResponse(CommentDto Comment);
 
-public record NewCommentRequest(NewCommentDto Comment);
 public record NewCommentCommand(string Slug, NewCommentDto Comment) : ICommand<SingleCommentResponse>;
 
 public class CommentCreateValidator : AbstractValidator<NewCommentCommand>

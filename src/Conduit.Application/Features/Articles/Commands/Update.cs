@@ -14,7 +14,6 @@ public class UpdateArticleDto
     public string? Body { get; set; }
 }
 
-public record UpdateArticleRequest(UpdateArticleDto Article);
 public record UpdateArticleCommand(string Slug, UpdateArticleDto Article) : ICommand<SingleArticleResponse>;
 
 public class ArticleUpdateValidator : AbstractValidator<UpdateArticleCommand>

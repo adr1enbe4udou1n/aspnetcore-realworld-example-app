@@ -12,6 +12,8 @@ namespace Conduit.Presentation.Controllers;
 public class CommentsController
 {
     private readonly ISender _sender;
+    public record NewCommentRequest(NewCommentDto Comment);
+
 
     public CommentsController(ISender sender)
     {

@@ -16,7 +16,6 @@ public class NewUserDto
     public string Username { get; set; } = default!;
 }
 
-public record NewUserRequest(NewUserDto User);
 public record NewUserCommand(NewUserDto User) : ICommand<UserResponse>;
 
 public class RegisterValidator : AbstractValidator<NewUserCommand>

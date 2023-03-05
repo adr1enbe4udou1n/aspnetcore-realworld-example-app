@@ -13,7 +13,6 @@ public class LoginUserDto
     public string Password { get; set; } = default!;
 }
 
-public record LoginUserRequest(LoginUserDto User);
 public record LoginUserCommand(LoginUserDto User) : ICommand<UserResponse>;
 
 public class LoginHandler : ICommandHandler<LoginUserCommand, UserResponse>

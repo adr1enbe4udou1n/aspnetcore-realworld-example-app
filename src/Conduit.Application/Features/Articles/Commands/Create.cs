@@ -18,7 +18,6 @@ public class NewArticleDto
     public List<string>? TagList { get; set; }
 }
 
-public record NewArticleRequest(NewArticleDto Article);
 public record NewArticleCommand(NewArticleDto Article) : ICommand<SingleArticleResponse>;
 
 public class ArticleCreateValidator : AbstractValidator<NewArticleCommand>
