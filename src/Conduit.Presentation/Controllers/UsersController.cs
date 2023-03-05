@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
+public record LoginUserRequest(LoginUserDto User);
+public record NewUserRequest(NewUserDto User);
+
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
 public class UsersController
 {
     private readonly ISender _sender;
-    public record LoginUserRequest(LoginUserDto User);
-    public record NewUserRequest(NewUserDto User);
 
     public UsersController(ISender sender)
     {

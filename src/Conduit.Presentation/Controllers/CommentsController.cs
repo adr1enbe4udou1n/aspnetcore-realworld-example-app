@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
+public record NewCommentRequest(NewCommentDto Comment);
+
 [Route("articles/{slug}/[controller]")]
 [ApiExplorerSettings(GroupName = "Comments")]
 [Authorize]
 public class CommentsController
 {
     private readonly ISender _sender;
-    public record NewCommentRequest(NewCommentDto Comment);
-
 
     public CommentsController(ISender sender)
     {

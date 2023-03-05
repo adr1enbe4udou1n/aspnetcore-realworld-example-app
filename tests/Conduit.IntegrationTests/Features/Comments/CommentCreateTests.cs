@@ -4,6 +4,7 @@ using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
+using Conduit.Presentation.Controllers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;

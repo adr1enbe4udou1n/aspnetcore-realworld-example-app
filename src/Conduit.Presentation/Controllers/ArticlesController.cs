@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
+public record NewArticleRequest(NewArticleDto Article);
+public record UpdateArticleRequest(UpdateArticleDto Article);
+
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "Articles")]
 [Authorize]
 public class ArticlesController
 {
     private readonly ISender _sender;
-    public record NewArticleRequest(NewArticleDto Article);
-    public record UpdateArticleRequest(UpdateArticleDto Article);
 
     public ArticlesController(ISender sender)
     {

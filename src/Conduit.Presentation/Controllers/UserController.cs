@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
+public record UpdateUserRequest(UpdateUserDto User);
+
 [Route("[controller]")]
 [ApiExplorerSettings(GroupName = "User and Authentication")]
 [Authorize]
 public class UserController
 {
     private readonly ISender _sender;
-    public record UpdateUserRequest(UpdateUserDto User);
 
     public UserController(ISender sender)
     {
