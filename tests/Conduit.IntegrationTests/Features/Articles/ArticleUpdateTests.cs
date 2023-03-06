@@ -135,7 +135,7 @@ public class ArticleUpdateTests : TestBase
             )
         );
 
-        response.Article.Should().BeEquivalentTo(new ArticleDto
+        response.Article.Should().BeEquivalentTo(new
         {
             Title = "New Title",
             Description = "New Description",
@@ -146,7 +146,7 @@ public class ArticleUpdateTests : TestBase
                 Username = "John Doe",
             },
             TagList = new List<string>(),
-        }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
+        });
 
         (await Context.Articles.AnyAsync(x => x.Title == "New Title")).Should().BeTrue();
     }

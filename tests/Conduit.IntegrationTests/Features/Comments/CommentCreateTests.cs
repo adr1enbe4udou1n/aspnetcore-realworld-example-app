@@ -1,7 +1,6 @@
 using System.Net;
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Comments.Commands;
-using Conduit.Application.Features.Comments.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Controllers;
@@ -71,7 +70,10 @@ public class CommentCreateTests : TestBase
     public async Task Guest_Cannot_Create_Comment()
     {
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(
-            new NewCommentDto()
+            new NewCommentDto
+            {
+                Body = "Test Body",
+            }
         ));
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -101,7 +103,7 @@ public class CommentCreateTests : TestBase
             Body = "Thank you !",
         }));
 
-        response.Comment.Should().BeEquivalentTo(new CommentDto
+        response.Comment.Should().BeEquivalentTo(new
         {
             Body = "Thank you !",
             Author = new ProfileDto
@@ -110,7 +112,7 @@ public class CommentCreateTests : TestBase
                 Bio = "My Bio",
                 Image = "https://i.pravatar.cc/300"
             },
-        }, options => options.Excluding(x => x.Id).Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
+        });
 
         (await Context.Comments.AnyAsync()).Should().BeTrue();
     }

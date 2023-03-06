@@ -7,7 +7,7 @@ namespace Conduit.Application.Features.Profiles.Queries;
 
 public class ProfileDto
 {
-    public string Username { get; set; } = default!;
+    public required string Username { get; set; }
 
     public string? Bio { get; set; }
 

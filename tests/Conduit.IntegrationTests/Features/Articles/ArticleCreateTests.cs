@@ -81,7 +81,12 @@ public class ArticleCreateTests : TestBase
     public async Task Guest_Cannot_Create_Article()
     {
         var response = await Act(HttpMethod.Post, "/articles", new NewArticleCommand(
-            new NewArticleDto()
+            new NewArticleDto
+            {
+                Title = "Test Title",
+                Description = "Test Description",
+                Body = "Test Body",
+            }
         ));
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -117,7 +122,7 @@ public class ArticleCreateTests : TestBase
             )
         );
 
-        response.Article.Should().BeEquivalentTo(new ArticleDto
+        response.Article.Should().BeEquivalentTo(new
         {
             Title = "Test Article",
             Description = "Test Description",
@@ -130,7 +135,7 @@ public class ArticleCreateTests : TestBase
                 Image = "https://i.pravatar.cc/300"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
-        }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
+        });
 
         (await Context.Articles.AnyAsync()).Should().BeTrue();
         (await Context.Tags.CountAsync()).Should().Be(3);

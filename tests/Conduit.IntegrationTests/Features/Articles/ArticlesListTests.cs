@@ -24,7 +24,7 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(20);
         response.ArticlesCount.Should().Be(50);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
+        response.Articles.First().Should().BeEquivalentTo(new
         {
             Title = "Jane Doe - Test Title 10",
             Description = "Test Description",
@@ -34,11 +34,7 @@ public class ArticlesListTests : TestBase
                 Username = "Jane Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag Jane Doe" },
-        }, options => options
-            .Excluding(x => x.Slug)
-            .Excluding(x => x.CreatedAt)
-            .Excluding(x => x.UpdatedAt)
-        );
+        });
     }
 
     [Fact]
@@ -51,7 +47,7 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
+        response.Articles.First().Should().BeEquivalentTo(new
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
@@ -61,11 +57,7 @@ public class ArticlesListTests : TestBase
                 Username = "John Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
-        }, options => options
-            .Excluding(x => x.Slug)
-            .Excluding(x => x.CreatedAt)
-            .Excluding(x => x.UpdatedAt)
-        );
+        });
     }
 
     [Fact]
@@ -78,7 +70,7 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(20);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
+        response.Articles.First().Should().BeEquivalentTo(new
         {
             Title = "Jane Doe - Test Title 20",
             Description = "Test Description",
@@ -88,11 +80,7 @@ public class ArticlesListTests : TestBase
                 Username = "Jane Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag Jane Doe" },
-        }, options => options
-            .Excluding(x => x.Slug)
-            .Excluding(x => x.CreatedAt)
-            .Excluding(x => x.UpdatedAt)
-        );
+        });
     }
 
     [Fact]
@@ -119,7 +107,7 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(5);
         response.ArticlesCount.Should().Be(5);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
+        response.Articles.First().Should().BeEquivalentTo(new
         {
             Title = "John Doe - Test Title 16",
             Description = "Test Description",
@@ -131,11 +119,7 @@ public class ArticlesListTests : TestBase
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
             Favorited = true,
             FavoritesCount = 1
-        }, options => options
-            .Excluding(x => x.Slug)
-            .Excluding(x => x.CreatedAt)
-            .Excluding(x => x.UpdatedAt)
-        );
+        });
     }
 
     [Fact]
@@ -157,7 +141,7 @@ public class ArticlesListTests : TestBase
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);
 
-        response.Articles.First().Should().BeEquivalentTo(new ArticleDto
+        response.Articles.First().Should().BeEquivalentTo(new
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
@@ -168,11 +152,7 @@ public class ArticlesListTests : TestBase
                 Following = true
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
-        }, options => options
-            .Excluding(x => x.Slug)
-            .Excluding(x => x.CreatedAt)
-            .Excluding(x => x.UpdatedAt)
-        );
+        });
     }
 
     private async Task CreateArticles()

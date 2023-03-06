@@ -30,6 +30,8 @@ public class RegisterTests : TestBase
             new NewUserDto
             {
                 Email = "john.doe@example.com",
+                Username = "",
+                Password = "",
             },
         };
         yield return new object[]

@@ -76,7 +76,7 @@ public class CommentsListTests : TestBase
 
         response.Comments.Count().Should().Be(10);
 
-        response.Comments.First().Should().BeEquivalentTo(new CommentDto
+        response.Comments.First().Should().BeEquivalentTo(new
         {
             Body = "This is Jane, Test Comment 5 !",
             Author = new ProfileDto
@@ -85,6 +85,6 @@ public class CommentsListTests : TestBase
                 Bio = "My Bio",
                 Image = "https://i.pravatar.cc/300"
             },
-        }, options => options.Excluding(x => x.Id).Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
+        });
     }
 }

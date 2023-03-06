@@ -13,19 +13,19 @@ public class Article : IAuditableEntity
 
     public int AuthorId { get; set; }
 
-    public virtual User Author { get; set; } = null!;
+    public required virtual User Author { get; set; }
 
 
     [MaxLength(255)]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
 
     [MaxLength(255)]
-    public string Slug { get; set; } = null!;
+    public required string Slug { get; set; }
 
-    public string Description { get; set; } = null!;
+    public required string Description { get; set; }
 
-    public string Body { get; set; } = null!;
+    public required string Body { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
@@ -51,7 +51,7 @@ public class Article : IAuditableEntity
     {
         if (!IsFavoritedBy(user))
         {
-            _favoredUsers.Add(new ArticleFavorite { User = user });
+            _favoredUsers.Add(new ArticleFavorite { User = user, Article = this });
         }
     }
 
@@ -65,7 +65,7 @@ public class Article : IAuditableEntity
 
     public void AddTag(Tag tag)
     {
-        _tags.Add(new ArticleTag { Tag = tag });
+        _tags.Add(new ArticleTag { Tag = tag, Article = this });
     }
 
     public void AddTags(IEnumerable<Tag> existingTags, params string[] newTags)
@@ -80,7 +80,8 @@ public class Article : IAuditableEntity
 
                     return new ArticleTag
                     {
-                        Tag = tag ?? new Tag { Name = x }
+                        Tag = tag ?? new Tag { Name = x },
+                        Article = this
                     };
                 })
                 .ToList()

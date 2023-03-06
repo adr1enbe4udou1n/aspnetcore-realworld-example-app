@@ -53,7 +53,7 @@ public class ArticleFavoriteTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles/test-title/favorite");
 
-        response.Article.Should().BeEquivalentTo(new ArticleDto
+        response.Article.Should().BeEquivalentTo(new
         {
             Favorited = true,
             FavoritesCount = 1,
@@ -84,7 +84,7 @@ public class ArticleFavoriteTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 
-        response.Article.Should().BeEquivalentTo(new ArticleDto
+        response.Article.Should().BeEquivalentTo(new
         {
             Favorited = false,
             FavoritesCount = 0,

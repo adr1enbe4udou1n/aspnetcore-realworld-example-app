@@ -44,7 +44,7 @@ public class ProfileFollowTests : TestBase
 
         var response = await Act<ProfileResponse>(HttpMethod.Post, "/profiles/celeb_Jane Doe/follow");
 
-        response.Profile.Should().BeEquivalentTo(new ProfileDto
+        response.Profile.Should().BeEquivalentTo(new
         {
             Username = "Jane Doe",
             Following = true
@@ -81,7 +81,7 @@ public class ProfileFollowTests : TestBase
 
         var response = await Act<ProfileResponse>(HttpMethod.Delete, "/profiles/celeb_Jane Doe/follow");
 
-        response.Profile.Should().BeEquivalentTo(new ProfileDto
+        response.Profile.Should().BeEquivalentTo(new
         {
             Username = "Jane Doe",
             Following = false

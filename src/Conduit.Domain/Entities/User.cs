@@ -14,10 +14,10 @@ public class User : IAuditableEntity
     public int Id { get; private set; }
 
     [MaxLength(255)]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     [MaxLength(255)]
-    public string Email { get; set; } = null!;
+    public required string Email { get; set; }
 
     [MaxLength(255)]
     public string? Password { get; set; }
@@ -60,7 +60,7 @@ public class User : IAuditableEntity
     {
         if (!IsFollowedBy(user))
         {
-            _followers.Add(new FollowerUser { Follower = user });
+            _followers.Add(new FollowerUser { Follower = user, Following = this });
         }
     }
 
@@ -74,6 +74,6 @@ public class User : IAuditableEntity
 
     public void AddFollowing(params User[] users)
     {
-        _following.AddRange(users.Select(x => new FollowerUser { Following = x }).ToList());
+        _following.AddRange(users.Select(x => new FollowerUser { Following = x, Follower = this }).ToList());
     }
 }

@@ -9,11 +9,11 @@ namespace Conduit.Application.Features.Auth.Commands;
 
 public class NewUserDto
 {
-    public string Email { get; set; } = default!;
+    public required string Email { get; set; }
 
-    public string Password { get; set; } = default!;
+    public required string Password { get; set; }
 
-    public string Username { get; set; } = default!;
+    public required string Username { get; set; }
 }
 
 public record NewUserCommand(NewUserDto User) : ICommand<UserResponse>;

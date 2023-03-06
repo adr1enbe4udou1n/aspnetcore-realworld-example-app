@@ -8,9 +8,9 @@ namespace Conduit.Application.Features.Auth.Commands;
 
 public class LoginUserDto
 {
-    public string Email { get; set; } = default!;
+    public required string Email { get; set; }
 
-    public string Password { get; set; } = default!;
+    public required string Password { get; set; }
 }
 
 public record LoginUserCommand(LoginUserDto User) : ICommand<UserResponse>;

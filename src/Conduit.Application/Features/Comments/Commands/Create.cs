@@ -10,7 +10,7 @@ namespace Conduit.Application.Features.Comments.Commands;
 public class NewCommentDto
 {
 
-    public string Body { get; set; } = default!;
+    public required string Body { get; set; }
 }
 
 public record SingleCommentResponse(CommentDto Comment);

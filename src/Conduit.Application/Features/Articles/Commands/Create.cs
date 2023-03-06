@@ -9,13 +9,13 @@ namespace Conduit.Application.Features.Articles.Commands;
 
 public class NewArticleDto
 {
-    public string Title { get; set; } = default!;
+    public required string Title { get; set; }
 
-    public string Description { get; set; } = default!;
+    public required string Description { get; set; }
 
-    public string Body { get; set; } = default!;
+    public required string Body { get; set; }
 
-    public List<string>? TagList { get; set; }
+    public List<string> TagList { get; set; } = new();
 }
 
 public record NewArticleCommand(NewArticleDto Article) : ICommand<SingleArticleResponse>;

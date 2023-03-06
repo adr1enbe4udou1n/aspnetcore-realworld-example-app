@@ -49,7 +49,7 @@ public class ArticleGetTests : TestBase
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Get, "/articles/test-title");
 
-        response.Article.Should().BeEquivalentTo(new ArticleDto
+        response.Article.Should().BeEquivalentTo(new
         {
             Title = "Test Title",
             Description = "Test Description",
@@ -64,6 +64,6 @@ public class ArticleGetTests : TestBase
             TagList = new List<string> { "Test Tag 1", "Test Tag 2" },
             Favorited = false,
             FavoritesCount = 0,
-        }, options => options.Excluding(x => x.CreatedAt).Excluding(x => x.UpdatedAt));
+        });
     }
 }

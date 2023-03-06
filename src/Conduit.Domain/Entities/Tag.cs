@@ -9,7 +9,7 @@ public class Tag
     public int Id { get; private set; }
 
     [MaxLength(255)]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     public virtual IReadOnlyCollection<ArticleTag> Articles => _articles;
 }

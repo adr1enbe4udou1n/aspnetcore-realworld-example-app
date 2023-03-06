@@ -3,8 +3,8 @@ namespace Conduit.Domain.Entities;
 public class FollowerUser
 {
     public int FollowingId { get; set; }
-    public virtual User Following { get; set; } = null!;
+    public virtual required User Following { get; set; }
 
     public int FollowerId { get; set; }
-    public virtual User Follower { get; set; } = null!;
+    public virtual required User Follower { get; set; }
 }

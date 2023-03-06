@@ -9,21 +9,21 @@ namespace Conduit.Application.Features.Articles.Queries;
 
 public class ArticleDto
 {
-    public string Title { get; set; } = default!;
+    public required string Title { get; set; }
 
-    public string Slug { get; set; } = default!;
+    public required string Slug { get; set; }
 
-    public string Description { get; set; } = default!;
+    public required string Description { get; set; }
 
-    public string Body { get; set; } = default!;
+    public required string Body { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 
-    public IEnumerable<string> TagList { get; set; } = default!;
+    public List<string> TagList { get; set; } = new();
 
-    public ProfileDto Author { get; set; } = null!;
+    public required ProfileDto Author { get; set; }
 
     public bool Favorited { get; set; }
 
@@ -40,7 +40,7 @@ public static class ArticleMapper
             Title = article.Title,
             Description = article.Description,
             Body = article.Body,
-            TagList = article.Tags.Select(t => t.Tag.Name).OrderBy(t => t),
+            TagList = article.Tags.Select(t => t.Tag.Name).OrderBy(t => t).ToList(),
             CreatedAt = article.CreatedAt,
             UpdatedAt = article.UpdatedAt,
             Favorited = currentUser != null && currentUser.HasFavorite(article),

@@ -7,12 +7,12 @@ public class Comment : IAuditableEntity
     public int Id { get; private set; }
 
     public int ArticleId { get; set; }
-    public virtual Article Article { get; set; } = null!;
+    public virtual required Article Article { get; set; }
 
     public int AuthorId { get; set; }
-    public virtual User Author { get; set; } = null!;
+    public virtual required User Author { get; set; }
 
-    public string Body { get; set; } = null!;
+    public required string Body { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

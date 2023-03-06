@@ -7,15 +7,15 @@ namespace Conduit.Application.Features.Auth.Queries;
 
 public class UserDto
 {
-    public string Email { get; set; } = default!;
+    public required string Email { get; set; }
 
-    public string Username { get; set; } = default!;
+    public required string Username { get; set; }
 
-    public string Bio { get; set; } = default!;
+    public string? Bio { get; set; }
 
-    public string Image { get; set; } = default!;
+    public string? Image { get; set; }
 
-    public string Token { get; set; } = default!;
+    public required string Token { get; set; }
 }
 
 public static class UserMapper

@@ -2,7 +2,7 @@ namespace Conduit.WebUI.Options;
 
 public class TracerOptions
 {
-    public string Host { get; set; } = default!;
+    public required string Host { get; set; }
     public int Port { get; set; }
     public bool Enabled { get; set; }
 }
