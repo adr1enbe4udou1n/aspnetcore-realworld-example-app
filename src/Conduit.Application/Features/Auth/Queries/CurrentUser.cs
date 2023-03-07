@@ -46,7 +46,7 @@ public static class UserMapper
 
 public record UserResponse(UserDto User);
 
-public record CurrentUserQuery() : IQuery<UserResponse>;
+public record CurrentUserQuery : IQuery<UserResponse>;
 
 public class CurrentUserHandler : IQueryHandler<CurrentUserQuery, UserResponse>
 {
