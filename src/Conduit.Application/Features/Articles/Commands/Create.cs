@@ -61,7 +61,7 @@ public class ArticleCreateHandler : ICommandHandler<NewArticleCommand, SingleArt
             Slug = _slugifier.Generate(request.Article.Title)
         };
 
-        if (request.Article.TagList != null)
+        if (request.Article.TagList.Any())
         {
             var existingTags = await _context.Tags
                 .Where(
