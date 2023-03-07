@@ -6,7 +6,7 @@ namespace Conduit.Application.Features.Tags.Queries;
 
 public record TagsResponse(IEnumerable<string> Tags);
 
-public record TagsListQuery() : IQuery<TagsResponse>;
+public record TagsListQuery : IQuery<TagsResponse>;
 
 public class TagsListHandler : IQueryHandler<TagsListQuery, TagsResponse>
 {
