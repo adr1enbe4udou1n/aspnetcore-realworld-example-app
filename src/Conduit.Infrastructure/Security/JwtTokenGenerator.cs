@@ -25,7 +25,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
     public string CreateToken(User user)
     {
-        if (_jwtOptions.SecretKey == null)
+        if (_jwtOptions.SecretKey is null)
         {
             throw new ArgumentException("You must set a JWT secret key");
         }

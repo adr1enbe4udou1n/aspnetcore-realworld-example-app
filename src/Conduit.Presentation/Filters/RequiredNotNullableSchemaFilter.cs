@@ -7,7 +7,7 @@ public class RequiredNotNullableSchemaFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        if (schema.Properties == null)
+        if (schema.Properties is null)
         {
             return;
         }

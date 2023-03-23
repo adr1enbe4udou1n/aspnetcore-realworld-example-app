@@ -11,7 +11,7 @@ public static class DbSetExtensions
     {
         var entity = await source.Where(predicate).SingleOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException();
         }

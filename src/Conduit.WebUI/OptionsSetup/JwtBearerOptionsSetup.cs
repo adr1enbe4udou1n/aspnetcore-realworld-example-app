@@ -37,7 +37,7 @@ public class JwtBearerOptionsSetup : IPostConfigureOptions<JwtBearerOptions>
                     await currentUser.SetIdentifier(Convert.ToInt32(userId, CultureInfo.InvariantCulture));
                 }
 
-                if (currentUser.User == null)
+                if (currentUser.User is null)
                 {
                     context.Fail("User unknown.");
                 }

@@ -33,7 +33,7 @@ public class LoginHandler : ICommandHandler<LoginUserCommand, UserResponse>
         var user = await _context.Users.Where(x => x.Email == request.User.Email)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (user == null || user.Password == null || !_passwordHasher.Check(request.User.Password, user.Password))
+        if (user?.Password is null || !_passwordHasher.Check(request.User.Password, user.Password))
         {
             throw new Exceptions.ValidationException("Bad credentials");
         }
