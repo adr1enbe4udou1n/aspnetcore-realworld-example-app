@@ -39,9 +39,6 @@ public class ArticlesListHandler : IQueryHandler<ArticlesListQuery, MultipleArti
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {
-        await _currentUser.LoadFollowing();
-        await _currentUser.LoadFavoriteArticles();
-
         var articles = await _context.Articles
             .Include(a => a.Author)
             .Include(a => a.Tags)

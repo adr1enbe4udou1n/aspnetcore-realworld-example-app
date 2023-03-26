@@ -18,22 +18,9 @@ public class CurrentUser : ICurrentUser
 
     public async Task SetIdentifier(long identifier)
     {
-        User = await _context.Users.Where(x => x.Id == identifier).SingleOrDefaultAsync();
-    }
-
-    public async Task LoadFollowing()
-    {
-        if (User != null)
-        {
-            await _context.Entry(User).Collection(u => u.Following).LoadAsync();
-        }
-    }
-
-    public async Task LoadFavoriteArticles()
-    {
-        if (User != null)
-        {
-            await _context.Entry(User).Collection(u => u.FavoriteArticles).LoadAsync();
-        }
+        User = await _context.Users
+            .Include(x => x.Following)
+            .Include(x => x.FavoriteArticles)
+            .Where(x => x.Id == identifier).SingleOrDefaultAsync();
     }
 }

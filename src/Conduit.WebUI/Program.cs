@@ -1,9 +1,11 @@
+using System.Globalization;
 using Conduit.Application;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Persistence;
 using Conduit.Presentation;
 using Conduit.WebUI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +31,13 @@ builder.Services
     .AddOpenTelemetry()
     .WithTracing();
 
+builder.Host.UseSerilog((context, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture));
+
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
