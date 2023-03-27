@@ -435,8 +435,8 @@
       },
       "Scrutor": {
         "type": "Transitive",
-        "resolved": "4.2.1",
-        "contentHash": "nFNpqlwIcseBIUMlTg25t7qYYLk7S0jrEXpZaPo6rhw8860Gnky8pbCYeDxSfKmIoJdMYtVxkbMENiIZbblm/Q==",
+        "resolved": "4.2.2",
+        "contentHash": "t5VIYA7WJXoJJo7s4DoHakMGwTu+MeEnZumMOhTCH7kz9xWha24G7dJNxWrHPlu0ZdZAS4jDZCxxAnyaBh7uYw==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
           "Microsoft.Extensions.DependencyModel": "6.0.0"
@@ -655,7 +655,7 @@
           "Microsoft.EntityFrameworkCore.Proxies": "[7.0.4, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[7.0.0, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.3, )",
-          "Scrutor": "[4.2.1, )",
+          "Scrutor": "[4.2.2, )",
           "Slugify.Core": "[4.0.1, )"
         }
       },
