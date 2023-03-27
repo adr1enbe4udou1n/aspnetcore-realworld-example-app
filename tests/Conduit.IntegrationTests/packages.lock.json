@@ -990,8 +990,8 @@
       },
       "Serilog.Sinks.Console": {
         "type": "Transitive",
-        "resolved": "4.1.0",
-        "contentHash": "K6N5q+5fetjnJPvCmkWOpJ/V8IEIoMIB1s86OzBrbxwTyHxdx3pmz4H+8+O/Dc/ftUX12DM1aynx/dDowkwzqg==",
+        "resolved": "4.0.1",
+        "contentHash": "apLOvSJQLlIbKlbx+Y2UDHSP05kJsV7mou+fvJoRGs/iR+jC22r8cuFVMjjfVxz/AD4B2UCltFhE1naRLXwKNw==",
         "dependencies": {
           "Serilog": "2.10.0"
         }
@@ -1976,8 +1976,7 @@
           "OpenTelemetry.Exporter.Jaeger": "[1.4.0, )",
           "OpenTelemetry.Extensions.Hosting": "[1.4.0, )",
           "OpenTelemetry.Instrumentation.AspNetCore": "[1.0.0-rc9.14, )",
-          "Serilog.AspNetCore": "[6.1.0, )",
-          "Serilog.Sinks.Console": "[4.1.0, )"
+          "Serilog.AspNetCore": "[6.1.0, )"
         }
       }
     }
