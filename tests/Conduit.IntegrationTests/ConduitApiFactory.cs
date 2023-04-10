@@ -18,22 +18,21 @@ public class ConduitApiFactory : WebApplicationFactory<Program>
 
     public ConduitApiFactory()
     {
-        _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-            ?? "Server=localhost;Port=5434;User Id=main;Password=main;Database=main;";
-
-        Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", _connectionString);
-        Environment.SetEnvironmentVariable("Jwt__SecretKey", "super secret key");
-
         var scope = Services.CreateScope();
 
         _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _connectionString = _context.Database.GetDbConnection().ConnectionString;
 
         _context.Database.Migrate();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureServices(services => services.AddLogging((builder) => builder.AddProvider(new SqlCounterLoggerProvider())));
+        builder
+            .UseEnvironment("Testing")
+            .ConfigureServices(services => services.AddLogging((builder) =>
+                builder.AddProvider(new SqlCounterLoggerProvider()))
+            );
     }
 
     public async Task RefreshDatabase()

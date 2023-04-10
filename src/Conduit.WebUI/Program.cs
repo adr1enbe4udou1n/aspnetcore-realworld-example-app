@@ -5,6 +5,7 @@ using Conduit.Infrastructure.Persistence;
 using Conduit.Presentation;
 using Conduit.WebUI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,28 +17,34 @@ builder.Services
     .AddPresentation();
 
 builder.Services
-    .AddHealthChecks()
-    .AddDbContextCheck<AppDbContext>();
-
-builder.Services
     .ConfigureOptions<JwtOptionsSetup>()
     .ConfigureOptions<JwtBearerOptionsSetup>()
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
 
 builder.Services
-    .ConfigureOptions<TracerOptionsSetup>()
-    .ConfigureOptions<TracerProviderBuilderSetup>()
-    .AddOpenTelemetry()
-    .WithTracing();
+    .AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
 
-builder.Host.UseSerilog((context, configuration) => configuration
-    .ReadFrom.Configuration(context.Configuration)
-    .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture));
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services
+        .ConfigureOptions<TracerOptionsSetup>()
+        .ConfigureOptions<TracerProviderBuilderSetup>()
+        .AddOpenTelemetry()
+        .WithTracing();
+
+    builder.Host.UseSerilog((context, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture));
+}
 
 var app = builder.Build();
 
-app.UseSerilogRequestLogging();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseSerilogRequestLogging();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -68,6 +75,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHealthChecks("/healthz");
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AppDbContext>();
+    await context.Database.MigrateAsync();
+}
 
 app.Run();
 

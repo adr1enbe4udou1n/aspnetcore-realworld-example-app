@@ -142,7 +142,7 @@ public class TestBase : IAsyncLifetime
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("super secret key")
+                Encoding.UTF8.GetBytes("super-secret-key-value!")
             ),
         }, out var validatedToken);
 
