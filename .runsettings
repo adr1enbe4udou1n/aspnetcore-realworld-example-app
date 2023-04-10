@@ -6,7 +6,7 @@
         <Configuration>
           <Format>cobertura</Format>
           <Exclude>
-            [Infrastructure]Infrastructure.Persistence.Migrations.*,
+            [Conduit.Infrastructure]Conduit.Infrastructure.Persistence.Migrations.*,
           </Exclude>
         </Configuration>
       </DataCollector>
