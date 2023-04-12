@@ -10,21 +10,21 @@
       },
       "Microsoft.AspNetCore.Authentication.JwtBearer": {
         "type": "Direct",
-        "requested": "[7.0.4, )",
-        "resolved": "7.0.4",
-        "contentHash": "yMCO9yU1kNQ5MomCnGDNsjPyIvnxHu4U7AfRkLmzZuzCeOGGA5XiehmpfzzqlyIs8wbSR/c6jbuLexedfKgjgA==",
+        "requested": "[7.0.5, )",
+        "resolved": "7.0.5",
+        "contentHash": "dS6LPC7ZwJUcxcnB7KBh5L7iO9dbzEuVrNv2YrtiUCclcvBCfCJ/UKlvgHedjd4VcB6bzHcj3sEmFZlfH6qH0Q==",
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.15.1"
         }
       },
       "Microsoft.EntityFrameworkCore.Proxies": {
         "type": "Direct",
-        "requested": "[7.0.4, )",
-        "resolved": "7.0.4",
-        "contentHash": "ZjJpJynbfKJ97K0TaV1Ac8Lkk25v1OX0cxCjusIrsoPozD1rX0jCowOWBR2rWfuhwVwrJDE5AL0M2se4a+d8oQ==",
+        "requested": "[7.0.5, )",
+        "resolved": "7.0.5",
+        "contentHash": "f4acqM9HNozuaSxASSFZu3uz6ZLjyGNZJgq95mfgZJdGvL+Ibp8DB5xoylkxFSEA6aHWrGCXlFdkQPkHNsQ6mA==",
         "dependencies": {
           "Castle.Core": "5.1.0",
-          "Microsoft.EntityFrameworkCore": "7.0.4"
+          "Microsoft.EntityFrameworkCore": "7.0.5"
         }
       },
       "Microsoft.Extensions.Options.ConfigurationExtensions": {
@@ -121,11 +121,11 @@
       },
       "Microsoft.EntityFrameworkCore": {
         "type": "Transitive",
-        "resolved": "7.0.4",
-        "contentHash": "eNcsY3rft5ERJJcen80Jyg57EScjWZmvhwmFLYXmEOTdVqHG+wQZiMOXnO1b5RH3u2qTQq+Tpci7KGfLAG5Gtg==",
+        "resolved": "7.0.5",
+        "contentHash": "RXbRLHHWP2Z3pq8qcL5nQ6LPeoOyp8hasM5bd0Te8PiQi3RjWQR4tcbdY5XMqQ+oTO9wA8/RLhZRn/hnxlTDnQ==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.4",
-          "Microsoft.EntityFrameworkCore.Analyzers": "7.0.4",
+          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.5",
+          "Microsoft.EntityFrameworkCore.Analyzers": "7.0.5",
           "Microsoft.Extensions.Caching.Memory": "7.0.0",
           "Microsoft.Extensions.DependencyInjection": "7.0.0",
           "Microsoft.Extensions.Logging": "7.0.0"
@@ -133,13 +133,13 @@
       },
       "Microsoft.EntityFrameworkCore.Abstractions": {
         "type": "Transitive",
-        "resolved": "7.0.4",
-        "contentHash": "6GbYvs4L5oFpYpMzwF05kdDgvX09UmMX7MpDtDlGI5ymijFwquwv+yvdijbtodOuu0yLUpc4n71x6eBdJ8v1xQ=="
+        "resolved": "7.0.5",
+        "contentHash": "iwQso+hFRsEWjhH2WsEQj1D2QE5BlEXiXEt6A3SlYTPRPdZsyTNDeDDEdtxL+H/UJPQgQYY+9SMMRcEiXBmCAA=="
       },
       "Microsoft.EntityFrameworkCore.Analyzers": {
         "type": "Transitive",
-        "resolved": "7.0.4",
-        "contentHash": "YRD4bViuaEPEsaBIL52DzXGzLCt3jYoE3wztYEW1QZYDl89hQ+ca0nvBO2mnMHmCXpU/2wlErrUyDp4x5B/3mg=="
+        "resolved": "7.0.5",
+        "contentHash": "yMLM/aK1MikVqpjxd7PJ1Pjgztd3VAd26ZHxyjxG3RPeM9cHjvS5tCg9kAAayR6eHmBg0ffZsHdT28WfA5tTlA=="
       },
       "Microsoft.EntityFrameworkCore.Relational": {
         "type": "Transitive",
