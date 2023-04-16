@@ -1,6 +1,7 @@
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 using Conduit.Infrastructure.Persistence;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Infrastructure.Security;

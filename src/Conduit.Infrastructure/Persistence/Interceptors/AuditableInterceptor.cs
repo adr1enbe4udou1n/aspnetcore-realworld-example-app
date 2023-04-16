@@ -1,4 +1,5 @@
 using Conduit.Domain.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

@@ -1,6 +1,8 @@
 using Conduit.Application.Features.Tags.Queries;
 using Conduit.Domain.Entities;
+
 using FluentAssertions;
+
 using Xunit;
 using Xunit.Abstractions;
 

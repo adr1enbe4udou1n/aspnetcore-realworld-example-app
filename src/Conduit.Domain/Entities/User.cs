@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using Conduit.Domain.Interfaces;
 
 namespace Conduit.Domain.Entities;

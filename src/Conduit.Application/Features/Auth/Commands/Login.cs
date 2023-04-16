@@ -1,7 +1,9 @@
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
+
 using FluentValidation;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Auth.Commands;

@@ -2,7 +2,9 @@ using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
+
 using FluentValidation;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Articles.Commands;

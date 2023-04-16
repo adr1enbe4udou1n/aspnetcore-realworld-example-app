@@ -4,6 +4,7 @@ using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Comments.Queries;

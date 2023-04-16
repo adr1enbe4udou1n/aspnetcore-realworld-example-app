@@ -2,6 +2,7 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
 using Conduit.Application.Support;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Articles.Queries;

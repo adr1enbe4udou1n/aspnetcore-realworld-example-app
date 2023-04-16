@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+
 using FluentValidation.Results;
 
 namespace Conduit.Application.Exceptions;

@@ -1,5 +1,6 @@
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Tags.Queries;

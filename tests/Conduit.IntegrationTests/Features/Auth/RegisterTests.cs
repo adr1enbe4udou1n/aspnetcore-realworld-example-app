@@ -1,10 +1,14 @@
 using System.Globalization;
 using System.Net;
+
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
+
 using FluentAssertions;
+
 using Microsoft.EntityFrameworkCore;
+
 using Xunit;
 using Xunit.Abstractions;
 

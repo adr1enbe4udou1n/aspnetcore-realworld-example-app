@@ -1,5 +1,7 @@
 using FluentValidation;
+
 using MediatR;
+
 using ValidationException = Conduit.Application.Exceptions.ValidationException;
 
 namespace Conduit.Application.Behaviors;

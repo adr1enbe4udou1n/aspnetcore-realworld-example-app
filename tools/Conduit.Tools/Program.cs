@@ -1,7 +1,9 @@
 using Conduit.Infrastructure;
 using Conduit.Tools.Interfaces;
 using Conduit.Tools.Seeders;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using Tools.Commands;
 
 var builder = ConsoleApp.CreateBuilder(args);

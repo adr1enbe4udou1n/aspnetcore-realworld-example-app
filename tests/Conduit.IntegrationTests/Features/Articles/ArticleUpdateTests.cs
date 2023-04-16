@@ -1,11 +1,15 @@
 using System.Net;
+
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Controllers;
+
 using FluentAssertions;
+
 using Microsoft.EntityFrameworkCore;
+
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,7 +1,11 @@
 using System.Reflection;
+
 using Conduit.Application.Behaviors;
+
 using FluentValidation;
+
 using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Conduit.Application;

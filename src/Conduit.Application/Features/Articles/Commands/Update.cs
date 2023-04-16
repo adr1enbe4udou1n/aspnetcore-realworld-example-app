@@ -3,6 +3,7 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Interfaces.Mediator;
+
 using FluentValidation;
 
 namespace Conduit.Application.Features.Articles.Commands;

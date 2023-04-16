@@ -1,4 +1,5 @@
 using Bogus;
+
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 using Conduit.Tools.Interfaces;

@@ -1,11 +1,14 @@
 using System.Globalization;
+
 using Conduit.Application;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Persistence;
 using Conduit.Presentation;
 using Conduit.WebUI.OptionsSetup;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

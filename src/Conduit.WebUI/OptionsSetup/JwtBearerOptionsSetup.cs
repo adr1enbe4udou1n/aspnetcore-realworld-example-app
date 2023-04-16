@@ -1,8 +1,10 @@
 ﻿using System.Globalization;
 using System.Security.Claims;
 using System.Text;
+
 using Conduit.Application.Interfaces;
 using Conduit.Infrastructure.Options;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

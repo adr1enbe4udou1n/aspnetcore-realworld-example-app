@@ -1,7 +1,10 @@
 using System.Net;
+
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
+
 using FluentAssertions;
+
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,6 +1,9 @@
 using Conduit.WebUI.Options;
+
 using Microsoft.Extensions.Options;
+
 using Npgsql;
+
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 

@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
+
 using Conduit.Application.Exceptions;
 using Conduit.Application.Support;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Extensions;

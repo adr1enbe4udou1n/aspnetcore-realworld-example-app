@@ -1,5 +1,7 @@
 using Conduit.Domain.Entities;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Interfaces;

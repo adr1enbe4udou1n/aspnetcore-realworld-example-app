@@ -1,4 +1,5 @@
 using Conduit.Application.Interfaces;
+
 using Slugify;
 
 namespace Conduit.Infrastructure.Security;
