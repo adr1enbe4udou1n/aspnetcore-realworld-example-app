@@ -4,9 +4,9 @@
     "net7.0": {
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[8.56.0.67649, )",
-        "resolved": "8.56.0.67649",
-        "contentHash": "u5klyn4PBAOe38/CoPbxGjuMqJQ5K0M7SA17H2DHgHyQ+neSU+abneRGjSQSVD76kbYXzG7E1/KQwTuj+nnMZw=="
+        "requested": "[9.0.0.68202, )",
+        "resolved": "9.0.0.68202",
+        "contentHash": "CdkFID8hrFCwxZkB/xubADWO0zZoGxG8fv6MHUoreUQ6syLXCELDE9DZy68ktEX1DhsQeW8IUHMroUU2gh2Byw=="
       }
     }
   }

@@ -27,11 +27,11 @@
       },
       "Npgsql.OpenTelemetry": {
         "type": "Direct",
-        "requested": "[7.0.2, )",
-        "resolved": "7.0.2",
-        "contentHash": "ZHXJYk3vkLPmBdh1MeKDWtqobHXW+nLxRMbrGBAEvUZEdHoVj/8iwHIjb+FqvDM2tOMgtLJZ689v69qIgBGAKQ==",
+        "requested": "[7.0.4, )",
+        "resolved": "7.0.4",
+        "contentHash": "Uirq1dHXnCPwuAI+3xi+i+FHv4gOJJ3+Z64WYLd9ZgVrxFFhpQ4lYDumh4j0CDbF/TOFHMvWv7PGGJcCbP5mbw==",
         "dependencies": {
-          "Npgsql": "7.0.2",
+          "Npgsql": "7.0.4",
           "OpenTelemetry.API": "1.3.1"
         }
       },
@@ -83,9 +83,9 @@
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[8.56.0.67649, )",
-        "resolved": "8.56.0.67649",
-        "contentHash": "u5klyn4PBAOe38/CoPbxGjuMqJQ5K0M7SA17H2DHgHyQ+neSU+abneRGjSQSVD76kbYXzG7E1/KQwTuj+nnMZw=="
+        "requested": "[9.0.0.68202, )",
+        "resolved": "9.0.0.68202",
+        "contentHash": "CdkFID8hrFCwxZkB/xubADWO0zZoGxG8fv6MHUoreUQ6syLXCELDE9DZy68ktEX1DhsQeW8IUHMroUU2gh2Byw=="
       },
       "BCrypt.Net-Next": {
         "type": "Transitive",
@@ -390,21 +390,21 @@
       },
       "Npgsql": {
         "type": "Transitive",
-        "resolved": "7.0.2",
-        "contentHash": "/k12hfmg4PI0IU2UTLN6n0s/FKUfox8+RdWtzgADYZoyks7GH82WLyXm27eeqatsi/nmiK9lO3HyULlTD87szg==",
+        "resolved": "7.0.4",
+        "contentHash": "7UVPYy2RP0ci04PED1tc9ZCaTw/DfSdSkLiGEFCAvwMwsgA/bAluj1liNzP1IpN0MFofnOF0cm1zJfmbEuCehg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
         "type": "Transitive",
-        "resolved": "7.0.3",
-        "contentHash": "3iVz7vcPAZt6iBSjJ8XyjtIP19jilNOJqTiTCs2UHWhpTyP+FbNhnzCBE/oyD3n49McmmenjKpva+yTy7q1z/g==",
+        "resolved": "7.0.4",
+        "contentHash": "ZYMtyG6pmLtUsFAx0/XaIlVkJM+1gArWEKD55cLLxiVlGScAphjiGj+G7Gk16yg5lhhdWx+bgXWpIUISXuS33g==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "[7.0.3, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.3, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Relational": "[7.0.3, 8.0.0)",
-          "Npgsql": "7.0.2"
+          "Microsoft.EntityFrameworkCore": "[7.0.5, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.5, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[7.0.5, 8.0.0)",
+          "Npgsql": "7.0.4"
         }
       },
       "OpenTelemetry": {
@@ -654,7 +654,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[7.0.5, )",
           "Microsoft.EntityFrameworkCore.Proxies": "[7.0.5, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[7.0.0, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.3, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.4, )",
           "Scrutor": "[4.2.2, )",
           "Slugify.Core": "[4.0.1, )"
         }

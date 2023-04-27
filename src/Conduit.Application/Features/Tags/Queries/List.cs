@@ -7,7 +7,9 @@ namespace Conduit.Application.Features.Tags.Queries;
 
 public record TagsResponse(IEnumerable<string> Tags);
 
+#pragma warning disable S2094
 public record TagsListQuery : IQuery<TagsResponse>;
+#pragma warning disable S2094
 
 public class TagsListHandler : IQueryHandler<TagsListQuery, TagsResponse>
 {

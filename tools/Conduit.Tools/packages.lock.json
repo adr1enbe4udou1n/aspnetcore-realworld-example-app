@@ -29,9 +29,9 @@
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[8.56.0.67649, )",
-        "resolved": "8.56.0.67649",
-        "contentHash": "u5klyn4PBAOe38/CoPbxGjuMqJQ5K0M7SA17H2DHgHyQ+neSU+abneRGjSQSVD76kbYXzG7E1/KQwTuj+nnMZw=="
+        "requested": "[9.0.0.68202, )",
+        "resolved": "9.0.0.68202",
+        "contentHash": "CdkFID8hrFCwxZkB/xubADWO0zZoGxG8fv6MHUoreUQ6syLXCELDE9DZy68ktEX1DhsQeW8IUHMroUU2gh2Byw=="
       },
       "Azure.Core": {
         "type": "Transitive",
@@ -181,10 +181,10 @@
       },
       "Microsoft.EntityFrameworkCore.Relational": {
         "type": "Transitive",
-        "resolved": "7.0.3",
-        "contentHash": "RxNNjtTrxsMtdBtgoXGRSy8uCXaBHaVzIonTeo7+Ys+N0yEWwhf2E74cxneyunMi13Ezlld10ecCHlDubEU/Pw==",
+        "resolved": "7.0.5",
+        "contentHash": "u/33DC4S6g2hpMPgBc5Kdnlz//nqHR5c/ovgjtiP/wQ7sOd0EOdygVzUJAAOxCwbtAHDsJXS9Vc3jLFYq0yu8Q==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "7.0.3",
+          "Microsoft.EntityFrameworkCore": "7.0.5",
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0"
         }
       },
@@ -562,21 +562,21 @@
       },
       "Npgsql": {
         "type": "Transitive",
-        "resolved": "7.0.2",
-        "contentHash": "/k12hfmg4PI0IU2UTLN6n0s/FKUfox8+RdWtzgADYZoyks7GH82WLyXm27eeqatsi/nmiK9lO3HyULlTD87szg==",
+        "resolved": "7.0.4",
+        "contentHash": "7UVPYy2RP0ci04PED1tc9ZCaTw/DfSdSkLiGEFCAvwMwsgA/bAluj1liNzP1IpN0MFofnOF0cm1zJfmbEuCehg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
         "type": "Transitive",
-        "resolved": "7.0.3",
-        "contentHash": "3iVz7vcPAZt6iBSjJ8XyjtIP19jilNOJqTiTCs2UHWhpTyP+FbNhnzCBE/oyD3n49McmmenjKpva+yTy7q1z/g==",
+        "resolved": "7.0.4",
+        "contentHash": "ZYMtyG6pmLtUsFAx0/XaIlVkJM+1gArWEKD55cLLxiVlGScAphjiGj+G7Gk16yg5lhhdWx+bgXWpIUISXuS33g==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "[7.0.3, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.3, 8.0.0)",
-          "Microsoft.EntityFrameworkCore.Relational": "[7.0.3, 8.0.0)",
-          "Npgsql": "7.0.2"
+          "Microsoft.EntityFrameworkCore": "[7.0.5, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Abstractions": "[7.0.5, 8.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[7.0.5, 8.0.0)",
+          "Npgsql": "7.0.4"
         }
       },
       "Scrutor": {
@@ -846,7 +846,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[7.0.5, )",
           "Microsoft.EntityFrameworkCore.Proxies": "[7.0.5, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[7.0.0, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.3, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[7.0.4, )",
           "Scrutor": "[4.2.2, )",
           "Slugify.Core": "[4.0.1, )"
         }
