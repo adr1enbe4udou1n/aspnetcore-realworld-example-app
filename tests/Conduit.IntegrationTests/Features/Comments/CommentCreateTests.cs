@@ -2,7 +2,6 @@ using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Comments.Commands;
-using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Controllers;
 
@@ -15,22 +14,22 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Comments;
 
+public class InvalidComments : TheoryData<NewCommentDto>
+{
+    public InvalidComments()
+    {
+        Add(new NewCommentDto
+        {
+            Body = "",
+        });
+    }
+}
+
 public class CommentCreateTests : TestBase
 {
     public CommentCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> InvalidComments()
-    {
-        yield return new object[]
-        {
-            new NewCommentDto
-            {
-                Body = "",
-            }
-        };
-    }
-
-    [Theory, MemberData(nameof(InvalidComments))]
+    [Theory, ClassData(typeof(InvalidComments))]
     public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDto comment)
     {
         await ActingAs(new User
@@ -110,7 +109,7 @@ public class CommentCreateTests : TestBase
         response.Comment.Should().BeEquivalentTo(new
         {
             Body = "Thank you !",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe",
                 Bio = "My Bio",

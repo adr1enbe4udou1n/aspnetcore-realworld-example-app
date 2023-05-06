@@ -12,31 +12,28 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Auth;
 
+public class InvalidCredentials : TheoryData<LoginUserDto>
+{
+    public InvalidCredentials()
+    {
+        Add(new LoginUserDto
+        {
+            Email = "jane.doe@example.com",
+            Password = "password",
+        });
+        Add(new LoginUserDto
+        {
+            Email = "john.doe@example.com",
+            Password = "badpassword"
+        });
+    }
+}
+
 public class LoginTests : TestBase
 {
     public LoginTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> InvalidCredentials()
-    {
-        yield return new object[]
-        {
-            new LoginUserDto
-            {
-                Email = "jane.doe@example.com",
-                Password = "password",
-            },
-        };
-        yield return new object[]
-        {
-            new LoginUserDto
-            {
-                Email = "john.doe@example.com",
-                Password = "badpassword",
-            }
-        };
-    }
-
-    [Theory, MemberData(nameof(InvalidCredentials))]
+    [Theory, ClassData(typeof(InvalidCredentials))]
     public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDto credentials)
     {
         await Context.Users.AddAsync(new User

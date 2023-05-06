@@ -2,7 +2,6 @@ using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
-using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 
 using FluentAssertions;
@@ -58,7 +57,7 @@ public class ArticleGetTests : TestBase
             Description = "Test Description",
             Body = "Test Body",
             Slug = "test-title",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe",
                 Bio = "My Bio",

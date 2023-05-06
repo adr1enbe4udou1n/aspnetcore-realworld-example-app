@@ -13,33 +13,30 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Auth;
 
+public class InvalidInfos : TheoryData<UpdateUserDto>
+{
+    public InvalidInfos()
+    {
+        Add(new UpdateUserDto
+        {
+            Username = "John Doe",
+            Email = "john.doe",
+            Bio = "My Bio",
+        });
+        Add(new UpdateUserDto
+        {
+            Username = "",
+            Email = "john.doe@example.com",
+            Bio = "My Bio",
+        });
+    }
+}
+
 public class UpdateUserTests : TestBase
 {
     public UpdateUserTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> InvalidInfos()
-    {
-        yield return new object[]
-        {
-            new UpdateUserDto
-            {
-                Username = "John Doe",
-                Email = "john.doe",
-                Bio = "My Bio",
-            },
-        };
-        yield return new object[]
-        {
-            new UpdateUserDto
-            {
-                Username = "",
-                Email = "john.doe@example.com",
-                Bio = "My Bio",
-            }
-        };
-    }
-
-    [Theory, MemberData(nameof(InvalidInfos))]
+    [Theory, ClassData(typeof(InvalidInfos))]
     public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDto user)
     {
         await ActingAs(new User

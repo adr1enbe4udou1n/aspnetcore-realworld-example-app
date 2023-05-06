@@ -2,7 +2,6 @@ using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
-using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 
 using FluentAssertions;
@@ -14,51 +13,42 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
+public class InvalidNewArticles : TheoryData<NewArticleDto>
+{
+    public InvalidNewArticles()
+    {
+        Add(new NewArticleDto
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "",
+        });
+        Add(new NewArticleDto
+        {
+            Title = "Test Title",
+            Description = "",
+            Body = "Test Body",
+        });
+        Add(new NewArticleDto
+        {
+            Title = "",
+            Description = "Test Description",
+            Body = "Test Body",
+        });
+        Add(new NewArticleDto
+        {
+            Title = "Existing Title",
+            Description = "Test Description",
+            Body = "Test Body",
+        });
+    }
+}
+
 public class ArticleCreateTests : TestBase
 {
     public ArticleCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> InvalidArticles()
-    {
-        yield return new object[]
-        {
-            new NewArticleDto
-            {
-                Title = "",
-                Description = "Test Description",
-                Body = "Test Body",
-            },
-        };
-        yield return new object[]
-        {
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "",
-                Body = "Test Body",
-            },
-        };
-        yield return new object[]
-        {
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "",
-            },
-        };
-        yield return new object[]
-        {
-            new NewArticleDto
-            {
-                Title = "Existing Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            },
-        };
-    }
-
-    [Theory, MemberData(nameof(InvalidArticles))]
+    [Theory, ClassData(typeof(InvalidNewArticles))]
     public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDto article)
     {
         await ActingAs(new User
@@ -132,7 +122,7 @@ public class ArticleCreateTests : TestBase
             Description = "Test Description",
             Body = "Test Body",
             Slug = "test-article",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe",
                 Bio = "My Bio",

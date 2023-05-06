@@ -3,7 +3,6 @@ using System.Net;
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
-using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 
 using FluentAssertions;
@@ -82,7 +81,7 @@ public class CommentsListTests : TestBase
         response.Comments.First().Should().BeEquivalentTo(new
         {
             Body = "This is Jane, Test Comment 5 !",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "Jane Doe",
                 Bio = "My Bio",

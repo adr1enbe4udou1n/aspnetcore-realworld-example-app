@@ -3,7 +3,6 @@ using System.Net;
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Features.Profiles.Commands;
-using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 
 using FluentAssertions;
@@ -32,7 +31,7 @@ public class ArticlesListTests : TestBase
             Title = "Jane Doe - Test Title 10",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "Jane Doe"
             },
@@ -55,7 +54,7 @@ public class ArticlesListTests : TestBase
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe"
             },
@@ -78,7 +77,7 @@ public class ArticlesListTests : TestBase
             Title = "Jane Doe - Test Title 20",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "Jane Doe"
             },
@@ -115,7 +114,7 @@ public class ArticlesListTests : TestBase
             Title = "John Doe - Test Title 16",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe"
             },
@@ -149,7 +148,7 @@ public class ArticlesListTests : TestBase
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
             Body = "Test Body",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe",
                 Following = true

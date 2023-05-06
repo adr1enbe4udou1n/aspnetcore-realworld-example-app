@@ -2,7 +2,6 @@ using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
-using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Controllers;
 
@@ -15,24 +14,24 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
+public class InvalidUpdateArticles : TheoryData<UpdateArticleDto>
+{
+    public InvalidUpdateArticles()
+    {
+        Add(new UpdateArticleDto
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "",
+        });
+    }
+}
+
 public class ArticleUpdateTests : TestBase
 {
     public ArticleUpdateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> InvalidArticles()
-    {
-        yield return new object[]
-        {
-            new UpdateArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "",
-            }
-        };
-    }
-
-    [Theory, MemberData(nameof(InvalidArticles))]
+    [Theory, ClassData(typeof(InvalidUpdateArticles))]
     public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDto article)
     {
         await ActingAs(new User
@@ -145,7 +144,7 @@ public class ArticleUpdateTests : TestBase
             Description = "New Description",
             Body = "Test Body",
             Slug = "test-title",
-            Author = new ProfileDto
+            Author = new
             {
                 Username = "John Doe",
             },

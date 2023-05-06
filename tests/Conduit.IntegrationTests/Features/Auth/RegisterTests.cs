@@ -14,42 +14,61 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Auth;
 
+public class InvalidRegisters : TheoryData<NewUserDto>
+{
+    public InvalidRegisters()
+    {
+        Add(new NewUserDto
+        {
+            Email = "john.doe",
+            Username = "John Doe",
+            Password = "password",
+        });
+        Add(new NewUserDto
+        {
+            Email = "john.doe@example.com",
+            Username = "",
+            Password = "",
+        });
+        Add(new NewUserDto
+        {
+            Email = "john.doe@example.com",
+            Username = "John Doe",
+            Password = "pass",
+        });
+    }
+}
+
 public class RegisterTests : TestBase
 {
     public RegisterTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public static IEnumerable<object[]> InvalidRegisters()
+    public class InvalidRegisters : TheoryData<NewUserDto>
     {
-        yield return new object[]
+        public InvalidRegisters()
         {
-            new NewUserDto
+            Add(new NewUserDto
             {
                 Email = "john.doe",
                 Username = "John Doe",
                 Password = "password",
-            },
-        };
-        yield return new object[]
-        {
-            new NewUserDto
+            });
+            Add(new NewUserDto
             {
                 Email = "john.doe@example.com",
                 Username = "",
                 Password = "",
-            },
-        };
-        yield return new object[]
-        {
-            new NewUserDto
+            });
+            Add(new NewUserDto
             {
                 Email = "john.doe@example.com",
                 Username = "John Doe",
                 Password = "pass",
-            }
-        };
+            });
+        }
     }
 
-    [Theory, MemberData(nameof(InvalidRegisters))]
+    [Theory, ClassData(typeof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {
         var response = await Act(HttpMethod.Post, "/users", new NewUserCommand(user));
