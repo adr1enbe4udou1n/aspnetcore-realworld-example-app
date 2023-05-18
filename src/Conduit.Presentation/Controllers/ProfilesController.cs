@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Presentation.Controllers;
 
-[Route("[controller]/celeb_{username}")]
+[Route("[controller]/{username}")]
 [ApiExplorerSettings(GroupName = "Profile")]
 [Authorize]
 public class ProfilesController

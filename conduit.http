@@ -1,0 +1,197 @@
+@base_url = http://localhost:5000/api
+@email = johndoe@example.com
+@password = password
+@username = John Doe
+
+POST {{base_url}}/users
+content-type: application/json
+
+{
+    "user": {
+        "email": "{{email}}",
+        "password": "{{password}}",
+        "username": "{{username}}"
+    }
+}
+
+###
+
+# @name login
+POST {{base_url}}/users/login
+content-type: application/json
+
+{
+    "user": {
+        "email": "{{email}}",
+        "password": "{{password}}"
+    }
+}
+
+###
+
+@token = {{login.response.body.user.token}}
+
+GET {{base_url}}/user
+Authorization: Token {{token}}
+
+###
+
+PUT {{base_url}}/user
+content-type: application/json
+Authorization: Token {{token}}
+
+{
+    "user": {
+        "email": "{{email}}"
+    }
+}
+
+###
+
+POST {{base_url}}/articles
+content-type: application/json
+Authorization: Token {{token}}
+
+{
+    "article": {
+        "title": "How to train your dragon",
+        "description": "Ever wonder how?",
+        "body": "You have to believe",
+        "tagList": ["reactjs", "angularjs", "dragons"]
+    }
+}
+
+###
+
+GET {{base_url}}/articles
+
+###
+
+GET {{base_url}}/articles
+Authorization: Token {{token}}
+
+###
+
+GET {{base_url}}/articles/feed
+Authorization: Token {{token}}
+
+###
+
+GET {{base_url}}/articles?author={{username}}
+
+###
+
+GET {{base_url}}/articles?author={{username}}
+Authorization: Token {{token}}
+
+###
+
+@slug = how-to-train-your-dragon
+
+GET {{base_url}}/articles/{{slug}}
+
+###
+
+GET {{base_url}}/articles?tag=dragons
+
+###
+
+PUT {{base_url}}/articles/{{slug}}
+content-type: application/json
+Authorization: Token {{token}}
+
+{
+    "article": {
+        "title": "Did you train your dragon?"
+    }
+}
+
+###
+
+POST {{base_url}}/articles/{{slug}}/favorite
+Authorization: Token {{token}}
+
+###
+
+GET {{base_url}}/articles?favorited={{username}}
+
+###
+
+GET {{base_url}}/articles?favorited={{username}}
+Authorization: Token {{token}}
+
+###
+
+DELETE {{base_url}}/articles/{{slug}}/favorite
+Authorization: Token {{token}}
+
+###
+
+# @name createComment
+POST {{base_url}}/articles/{{slug}}/comments
+content-type: application/json
+Authorization: Token {{token}}
+
+{
+    "comment": {
+        "body": "His name was my name too."
+    }
+}
+
+###
+
+GET {{base_url}}/articles/{{slug}}/comments
+
+###
+
+GET {{base_url}}/articles/{{slug}}/comments
+Authorization: Token {{token}}
+
+###
+
+@commentId = {{createComment.response.body.comment.id}}
+
+DELETE {{base_url}}/articles/{{slug}}/comments/{{commentId}}
+Authorization: Token {{token}}
+
+###
+
+DELETE {{base_url}}/articles/{{slug}}
+Authorization: Token {{token}}
+
+###
+
+POST {{base_url}}/users
+content-type: application/json
+
+{
+    "user": {
+        "email": "celeb_{{email}}",
+        "password": "celeb_{{password}}",
+        "username": "celeb_{{username}}"
+    }
+}
+
+###
+
+GET {{base_url}}/profiles/celeb_{{username}}
+Authorization: Token {{token}}
+
+###
+
+POST {{base_url}}/profiles/celeb_{{username}}/follow
+Authorization: Token {{token}}
+
+###
+
+GET {{base_url}}/profiles/celeb_{{username}}
+Authorization: Token {{token}}
+
+###
+
+DELETE {{base_url}}/profiles/celeb_{{username}}/follow
+Authorization: Token {{token}}
+
+###
+
+GET {{base_url}}/tags

@@ -19,7 +19,7 @@ public class ProfileFollowTests : TestBase
     [Fact]
     public async Task Guest_Cannot_Follow_Profile()
     {
-        var response = await Act(HttpMethod.Post, "/profiles/celeb_john/follow");
+        var response = await Act(HttpMethod.Post, "/profiles/john/follow");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
@@ -46,7 +46,7 @@ public class ProfileFollowTests : TestBase
         );
         await Context.SaveChangesAsync();
 
-        var response = await Act<ProfileResponse>(HttpMethod.Post, "/profiles/celeb_Jane Doe/follow");
+        var response = await Act<ProfileResponse>(HttpMethod.Post, "/profiles/Jane Doe/follow");
 
         response.Profile.Should().BeEquivalentTo(new
         {
@@ -83,7 +83,7 @@ public class ProfileFollowTests : TestBase
 
         await ActingAs(user);
 
-        var response = await Act<ProfileResponse>(HttpMethod.Delete, "/profiles/celeb_Jane Doe/follow");
+        var response = await Act<ProfileResponse>(HttpMethod.Delete, "/profiles/Jane Doe/follow");
 
         response.Profile.Should().BeEquivalentTo(new
         {

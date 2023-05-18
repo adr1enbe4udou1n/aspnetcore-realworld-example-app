@@ -26,7 +26,7 @@ public class ProfileGetTests : TestBase
         });
         await Context.SaveChangesAsync();
 
-        var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_John Doe");
+        var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/John Doe");
 
         response.Profile.Should().BeEquivalentTo(new
         {
@@ -40,7 +40,7 @@ public class ProfileGetTests : TestBase
     [Fact]
     public async Task Cannot_Get_Non_Existent_Profile()
     {
-        var response = await Act(HttpMethod.Get, "/profiles/celeb_John Doe");
+        var response = await Act(HttpMethod.Get, "/profiles/John Doe");
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
@@ -65,7 +65,7 @@ public class ProfileGetTests : TestBase
 
         await ActingAs(user);
 
-        var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/celeb_Jane Doe");
+        var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/Jane Doe");
 
         response.Profile.Should().BeEquivalentTo(new
         {
