@@ -67,7 +67,9 @@ public class ArticleCreateHandler : ICommandHandler<NewArticleCommand, SingleArt
         {
             var existingTags = await _context.Tags
                 .Where(
-                    x => request.Article.TagList.Exists(t => t == x.Name)
+                    x => request.Article.TagList
+                        .AsEnumerable()
+                        .Any(t => t == x.Name)
                 )
                 .ToListAsync(cancellationToken);
 

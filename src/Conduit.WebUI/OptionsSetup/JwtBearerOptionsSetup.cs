@@ -46,7 +46,7 @@ public class JwtBearerOptionsSetup : IPostConfigureOptions<JwtBearerOptions>
             },
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()
+                context.Token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ")[^1]
                     ?? context.Request.Cookies[JwtBearerDefaults.AuthenticationScheme];
 
                 return Task.CompletedTask;
