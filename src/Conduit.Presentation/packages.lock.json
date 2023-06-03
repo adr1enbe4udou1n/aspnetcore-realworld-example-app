@@ -4,9 +4,9 @@
     "net7.0": {
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[9.1.0.70676, )",
-        "resolved": "9.1.0.70676",
-        "contentHash": "Vq/chjlBPmtp3SgNVy9fgQFUd+SLZUTm4DrJLw26wH3MpXHA1JvCpzQeGDqvG1aw4lBgX/yYx09l7VGJCDnfYA=="
+        "requested": "[9.2.0.71021, )",
+        "resolved": "9.2.0.71021",
+        "contentHash": "KoUlM82k1DNccIatOrxeYVfBXk8yWCyGsD/14PvDnkNHab6cIlIr20TTE8Zn2Szb6CGrA5a6fYcwspkgG8DlSg=="
       },
       "Swashbuckle.AspNetCore": {
         "type": "Direct",
