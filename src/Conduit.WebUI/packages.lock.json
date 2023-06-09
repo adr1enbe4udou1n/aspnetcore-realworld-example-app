@@ -37,31 +37,31 @@
       },
       "OpenTelemetry.Exporter.Jaeger": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "2zV0kslWsjXR/y2gGg9lx8aL26n6fFpjt/IRoFn3LKjwzczD/PLAy21T9J7KnTPTy0f+usOGdB5ZDMjrEoYPOA==",
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "muDtRP59HiFtDA6nHVaIZXanpfVo2c1CkeiCJMgUtrFr66aYYAPfHIfgysKBwFrRvXVrI7FRD4O04qRTiWI9ew==",
         "dependencies": {
-          "OpenTelemetry": "1.4.0",
+          "OpenTelemetry": "1.5.0",
           "System.Threading.Tasks.Extensions": "4.5.4"
         }
       },
       "OpenTelemetry.Extensions.Hosting": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "fPg1cKLke/kAJhztAo8WYZ3Rspe94dpqxGDdonRF+M0nrzd1T9WCwMrpuVEXl0JPpJvsjF0H0KVSQTQLiZtP5w==",
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "jFnYfeOcTdag7/OEAZq39JwmVs4073i8FTM344uFILGMzljIsR28hPkCAE//4SLyptib5deC5QPm0hYDlLw35A==",
         "dependencies": {
           "Microsoft.Extensions.Hosting.Abstractions": "2.1.0",
-          "OpenTelemetry": "1.4.0"
+          "OpenTelemetry": "1.5.0"
         }
       },
       "OpenTelemetry.Instrumentation.AspNetCore": {
         "type": "Direct",
-        "requested": "[1.0.0-rc9.14, )",
-        "resolved": "1.0.0-rc9.14",
-        "contentHash": "1FEX8srCzGBrDWL5gdXwk0RoXkYWamj3ZnBjDbwqJd2XGvWCE4LwfwtPj8G8P1ox1tYaBEs5mWkb+h2t9KQyfQ==",
+        "requested": "[1.5.0-beta.1, )",
+        "resolved": "1.5.0-beta.1",
+        "contentHash": "CLL87iDx8NBySR3wByWAOyy+nisHjqR9WxsRbYgSys+S4EFahWEz6pde/g9ti/IBYxY2szzVsd2zkYuzg5TGIg==",
         "dependencies": {
-          "OpenTelemetry": "1.4.0"
+          "OpenTelemetry": "1.5.0"
         }
       },
       "Serilog.AspNetCore": {
@@ -83,9 +83,9 @@
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[9.2.0.71021, )",
-        "resolved": "9.2.0.71021",
-        "contentHash": "KoUlM82k1DNccIatOrxeYVfBXk8yWCyGsD/14PvDnkNHab6cIlIr20TTE8Zn2Szb6CGrA5a6fYcwspkgG8DlSg=="
+        "requested": "[9.3.0.71466, )",
+        "resolved": "9.3.0.71466",
+        "contentHash": "XaoZmOTe3K0Qpa5vRs4hL4Lli1F4FvCEk+3e1C+pZu/tuzTyZxorC3j3tCHaUpMzJWlFPx27sUul9ubvVbEeig=="
       },
       "BCrypt.Net-Next": {
         "type": "Transitive",
@@ -409,28 +409,28 @@
       },
       "OpenTelemetry": {
         "type": "Transitive",
-        "resolved": "1.4.0",
-        "contentHash": "0yHQEYVyYcxxD3H+Zec/e2iw1XU6ksXPKIqUGyqm9jt5ZTkC2OEVAjaqx1Wcr3kua+YEXgebkAbcIiHuK7oUDw==",
+        "resolved": "1.5.0",
+        "contentHash": "Fx44sVmnPkp/JJQSmUC1iHHWjWQ/lBh6wUIUK6SFeTYRdizn2/K/SaQNNy1dlf0ztpWTB6kfFD+xcjBYgdWPgg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Configuration": "3.1.0",
-          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.4.0"
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.5.0"
         }
       },
       "OpenTelemetry.Api": {
         "type": "Transitive",
-        "resolved": "1.4.0",
-        "contentHash": "754QKfiEZ3TNR3lOWS+u15qJYOVMWXhuUy8zjCXtgbaJihCFga3Wm3UZ9ggC5CJiUEjyeR6vw66NBZUxMOPTNQ==",
+        "resolved": "1.5.0",
+        "contentHash": "aAugEK9E+ono8I2Crjel78mrpEreJtcK1uzCYVooYELnSEPYytrzJYvw5SBxNizXT/qOBbz+EsfO+rkQfW7Mkg==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "7.0.0"
         }
       },
       "OpenTelemetry.Api.ProviderBuilderExtensions": {
         "type": "Transitive",
-        "resolved": "1.4.0",
-        "contentHash": "W0Vp2PutW0yJbjRQMTcKhtDlp20kXZqvswQ0EteSoJ4kI3J2Tod5m5RG+3JblAZU3kIwSCzQnhtHT8I4LOvm0g==",
+        "resolved": "1.5.0",
+        "contentHash": "Wv28j71V1mizHjBfNx/ILhgqkXpbBZbCcZRoQMvqkF+Pp1bHHJpxOuipDXLqpO7KKHTwrTVl0/TAUHzoXXRK0g==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.0",
-          "OpenTelemetry.Api": "1.4.0"
+          "OpenTelemetry.Api": "1.5.0"
         }
       },
       "Scrutor": {
