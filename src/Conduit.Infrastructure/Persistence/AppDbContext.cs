@@ -2,8 +2,6 @@ using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 using Conduit.Infrastructure.Interceptors;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -35,25 +33,6 @@ public class AppDbContext : DbContext, IAppDbContext
         if (_roConnectionString != null)
         {
             Database.SetConnectionString(_roConnectionString);
-        }
-    }
-
-    public async Task<TResponse> UseTransactionAsync<TResponse>(RequestHandlerDelegate<TResponse> request, CancellationToken cancellationToken = default)
-    {
-        using var transaction = await Database.BeginTransactionAsync(cancellationToken);
-
-        try
-        {
-            var result = await request();
-
-            await transaction.CommitAsync(cancellationToken);
-
-            return result;
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync(cancellationToken);
-            throw;
         }
     }
 

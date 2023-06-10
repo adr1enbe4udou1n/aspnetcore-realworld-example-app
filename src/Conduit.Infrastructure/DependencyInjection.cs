@@ -22,7 +22,9 @@ public static class DependencyInjection
             {
                 options
                     .UseLazyLoadingProxies()
-                    .UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                    .UseNpgsql(
+                        configuration.GetConnectionString("DefaultConnection") + "Enlist=true"
+                    );
             })
             .Scan(
                 selector => selector
