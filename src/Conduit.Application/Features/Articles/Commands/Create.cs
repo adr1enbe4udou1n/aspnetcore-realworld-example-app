@@ -1,9 +1,10 @@
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
 
 using FluentValidation;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ public class NewArticleDto
     public List<string> TagList { get; set; } = new();
 }
 
-public record NewArticleCommand(NewArticleDto Article) : ICommand<SingleArticleResponse>;
+public record NewArticleCommand(NewArticleDto Article) : IRequest<SingleArticleResponse>;
 
 public class ArticleCreateValidator : AbstractValidator<NewArticleCommand>
 {
@@ -39,7 +40,7 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleCommand>
     }
 }
 
-public class ArticleCreateHandler : ICommandHandler<NewArticleCommand, SingleArticleResponse>
+public class ArticleCreateHandler : IRequestHandler<NewArticleCommand, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

@@ -1,5 +1,4 @@
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 
 using MediatR;
 
@@ -16,11 +15,16 @@ public class QueryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TR
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (request is IQuery<TResponse>)
+        if (IsQuery(request))
         {
             _context.UseRoConnection();
         }
 
         return await next();
+    }
+
+    private static bool IsQuery(TRequest request)
+    {
+        return request.GetType().Name.EndsWith("Query", StringComparison.OrdinalIgnoreCase);
     }
 }

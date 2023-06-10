@@ -2,8 +2,9 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -39,9 +40,9 @@ public static class CommentMapper
 
 public record MultipleCommentsResponse(IEnumerable<CommentDto> Comments);
 
-public record CommentsListQuery(string Slug) : IQuery<MultipleCommentsResponse>;
+public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse>;
 
-public class CommentsListHandler : IQueryHandler<CommentsListQuery, MultipleCommentsResponse>
+public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

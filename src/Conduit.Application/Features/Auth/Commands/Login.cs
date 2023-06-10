@@ -1,8 +1,9 @@
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 
 using FluentValidation;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,9 @@ public class LoginUserDto
     public required string Password { get; set; }
 }
 
-public record LoginUserCommand(LoginUserDto User) : ICommand<UserResponse>;
+public record LoginUserCommand(LoginUserDto User) : IRequest<UserResponse>;
 
-public class LoginHandler : ICommandHandler<LoginUserCommand, UserResponse>
+public class LoginHandler : IRequestHandler<LoginUserCommand, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;

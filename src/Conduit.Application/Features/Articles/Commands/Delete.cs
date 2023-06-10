@@ -1,13 +1,14 @@
 using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Articles.Commands;
 
-public record ArticleDeleteCommand(string Slug) : ICommand;
+public record ArticleDeleteCommand(string Slug) : IRequest;
 
-public class ArticleDeleteHandler : ICommandHandler<ArticleDeleteCommand>
+public class ArticleDeleteHandler : IRequestHandler<ArticleDeleteCommand>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

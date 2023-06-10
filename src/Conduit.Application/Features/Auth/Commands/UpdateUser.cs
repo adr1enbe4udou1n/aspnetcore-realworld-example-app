@@ -1,8 +1,9 @@
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 
 using FluentValidation;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ public class UpdateUserDto
     public string? Image { get; set; }
 }
 
-public record UpdateUserCommand(UpdateUserDto User) : ICommand<UserResponse>;
+public record UpdateUserCommand(UpdateUserDto User) : IRequest<UserResponse>;
 
 public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
 {
@@ -38,7 +39,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
     }
 }
 
-public class UpdateUserHandler : ICommandHandler<UpdateUserCommand, UserResponse>
+public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, UserResponse>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IAppDbContext _context;

@@ -19,6 +19,6 @@ public static class DependencyInjection
             .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(QueryBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(CommandBehavior<,>));
     }
 }

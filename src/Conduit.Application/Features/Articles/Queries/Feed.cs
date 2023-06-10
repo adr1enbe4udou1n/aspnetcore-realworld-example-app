@@ -1,17 +1,18 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Application.Support;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
-public class ArticlesFeedQuery : PagedQuery, IQuery<MultipleArticlesResponse>
+public class ArticlesFeedQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 {
 }
 
-public class ArticlesFeedHandler : IQueryHandler<ArticlesFeedQuery, MultipleArticlesResponse>
+public class ArticlesFeedHandler : IRequestHandler<ArticlesFeedQuery, MultipleArticlesResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

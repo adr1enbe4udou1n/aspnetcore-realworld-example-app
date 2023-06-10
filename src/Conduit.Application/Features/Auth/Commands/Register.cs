@@ -1,9 +1,10 @@
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
 
 using FluentValidation;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,7 @@ public class NewUserDto
     public required string Username { get; set; }
 }
 
-public record NewUserCommand(NewUserDto User) : ICommand<UserResponse>;
+public record NewUserCommand(NewUserDto User) : IRequest<UserResponse>;
 
 public class RegisterValidator : AbstractValidator<NewUserCommand>
 {
@@ -37,7 +38,7 @@ public class RegisterValidator : AbstractValidator<NewUserCommand>
     }
 }
 
-public class RegisterHandler : ICommandHandler<NewUserCommand, UserResponse>
+public class RegisterHandler : IRequestHandler<NewUserCommand, UserResponse>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;

@@ -2,13 +2,14 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Profiles.Commands;
 
-public record ProfileFollowCommand(string Username, bool Follow) : ICommand<ProfileResponse>;
+public record ProfileFollowCommand(string Username, bool Follow) : IRequest<ProfileResponse>;
 
-public class ProfileGetHandler : ICommandHandler<ProfileFollowCommand, ProfileResponse>
+public class ProfileGetHandler : IRequestHandler<ProfileFollowCommand, ProfileResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

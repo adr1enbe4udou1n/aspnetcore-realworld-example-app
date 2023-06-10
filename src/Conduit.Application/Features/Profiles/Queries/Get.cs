@@ -1,7 +1,8 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Profiles.Queries;
 
@@ -18,9 +19,9 @@ public class ProfileDto
 
 public record ProfileResponse(ProfileDto Profile);
 
-public record ProfileGetQuery(string Username) : IQuery<ProfileResponse>;
+public record ProfileGetQuery(string Username) : IRequest<ProfileResponse>;
 
-public class ProfileGetHandler : IQueryHandler<ProfileGetQuery, ProfileResponse>
+public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

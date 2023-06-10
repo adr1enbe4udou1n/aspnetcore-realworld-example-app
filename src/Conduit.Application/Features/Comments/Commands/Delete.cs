@@ -1,13 +1,14 @@
 using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Comments.Commands;
 
-public record CommentDeleteCommand(string Slug, int Id) : ICommand;
+public record CommentDeleteCommand(string Slug, int Id) : IRequest;
 
-public class CommentDeleteHandler : ICommandHandler<CommentDeleteCommand>
+public class CommentDeleteHandler : IRequestHandler<CommentDeleteCommand>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

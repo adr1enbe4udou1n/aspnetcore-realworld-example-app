@@ -1,7 +1,8 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Application.Support;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,7 @@ namespace Conduit.Application.Features.Articles.Queries;
 
 public record MultipleArticlesResponse(IEnumerable<ArticleDto> Articles, int ArticlesCount);
 
-public class ArticlesListQuery : PagedQuery, IQuery<MultipleArticlesResponse>
+public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 {
     /// <summary>
     /// Filter by author (username)
@@ -27,7 +28,7 @@ public class ArticlesListQuery : PagedQuery, IQuery<MultipleArticlesResponse>
     public string? Tag { get; set; }
 }
 
-public class ArticlesListHandler : IQueryHandler<ArticlesListQuery, MultipleArticlesResponse>
+public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

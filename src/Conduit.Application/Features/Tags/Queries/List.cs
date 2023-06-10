@@ -1,5 +1,6 @@
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,10 @@ namespace Conduit.Application.Features.Tags.Queries;
 public record TagsResponse(IEnumerable<string> Tags);
 
 #pragma warning disable S2094
-public record TagsListQuery : IQuery<TagsResponse>;
+public record TagsListQuery : IRequest<TagsResponse>;
 #pragma warning disable S2094
 
-public class TagsListHandler : IQueryHandler<TagsListQuery, TagsResponse>
+public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
 {
     private readonly IAppDbContext _context;
 

@@ -1,10 +1,11 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Comments.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
 
 using FluentValidation;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Comments.Commands;
 
@@ -16,7 +17,7 @@ public class NewCommentDto
 
 public record SingleCommentResponse(CommentDto Comment);
 
-public record NewCommentCommand(string Slug, NewCommentDto Comment) : ICommand<SingleCommentResponse>;
+public record NewCommentCommand(string Slug, NewCommentDto Comment) : IRequest<SingleCommentResponse>;
 
 public class CommentCreateValidator : AbstractValidator<NewCommentCommand>
 {
@@ -26,7 +27,7 @@ public class CommentCreateValidator : AbstractValidator<NewCommentCommand>
     }
 }
 
-public class CommentCreateHandler : ICommandHandler<NewCommentCommand, SingleCommentResponse>
+public class CommentCreateHandler : IRequestHandler<NewCommentCommand, SingleCommentResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

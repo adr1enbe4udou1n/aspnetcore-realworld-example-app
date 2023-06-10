@@ -2,9 +2,10 @@ using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 
 using FluentValidation;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Articles.Commands;
 
@@ -15,7 +16,7 @@ public class UpdateArticleDto
     public string? Body { get; set; }
 }
 
-public record UpdateArticleCommand(string Slug, UpdateArticleDto Article) : ICommand<SingleArticleResponse>;
+public record UpdateArticleCommand(string Slug, UpdateArticleDto Article) : IRequest<SingleArticleResponse>;
 
 public class ArticleUpdateValidator : AbstractValidator<UpdateArticleCommand>
 {
@@ -27,7 +28,7 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleCommand>
     }
 }
 
-public class ArticleUpdateHandler : ICommandHandler<UpdateArticleCommand, SingleArticleResponse>
+public class ArticleUpdateHandler : IRequestHandler<UpdateArticleCommand, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

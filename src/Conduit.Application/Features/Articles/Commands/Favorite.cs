@@ -1,13 +1,14 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Articles.Commands;
 
-public record ArticleFavoriteCommand(string Slug, bool Favorite) : ICommand<SingleArticleResponse>;
+public record ArticleFavoriteCommand(string Slug, bool Favorite) : IRequest<SingleArticleResponse>;
 
-public class ArticleFavoriteHandler : ICommandHandler<ArticleFavoriteCommand, SingleArticleResponse>
+public class ArticleFavoriteHandler : IRequestHandler<ArticleFavoriteCommand, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

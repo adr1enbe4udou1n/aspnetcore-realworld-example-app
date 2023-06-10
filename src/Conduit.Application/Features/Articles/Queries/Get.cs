@@ -2,8 +2,9 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
@@ -52,9 +53,9 @@ public static class ArticleMapper
 
 public record SingleArticleResponse(ArticleDto Article);
 
-public record ArticleGetQuery(string Slug) : IQuery<SingleArticleResponse>;
+public record ArticleGetQuery(string Slug) : IRequest<SingleArticleResponse>;
 
-public class ArticleGetHandler : IQueryHandler<ArticleGetQuery, SingleArticleResponse>
+public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUser _currentUser;

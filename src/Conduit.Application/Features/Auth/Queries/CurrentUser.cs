@@ -1,7 +1,8 @@
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Interfaces.Mediator;
 using Conduit.Domain.Entities;
+
+using MediatR;
 
 namespace Conduit.Application.Features.Auth.Queries;
 
@@ -47,10 +48,10 @@ public static class UserMapper
 public record UserResponse(UserDto User);
 
 #pragma warning disable S2094
-public record CurrentUserQuery : IQuery<UserResponse>;
+public record CurrentUserQuery : IRequest<UserResponse>;
 #pragma warning disable S2094
 
-public class CurrentUserHandler : IQueryHandler<CurrentUserQuery, UserResponse>
+public class CurrentUserHandler : IRequestHandler<CurrentUserQuery, UserResponse>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
