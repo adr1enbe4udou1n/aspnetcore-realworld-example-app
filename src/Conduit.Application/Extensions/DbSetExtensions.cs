@@ -11,14 +11,8 @@ public static class DbSetExtensions
 {
     public static async Task<TSource> FindAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        var entity = await source.Where(predicate).SingleOrDefaultAsync(cancellationToken);
-
-        if (entity is null)
-        {
-            throw new NotFoundException();
-        }
-
-        return entity;
+        return await source.Where(predicate).SingleOrDefaultAsync(cancellationToken)
+            ?? throw new NotFoundException();
     }
 
     public static async Task<PagedResponse<TSource>> PaginateAsync<TSource>(
@@ -33,10 +27,6 @@ public static class DbSetExtensions
             .Take(query.Limit)
             .ToListAsync(cancellationToken);
 
-        return new PagedResponse<TSource>
-        {
-            Items = items,
-            Total = count
-        };
+        return new PagedResponse<TSource>(items, count);
     }
 }

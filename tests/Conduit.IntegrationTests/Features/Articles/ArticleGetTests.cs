@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
@@ -45,7 +46,7 @@ public class ArticleGetTests : TestBase
                 Title = "Test Title",
                 Description = "Test Description",
                 Body = "Test Body",
-                TagList = new List<string> { "Test Tag 1", "Test Tag 2" }
+                TagList = new Collection<string> { "Test Tag 1", "Test Tag 2" }
             }
         ));
 

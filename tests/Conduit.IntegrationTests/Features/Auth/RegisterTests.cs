@@ -43,31 +43,6 @@ public class RegisterTests : TestBase
 {
     public RegisterTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public class InvalidRegisters : TheoryData<NewUserDto>
-    {
-        public InvalidRegisters()
-        {
-            Add(new NewUserDto
-            {
-                Email = "john.doe",
-                Username = "John Doe",
-                Password = "password",
-            });
-            Add(new NewUserDto
-            {
-                Email = "john.doe@example.com",
-                Username = "",
-                Password = "",
-            });
-            Add(new NewUserDto
-            {
-                Email = "john.doe@example.com",
-                Username = "John Doe",
-                Password = "pass",
-            });
-        }
-    }
-
     [Theory, ClassData(typeof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {

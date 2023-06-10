@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
@@ -18,7 +20,7 @@ public class NewArticleDto
 
     public required string Body { get; set; }
 
-    public List<string> TagList { get; set; } = new();
+    public Collection<string> TagList { get; set; } = new();
 }
 
 public record NewArticleCommand(NewArticleDto Article) : IRequest<SingleArticleResponse>;

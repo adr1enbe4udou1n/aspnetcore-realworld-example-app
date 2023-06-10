@@ -88,7 +88,7 @@ if (app.Environment.IsDevelopment())
     await context.Database.MigrateAsync();
 }
 
-app.Run();
+await app.RunAsync();
 
 public partial class Program
 {

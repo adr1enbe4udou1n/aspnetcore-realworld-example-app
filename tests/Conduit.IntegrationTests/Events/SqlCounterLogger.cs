@@ -7,21 +7,16 @@ public class SqlCounterLogger : ILogger
 {
     private readonly string _categoryName;
 
-    private static int s_currentCounter;
-
     public SqlCounterLogger(string categoryName)
     {
         _categoryName = categoryName;
     }
 
-    public static int GetCounter()
-    {
-        return s_currentCounter;
-    }
+    public static int GetCounter { get; private set; }
 
     public static void ResetCounter()
     {
-        s_currentCounter = 0;
+        GetCounter = 0;
     }
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
@@ -38,7 +33,7 @@ public class SqlCounterLogger : ILogger
     {
         if (_categoryName == DbLoggerCategory.Database.Command.Name)
         {
-            s_currentCounter++;
+            GetCounter++;
         }
     }
 }

@@ -11,7 +11,7 @@ using Slugify;
 
 namespace Conduit.Infrastructure;
 
-public static class DependencyInjection
+public static class ServiceExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
@@ -27,7 +27,7 @@ public static class DependencyInjection
             .Scan(
                 selector => selector
                     .FromAssemblies(
-                        typeof(DependencyInjection).Assembly,
+                        typeof(ServiceExtensions).Assembly,
                         typeof(SlugHelper).Assembly
                     )
                     .AddClasses()

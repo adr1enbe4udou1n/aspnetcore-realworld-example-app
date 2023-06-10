@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
@@ -22,7 +24,7 @@ public class ArticleDto
 
     public DateTime UpdatedAt { get; set; }
 
-    public List<string> TagList { get; set; } = new();
+    public Collection<string> TagList { get; set; } = new();
 
     public required ProfileDto Author { get; set; }
 
@@ -41,12 +43,12 @@ public static class ArticleMapper
             Title = article.Title,
             Description = article.Description,
             Body = article.Body,
-            TagList = article.Tags.Select(t => t.Tag.Name).OrderBy(t => t).ToList(),
             CreatedAt = article.CreatedAt,
             UpdatedAt = article.UpdatedAt,
             Favorited = currentUser != null && currentUser.HasFavorite(article),
             FavoritesCount = article.FavoredUsers.Count,
             Author = article.Author.MapToProfile(currentUser),
+            TagList = new Collection<string>(article.Tags.Select(t => t.Tag.Name).OrderBy(t => t).ToList())
         };
     }
 }

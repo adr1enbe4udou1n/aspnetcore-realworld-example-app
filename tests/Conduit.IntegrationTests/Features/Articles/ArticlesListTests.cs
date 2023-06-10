@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
@@ -44,7 +45,7 @@ public class ArticlesListTests : TestBase
     {
         await CreateArticles();
 
-        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&author=John");
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&author=John Doe");
 
         response.Articles.Count().Should().Be(10);
         response.ArticlesCount.Should().Be(30);
@@ -104,7 +105,7 @@ public class ArticlesListTests : TestBase
             await Mediator.Send(new ArticleFavoriteCommand(a, true));
         }
 
-        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&favorited=Jane");
+        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&favorited=Jane Doe");
 
         response.Articles.Count().Should().Be(5);
         response.ArticlesCount.Should().Be(5);
@@ -191,7 +192,7 @@ public class ArticlesListTests : TestBase
                     Title = a,
                     Description = "Test Description",
                     Body = "Test Body",
-                    TagList = new List<string> { "Test Tag 1", "Test Tag 2", $"Tag {author.Name}" }
+                    TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", $"Tag {author.Name}" }
                 }
             ));
         }

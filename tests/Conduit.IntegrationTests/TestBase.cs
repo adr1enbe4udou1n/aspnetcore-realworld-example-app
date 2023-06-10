@@ -29,6 +29,7 @@ public class TestBase : IAsyncLifetime
     private readonly HttpClient _client;
     private readonly Func<Task> _refreshDatabase;
     private readonly ITestOutputHelper _output;
+    private readonly IServiceScope _scope;
 
     protected TestBase(ConduitApiFactory factory, ITestOutputHelper output)
     {
@@ -36,13 +37,13 @@ public class TestBase : IAsyncLifetime
         _refreshDatabase = factory.RefreshDatabase;
         _output = output;
 
-        var scope = factory.Services.CreateScope();
+        _scope = factory.Services.CreateScope();
 
-        Context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        Mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        _currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        PasswordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-        _jwtTokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
+        Context = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        Mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
+        PasswordHasher = _scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        _currentUser = _scope.ServiceProvider.GetRequiredService<ICurrentUser>();
+        _jwtTokenGenerator = _scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
     }
 
     public Task InitializeAsync()
@@ -52,6 +53,7 @@ public class TestBase : IAsyncLifetime
 
     public Task DisposeAsync()
     {
+        _scope.Dispose();
         return Task.CompletedTask;
     }
 
@@ -79,23 +81,27 @@ public class TestBase : IAsyncLifetime
         return _client;
     }
 
-    protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestUri)
+    protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestPath)
     {
         var client = GetClient();
+
+        using var request = new HttpRequestMessage(method, $"/api{requestPath}");
 
         try
         {
-            return await client.SendAsync(new HttpRequestMessage(method, $"/api{requestUri}"));
+            return await client.SendAsync(request);
         }
         finally
         {
-            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
+            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter}");
         }
     }
 
-    protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestUri, object value)
+    protected async Task<HttpResponseMessage> Act(HttpMethod method, string requestPath, object value)
     {
         var client = GetClient();
+
+        using var request = new HttpRequestMessage(method, $"/api{requestPath}");
 
         try
         {
@@ -104,33 +110,33 @@ public class TestBase : IAsyncLifetime
                 switch (method.Method)
                 {
                     case "POST":
-                        return await client.PostAsJsonAsync($"/api{requestUri}", value);
+                        return await client.PostAsJsonAsync($"/api{requestPath}", value);
                     case "PUT":
-                        return await client.PutAsJsonAsync($"/api{requestUri}", value);
+                        return await client.PutAsJsonAsync($"/api{requestPath}", value);
                     default:
                         break;
                 }
             }
-            return await client.SendAsync(new HttpRequestMessage(method, $"/api{requestUri}"));
+            return await client.SendAsync(request);
         }
         finally
         {
-            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter()}");
+            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter}");
         }
     }
 
-    protected async Task<T> Act<T>(HttpMethod method, string requestUri)
+    protected async Task<T> Act<T>(HttpMethod method, string requestPath)
     {
-        var response = await Act(method, requestUri);
+        var response = await Act(method, requestPath);
 
         response.EnsureSuccessStatusCode();
 
         return (await response.Content.ReadFromJsonAsync<T>())!;
     }
 
-    protected async Task<T> Act<T>(HttpMethod method, string requestUri, object value)
+    protected async Task<T> Act<T>(HttpMethod method, string requestPath, object value)
     {
-        var response = await Act(method, requestUri, value);
+        var response = await Act(method, requestPath, value);
 
         response.EnsureSuccessStatusCode();
 
@@ -142,8 +148,10 @@ public class TestBase : IAsyncLifetime
         var tokenHandler = new JwtSecurityTokenHandler();
         tokenHandler.ValidateToken(token, new TokenValidationParameters
         {
-            ValidateAudience = false,
+#pragma warning disable CA5404
             ValidateIssuer = false,
+            ValidateAudience = false,
+#pragma warning restore CA5404
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes("super-secret-key-value!")

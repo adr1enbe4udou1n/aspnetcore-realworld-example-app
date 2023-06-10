@@ -48,7 +48,7 @@ public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
 
         options.CustomSchemaIds(x => x.GetCustomAttributes(false)
             .OfType<DisplayNameAttribute>()
-            .FirstOrDefault()?.DisplayName ?? x.Name.Replace("Dto", string.Empty)
+            .FirstOrDefault()?.DisplayName ?? x.Name.Replace("Dto", string.Empty, StringComparison.InvariantCultureIgnoreCase)
         );
 
         options.TagActionsBy(y => new[]

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Conduit.Presentation;
 
-public static class DependencyInjection
+public static class ServiceExtensions
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
@@ -18,7 +18,7 @@ public static class DependencyInjection
                 opt.UseRoutePrefix("api");
                 opt.Filters.Add(typeof(ApiExceptionFilterAttribute));
             })
-            .AddApplicationPart(typeof(DependencyInjection).Assembly)
+            .AddApplicationPart(typeof(ServiceExtensions).Assembly)
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new DateTimeConverter())
             );

@@ -16,17 +16,16 @@ namespace Conduit.IntegrationTests;
 
 public class ConduitApiFactory : WebApplicationFactory<Program>
 {
-    private readonly AppDbContext _context;
     private readonly string _connectionString;
 
     public ConduitApiFactory()
     {
-        var scope = Services.CreateScope();
+        using var scope = Services.CreateScope();
 
-        _context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        _connectionString = _context.Database.GetDbConnection().ConnectionString;
+        using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _connectionString = dbContext.Database.GetDbConnection().ConnectionString;
 
-        _context.Database.Migrate();
+        dbContext.Database.Migrate();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

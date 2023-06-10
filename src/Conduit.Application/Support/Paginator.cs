@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Conduit.Application.Support;
@@ -33,7 +34,13 @@ public class PagedQuery
 
 public class PagedResponse<T>
 {
-    public List<T> Items { get; set; } = new();
+    public Collection<T> Items { get; }
 
     public int Total { get; set; }
+
+    public PagedResponse(IEnumerable<T> items, int total)
+    {
+        Items = new Collection<T>(items.ToList());
+        Total = total;
+    }
 }

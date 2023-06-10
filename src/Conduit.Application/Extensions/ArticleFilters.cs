@@ -13,7 +13,7 @@ public static class ArticleFilters
         {
             return source;
         }
-        return source.Where(a => a.Author.Name.Contains(author));
+        return source.Where(a => a.Author.Name == author);
     }
 
     public static IQueryable<Article> HasAuthorsFollowedBy(
@@ -45,6 +45,6 @@ public static class ArticleFilters
         {
             return source;
         }
-        return source.Where(a => a.FavoredUsers.Any(t => t.User.Name.Contains(favoritedBy)));
+        return source.Where(a => a.FavoredUsers.Any(t => t.User.Name == favoritedBy));
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Conduit.Presentation.Filters;
 
-public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
+public sealed class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)
     {

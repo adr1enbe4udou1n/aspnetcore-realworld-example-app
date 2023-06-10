@@ -16,7 +16,7 @@ public class PathPrefixDocumentFilter : IDocumentFilter
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         var paths = swaggerDoc.Paths.ToDictionary(
-            entry => entry.Key.Replace($"/{_pathPrefix}", string.Empty),
+            entry => entry.Key.Replace($"/{_pathPrefix}", string.Empty, StringComparison.InvariantCultureIgnoreCase),
             entry => entry.Value
         );
 

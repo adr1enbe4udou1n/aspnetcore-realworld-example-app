@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
@@ -111,7 +112,7 @@ public class ArticleCreateTests : TestBase
                     Title = "Test Article",
                     Description = "Test Description",
                     Body = "Test Body",
-                    TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" }
+                    TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
                 }
             )
         );
@@ -128,7 +129,7 @@ public class ArticleCreateTests : TestBase
                 Bio = "My Bio",
                 Image = "https://i.pravatar.cc/300"
             },
-            TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
+            TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
         });
 
         (await Context.Articles.AnyAsync()).Should().BeTrue();

@@ -47,9 +47,7 @@ public static class UserMapper
 
 public record UserResponse(UserDto User);
 
-#pragma warning disable S2094
 public record CurrentUserQuery : IRequest<UserResponse>;
-#pragma warning disable S2094
 
 public class CurrentUserHandler : IRequestHandler<CurrentUserQuery, UserResponse>
 {
