@@ -20,7 +20,9 @@ public class NewArticleDto
 
     public required string Body { get; set; }
 
+#pragma warning disable CA2227
     public Collection<string> TagList { get; set; } = new();
+#pragma warning restore CA2227
 }
 
 public record NewArticleCommand(NewArticleDto Article) : IRequest<SingleArticleResponse>;
