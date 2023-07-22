@@ -1,3 +1,4 @@
 {
-    "rest-client.rememberCookiesForSubsequentRequests": false
+    "rest-client.rememberCookiesForSubsequentRequests": false,
+    "dotnet.defaultSolution": "RealworldApp.sln"
 }
