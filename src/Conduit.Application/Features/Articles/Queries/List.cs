@@ -46,6 +46,7 @@ public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleAr
             .Include(a => a.Tags)
             .ThenInclude(t => t.Tag)
             .Include(a => a.FavoredUsers)
+            .AsSplitQuery()
             .FilterByAuthor(request.Author)
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)
