@@ -29,7 +29,7 @@ Target(format, () =>
 
 Target(build, DependsOn(format), () =>
 {
-    Run("dotnet", "restore --locked-mode");
+    Run("dotnet", "restore");
     Run("dotnet", "build . -c Release");
 });
 
