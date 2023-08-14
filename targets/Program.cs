@@ -24,7 +24,6 @@ dir =>
 
 Target(format, () =>
 {
-    Run("dotnet", "tool restore");
     Run("dotnet", "format --verify-no-changes");
 });
 
