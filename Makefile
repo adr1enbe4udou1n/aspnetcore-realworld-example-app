@@ -10,8 +10,6 @@ fresh:
 	@cd tools/Conduit.Tools && dotnet run db fresh
 seed:
 	@cd tools/Conduit.Tools && dotnet run db seed
-publish:
-	dotnet run --project targets
 format:
 	dotnet format
 test:
