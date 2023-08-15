@@ -25,4 +25,10 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>Persistence/Migrations/**/*</Value>
+    </SonarQubeSetting>
+  </ItemGroup>
+
 </Project>
