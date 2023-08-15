@@ -1,4 +1,0 @@
-[reportgenerator]
-	reports = tests/Conduit.IntegrationTests/TestResults/**/coverage.cobertura.xml
-	reporttype = Html_Dark
-    targetdir = reports
