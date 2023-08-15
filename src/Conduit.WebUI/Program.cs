@@ -13,6 +13,9 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
 // Add services to the container.
 builder.Services
     .AddApplication()
@@ -43,6 +46,8 @@ if (!builder.Environment.IsEnvironment("Testing"))
 }
 
 var app = builder.Build();
+
+app.MapReverseProxy();
 
 if (!app.Environment.IsEnvironment("Testing"))
 {
