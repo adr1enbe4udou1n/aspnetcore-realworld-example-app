@@ -49,12 +49,6 @@ if (!app.Environment.IsEnvironment("Testing"))
     app.UseSerilogRequestLogging();
 }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "/api/{documentName}/docs.json";
@@ -66,12 +60,6 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
-
-app.UseCors(x => x
-    .AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-);
 
 app.UseAuthentication();
 app.UseAuthorization();

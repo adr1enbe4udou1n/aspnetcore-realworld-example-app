@@ -58,6 +58,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new CookieOptions
             {
                 HttpOnly = true,
+                Secure = true,
                 Expires = tokenDescriptor.Expires,
             }
         );
