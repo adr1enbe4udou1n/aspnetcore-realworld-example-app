@@ -17,18 +17,13 @@ public static class ServiceExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var dataSource = new NpgsqlDataSourceBuilder(
-                configuration.GetConnectionString("DefaultConnection")
-            )
-            .BuildMultiHost();
-
         return services
             .AddHttpContextAccessor()
             .AddDbContext<IAppDbContext, AppDbContext>((options) =>
             {
                 options
                     .UseLazyLoadingProxies()
-                    .UseNpgsql(dataSource);
+                    .UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             })
             .Scan(
                 selector => selector
