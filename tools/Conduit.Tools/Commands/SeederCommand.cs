@@ -2,6 +2,7 @@ using Conduit.Infrastructure.Persistence;
 using Conduit.Tools.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 using Npgsql;
 
@@ -14,11 +15,13 @@ namespace Tools.Commands;
 [Command("db")]
 public class SeederCommand : ConsoleAppBase, IAsyncDisposable
 {
+    private readonly IConfiguration _config;
     private readonly AppDbContext _context;
     private readonly IEnumerable<ISeeder> _seeders;
 
-    public SeederCommand(AppDbContext context, IEnumerable<ISeeder> seeders)
+    public SeederCommand(IConfiguration config, AppDbContext context, IEnumerable<ISeeder> seeders)
     {
+        _config = config;
         _context = context;
         _seeders = seeders;
     }
@@ -34,7 +37,7 @@ public class SeederCommand : ConsoleAppBase, IAsyncDisposable
     {
         await Migrate();
 
-        using var conn = new NpgsqlConnection(_context.Database.GetConnectionString());
+        using var conn = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
         await conn.OpenAsync();
 

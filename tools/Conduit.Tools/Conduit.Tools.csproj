@@ -5,6 +5,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RunWorkingDirectory>$(MSBuildProjectDirectory)</RunWorkingDirectory>
     <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
