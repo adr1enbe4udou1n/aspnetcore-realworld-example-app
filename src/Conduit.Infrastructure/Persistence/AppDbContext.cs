@@ -9,7 +9,6 @@ namespace Conduit.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-    private readonly string? _roConnectionString;
     private static readonly AuditableInterceptor AuditableInterceptor = new();
 
     public DbSet<User> Users => Set<User>();
@@ -18,22 +17,13 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(AuditableInterceptor);
-    }
-
-    public void UseRoConnection()
-    {
-        if (_roConnectionString != null)
-        {
-            Database.SetConnectionString(_roConnectionString);
-        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

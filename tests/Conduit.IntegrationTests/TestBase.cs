@@ -9,8 +9,14 @@ using Conduit.IntegrationTests.Events;
 
 using MediatR;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+
+using Npgsql;
+
+using Respawn;
+using Respawn.Graph;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -26,15 +32,15 @@ public class TestBase : IAsyncLifetime
 
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ICurrentUser _currentUser;
+    private readonly ConduitApiFactory _factory;
     private readonly HttpClient _client;
-    private readonly Func<Task> _refreshDatabase;
     private readonly ITestOutputHelper _output;
     private readonly IServiceScope _scope;
 
     protected TestBase(ConduitApiFactory factory, ITestOutputHelper output)
     {
+        _factory = factory;
         _client = factory.CreateClient();
-        _refreshDatabase = factory.RefreshDatabase;
         _output = output;
 
         _scope = factory.Services.CreateScope();
@@ -46,9 +52,28 @@ public class TestBase : IAsyncLifetime
         _jwtTokenGenerator = _scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
     }
 
-    public Task InitializeAsync()
+    public async Task RefreshDatabase()
     {
-        return _refreshDatabase();
+        var connectionString = _factory.Services
+            .GetRequiredService<IConfiguration>()
+            .GetConnectionString("DefaultConnection");
+
+        using var conn = new NpgsqlConnection(connectionString);
+
+        await conn.OpenAsync();
+
+        var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
+        {
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+            DbAdapter = DbAdapter.Postgres
+        });
+
+        await respawner.ResetAsync(conn);
+    }
+
+    public async Task InitializeAsync()
+    {
+        await RefreshDatabase();
     }
 
     public Task DisposeAsync()

@@ -17,7 +17,6 @@ public static class ServiceExtensions
         return services
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceExtensions).Assembly))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(QueryBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(CommandBehavior<,>));
     }
