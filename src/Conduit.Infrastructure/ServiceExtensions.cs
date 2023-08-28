@@ -17,12 +17,10 @@ public static class ServiceExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var dataSourceBuilder = new NpgsqlDataSourceBuilder(configuration.GetConnectionString("DefaultConnection"));
-        dataSourceBuilder
-            .BuildMultiHost()
-            .WithTargetSession(TargetSessionAttributes.PreferStandby);
-
-        var dataSource = dataSourceBuilder.Build();
+        var dataSource = new NpgsqlDataSourceBuilder(
+                configuration.GetConnectionString("DefaultConnection")
+            )
+            .BuildMultiHost();
 
         return services
             .AddHttpContextAccessor()
