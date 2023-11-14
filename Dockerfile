@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 USER app
 
-COPY /publish /app
+COPY --chown=app:app /publish /app
 WORKDIR /app
 
 ENV ASPNETCORE_URLS=http://+:8080
