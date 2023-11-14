@@ -36,7 +36,11 @@ public class UsersSeeder : ISeeder
             var f = new Faker();
             f.PickRandom(users, f.Random.Number(5))
                 .ToList()
-                .ForEach(follower => u.Follow(follower));
+                .ForEach(follower => _context.FollowerUser.Add(new FollowerUser
+                {
+                    Follower = follower,
+                    Following = u
+                }));
         });
         await _context.SaveChangesAsync(cancellationToken);
     }

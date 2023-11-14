@@ -2,6 +2,7 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
 
 using MediatR;
 
@@ -27,11 +28,17 @@ public class ProfileGetHandler : IRequestHandler<ProfileFollowCommand, ProfileRe
 
         if (request.Follow)
         {
-            user.Follow(_currentUser.User!);
+            _context.FollowerUser.Add(new FollowerUser
+            {
+                Follower = _currentUser.User!,
+                Following = user
+            });
         }
         else
         {
-            user.Unfollow(_currentUser.User!);
+            _context.FollowerUser.Remove(user.Followers
+                .First(x => x.FollowerId == _currentUser.User!.Id)
+            );
         }
 
         await _context.SaveChangesAsync(cancellationToken);

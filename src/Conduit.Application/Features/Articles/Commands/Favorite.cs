@@ -1,6 +1,7 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Interfaces;
+using Conduit.Domain.Entities;
 
 using MediatR;
 
@@ -26,11 +27,17 @@ public class ArticleFavoriteHandler : IRequestHandler<ArticleFavoriteCommand, Si
 
         if (request.Favorite)
         {
-            article.Favorite(_currentUser.User!);
+            _context.ArticleFavorite.Add(new ArticleFavorite
+            {
+                Article = article,
+                User = _currentUser.User!
+            });
         }
         else
         {
-            article.Unfavorite(_currentUser.User!);
+            _context.ArticleFavorite.Remove(
+                article.FavoredUsers.First(x => x.UserId == _currentUser.User!.Id)
+            );
         }
 
         await _context.SaveChangesAsync(cancellationToken);

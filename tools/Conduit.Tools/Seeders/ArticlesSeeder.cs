@@ -61,7 +61,11 @@ public class ArticlesSeeder : ISeeder
 
             foreach (var user in f.PickRandom(users, f.Random.Number(5)))
             {
-                article.Favorite(user);
+                _context.ArticleFavorite.Add(new ArticleFavorite
+                {
+                    Article = article,
+                    User = user
+                });
             }
         }
 

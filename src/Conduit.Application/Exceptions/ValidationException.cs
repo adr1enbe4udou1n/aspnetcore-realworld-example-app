@@ -1,10 +1,7 @@
-using System.Runtime.Serialization;
-
 using FluentValidation.Results;
 
 namespace Conduit.Application.Exceptions;
 
-[Serializable]
 public class ValidationException : Exception
 {
     public IDictionary<string, string[]> Errors { get; } = new Dictionary<string, string[]>();
@@ -20,11 +17,6 @@ public class ValidationException : Exception
 
     public ValidationException(string message, Exception innerException) : base(message, innerException)
     {
-    }
-
-    protected ValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-        Errors = new Dictionary<string, string[]>();
     }
 
     public ValidationException(IEnumerable<ValidationFailure> failures) : this()

@@ -57,22 +57,6 @@ public class User : IAuditableEntity
         return FavoriteArticles.Any(f => f.ArticleId == article.Id);
     }
 
-    public void Follow(User user)
-    {
-        if (!IsFollowedBy(user))
-        {
-            _followers.Add(new FollowerUser { Follower = user, Following = this });
-        }
-    }
-
-    public void Unfollow(User user)
-    {
-        if (IsFollowedBy(user))
-        {
-            _followers.RemoveAll(x => x.FollowerId == user.Id);
-        }
-    }
-
     public void AddFollowing(params User[] users)
     {
         _following.AddRange(users.Select(x => new FollowerUser { Following = x, Follower = this }).ToList());

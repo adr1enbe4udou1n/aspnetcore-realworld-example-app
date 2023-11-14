@@ -13,8 +13,9 @@ public class AppDbContext : DbContext, IAppDbContext
     private static readonly AuditableInterceptor AuditableInterceptor = new();
 
     public DbSet<User> Users => Set<User>();
-
+    public DbSet<FollowerUser> FollowerUser => Set<FollowerUser>();
     public DbSet<Article> Articles => Set<Article>();
+    public DbSet<ArticleFavorite> ArticleFavorite => Set<ArticleFavorite>();
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
 

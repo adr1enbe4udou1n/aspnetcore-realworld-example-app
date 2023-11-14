@@ -48,22 +48,6 @@ public class Article : IAuditableEntity
         _comments.Add(comment);
     }
 
-    public void Favorite(User user)
-    {
-        if (!IsFavoritedBy(user))
-        {
-            _favoredUsers.Add(new ArticleFavorite { User = user, Article = this });
-        }
-    }
-
-    public void Unfavorite(User user)
-    {
-        if (IsFavoritedBy(user))
-        {
-            _favoredUsers.RemoveAll(x => x.UserId == user.Id);
-        }
-    }
-
     public void AddTag(Tag tag)
     {
         _tags.Add(new ArticleTag { Tag = tag, Article = this });

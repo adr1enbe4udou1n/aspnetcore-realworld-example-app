@@ -179,7 +179,7 @@ public class TestBase : IAsyncLifetime
 #pragma warning restore CA5404
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("super-secret-key-value!")
+                Encoding.UTF8.GetBytes("00000000-0000-0000-0000-000000000000")
             ),
         }, out var validatedToken);
 
