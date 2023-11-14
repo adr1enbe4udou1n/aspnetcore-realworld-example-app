@@ -23,7 +23,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
             var validationResult = await _validator.ValidateAsync(context, cancellationToken);
 
-            if (validationResult.Errors.Any())
+            if (validationResult.Errors.Count > 0)
             {
                 throw new ValidationException(validationResult.Errors);
             }
