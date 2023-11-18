@@ -51,11 +51,6 @@ public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
             .FirstOrDefault()?.DisplayName ?? x.Name.Replace("Dto", string.Empty, StringComparison.InvariantCultureIgnoreCase)
         );
 
-        options.TagActionsBy(y => new[]
-        {
-            y.GroupName ?? throw new InvalidOperationException()
-        });
-
         options.DocInclusionPredicate((name, api) => true);
 
         options.OperationFilter<SecurityRequirementsOperationFilter>();

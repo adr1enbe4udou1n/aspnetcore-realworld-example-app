@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
 using Conduit.Application.Support;

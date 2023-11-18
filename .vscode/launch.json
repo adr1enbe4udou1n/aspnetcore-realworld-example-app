@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Conduit.WebUI/bin/Debug/net7.0/Conduit.WebUI.dll",
+            "program": "${workspaceFolder}/src/Conduit.WebUI/bin/Debug/net8.0/Conduit.WebUI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Conduit.WebUI",
             "stopAtEntry": false,
