@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Application.Features.Profiles.Queries;
 
@@ -9,9 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.EndPoints;
 
-public static class ProfilesEndpoints
+public class ProfilesEndpoints : ICarterModule
 {
-    public static void AddProfilesEndpoints(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/profiles/{username}", (ISender sender, string username, CancellationToken cancellationToken) =>
             sender.Send(new ProfileGetQuery(username), cancellationToken)

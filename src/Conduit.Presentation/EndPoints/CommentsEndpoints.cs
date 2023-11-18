@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
 
@@ -9,9 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.EndPoints;
 
-public static class CommentsEndpoints
+public class CommentsEndpoints : ICarterModule
 {
-    public static void AddCommentsEndpoints(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/articles/{slug}/comments", (ISender sender, string slug, CancellationToken cancellationToken) =>
             sender.Send(new CommentsListQuery(slug), cancellationToken)

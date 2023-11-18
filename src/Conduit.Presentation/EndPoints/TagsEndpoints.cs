@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Tags.Queries;
 
 using MediatR;
@@ -8,9 +10,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.EndPoints;
 
-public static class TagsEndpoints
+public class TagsEndpoints : ICarterModule
 {
-    public static void AddTagsEndpoints(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/tags", (ISender sender, CancellationToken cancellationToken) =>
             sender.Send(new TagsListQuery(), cancellationToken)

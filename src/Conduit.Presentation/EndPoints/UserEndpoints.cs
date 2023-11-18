@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 
@@ -9,9 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.EndPoints;
 
-public static class UserEndpoints
+public class UserEndpoints : ICarterModule
 {
-    public static void AddUserEndpoints(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/user", (ISender sender, CancellationToken cancellationToken) =>
             sender.Send(new CurrentUserQuery(), cancellationToken)

@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 
@@ -9,9 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.EndPoints;
 
-public static class ArticlesEndpoints
+public class ArticlesEndpoints : ICarterModule
 {
-    public static void AddArticlesEndpoints(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/articles", (ISender sender, [AsParameters] ArticlesListQuery query, CancellationToken cancellationToken) =>
             sender.Send(query, cancellationToken)
