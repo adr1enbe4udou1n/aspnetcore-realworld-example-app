@@ -10,9 +10,6 @@ public class PagedQuery
 
     private int _limit = MaxLimit;
 
-    /// <summary>
-    /// Limit number of articles returned (default is 20)
-    /// </summary>
     [DefaultValue(20)]
     public int Limit
     {
@@ -26,9 +23,6 @@ public class PagedQuery
         }
     }
 
-    /// <summary>
-    /// Offset/skip number of articles (default is 0)
-    /// </summary>
     [DefaultValue(0)]
     public int Offset { get; set; }
 }

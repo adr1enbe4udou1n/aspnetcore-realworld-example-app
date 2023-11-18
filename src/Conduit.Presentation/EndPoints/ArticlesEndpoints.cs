@@ -20,7 +20,20 @@ public static class ArticlesEndpoints
             .WithName("GetArticles")
             .WithSummary("Get recent articles globally")
             .WithDescription("Get most recent articles globally. Use query parameters to filter results. Auth is optional")
-            .WithOpenApi();
+            .WithOpenApi(generatedOperation =>
+            {
+                var parameterAuthor = generatedOperation.Parameters[0];
+                parameterAuthor.Description = "Filter by author (username)";
+                var parameterFavorited = generatedOperation.Parameters[1];
+                parameterFavorited.Description = "Filter by favorites of a user (username)";
+                var parameterTag = generatedOperation.Parameters[2];
+                parameterTag.Description = "Filter by tag";
+                var parameterLimit = generatedOperation.Parameters[3];
+                parameterLimit.Description = "Limit number of articles returned (default is 20)";
+                var parameterOffset = generatedOperation.Parameters[4];
+                parameterOffset.Description = "Offset/skip number of articles (default is 0)";
+                return generatedOperation;
+            });
 
         app.MapGet("/articles/feed", (ISender sender, [AsParameters] ArticlesFeedQuery query, CancellationToken cancellationToken) =>
             sender.Send(query, cancellationToken)
@@ -30,7 +43,14 @@ public static class ArticlesEndpoints
             .WithSummary("Get recent articles from users you follow")
             .WithDescription("Get most recent articles from users you follow. Use query parameters to limit. Auth is required")
             .RequireAuthorization()
-            .WithOpenApi();
+            .WithOpenApi(generatedOperation =>
+            {
+                var parameterLimit = generatedOperation.Parameters[0];
+                parameterLimit.Description = "Limit number of articles returned (default is 20)";
+                var parameterOffset = generatedOperation.Parameters[1];
+                parameterOffset.Description = "Offset/skip number of articles (default is 0)";
+                return generatedOperation;
+            });
 
         app.MapGet("/articles/{slug}", (ISender sender, string slug, CancellationToken cancellationToken) =>
             sender.Send(new ArticleGetQuery(slug), cancellationToken)
