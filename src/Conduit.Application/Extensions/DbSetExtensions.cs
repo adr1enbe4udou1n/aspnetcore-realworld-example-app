@@ -23,8 +23,10 @@ public static class DbSetExtensions
     {
         var count = await source.CountAsync(cancellationToken);
         var items = await source
-            .Skip(query.Offset)
-            .Take(query.Limit)
+            .Skip(query.Offset ?? 0)
+            .Take(query.Limit > PagedQuery.MaxLimit
+                ? PagedQuery.MaxLimit
+                : query.Limit ?? PagedQuery.MaxLimit)
             .ToListAsync(cancellationToken);
 
         return new PagedResponse<TSource>(items, count);

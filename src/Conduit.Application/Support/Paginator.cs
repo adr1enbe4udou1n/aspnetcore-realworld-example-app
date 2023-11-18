@@ -8,23 +8,9 @@ public class PagedQuery
 {
     public const int MaxLimit = 20;
 
-    private int _limit = MaxLimit;
+    public int? Limit { get; set; }
 
-    [DefaultValue(20)]
-    public int Limit
-    {
-        get
-        {
-            return _limit;
-        }
-        set
-        {
-            _limit = value > MaxLimit ? MaxLimit : value;
-        }
-    }
-
-    [DefaultValue(0)]
-    public int Offset { get; set; }
+    public int? Offset { get; set; }
 }
 
 public class PagedResponse<T>
