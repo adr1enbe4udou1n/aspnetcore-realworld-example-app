@@ -16,23 +16,21 @@ public sealed class ApiExceptionFilter : IEndpointFilter
         }
         catch (NotFoundException ex)
         {
-            Results.StatusCode(StatusCodes.Status404NotFound);
-            return Results.Problem(ex.Message);
+            return Results.Problem(ex.Message, statusCode: StatusCodes.Status404NotFound);
         }
         catch (ValidationException ex)
         {
-            Results.StatusCode(StatusCodes.Status400BadRequest);
-            return Results.ValidationProblem(ex.Errors, ex.Message);
+            return Results.ValidationProblem(
+                ex.Errors, ex.Message, statusCode: StatusCodes.Status400BadRequest
+            );
         }
         catch (ForbiddenException ex)
         {
-            Results.StatusCode(StatusCodes.Status403Forbidden);
-            return Results.Problem(ex.Message);
+            return Results.Problem(ex.Message, statusCode: StatusCodes.Status403Forbidden);
         }
         catch (UnauthorizedException ex)
         {
-            Results.StatusCode(StatusCodes.Status401Unauthorized);
-            return Results.Problem(ex.Message);
+            return Results.Problem(ex.Message, statusCode: StatusCodes.Status401Unauthorized);
         }
     }
 }
