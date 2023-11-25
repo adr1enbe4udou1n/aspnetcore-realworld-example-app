@@ -72,6 +72,7 @@ app.UseAuthorization();
 
 app.AddApplicationEndpoints();
 app.MapHealthChecks("/healthz");
+app.MapPrometheusScrapingEndpoint();
 
 if (app.Environment.IsDevelopment())
 {
