@@ -4,13 +4,10 @@ using Conduit.Application;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Persistence;
 using Conduit.Presentation;
-using Conduit.Presentation.EndPoints;
 using Conduit.WebUI.OptionsSetup;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-
-using OpenTelemetry.Metrics;
 
 using Serilog;
 

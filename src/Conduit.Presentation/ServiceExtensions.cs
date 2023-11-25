@@ -1,7 +1,6 @@
 using Carter;
 
 using Conduit.Presentation.Converters;
-using Conduit.Presentation.EndPoints;
 using Conduit.Presentation.Filters;
 using Conduit.Presentation.OptionsSetup;
 
