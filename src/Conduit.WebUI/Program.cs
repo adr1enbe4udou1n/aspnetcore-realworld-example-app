@@ -10,6 +10,8 @@ using Conduit.WebUI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
+using OpenTelemetry.Metrics;
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +41,15 @@ if (!builder.Environment.IsEnvironment("Testing"))
         .ConfigureOptions<TracerOptionsSetup>()
         .ConfigureOptions<TracerProviderBuilderSetup>()
         .AddOpenTelemetry()
+        .WithMetrics(builder =>
+        {
+            builder
+                .AddPrometheusExporter()
+                .AddMeter(
+                    "Microsoft.AspNetCore.Hosting",
+                    "Microsoft.AspNetCore.Server.Kestrel"
+                );
+        })
         .WithTracing();
 
     builder.Host.UseSerilog((context, configuration) => configuration
