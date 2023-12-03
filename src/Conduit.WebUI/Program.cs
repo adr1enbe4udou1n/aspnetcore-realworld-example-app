@@ -63,6 +63,8 @@ app.MapReverseProxy();
 if (!app.Environment.IsEnvironment("Testing"))
 {
     app.UseSerilogRequestLogging();
+    app.MapHealthChecks("/healthz");
+    app.MapPrometheusScrapingEndpoint();
 }
 
 app.UseSwagger(c =>
@@ -81,8 +83,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.AddApplicationEndpoints();
-app.MapHealthChecks("/healthz");
-app.MapPrometheusScrapingEndpoint();
 
 if (app.Environment.IsDevelopment())
 {
