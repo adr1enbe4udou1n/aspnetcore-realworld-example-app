@@ -30,12 +30,12 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
 
-builder.Services
-    .AddHealthChecks()
-    .AddDbContextCheck<AppDbContext>();
-
 if (!builder.Environment.IsEnvironment("Testing"))
 {
+    builder.Services
+        .AddHealthChecks()
+        .AddDbContextCheck<AppDbContext>();
+
     builder.Services
         .ConfigureOptions<TracerOptionsSetup>()
         .ConfigureOptions<TracerProviderBuilderSetup>()
