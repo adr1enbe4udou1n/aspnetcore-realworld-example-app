@@ -24,7 +24,7 @@ using Xunit.Abstractions;
 namespace Conduit.IntegrationTests;
 
 [Collection("Test collection")]
-public class TestBase : IAsyncLifetime
+public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
 {
     protected AppDbContext Context { get; }
     protected IMediator Mediator { get; }
