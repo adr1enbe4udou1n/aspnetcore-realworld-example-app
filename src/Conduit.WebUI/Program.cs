@@ -9,7 +9,11 @@ using Conduit.WebUI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
+using Npgsql;
+
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 using Serilog;
 
@@ -37,19 +41,38 @@ if (!builder.Environment.IsEnvironment("Testing"))
         .AddDbContextCheck<AppDbContext>();
 
     builder.Services
-        .ConfigureOptions<TracerOptionsSetup>()
-        .ConfigureOptions<TracerProviderBuilderSetup>()
         .AddOpenTelemetry()
         .WithMetrics(builder =>
         {
             builder
+                .AddAspNetCoreInstrumentation()
                 .AddPrometheusExporter()
                 .AddMeter(
                     "Microsoft.AspNetCore.Hosting",
                     "Microsoft.AspNetCore.Server.Kestrel"
                 );
         })
-        .WithTracing();
+        .WithTracing(b =>
+        {
+            b
+                .SetResourceBuilder(ResourceBuilder
+                    .CreateDefault()
+                    .AddService("AspNetCore.Conduit")
+                    .AddTelemetrySdk()
+                )
+                .AddAspNetCoreInstrumentation(b =>
+                {
+                    b.Filter = ctx =>
+                    {
+                        return ctx.Request.Path.StartsWithSegments(
+                            "/api", StringComparison.OrdinalIgnoreCase
+                        );
+                    };
+                })
+                .AddEntityFrameworkCoreInstrumentation()
+                .AddNpgsql()
+                .AddOtlpExporter();
+        });
 
     builder.Host.UseSerilog((context, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
