@@ -42,17 +42,6 @@ public class ArticlesSeeder : ISeeder
         foreach (var article in articles)
         {
             var f = new Faker();
-            var comments = new Faker<Comment>()
-                .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(2))
-                .RuleFor(a => a.Author, f => f.PickRandom(users))
-                .RuleFor(a => a.CreatedAt, f => f.Date.Recent(7).ToUniversalTime())
-                .Generate(f.Random.Number(10)
-            );
-
-            foreach (var comment in comments)
-            {
-                article.AddComment(comment);
-            }
 
             foreach (var tag in f.PickRandom(tags, f.Random.Number(3)))
             {
@@ -69,7 +58,15 @@ public class ArticlesSeeder : ISeeder
             }
         }
 
+        var comments = new Faker<Comment>()
+            .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(2))
+            .RuleFor(a => a.Author, f => f.PickRandom(users))
+            .RuleFor(a => a.CreatedAt, f => f.Date.Recent(7).ToUniversalTime())
+            .RuleFor(a => a.Article, f => f.PickRandom(articles))
+            .Generate(5000);
+
         await _context.Articles.AddRangeAsync(articles, cancellationToken);
+        await _context.Comments.AddRangeAsync(comments, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
