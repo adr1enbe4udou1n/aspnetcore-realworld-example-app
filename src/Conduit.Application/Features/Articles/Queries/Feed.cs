@@ -30,7 +30,6 @@ public class ArticlesFeedHandler : IRequestHandler<ArticlesFeedQuery, MultipleAr
             .Include(a => a.Tags)
             .ThenInclude(t => t.Tag)
             .Include(a => a.FavoredUsers)
-            .AsSplitQuery()
             .HasAuthorsFollowedBy(_currentUser.User!)
             .OrderByDescending(x => x.Id)
             .Select(a => a.Map(_currentUser.User))
