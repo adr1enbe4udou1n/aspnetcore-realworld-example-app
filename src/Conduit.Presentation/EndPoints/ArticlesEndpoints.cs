@@ -35,9 +35,11 @@ public class ArticlesEndpoints : ICarterModule
                 parameterTag.Description = "Filter by tag";
                 var parameterLimit = generatedOperation.Parameters[3];
                 parameterLimit.Name = "limit";
+                parameterLimit.Schema = new() { Type = "integer", Format = "int32" };
                 parameterLimit.Description = "Limit number of articles returned (default is 20)";
                 var parameterOffset = generatedOperation.Parameters[4];
                 parameterOffset.Name = "offset";
+                parameterOffset.Schema = new() { Type = "integer", Format = "int32" };
                 parameterOffset.Description = "Offset/skip number of articles (default is 0)";
                 return generatedOperation;
             });
@@ -54,9 +56,11 @@ public class ArticlesEndpoints : ICarterModule
             {
                 var parameterLimit = generatedOperation.Parameters[0];
                 parameterLimit.Name = "limit";
+                parameterLimit.Schema = new() { Type = "integer", Format = "int32" };
                 parameterLimit.Description = "Limit number of articles returned (default is 20)";
                 var parameterOffset = generatedOperation.Parameters[1];
                 parameterOffset.Name = "offset";
+                parameterOffset.Schema = new() { Type = "integer", Format = "int32" };
                 parameterOffset.Description = "Offset/skip number of articles (default is 0)";
                 return generatedOperation;
             });
