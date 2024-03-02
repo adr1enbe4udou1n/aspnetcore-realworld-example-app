@@ -25,14 +25,19 @@ public class ArticlesEndpoints : ICarterModule
             .WithOpenApi(generatedOperation =>
             {
                 var parameterAuthor = generatedOperation.Parameters[0];
+                parameterAuthor.Name = "author";
                 parameterAuthor.Description = "Filter by author (username)";
                 var parameterFavorited = generatedOperation.Parameters[1];
+                parameterFavorited.Name = "favorited";
                 parameterFavorited.Description = "Filter by favorites of a user (username)";
                 var parameterTag = generatedOperation.Parameters[2];
+                parameterTag.Name = "tag";
                 parameterTag.Description = "Filter by tag";
                 var parameterLimit = generatedOperation.Parameters[3];
+                parameterLimit.Name = "limit";
                 parameterLimit.Description = "Limit number of articles returned (default is 20)";
                 var parameterOffset = generatedOperation.Parameters[4];
+                parameterOffset.Name = "offset";
                 parameterOffset.Description = "Offset/skip number of articles (default is 0)";
                 return generatedOperation;
             });
@@ -48,8 +53,10 @@ public class ArticlesEndpoints : ICarterModule
             .WithOpenApi(generatedOperation =>
             {
                 var parameterLimit = generatedOperation.Parameters[0];
+                parameterLimit.Name = "limit";
                 parameterLimit.Description = "Limit number of articles returned (default is 20)";
                 var parameterOffset = generatedOperation.Parameters[1];
+                parameterOffset.Name = "offset";
                 parameterOffset.Description = "Offset/skip number of articles (default is 0)";
                 return generatedOperation;
             });
