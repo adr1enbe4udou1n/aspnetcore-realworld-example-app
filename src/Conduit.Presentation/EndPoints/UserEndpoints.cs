@@ -33,7 +33,7 @@ public class UserEndpoints : ICarterModule
             .WithSummary("Update current user")
             .WithDescription("Updated user information for current user")
             .Produces(200)
-            .ProducesProblem(400)
+            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApi(generatedOperation =>
             {

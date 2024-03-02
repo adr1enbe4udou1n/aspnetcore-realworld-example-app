@@ -87,7 +87,7 @@ public class ArticlesEndpoints : ICarterModule
             .WithSummary("Create an article")
             .WithDescription("Create an article. Auth is required")
             .Produces(200)
-            .ProducesProblem(400)
+            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApi(generatedOperation =>
             {
@@ -103,7 +103,7 @@ public class ArticlesEndpoints : ICarterModule
             .WithSummary("Update an article")
             .WithDescription("Update an article. Auth is required")
             .Produces(200)
-            .ProducesProblem(400)
+            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApi(generatedOperation =>
             {

@@ -37,7 +37,7 @@ public class CommentsEndpoints : ICarterModule
             .WithSummary("Create a comment for an article")
             .WithDescription("Create a comment for an article. Auth is required")
             .Produces(200)
-            .ProducesProblem(400)
+            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApi(generatedOperation =>
             {

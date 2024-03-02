@@ -35,7 +35,7 @@ public class UsersEndpoints : ICarterModule
             .WithSummary("Existing user login")
             .WithDescription("Login for existing user")
             .Produces(200)
-            .ProducesProblem(400)
+            .ProducesValidationProblem(400)
             .WithOpenApi(generatedOperation =>
             {
                 generatedOperation.RequestBody.Description = "Credentials to use";
