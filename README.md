@@ -1,6 +1,6 @@
 # ![RealWorld Example App](logo.png)
 
-ASP.NET Core 7.0 codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
+ASP.NET Core 8.0 codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
 [![CI](https://concourse.okami101.io/api/v1/teams/main/pipelines/conduit-aspnet-core/badge)](https://concourse.okami101.io/teams/main/pipelines/conduit-aspnet-core)
 
