@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="35.4.0" />
+    <PackageReference Include="Bogus" Version="35.4.1" />
     <PackageReference Include="Respawn" Version="6.2.1" />
     <PackageReference Include="ConsoleAppFramework" Version="4.2.4" />
   </ItemGroup>
