@@ -15,8 +15,21 @@ public class ArticlesEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/articles", (ISender sender, [AsParameters] ArticlesListQuery query, CancellationToken cancellationToken) =>
-            sender.Send(query, cancellationToken)
+        app.MapGet("/articles", (ISender sender,
+            string? author,
+            string? favorited,
+            string? tag,
+            int? limit,
+            int? offset,
+            CancellationToken cancellationToken) =>
+            sender.Send(new ArticlesListQuery
+            {
+                Author = author,
+                Favorited = favorited,
+                Tag = tag,
+                Limit = limit,
+                Offset = offset
+            }, cancellationToken)
         )
             .WithTags("Articles")
             .WithName("GetArticles")
@@ -24,28 +37,28 @@ public class ArticlesEndpoints : ICarterModule
             .WithDescription("Get most recent articles globally. Use query parameters to filter results. Auth is optional")
             .WithOpenApi(generatedOperation =>
             {
-                var parameterAuthor = generatedOperation.Parameters[0];
-                parameterAuthor.Name = "author";
-                parameterAuthor.Description = "Filter by author (username)";
-                var parameterFavorited = generatedOperation.Parameters[1];
-                parameterFavorited.Name = "favorited";
-                parameterFavorited.Description = "Filter by favorites of a user (username)";
-                var parameterTag = generatedOperation.Parameters[2];
-                parameterTag.Name = "tag";
-                parameterTag.Description = "Filter by tag";
-                var parameterLimit = generatedOperation.Parameters[3];
-                parameterLimit.Name = "limit";
-                parameterLimit.Schema = new() { Type = "integer", Format = "int32" };
-                parameterLimit.Description = "Limit number of articles returned (default is 20)";
-                var parameterOffset = generatedOperation.Parameters[4];
-                parameterOffset.Name = "offset";
-                parameterOffset.Schema = new() { Type = "integer", Format = "int32" };
-                parameterOffset.Description = "Offset/skip number of articles (default is 0)";
+                var parameter = generatedOperation.Parameters[0];
+                parameter.Description = "Filter by author (username)";
+                parameter = generatedOperation.Parameters[1];
+                parameter.Description = "Filter by favorites of a user (username)";
+                parameter = generatedOperation.Parameters[2];
+                parameter.Description = "Filter by tag";
+                parameter = generatedOperation.Parameters[3];
+                parameter.Description = "Limit number of articles returned (default is 20)";
+                parameter = generatedOperation.Parameters[4];
+                parameter.Description = "Offset/skip number of articles (default is 0)";
                 return generatedOperation;
             });
 
-        app.MapGet("/articles/feed", (ISender sender, [AsParameters] ArticlesFeedQuery query, CancellationToken cancellationToken) =>
-            sender.Send(query, cancellationToken)
+        app.MapGet("/articles/feed", (ISender sender,
+            int? limit,
+            int? offset,
+            CancellationToken cancellationToken) =>
+            sender.Send(new ArticlesFeedQuery
+            {
+                Limit = limit,
+                Offset = offset
+            }, cancellationToken)
         )
             .WithTags("Articles")
             .WithName("GetArticlesFeed")
@@ -54,14 +67,10 @@ public class ArticlesEndpoints : ICarterModule
             .RequireAuthorization()
             .WithOpenApi(generatedOperation =>
             {
-                var parameterLimit = generatedOperation.Parameters[0];
-                parameterLimit.Name = "limit";
-                parameterLimit.Schema = new() { Type = "integer", Format = "int32" };
-                parameterLimit.Description = "Limit number of articles returned (default is 20)";
-                var parameterOffset = generatedOperation.Parameters[1];
-                parameterOffset.Name = "offset";
-                parameterOffset.Schema = new() { Type = "integer", Format = "int32" };
-                parameterOffset.Description = "Offset/skip number of articles (default is 0)";
+                var parameter = generatedOperation.Parameters[0];
+                parameter.Description = "Limit number of articles returned (default is 20)";
+                parameter = generatedOperation.Parameters[1];
+                parameter.Description = "Offset/skip number of articles (default is 0)";
                 return generatedOperation;
             });
 

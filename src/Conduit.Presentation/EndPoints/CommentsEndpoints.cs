@@ -58,6 +58,8 @@ public class CommentsEndpoints : ICarterModule
             {
                 var parameter = generatedOperation.Parameters[0];
                 parameter.Description = "Slug of the article that you want to delete a comments for";
+                parameter = generatedOperation.Parameters[1];
+                parameter.Description = "ID of the comment you want to delete";
                 return generatedOperation;
             });
     }
