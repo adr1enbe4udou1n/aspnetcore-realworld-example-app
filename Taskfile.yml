@@ -4,7 +4,7 @@ tasks:
   prepare:
     cmds:
       - dotnet tool restore
-      - dotnet sonarscanner begin /k:"aspnet-core-realworld" /d:sonar.host.url="{{.TASK_SONARQUBE_URL}}" /d:sonar.token="{{.TASK_SONARQUBE_ANALYSIS_TOKEN}}" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+      - dotnet sonarscanner begin /k:"aspnet-core-realworld" /d:sonar.host.url="{{.SONARQUBE_URL}}" /d:sonar.token="{{.SONARQUBE_ANALYSIS_TOKEN}}" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
   install:
     cmds:
       - dotnet restore
@@ -17,6 +17,6 @@ tasks:
   test:
     cmds:
       - dotnet coverage collect 'dotnet test -c Release --no-restore --no-build --verbosity=normal' -f xml -o 'coverage.xml'
-      - dotnet sonarscanner end /d:sonar.token="{{.TASK_SONARQUBE_ANALYSIS_TOKEN}}"
+      - dotnet sonarscanner end /d:sonar.token="{{.SONARQUBE_ANALYSIS_TOKEN}}"
       - dotnet publish src/Conduit.WebUI -c Release -o publish --no-restore --no-build --verbosity=normal
       - dotnet publish tools/Conduit.Tools -c Release -o publish --no-restore --no-build --verbosity=normal
