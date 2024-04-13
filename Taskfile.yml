@@ -3,10 +3,10 @@ version: "3"
 tasks:
   prepare:
     cmds:
+      - dotnet tool restore
       - dotnet sonarscanner begin /k:"aspnet-core-realworld" /d:sonar.host.url="{{.SONARQUBE_URL}}" /d:sonar.token="{{.SONARQUBE_ANALYSIS_TOKEN}}" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
   install:
     cmds:
-      - dotnet tool restore
       - dotnet restore
   lint:
     cmds:
