@@ -9,16 +9,10 @@ namespace Conduit.Application.Features.Articles.Commands;
 
 public record ArticleFavoriteCommand(string Slug, bool Favorite) : IRequest<SingleArticleResponse>;
 
-public class ArticleFavoriteHandler : IRequestHandler<ArticleFavoriteCommand, SingleArticleResponse>
+public class ArticleFavoriteHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticleFavoriteCommand, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ArticleFavoriteHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<SingleArticleResponse> Handle(ArticleFavoriteCommand request, CancellationToken cancellationToken)
     {

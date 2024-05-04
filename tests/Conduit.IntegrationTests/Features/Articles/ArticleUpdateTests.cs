@@ -27,9 +27,8 @@ public class InvalidUpdateArticles : TheoryData<UpdateArticleDto>
     }
 }
 
-public class ArticleUpdateTests : TestBase
+public class ArticleUpdateTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ArticleUpdateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Theory, ClassData(typeof(InvalidUpdateArticles))]
     public async Task Cannot_Update_Article_With_Invalid_Data(UpdateArticleDto article)

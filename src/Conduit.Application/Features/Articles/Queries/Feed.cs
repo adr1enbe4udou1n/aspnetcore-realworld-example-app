@@ -12,16 +12,10 @@ public class ArticlesFeedQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 {
 }
 
-public class ArticlesFeedHandler : IRequestHandler<ArticlesFeedQuery, MultipleArticlesResponse>
+public class ArticlesFeedHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticlesFeedQuery, MultipleArticlesResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ArticlesFeedHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesFeedQuery request, CancellationToken cancellationToken)
     {

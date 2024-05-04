@@ -12,14 +12,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Conduit.Presentation.OptionsSetup;
 
-public class SwaggerGenOptionsSetup : IConfigureOptions<SwaggerGenOptions>
+public class SwaggerGenOptionsSetup(IConfiguration configuration) : IConfigureOptions<SwaggerGenOptions>
 {
-    private readonly IConfiguration _configuration;
-
-    public SwaggerGenOptionsSetup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+    private readonly IConfiguration _configuration = configuration;
 
     public void Configure(SwaggerGenOptions options)
     {

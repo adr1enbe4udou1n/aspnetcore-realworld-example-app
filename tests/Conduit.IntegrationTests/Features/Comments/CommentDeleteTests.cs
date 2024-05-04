@@ -13,9 +13,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Comments;
 
-public class CommentDeleteTests : TestBase
+public class CommentDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public CommentDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Delete_Comment()

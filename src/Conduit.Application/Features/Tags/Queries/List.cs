@@ -12,14 +12,9 @@ public record TagsResponse(IEnumerable<string> Tags);
 public record TagsListQuery : IRequest<TagsResponse>;
 #pragma warning restore S2094
 
-public class TagsListHandler : IRequestHandler<TagsListQuery, TagsResponse>
+public class TagsListHandler(IAppDbContext context) : IRequestHandler<TagsListQuery, TagsResponse>
 {
-    private readonly IAppDbContext _context;
-
-    public TagsListHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly IAppDbContext _context = context;
 
     public async Task<TagsResponse> Handle(TagsListQuery request, CancellationToken cancellationToken)
     {

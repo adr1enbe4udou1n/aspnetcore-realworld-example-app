@@ -29,9 +29,8 @@ public class InvalidCredentials : TheoryData<LoginUserDto>
     }
 }
 
-public class LoginTests : TestBase
+public class LoginTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public LoginTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Theory, ClassData(typeof(InvalidCredentials))]
     public async Task User_Cannot_Login_With_Invalid_Data(LoginUserDto credentials)

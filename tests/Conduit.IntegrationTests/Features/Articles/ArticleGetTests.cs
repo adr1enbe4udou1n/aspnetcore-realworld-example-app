@@ -12,9 +12,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
-public class ArticleGetTests : TestBase
+public class ArticleGetTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ArticleGetTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Cannot_Get_Non_Existent_Article()

@@ -10,9 +10,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Profiles;
 
-public class ProfileGetTests : TestBase
+public class ProfileGetTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ProfileGetTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Can_Get_Profile()

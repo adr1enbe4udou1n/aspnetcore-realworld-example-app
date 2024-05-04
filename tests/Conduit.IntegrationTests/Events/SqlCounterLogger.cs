@@ -3,14 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Conduit.IntegrationTests.Events;
 
-public class SqlCounterLogger : ILogger
+public class SqlCounterLogger(string categoryName) : ILogger
 {
-    private readonly string _categoryName;
-
-    public SqlCounterLogger(string categoryName)
-    {
-        _categoryName = categoryName;
-    }
+    private readonly string _categoryName = categoryName;
 
     public static int GetCounter { get; private set; }
 

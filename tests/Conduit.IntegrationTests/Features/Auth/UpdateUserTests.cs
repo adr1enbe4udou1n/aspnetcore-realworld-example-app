@@ -32,9 +32,8 @@ public class InvalidInfos : TheoryData<UpdateUserDto>
     }
 }
 
-public class UpdateUserTests : TestBase
+public class UpdateUserTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public UpdateUserTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Theory, ClassData(typeof(InvalidInfos))]
     public async Task Cannot_Update_Infos_With_Invalid_Data(UpdateUserDto user)

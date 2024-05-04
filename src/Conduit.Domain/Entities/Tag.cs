@@ -6,7 +6,7 @@ public class Tag
 {
     private readonly List<ArticleTag> _articles = new();
 
-    public int Id { get; private set; }
+    public int Id { get; }
 
     [MaxLength(255)]
     public required string Name { get; set; }

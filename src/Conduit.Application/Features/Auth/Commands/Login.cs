@@ -18,18 +18,11 @@ public class LoginUserDto
 
 public record LoginUserCommand(LoginUserDto User) : IRequest<UserResponse>;
 
-public class LoginHandler : IRequestHandler<LoginUserCommand, UserResponse>
+public class LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<LoginUserCommand, UserResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-
-    public LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
-    {
-        _context = context;
-        _passwordHasher = passwordHasher;
-        _jwtTokenGenerator = jwtTokenGenerator;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
     public async Task<UserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {

@@ -45,9 +45,8 @@ public class InvalidNewArticles : TheoryData<NewArticleDto>
     }
 }
 
-public class ArticleCreateTests : TestBase
+public class ArticleCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ArticleCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Theory, ClassData(typeof(InvalidNewArticles))]
     public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDto article)

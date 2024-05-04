@@ -39,9 +39,8 @@ public class InvalidRegisters : TheoryData<NewUserDto>
     }
 }
 
-public class RegisterTests : TestBase
+public class RegisterTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public RegisterTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Theory, ClassData(typeof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)

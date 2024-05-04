@@ -4,7 +4,7 @@ namespace Conduit.Domain.Entities;
 
 public class Comment : IAuditableEntity
 {
-    public int Id { get; private set; }
+    public int Id { get; }
 
     public int ArticleId { get; set; }
     public virtual required Article Article { get; set; }

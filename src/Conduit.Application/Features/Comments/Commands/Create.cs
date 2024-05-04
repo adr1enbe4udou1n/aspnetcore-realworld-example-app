@@ -27,16 +27,10 @@ public class CommentCreateValidator : AbstractValidator<NewCommentCommand>
     }
 }
 
-public class CommentCreateHandler : IRequestHandler<NewCommentCommand, SingleCommentResponse>
+public class CommentCreateHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<NewCommentCommand, SingleCommentResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public CommentCreateHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<SingleCommentResponse> Handle(NewCommentCommand request, CancellationToken cancellationToken)
     {

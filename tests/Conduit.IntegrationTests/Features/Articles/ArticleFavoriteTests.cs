@@ -13,9 +13,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
-public class ArticleFavoriteTests : TestBase
+public class ArticleFavoriteTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ArticleFavoriteTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Favorite_Article()

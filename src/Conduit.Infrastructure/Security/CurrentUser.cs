@@ -6,16 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Infrastructure.Security;
 
-public class CurrentUser : ICurrentUser
+public class CurrentUser(AppDbContext context) : ICurrentUser
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _context = context;
 
     public User? User { get; private set; }
-
-    public CurrentUser(AppDbContext context)
-    {
-        _context = context;
-    }
 
     public async Task SetIdentifier(long identifier)
     {

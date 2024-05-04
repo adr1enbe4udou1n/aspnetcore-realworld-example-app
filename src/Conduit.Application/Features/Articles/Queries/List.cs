@@ -17,16 +17,10 @@ public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
     public string? Tag { get; set; }
 }
 
-public class ArticlesListHandler : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
+public class ArticlesListHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ArticlesListHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {

@@ -12,9 +12,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Comments;
 
-public class CommentsListTests : TestBase
+public class CommentsListTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public CommentsListTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Cannot_List_All_Comments_Of_Non_Existent_Article()

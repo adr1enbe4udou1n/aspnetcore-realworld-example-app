@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Conduit.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext, IAppDbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : DbContext(options), IAppDbContext
 {
-    private readonly string? _roConnectionString;
+    private readonly string? _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
     private static readonly AuditableInterceptor AuditableInterceptor = new();
 
     public DbSet<User> Users => Set<User>();
@@ -18,11 +18,6 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<ArticleFavorite> ArticleFavorite => Set<ArticleFavorite>();
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
-
-    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
-    {
-        _roConnectionString = configuration.GetConnectionString("DefaultRoConnection");
-    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

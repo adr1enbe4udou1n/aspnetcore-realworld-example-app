@@ -10,7 +10,7 @@ public class Article : IAuditableEntity
     private readonly List<ArticleTag> _tags = new();
     private readonly List<ArticleFavorite> _favoredUsers = new();
 
-    public int Id { get; private set; }
+    public int Id { get; }
 
     public int AuthorId { get; set; }
 

@@ -10,9 +10,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Auth;
 
-public class CurrentUserTests : TestBase
+public class CurrentUserTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public CurrentUserTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Logged_User_Can_Fetch_Infos()

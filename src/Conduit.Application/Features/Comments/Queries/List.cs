@@ -42,16 +42,10 @@ public record MultipleCommentsResponse(IEnumerable<CommentDto> Comments);
 
 public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse>;
 
-public class CommentsListHandler : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
+public class CommentsListHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public CommentsListHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<MultipleCommentsResponse> Handle(CommentsListQuery request, CancellationToken cancellationToken)
     {

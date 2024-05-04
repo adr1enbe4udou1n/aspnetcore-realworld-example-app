@@ -6,16 +6,10 @@ using Conduit.Tools.Interfaces;
 
 namespace Conduit.Tools.Seeders;
 
-public class UsersSeeder : ISeeder
+public class UsersSeeder(IAppDbContext context, IPasswordHasher passwordHasher) : ISeeder
 {
-    private readonly IAppDbContext _context;
-    private readonly IPasswordHasher _passwordHasher;
-
-    public UsersSeeder(IAppDbContext context, IPasswordHasher passwordHasher)
-    {
-        _context = context;
-        _passwordHasher = passwordHasher;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
     public async Task Run(CancellationToken cancellationToken)
     {

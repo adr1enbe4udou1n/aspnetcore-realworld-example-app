@@ -8,16 +8,10 @@ namespace Conduit.Application.Features.Comments.Commands;
 
 public record CommentDeleteCommand(string Slug, int Id) : IRequest;
 
-public class CommentDeleteHandler : IRequestHandler<CommentDeleteCommand>
+public class CommentDeleteHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<CommentDeleteCommand>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public CommentDeleteHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task Handle(CommentDeleteCommand request, CancellationToken cancellationToken)
     {

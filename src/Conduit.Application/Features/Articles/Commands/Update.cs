@@ -28,16 +28,10 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleCommand>
     }
 }
 
-public class ArticleUpdateHandler : IRequestHandler<UpdateArticleCommand, SingleArticleResponse>
+public class ArticleUpdateHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<UpdateArticleCommand, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ArticleUpdateHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<SingleArticleResponse> Handle(UpdateArticleCommand request, CancellationToken cancellationToken)
     {

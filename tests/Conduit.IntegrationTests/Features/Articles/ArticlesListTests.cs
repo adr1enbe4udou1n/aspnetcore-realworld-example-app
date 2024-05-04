@@ -13,9 +13,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
-public class ArticlesListTests : TestBase
+public class ArticlesListTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ArticlesListTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Can_Paginate_Articles()

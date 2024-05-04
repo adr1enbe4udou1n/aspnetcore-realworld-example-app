@@ -59,16 +59,10 @@ public record SingleArticleResponse(ArticleDto Article);
 
 public record ArticleGetQuery(string Slug) : IRequest<SingleArticleResponse>;
 
-public class ArticleGetHandler : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
+public class ArticleGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ArticleGetHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<SingleArticleResponse> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
     {

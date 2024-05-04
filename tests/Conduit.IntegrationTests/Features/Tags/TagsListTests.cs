@@ -8,9 +8,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Tags;
 
-public class TagsListTests : TestBase
+public class TagsListTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public TagsListTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Can_List_All_Tags()

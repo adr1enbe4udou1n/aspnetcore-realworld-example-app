@@ -4,14 +4,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Conduit.Presentation.Filters;
 
-public class PathPrefixDocumentFilter : IDocumentFilter
+public class PathPrefixDocumentFilter(string pathPrefix) : IDocumentFilter
 {
-    private readonly string _pathPrefix;
-
-    public PathPrefixDocumentFilter(string pathPrefix)
-    {
-        _pathPrefix = pathPrefix;
-    }
+    private readonly string _pathPrefix = pathPrefix;
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {

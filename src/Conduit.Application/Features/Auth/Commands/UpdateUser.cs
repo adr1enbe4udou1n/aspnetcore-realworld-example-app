@@ -39,18 +39,11 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
     }
 }
 
-public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, UserResponse>
+public class UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<UpdateUserCommand, UserResponse>
 {
-    private readonly ICurrentUser _currentUser;
-    private readonly IAppDbContext _context;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-
-    public UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IJwtTokenGenerator jwtTokenGenerator)
-    {
-        _currentUser = currentUser;
-        _context = context;
-        _jwtTokenGenerator = jwtTokenGenerator;
-    }
+    private readonly ICurrentUser _currentUser = currentUser;
+    private readonly IAppDbContext _context = context;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
     public async Task<UserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {

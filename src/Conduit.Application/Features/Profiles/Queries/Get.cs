@@ -21,16 +21,10 @@ public record ProfileResponse(ProfileDto Profile);
 
 public record ProfileGetQuery(string Username) : IRequest<ProfileResponse>;
 
-public class ProfileGetHandler : IRequestHandler<ProfileGetQuery, ProfileResponse>
+public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ProfileGetQuery, ProfileResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
     {

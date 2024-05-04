@@ -25,9 +25,8 @@ public class InvalidComments : TheoryData<NewCommentDto>
     }
 }
 
-public class CommentCreateTests : TestBase
+public class CommentCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public CommentCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Theory, ClassData(typeof(InvalidComments))]
     public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDto comment)

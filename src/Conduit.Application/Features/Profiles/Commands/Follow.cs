@@ -10,16 +10,10 @@ namespace Conduit.Application.Features.Profiles.Commands;
 
 public record ProfileFollowCommand(string Username, bool Follow) : IRequest<ProfileResponse>;
 
-public class ProfileGetHandler : IRequestHandler<ProfileFollowCommand, ProfileResponse>
+public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ProfileFollowCommand, ProfileResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-
-    public ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser)
-    {
-        _context = context;
-        _currentUser = currentUser;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<ProfileResponse> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
     {

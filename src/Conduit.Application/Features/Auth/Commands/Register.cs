@@ -38,18 +38,11 @@ public class RegisterValidator : AbstractValidator<NewUserCommand>
     }
 }
 
-public class RegisterHandler : IRequestHandler<NewUserCommand, UserResponse>
+public class RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<NewUserCommand, UserResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-
-    public RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
-    {
-        _context = context;
-        _passwordHasher = passwordHasher;
-        _jwtTokenGenerator = jwtTokenGenerator;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
     public async Task<UserResponse> Handle(NewUserCommand request, CancellationToken cancellationToken)
     {

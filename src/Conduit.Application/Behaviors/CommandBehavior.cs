@@ -6,14 +6,9 @@ using MediatR;
 
 namespace Conduit.Application.Behaviors;
 
-public class CommandBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+public class CommandBehavior<TRequest, TResponse>(IAppDbContext context) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    private readonly IAppDbContext _context;
-
-    public CommandBehavior(IAppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly IAppDbContext _context = context;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

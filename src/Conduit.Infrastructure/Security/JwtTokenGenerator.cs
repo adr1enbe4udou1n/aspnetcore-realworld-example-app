@@ -14,16 +14,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Conduit.Infrastructure.Security;
 
-public class JwtTokenGenerator : IJwtTokenGenerator
+public class JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContextAccessor httpContextAccessor) : IJwtTokenGenerator
 {
-    private readonly JwtOptions _jwtOptions;
-    private readonly HttpContext? _httpContext;
-
-    public JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContextAccessor httpContextAccessor)
-    {
-        _jwtOptions = options.CurrentValue;
-        _httpContext = httpContextAccessor.HttpContext;
-    }
+    private readonly JwtOptions _jwtOptions = options.CurrentValue;
+    private readonly HttpContext? _httpContext = httpContextAccessor.HttpContext;
 
     public string CreateToken(User user)
     {

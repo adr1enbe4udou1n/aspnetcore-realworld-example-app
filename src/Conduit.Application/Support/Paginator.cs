@@ -11,15 +11,9 @@ public class PagedQuery
     public int? Offset { get; set; }
 }
 
-public class PagedResponse<T>
+public class PagedResponse<T>(IEnumerable<T> items, int total)
 {
-    public Collection<T> Items { get; }
+    public Collection<T> Items { get; } = new Collection<T>(items.ToList());
 
-    public int Total { get; set; }
-
-    public PagedResponse(IEnumerable<T> items, int total)
-    {
-        Items = new Collection<T>(items.ToList());
-        Total = total;
-    }
+    public int Total { get; set; } = total;
 }

@@ -13,18 +13,11 @@ namespace Tools.Commands;
 
 
 [Command("db")]
-public class SeederCommand : ConsoleAppBase, IAsyncDisposable
+public class SeederCommand(IConfiguration config, AppDbContext context, IEnumerable<ISeeder> seeders) : ConsoleAppBase, IAsyncDisposable
 {
-    private readonly IConfiguration _config;
-    private readonly AppDbContext _context;
-    private readonly IEnumerable<ISeeder> _seeders;
-
-    public SeederCommand(IConfiguration config, AppDbContext context, IEnumerable<ISeeder> seeders)
-    {
-        _config = config;
-        _context = context;
-        _seeders = seeders;
-    }
+    private readonly IConfiguration _config = config;
+    private readonly AppDbContext _context = context;
+    private readonly IEnumerable<ISeeder> _seeders = seeders;
 
     [Command("migrate", "Migrate database")]
     public async Task Migrate()

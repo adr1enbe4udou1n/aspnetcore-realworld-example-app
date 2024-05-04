@@ -12,9 +12,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Profiles;
 
-public class ProfileFollowTests : TestBase
+public class ProfileFollowTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ProfileFollowTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Follow_Profile()

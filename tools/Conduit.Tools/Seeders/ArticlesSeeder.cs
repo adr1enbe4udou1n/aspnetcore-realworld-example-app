@@ -8,16 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Tools.Seeders;
 
-public class ArticlesSeeder : ISeeder
+public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeeder
 {
-    private readonly IAppDbContext _context;
-    private readonly ISlugifier _slugifier;
-
-    public ArticlesSeeder(IAppDbContext context, ISlugifier slugifier)
-    {
-        _context = context;
-        _slugifier = slugifier;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ISlugifier _slugifier = slugifier;
 
     public async Task Run(CancellationToken cancellationToken)
     {

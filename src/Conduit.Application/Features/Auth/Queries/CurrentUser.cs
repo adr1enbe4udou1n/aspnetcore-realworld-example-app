@@ -51,16 +51,10 @@ public record UserResponse(UserDto User);
 public record CurrentUserQuery : IRequest<UserResponse>;
 #pragma warning restore S2094
 
-public class CurrentUserHandler : IRequestHandler<CurrentUserQuery, UserResponse>
+public class CurrentUserHandler(ICurrentUser currentUser, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<CurrentUserQuery, UserResponse>
 {
-    private readonly ICurrentUser _currentUser;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-
-    public CurrentUserHandler(ICurrentUser currentUser, IJwtTokenGenerator jwtTokenGenerator)
-    {
-        _currentUser = currentUser;
-        _jwtTokenGenerator = jwtTokenGenerator;
-    }
+    private readonly ICurrentUser _currentUser = currentUser;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
     public Task<UserResponse> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
     {

@@ -13,9 +13,8 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
-public class ArticleDeleteTests : TestBase
+public class ArticleDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
 {
-    public ArticleDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
     [Fact]
     public async Task Guest_Cannot_Delete_Article()

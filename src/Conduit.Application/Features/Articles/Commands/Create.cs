@@ -44,18 +44,11 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleCommand>
     }
 }
 
-public class ArticleCreateHandler : IRequestHandler<NewArticleCommand, SingleArticleResponse>
+public class ArticleCreateHandler(IAppDbContext context, ICurrentUser currentUser, ISlugifier slugifier) : IRequestHandler<NewArticleCommand, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context;
-    private readonly ICurrentUser _currentUser;
-    private readonly ISlugifier _slugifier;
-
-    public ArticleCreateHandler(IAppDbContext context, ICurrentUser currentUser, ISlugifier slugifier)
-    {
-        _context = context;
-        _currentUser = currentUser;
-        _slugifier = slugifier;
-    }
+    private readonly IAppDbContext _context = context;
+    private readonly ICurrentUser _currentUser = currentUser;
+    private readonly ISlugifier _slugifier = slugifier;
 
     public async Task<SingleArticleResponse> Handle(NewArticleCommand request, CancellationToken cancellationToken)
     {

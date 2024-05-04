@@ -12,7 +12,7 @@ public class User : IAuditableEntity
     private readonly List<FollowerUser> _following = new();
     private readonly List<FollowerUser> _followers = new();
 
-    public int Id { get; private set; }
+    public int Id { get; }
 
     [MaxLength(255)]
     public required string Name { get; set; }
