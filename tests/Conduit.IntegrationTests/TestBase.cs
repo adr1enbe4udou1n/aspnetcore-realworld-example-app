@@ -47,7 +47,7 @@ public class TestBase(ConduitApiFactory factory, ITestOutputHelper output) : IAs
 
         var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
         {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+            TablesToIgnore = ["__EFMigrationsHistory"],
             DbAdapter = DbAdapter.Postgres
         });
 

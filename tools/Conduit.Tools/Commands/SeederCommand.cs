@@ -32,7 +32,7 @@ public class SeederCommand(IConfiguration config, AppDbContext context, IEnumera
 
         var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
         {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" },
+            TablesToIgnore = ["__EFMigrationsHistory"],
             DbAdapter = DbAdapter.Postgres
         });
 
