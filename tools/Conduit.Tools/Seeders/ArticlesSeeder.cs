@@ -10,19 +10,16 @@ namespace Conduit.Tools.Seeders;
 
 public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeeder
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ISlugifier _slugifier = slugifier;
-
     public async Task Run(CancellationToken cancellationToken)
     {
-        var users = await _context.Users.ToListAsync(cancellationToken);
+        var users = await context.Users.ToListAsync(cancellationToken);
 
         var tags = new Faker<Tag>()
             .RuleFor(a => a.Name, f => $"{f.Lorem.Word()}{f.UniqueIndex % 10}".TrimEnd('0'))
             .Generate(30);
 
-        await _context.Tags.AddRangeAsync(tags, cancellationToken);
-        _ = await _context.SaveChangesAsync(cancellationToken);
+        await context.Tags.AddRangeAsync(tags, cancellationToken);
+        _ = await context.SaveChangesAsync(cancellationToken);
 
         var articles = new Faker<Article>()
             .RuleFor(a => a.Title, f => f.Lorem.Sentence().TrimEnd('.'))
@@ -30,7 +27,7 @@ public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeed
             .RuleFor(a => a.Body, f => f.Lorem.Paragraphs(5))
             .RuleFor(a => a.Author, f => f.PickRandom(users))
             .RuleFor(a => a.CreatedAt, f => f.Date.Recent(90).ToUniversalTime())
-            .RuleFor(a => a.Slug, (f, a) => _slugifier.Generate(a.Title))
+            .RuleFor(a => a.Slug, (f, a) => slugifier.Generate(a.Title))
             .Generate(500);
 
         foreach (var article in articles)
@@ -44,7 +41,7 @@ public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeed
 
             foreach (var user in f.PickRandom(users, f.Random.Number(5)))
             {
-                _context.ArticleFavorite.Add(new ArticleFavorite
+                context.ArticleFavorite.Add(new ArticleFavorite
                 {
                     Article = article,
                     User = user
@@ -59,8 +56,8 @@ public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeed
             .RuleFor(a => a.Article, f => f.PickRandom(articles))
             .Generate(5000);
 
-        await _context.Articles.AddRangeAsync(articles, cancellationToken);
-        await _context.Comments.AddRangeAsync(comments, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.Articles.AddRangeAsync(articles, cancellationToken);
+        await context.Comments.AddRangeAsync(comments, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

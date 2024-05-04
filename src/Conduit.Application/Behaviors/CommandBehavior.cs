@@ -8,13 +8,11 @@ namespace Conduit.Application.Behaviors;
 
 public class CommandBehavior<TRequest, TResponse>(IAppDbContext context) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    private readonly IAppDbContext _context = context;
-
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         if (IsNotCommand(request))
         {
-            _context.UseRoConnection();
+            context.UseRoConnection();
             return await next();
         }
 

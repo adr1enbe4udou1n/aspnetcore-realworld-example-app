@@ -14,11 +14,9 @@ namespace Conduit.Presentation.OptionsSetup;
 
 public class SwaggerGenOptionsSetup(IConfiguration configuration) : IConfigureOptions<SwaggerGenOptions>
 {
-    private readonly IConfiguration _configuration = configuration;
-
     public void Configure(SwaggerGenOptions options)
     {
-        options.SwaggerDoc("v1", _configuration.GetSection("OpenApiInfo").Get<OpenApiInfo>());
+        options.SwaggerDoc("v1", configuration.GetSection("OpenApiInfo").Get<OpenApiInfo>());
         options.DocumentFilter<PathPrefixDocumentFilter>("api");
 
         options.AddServer(new OpenApiServer

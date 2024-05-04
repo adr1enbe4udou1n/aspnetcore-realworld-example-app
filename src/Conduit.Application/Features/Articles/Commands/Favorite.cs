@@ -11,31 +11,28 @@ public record ArticleFavoriteCommand(string Slug, bool Favorite) : IRequest<Sing
 
 public class ArticleFavoriteHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticleFavoriteCommand, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<SingleArticleResponse> Handle(ArticleFavoriteCommand request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles
+        var article = await context.Articles
             .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         if (request.Favorite)
         {
-            _context.ArticleFavorite.Add(new ArticleFavorite
+            context.ArticleFavorite.Add(new ArticleFavorite
             {
                 Article = article,
-                User = _currentUser.User!
+                User = currentUser.User!
             });
         }
         else
         {
-            _context.ArticleFavorite.Remove(
-                article.FavoredUsers.First(x => x.UserId == _currentUser.User!.Id)
+            context.ArticleFavorite.Remove(
+                article.FavoredUsers.First(x => x.UserId == currentUser.User!.Id)
             );
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(article.Map(_currentUser.User));
+        return new SingleArticleResponse(article.Map(currentUser.User));
     }
 }

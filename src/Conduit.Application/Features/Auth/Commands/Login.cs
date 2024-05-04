@@ -20,20 +20,16 @@ public record LoginUserCommand(LoginUserDto User) : IRequest<UserResponse>;
 
 public class LoginHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<LoginUserCommand, UserResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-
     public async Task<UserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.Where(x => x.Email == request.User.Email)
+        var user = await context.Users.Where(x => x.Email == request.User.Email)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (user?.Password is null || !_passwordHasher.Check(request.User.Password, user.Password))
+        if (user?.Password is null || !passwordHasher.Check(request.User.Password, user.Password))
         {
             throw new Exceptions.ValidationException("Bad credentials");
         }
 
-        return new UserResponse(user.Map(_jwtTokenGenerator));
+        return new UserResponse(user.Map(jwtTokenGenerator));
     }
 }

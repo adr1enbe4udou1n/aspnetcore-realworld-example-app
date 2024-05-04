@@ -6,12 +6,10 @@ namespace Conduit.Presentation.Filters;
 
 public class PathPrefixDocumentFilter(string pathPrefix) : IDocumentFilter
 {
-    private readonly string _pathPrefix = pathPrefix;
-
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         var paths = swaggerDoc.Paths.ToDictionary(
-            entry => entry.Key.Replace($"/{_pathPrefix}", string.Empty, StringComparison.InvariantCultureIgnoreCase),
+            entry => entry.Key.Replace($"/{pathPrefix}", string.Empty, StringComparison.InvariantCultureIgnoreCase),
             entry => entry.Value
         );
 

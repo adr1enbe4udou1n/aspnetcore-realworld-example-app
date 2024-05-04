@@ -40,22 +40,18 @@ public class RegisterValidator : AbstractValidator<NewUserCommand>
 
 public class RegisterHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<NewUserCommand, UserResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-
     public async Task<UserResponse> Handle(NewUserCommand request, CancellationToken cancellationToken)
     {
         var user = new User
         {
             Name = request.User.Username,
             Email = request.User.Email,
-            Password = _passwordHasher.Hash(request.User.Password)
+            Password = passwordHasher.Hash(request.User.Password)
         };
 
-        await _context.Users.AddAsync(user, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.Users.AddAsync(user, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new UserResponse(user.Map(_jwtTokenGenerator));
+        return new UserResponse(user.Map(jwtTokenGenerator));
     }
 }

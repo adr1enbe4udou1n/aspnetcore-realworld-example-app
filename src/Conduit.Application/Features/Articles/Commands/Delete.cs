@@ -10,19 +10,16 @@ public record ArticleDeleteCommand(string Slug) : IRequest;
 
 public class ArticleDeleteHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticleDeleteCommand>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task Handle(ArticleDeleteCommand request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        if (article.AuthorId != _currentUser.User!.Id)
+        if (article.AuthorId != currentUser.User!.Id)
         {
             throw new ForbiddenException();
         }
 
-        _context.Articles.Remove(article);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Articles.Remove(article);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

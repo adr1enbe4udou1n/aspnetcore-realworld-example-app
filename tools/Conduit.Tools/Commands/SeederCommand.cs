@@ -15,14 +15,10 @@ namespace Tools.Commands;
 [Command("db")]
 public class SeederCommand(IConfiguration config, AppDbContext context, IEnumerable<ISeeder> seeders) : ConsoleAppBase, IAsyncDisposable
 {
-    private readonly IConfiguration _config = config;
-    private readonly AppDbContext _context = context;
-    private readonly IEnumerable<ISeeder> _seeders = seeders;
-
     [Command("migrate", "Migrate database")]
     public async Task Migrate()
     {
-        await _context.Database.MigrateAsync();
+        await context.Database.MigrateAsync();
     }
 
     [Command("fresh", "Wipe data")]
@@ -30,7 +26,7 @@ public class SeederCommand(IConfiguration config, AppDbContext context, IEnumera
     {
         await Migrate();
 
-        using var conn = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+        using var conn = new NpgsqlConnection(config.GetConnectionString("DefaultConnection"));
 
         await conn.OpenAsync();
 
@@ -51,7 +47,7 @@ public class SeederCommand(IConfiguration config, AppDbContext context, IEnumera
 
         var token = new CancellationToken();
 
-        foreach (var seeder in _seeders)
+        foreach (var seeder in seeders)
         {
             await seeder.Run(token);
         }
@@ -60,6 +56,6 @@ public class SeederCommand(IConfiguration config, AppDbContext context, IEnumera
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
-        return _context.DisposeAsync();
+        return context.DisposeAsync();
     }
 }

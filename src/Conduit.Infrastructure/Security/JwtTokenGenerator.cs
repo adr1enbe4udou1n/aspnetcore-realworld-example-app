@@ -16,12 +16,9 @@ namespace Conduit.Infrastructure.Security;
 
 public class JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContextAccessor httpContextAccessor) : IJwtTokenGenerator
 {
-    private readonly JwtOptions _jwtOptions = options.CurrentValue;
-    private readonly HttpContext? _httpContext = httpContextAccessor.HttpContext;
-
     public string CreateToken(User user)
     {
-        if (_jwtOptions.SecretKey is null)
+        if (options.CurrentValue.SecretKey is null)
         {
             throw new ArgumentException("You must set a JWT secret key");
         }
@@ -29,8 +26,8 @@ public class JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContext
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Issuer = _jwtOptions.Issuer,
-            Audience = _jwtOptions.Audience,
+            Issuer = options.CurrentValue.Issuer,
+            Audience = options.CurrentValue.Audience,
             Subject = new ClaimsIdentity(new Claim[] {
                 new(JwtRegisteredClaimNames.Sub, user.Id.ToString(CultureInfo.InvariantCulture)),
                 new(JwtRegisteredClaimNames.Name, user.Name),
@@ -38,7 +35,7 @@ public class JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContext
             }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.CurrentValue.SecretKey)),
                 SecurityAlgorithms.HmacSha256Signature
             )
         };
@@ -46,7 +43,7 @@ public class JwtTokenGenerator(IOptionsMonitor<JwtOptions> options, IHttpContext
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var response = tokenHandler.WriteToken(token);
 
-        _httpContext?.Response.Cookies.Append(
+        httpContextAccessor.HttpContext?.Response.Cookies.Append(
             JwtBearerDefaults.AuthenticationScheme,
             response,
             new CookieOptions

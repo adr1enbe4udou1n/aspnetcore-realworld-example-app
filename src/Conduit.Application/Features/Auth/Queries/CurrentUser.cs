@@ -53,13 +53,10 @@ public record CurrentUserQuery : IRequest<UserResponse>;
 
 public class CurrentUserHandler(ICurrentUser currentUser, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<CurrentUserQuery, UserResponse>
 {
-    private readonly ICurrentUser _currentUser = currentUser;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-
     public Task<UserResponse> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
     {
         return Task.FromResult(new UserResponse(
-            _currentUser.User!.Map(_jwtTokenGenerator)
+            currentUser.User!.Map(jwtTokenGenerator)
         ));
     }
 }

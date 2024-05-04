@@ -19,12 +19,9 @@ public class ArticlesListQuery : PagedQuery, IRequest<MultipleArticlesResponse>
 
 public class ArticlesListHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticlesListQuery, MultipleArticlesResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<MultipleArticlesResponse> Handle(ArticlesListQuery request, CancellationToken cancellationToken)
     {
-        var articles = await _context.Articles
+        var articles = await context.Articles
             .Include(a => a.Author)
             .Include(a => a.Tags)
             .ThenInclude(t => t.Tag)
@@ -34,7 +31,7 @@ public class ArticlesListHandler(IAppDbContext context, ICurrentUser currentUser
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)
             .OrderByDescending(x => x.Id)
-            .Select(a => a.Map(_currentUser.User))
+            .Select(a => a.Map(currentUser.User))
             .PaginateAsync(request, cancellationToken);
 
         return new MultipleArticlesResponse(articles.Items, articles.Total);

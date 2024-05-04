@@ -30,14 +30,11 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleCommand>
 
 public class ArticleUpdateHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<UpdateArticleCommand, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<SingleArticleResponse> Handle(UpdateArticleCommand request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        if (article.AuthorId != _currentUser.User!.Id)
+        if (article.AuthorId != currentUser.User!.Id)
         {
             throw new ForbiddenException();
         }
@@ -46,9 +43,9 @@ public class ArticleUpdateHandler(IAppDbContext context, ICurrentUser currentUse
         article.Description = request.Article.Description ?? article.Description;
         article.Body = request.Article.Body ?? article.Body;
 
-        _context.Articles.Update(article);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Articles.Update(article);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(article.Map(_currentUser.User));
+        return new SingleArticleResponse(article.Map(currentUser.User));
     }
 }

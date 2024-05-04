@@ -23,14 +23,11 @@ public record ProfileGetQuery(string Username) : IRequest<ProfileResponse>;
 
 public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ProfileGetQuery, ProfileResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
+        var user = await context.Users
             .FindAsync(x => x.Name == request.Username, cancellationToken);
 
-        return new ProfileResponse(user.MapToProfile(_currentUser.User));
+        return new ProfileResponse(user.MapToProfile(currentUser.User));
     }
 }

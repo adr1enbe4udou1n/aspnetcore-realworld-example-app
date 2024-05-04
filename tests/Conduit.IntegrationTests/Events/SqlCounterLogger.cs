@@ -5,8 +5,6 @@ namespace Conduit.IntegrationTests.Events;
 
 public class SqlCounterLogger(string categoryName) : ILogger
 {
-    private readonly string _categoryName = categoryName;
-
     public static int GetCounter { get; private set; }
 
     public static void ResetCounter()
@@ -26,7 +24,7 @@ public class SqlCounterLogger(string categoryName) : ILogger
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
-        if (_categoryName == DbLoggerCategory.Database.Command.Name)
+        if (categoryName == DbLoggerCategory.Database.Command.Name)
         {
             GetCounter++;
         }

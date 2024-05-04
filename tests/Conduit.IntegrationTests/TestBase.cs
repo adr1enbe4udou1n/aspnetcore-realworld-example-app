@@ -90,7 +90,7 @@ public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
         await Context.SaveChangesAsync();
 
         _token = _jwtTokenGenerator.CreateToken(user);
-        await _currentUser.SetIdentifier(user.Id);
+        await currentUser.SetIdentifier(user.Id);
         return user;
     }
 

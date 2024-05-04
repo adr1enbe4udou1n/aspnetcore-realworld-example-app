@@ -46,10 +46,6 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleCommand>
 
 public class ArticleCreateHandler(IAppDbContext context, ICurrentUser currentUser, ISlugifier slugifier) : IRequestHandler<NewArticleCommand, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-    private readonly ISlugifier _slugifier = slugifier;
-
     public async Task<SingleArticleResponse> Handle(NewArticleCommand request, CancellationToken cancellationToken)
     {
         var article = new Article
@@ -57,13 +53,13 @@ public class ArticleCreateHandler(IAppDbContext context, ICurrentUser currentUse
             Title = request.Article.Title,
             Description = request.Article.Description,
             Body = request.Article.Body,
-            Author = _currentUser.User!,
-            Slug = _slugifier.Generate(request.Article.Title)
+            Author = currentUser.User!,
+            Slug = slugifier.Generate(request.Article.Title)
         };
 
         if (request.Article.TagList.Count > 0)
         {
-            var existingTags = await _context.Tags
+            var existingTags = await context.Tags
                 .Where(
                     x => request.Article.TagList
                         .AsEnumerable()
@@ -74,9 +70,9 @@ public class ArticleCreateHandler(IAppDbContext context, ICurrentUser currentUse
             article.AddTags(existingTags, request.Article.TagList.ToArray());
         }
 
-        await _context.Articles.AddAsync(article, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.Articles.AddAsync(article, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new SingleArticleResponse(article.Map(_currentUser.User));
+        return new SingleArticleResponse(article.Map(currentUser.User));
     }
 }

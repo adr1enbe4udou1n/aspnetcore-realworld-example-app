@@ -12,31 +12,28 @@ public record ProfileFollowCommand(string Username, bool Follow) : IRequest<Prof
 
 public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ProfileFollowCommand, ProfileResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<ProfileResponse> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
+        var user = await context.Users
             .FindAsync(x => x.Name == request.Username, cancellationToken);
 
         if (request.Follow)
         {
-            _context.FollowerUser.Add(new FollowerUser
+            context.FollowerUser.Add(new FollowerUser
             {
-                Follower = _currentUser.User!,
+                Follower = currentUser.User!,
                 Following = user
             });
         }
         else
         {
-            _context.FollowerUser.Remove(user.Followers
-                .First(x => x.FollowerId == _currentUser.User!.Id)
+            context.FollowerUser.Remove(user.Followers
+                .First(x => x.FollowerId == currentUser.User!.Id)
             );
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new ProfileResponse(user.MapToProfile(_currentUser.User));
+        return new ProfileResponse(user.MapToProfile(currentUser.User));
     }
 }

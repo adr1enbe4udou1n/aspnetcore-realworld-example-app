@@ -29,23 +29,20 @@ public class CommentCreateValidator : AbstractValidator<NewCommentCommand>
 
 public class CommentCreateHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<NewCommentCommand, SingleCommentResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<SingleCommentResponse> Handle(NewCommentCommand request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
         var comment = new Comment
         {
             Body = request.Comment.Body,
             Article = article,
-            Author = _currentUser.User!
+            Author = currentUser.User!
         };
 
-        await _context.Comments.AddAsync(comment, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.Comments.AddAsync(comment, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new SingleCommentResponse(comment.Map(_currentUser.User));
+        return new SingleCommentResponse(comment.Map(currentUser.User));
     }
 }

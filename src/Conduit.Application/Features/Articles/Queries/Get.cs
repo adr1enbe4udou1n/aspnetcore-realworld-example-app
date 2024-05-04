@@ -61,14 +61,11 @@ public record ArticleGetQuery(string Slug) : IRequest<SingleArticleResponse>;
 
 public class ArticleGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<SingleArticleResponse> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles
+        var article = await context.Articles
             .FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        return new SingleArticleResponse(article.Map(_currentUser.User));
+        return new SingleArticleResponse(article.Map(currentUser.User));
     }
 }

@@ -44,18 +44,15 @@ public record CommentsListQuery(string Slug) : IRequest<MultipleCommentsResponse
 
 public class CommentsListHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<CommentsListQuery, MultipleCommentsResponse>
 {
-    private readonly IAppDbContext _context = context;
-    private readonly ICurrentUser _currentUser = currentUser;
-
     public async Task<MultipleCommentsResponse> Handle(CommentsListQuery request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == request.Slug, cancellationToken);
 
-        var comments = await _context.Comments
+        var comments = await context.Comments
             .Include(c => c.Author)
             .Where(c => c.ArticleId == article.Id)
             .OrderByDescending(x => x.Id)
-            .Select(c => c.Map(_currentUser.User))
+            .Select(c => c.Map(currentUser.User))
             .ToListAsync(cancellationToken);
 
         return new MultipleCommentsResponse(comments);

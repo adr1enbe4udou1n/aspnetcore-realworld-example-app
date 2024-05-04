@@ -8,9 +8,6 @@ namespace Conduit.Tools.Seeders;
 
 public class UsersSeeder(IAppDbContext context, IPasswordHasher passwordHasher) : ISeeder
 {
-    private readonly IAppDbContext _context = context;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-
     public async Task Run(CancellationToken cancellationToken)
     {
         var users = new Faker<User>()
@@ -18,24 +15,24 @@ public class UsersSeeder(IAppDbContext context, IPasswordHasher passwordHasher) 
             .RuleFor(m => m.Email, f => f.Person.Email)
             .RuleFor(m => m.Bio, f => f.Lorem.Paragraphs(3))
             .RuleFor(m => m.Image, f => f.Internet.Avatar())
-            .RuleFor(m => m.Password, _passwordHasher.Hash("password"))
+            .RuleFor(m => m.Password, passwordHasher.Hash("password"))
             .Generate(50);
 
-        await _context.Users.AddRangeAsync(users, cancellationToken);
+        await context.Users.AddRangeAsync(users, cancellationToken);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         users.ForEach(u =>
         {
             var f = new Faker();
             f.PickRandom(users, f.Random.Number(5))
                 .ToList()
-                .ForEach(follower => _context.FollowerUser.Add(new FollowerUser
+                .ForEach(follower => context.FollowerUser.Add(new FollowerUser
                 {
                     Follower = follower,
                     Following = u
                 }));
         });
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

@@ -14,11 +14,9 @@ public record TagsListQuery : IRequest<TagsResponse>;
 
 public class TagsListHandler(IAppDbContext context) : IRequestHandler<TagsListQuery, TagsResponse>
 {
-    private readonly IAppDbContext _context = context;
-
     public async Task<TagsResponse> Handle(TagsListQuery request, CancellationToken cancellationToken)
     {
-        var tags = await _context.Tags.OrderBy(t => t.Name).ToListAsync(cancellationToken);
+        var tags = await context.Tags.OrderBy(t => t.Name).ToListAsync(cancellationToken);
         return new TagsResponse(tags.Select(t => t.Name));
     }
 }

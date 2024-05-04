@@ -41,22 +41,18 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
 
 public class UpdateUserHandler(ICurrentUser currentUser, IAppDbContext context, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<UpdateUserCommand, UserResponse>
 {
-    private readonly ICurrentUser _currentUser = currentUser;
-    private readonly IAppDbContext _context = context;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
-
     public async Task<UserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = _currentUser.User!;
+        var user = currentUser.User!;
 
         user.Name = request.User.Username ?? user.Name;
         user.Email = request.User.Email ?? user.Email;
         user.Bio = request.User.Bio ?? user.Bio;
         user.Image = request.User.Image ?? user.Image;
 
-        _context.Users.Update(user);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Users.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return new UserResponse(user.Map(_jwtTokenGenerator));
+        return new UserResponse(user.Map(jwtTokenGenerator));
     }
 }
