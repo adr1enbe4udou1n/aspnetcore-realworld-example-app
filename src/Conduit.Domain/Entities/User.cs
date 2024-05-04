@@ -6,11 +6,11 @@ namespace Conduit.Domain.Entities;
 
 public class User : IAuditableEntity
 {
-    private readonly List<Article> _articles = new();
-    private readonly List<ArticleFavorite> _favoriteArticles = new();
-    private readonly List<Comment> _comments = new();
-    private readonly List<FollowerUser> _following = new();
-    private readonly List<FollowerUser> _followers = new();
+    private readonly List<Article> _articles = [];
+    private readonly List<ArticleFavorite> _favoriteArticles = [];
+    private readonly List<Comment> _comments = [];
+    private readonly List<FollowerUser> _following = [];
+    private readonly List<FollowerUser> _followers = [];
 
     public int Id { get; set; }
 

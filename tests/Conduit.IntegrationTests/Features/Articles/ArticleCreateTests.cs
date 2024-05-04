@@ -111,7 +111,7 @@ public class ArticleCreateTests(ConduitApiFactory factory, ITestOutputHelper out
                     Title = "Test Article",
                     Description = "Test Description",
                     Body = "Test Body",
-                    TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
+                    TagList = ["Test Tag 1", "Test Tag 2", "Existing Tag"],
                 }
             )
         );

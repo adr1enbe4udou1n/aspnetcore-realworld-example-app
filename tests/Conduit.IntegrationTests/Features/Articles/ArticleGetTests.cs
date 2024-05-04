@@ -45,7 +45,7 @@ public class ArticleGetTests(ConduitApiFactory factory, ITestOutputHelper output
                 Title = "Test Title",
                 Description = "Test Description",
                 Body = "Test Body",
-                TagList = new Collection<string> { "Test Tag 1", "Test Tag 2" }
+                TagList = ["Test Tag 1", "Test Tag 2"]
             }
         ));
 

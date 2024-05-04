@@ -6,9 +6,9 @@ namespace Conduit.Domain.Entities;
 
 public class Article : IAuditableEntity
 {
-    private readonly List<Comment> _comments = new();
-    private readonly List<ArticleTag> _tags = new();
-    private readonly List<ArticleFavorite> _favoredUsers = new();
+    private readonly List<Comment> _comments = [];
+    private readonly List<ArticleTag> _tags = [];
+    private readonly List<ArticleFavorite> _favoredUsers = [];
 
     public int Id { get; set; }
 

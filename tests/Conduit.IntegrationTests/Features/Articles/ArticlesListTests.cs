@@ -191,7 +191,7 @@ public class ArticlesListTests(ConduitApiFactory factory, ITestOutputHelper outp
                     Title = a,
                     Description = "Test Description",
                     Body = "Test Body",
-                    TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", $"Tag {author.Name}" }
+                    TagList = ["Test Tag 1", "Test Tag 2", $"Tag {author.Name}"]
                 }
             ));
         }

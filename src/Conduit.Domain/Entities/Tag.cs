@@ -4,7 +4,7 @@ namespace Conduit.Domain.Entities;
 
 public class Tag
 {
-    private readonly List<ArticleTag> _articles = new();
+    private readonly List<ArticleTag> _articles = [];
 
     public int Id { get; set; }
 
