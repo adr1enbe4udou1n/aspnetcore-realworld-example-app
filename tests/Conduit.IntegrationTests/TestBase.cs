@@ -24,37 +24,20 @@ using Xunit.Abstractions;
 namespace Conduit.IntegrationTests;
 
 [Collection("Test collection")]
-public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
+public class TestBase(ConduitApiFactory factory, ITestOutputHelper output) : IAsyncLifetime, IClassFixture<ConduitApiFactory>
 {
-    protected AppDbContext Context { get; }
-    protected IMediator Mediator { get; }
-    protected IPasswordHasher PasswordHasher { get; }
+    private readonly HttpClient _client = factory.CreateClient();
+    private readonly IServiceScope _scope = factory.Services.CreateScope();
+    protected AppDbContext Context => _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    protected IMediator Mediator => _scope.ServiceProvider.GetRequiredService<IMediator>();
+    protected IPasswordHasher PasswordHasher => _scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly ICurrentUser _currentUser;
-    private readonly ConduitApiFactory _factory;
-    private readonly HttpClient _client;
-    private readonly ITestOutputHelper _output;
-    private readonly IServiceScope _scope;
-
-    protected TestBase(ConduitApiFactory factory, ITestOutputHelper output)
-    {
-        _factory = factory;
-        _client = factory.CreateClient();
-        _output = output;
-
-        _scope = factory.Services.CreateScope();
-
-        Context = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        Mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
-        PasswordHasher = _scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-        _currentUser = _scope.ServiceProvider.GetRequiredService<ICurrentUser>();
-        _jwtTokenGenerator = _scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
-    }
+    private IJwtTokenGenerator JwtTokenGenerator => _scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
+    private ICurrentUser CurrentUser => _scope.ServiceProvider.GetRequiredService<ICurrentUser>();
 
     public async Task RefreshDatabase()
     {
-        var connectionString = _factory.Services
+        var connectionString = factory.Services
             .GetRequiredService<IConfiguration>()
             .GetConnectionString("DefaultConnection");
 
@@ -89,8 +72,8 @@ public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
         await Context.Users.AddAsync(user);
         await Context.SaveChangesAsync();
 
-        _token = _jwtTokenGenerator.CreateToken(user);
-        await currentUser.SetIdentifier(user.Id);
+        _token = JwtTokenGenerator.CreateToken(user);
+        await CurrentUser.SetIdentifier(user.Id);
         return user;
     }
 
@@ -118,7 +101,7 @@ public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
         }
         finally
         {
-            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter}");
+            output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter}");
         }
     }
 
@@ -146,7 +129,7 @@ public class TestBase : IAsyncLifetime, IClassFixture<ConduitApiFactory>
         }
         finally
         {
-            _output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter}");
+            output.WriteLine($"SQL queries count : {SqlCounterLogger.GetCounter}");
         }
     }
 
