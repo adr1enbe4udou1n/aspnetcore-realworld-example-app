@@ -41,7 +41,7 @@ public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeed
 
             foreach (var user in f.PickRandom(users, f.Random.Number(5)))
             {
-                context.ArticleFavorite.Add(new ArticleFavorite
+                await context.ArticleFavorite.AddAsync(new ArticleFavorite
                 {
                     Article = article,
                     User = user

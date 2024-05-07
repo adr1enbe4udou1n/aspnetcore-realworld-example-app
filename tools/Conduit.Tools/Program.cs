@@ -24,7 +24,7 @@ var app = builder.Build();
 
 app.AddSubCommands<SeederCommand>();
 
-app.Run();
+await app.RunAsync();
 
 public partial class Program
 {
