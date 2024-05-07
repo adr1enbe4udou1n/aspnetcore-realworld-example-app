@@ -45,7 +45,7 @@ public class ArticlesSeeder(IAppDbContext context, ISlugifier slugifier) : ISeed
                 {
                     Article = article,
                     User = user
-                });
+                }, CancellationToken.None);
             }
         }
 

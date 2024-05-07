@@ -18,11 +18,11 @@ public class ArticleFavoriteHandler(IAppDbContext context, ICurrentUser currentU
 
         if (request.Favorite)
         {
-            context.ArticleFavorite.Add(new ArticleFavorite
+            await context.ArticleFavorite.AddAsync(new ArticleFavorite
             {
                 Article = article,
                 User = currentUser.User!
-            });
+            }, CancellationToken.None);
         }
         else
         {
