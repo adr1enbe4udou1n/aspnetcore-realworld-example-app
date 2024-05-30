@@ -1,5 +1,3 @@
-using Carter;
-
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Filters;
 using Conduit.Presentation.OptionsSetup;
@@ -10,6 +8,8 @@ using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
+using Conduit.Presentation.EndPoints;
+
 namespace Conduit.Presentation;
 
 public static class ServiceExtensions
@@ -18,10 +18,6 @@ public static class ServiceExtensions
     {
         services
             .AddRouting(options => options.LowercaseUrls = true)
-            .AddCarter(configurator: c =>
-            {
-                c.WithValidatorLifetime(ServiceLifetime.Scoped);
-            })
             .Configure<JsonOptions>(options =>
                 options.SerializerOptions.Converters.Add(new DateTimeConverter())
             );
@@ -36,7 +32,13 @@ public static class ServiceExtensions
     {
         var api = app.MapGroup("/api");
 
-        api.MapCarter();
+        api
+            .AddTagsRoutes()
+            .AddUserRoutes()
+            .AddUsersRoutes()
+            .AddProfilesRoutes()
+            .AddArticlesRoutes()
+            .AddCommentsRoutes();
 
         api.AddEndpointFilter<ApiExceptionFilter>();
     }

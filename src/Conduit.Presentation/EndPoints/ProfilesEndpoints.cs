@@ -1,5 +1,3 @@
-using Carter;
-
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Application.Features.Profiles.Queries;
 
@@ -11,9 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.EndPoints;
 
-public class ProfilesEndpoints : ICarterModule
+public static class ProfilesEndpoints
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder AddProfilesRoutes(this IEndpointRouteBuilder app)
     {
         app.MapGet("/profiles/{username}", (ISender sender, string username, CancellationToken cancellationToken) =>
             sender.Send(new ProfileGetQuery(username), cancellationToken)
@@ -55,5 +53,7 @@ public class ProfilesEndpoints : ICarterModule
                 parameter.Description = "Username of the profile you want to unfollow";
                 return generatedOperation;
             });
+
+        return app;
     }
 }
