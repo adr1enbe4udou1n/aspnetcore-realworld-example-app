@@ -1,4 +1,5 @@
 using Conduit.Presentation.Converters;
+using Conduit.Presentation.EndPoints;
 using Conduit.Presentation.Filters;
 using Conduit.Presentation.OptionsSetup;
 
@@ -7,8 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-
-using Conduit.Presentation.EndPoints;
 
 namespace Conduit.Presentation;
 
