@@ -7,22 +7,23 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 using Respawn;
-using Respawn.Graph;
 
 namespace Tools.Commands;
 
-
-[Command("db")]
-public class SeederCommand(IConfiguration config, AppDbContext context, IEnumerable<ISeeder> seeders) : ConsoleAppBase, IAsyncDisposable
+public class SeederCommand(IConfiguration config, AppDbContext context, IEnumerable<ISeeder> seeders) : IAsyncDisposable
 {
-    [Command("migrate", "Migrate database")]
+    /// <summary>
+    /// Migrate database
+    /// </summary>
     public async Task Migrate()
     {
         await context.Database.MigrateAsync();
     }
 
-    [Command("fresh", "Wipe data")]
-    public async Task FreshData()
+    /// <summary>
+    /// Wipe data
+    /// </summary>
+    public async Task Fresh()
     {
         await Migrate();
 
@@ -39,11 +40,13 @@ public class SeederCommand(IConfiguration config, AppDbContext context, IEnumera
         await respawner.ResetAsync(conn);
     }
 
-    [Command("seed", "Fake data")]
-    public async Task SeedData()
+    /// <summary>
+    /// Fake data
+    /// </summary>
+    public async Task Seed()
     {
         await Migrate();
-        await FreshData();
+        await Fresh();
 
         var token = new CancellationToken();
 

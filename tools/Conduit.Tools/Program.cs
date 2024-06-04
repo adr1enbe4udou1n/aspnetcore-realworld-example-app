@@ -5,26 +5,34 @@ using Conduit.Tools.Seeders;
 using Microsoft.Extensions.DependencyInjection;
 
 using Tools.Commands;
+using ConsoleAppFramework;
+using Microsoft.Extensions.Configuration;
 
-var builder = ConsoleApp.CreateBuilder(args);
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-builder.ConfigureServices((ctx, services) =>
-{
-    services.AddInfrastructure(ctx.Configuration)
-        .AddScoped<UsersSeeder>()
-        .AddScoped<ArticlesSeeder>()
-        .AddScoped<IEnumerable<ISeeder>>(options => new List<ISeeder>
-        {
-                options.GetRequiredService<UsersSeeder>(),
-                options.GetRequiredService<ArticlesSeeder>()
-        });
-});
+var services = new ServiceCollection();
 
-var app = builder.Build();
+services.AddInfrastructure(configuration)
+    .AddSingleton<IConfiguration>(configuration)
+    .AddScoped<UsersSeeder>()
+    .AddScoped<ArticlesSeeder>()
+    .AddScoped<IEnumerable<ISeeder>>(options =>
+    [
+        options.GetRequiredService<UsersSeeder>(),
+        options.GetRequiredService<ArticlesSeeder>()
+    ]);
 
-app.AddSubCommands<SeederCommand>();
+using var serviceProvider = services.BuildServiceProvider();
+ConsoleApp.ServiceProvider = serviceProvider;
 
-await app.RunAsync();
+var app = ConsoleApp.Create();
+
+app.Add<SeederCommand>("db");
+
+await app.RunAsync(args);
 
 public partial class Program
 {

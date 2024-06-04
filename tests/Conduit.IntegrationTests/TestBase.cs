@@ -161,9 +161,11 @@ public class TestBase(ConduitApiFactory factory, ITestOutputHelper output) : IAs
             ValidateAudience = false,
 #pragma warning restore CA5404
             ValidateIssuerSigningKey = true,
+#pragma warning disable S6781 // JWT secret keys should not be disclosed
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes("00000000-0000-0000-0000-000000000000")
             ),
+#pragma warning restore S6781 // JWT secret keys should not be disclosed
         }, out var validatedToken);
 
         var jwtToken = (JwtSecurityToken)validatedToken;
