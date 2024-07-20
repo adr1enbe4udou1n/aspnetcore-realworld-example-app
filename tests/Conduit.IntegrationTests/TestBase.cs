@@ -16,7 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 
 using Respawn;
-using Respawn.Graph;
 
 using Xunit;
 using Xunit.Abstractions;

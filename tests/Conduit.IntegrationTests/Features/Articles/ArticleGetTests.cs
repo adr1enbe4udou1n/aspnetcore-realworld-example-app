@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
