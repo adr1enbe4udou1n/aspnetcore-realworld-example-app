@@ -28,6 +28,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.x
+          cache: true
       - uses: https://gitea.okami101.io/okami101/actions/task@main
       - uses: https://gitea.okami101.io/okami101/actions/docker@main
         if: startsWith(github.ref, 'refs/tags/v')
