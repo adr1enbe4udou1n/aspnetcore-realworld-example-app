@@ -33,4 +33,4 @@ jobs:
       - uses: https://gitea.okami101.io/okami101/actions/docker@main
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}sd
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
