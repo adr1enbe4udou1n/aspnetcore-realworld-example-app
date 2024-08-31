@@ -9,7 +9,6 @@ using Conduit.IntegrationTests.Events;
 
 using MediatR;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -37,7 +36,11 @@ public class TestBase(ConduitApiFactory factory, ITestOutputHelper output) : IAs
 
     public async Task RefreshDatabase()
     {
-        using var conn = new NpgsqlConnection(Context.Database.GetConnectionString());
+        var connectionString = factory.Services
+            .GetRequiredService<IConfiguration>()
+            .GetConnectionString("DefaultConnection");
+
+        using var conn = new NpgsqlConnection(connectionString);
 
         await conn.OpenAsync();
 

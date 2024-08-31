@@ -1,5 +1,3 @@
-
-using Conduit.Application.Interfaces;
 using Conduit.Infrastructure.Persistence;
 using Conduit.IntegrationTests.Events;
 
@@ -9,67 +7,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using Testcontainers.PostgreSql;
-
 namespace Conduit.IntegrationTests;
 
 public class ConduitApiFactory : WebApplicationFactory<Program>
 {
-    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
-        .WithDatabase("main")
-        .WithUsername("main")
-        .WithPassword("main")
-        .WithImage("postgres:16")
-        .Build();
-
     public ConduitApiFactory()
-    {
-        _postgreSqlContainer.StartAsync().GetAwaiter().GetResult();
-
-        MigrateDatabase().GetAwaiter().GetResult();
-    }
-
-    public async Task MigrateDatabase()
     {
         using var scope = Services.CreateScope();
 
         using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        await dbContext.Database.MigrateAsync();
+        dbContext.Database.Migrate();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
             .UseEnvironment("Testing")
-            .ConfigureServices(services =>
-            {
-                services.AddLogging((builder) =>
-                    builder.AddProvider(new SqlCounterLoggerProvider()));
-
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
-
-                services.AddDbContext<IAppDbContext, AppDbContext>((options) =>
-                {
-                    options
-                        .UseLazyLoadingProxies()
-                        .UseNpgsql(_postgreSqlContainer.GetConnectionString());
-                });
-            });
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        if (disposing)
-        {
-            _postgreSqlContainer.DisposeAsync().AsTask().GetAwaiter().GetResult();
-        }
+            .ConfigureServices(services => services.AddLogging((builder) =>
+                builder.AddProvider(new SqlCounterLoggerProvider()))
+            );
     }
 }
