@@ -11,9 +11,11 @@ using Microsoft.Extensions.Logging;
 
 using Testcontainers.PostgreSql;
 
+using Xunit;
+
 namespace Conduit.IntegrationTests;
 
-public class ConduitApiFactory : WebApplicationFactory<Program>
+public class ConduitApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
         .WithDatabase("main")
@@ -21,13 +23,6 @@ public class ConduitApiFactory : WebApplicationFactory<Program>
         .WithPassword("main")
         .WithImage("postgres:16")
         .Build();
-
-    public ConduitApiFactory()
-    {
-        _postgreSqlContainer.StartAsync().GetAwaiter().GetResult();
-
-        MigrateDatabase().GetAwaiter().GetResult();
-    }
 
     public async Task MigrateDatabase()
     {
@@ -64,12 +59,15 @@ public class ConduitApiFactory : WebApplicationFactory<Program>
             });
     }
 
-    protected override void Dispose(bool disposing)
+    public async Task InitializeAsync()
     {
-        base.Dispose(disposing);
-        if (disposing)
-        {
-            _postgreSqlContainer.DisposeAsync().AsTask().GetAwaiter().GetResult();
-        }
+        await _postgreSqlContainer.StartAsync();
+        await MigrateDatabase();
+    }
+
+    public new async Task DisposeAsync()
+    {
+        await _postgreSqlContainer.DisposeAsync();
+        await base.DisposeAsync();
     }
 }
