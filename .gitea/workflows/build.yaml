@@ -24,6 +24,7 @@ jobs:
           cache-dependency-path: "**/packages.lock.json"
       - uses: https://gitea.okami101.io/okami101/actions/task@main
         env:
+          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: unix:///var/run/user/1000/docker.sock
           SONARQUBE_URL: ${{ vars.SONAR_HOST_URL }}
           SONARQUBE_ANALYSIS_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONARQUBE_PROJECT_KEY: aspnet-core-realworld
