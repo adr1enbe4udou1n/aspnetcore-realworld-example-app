@@ -23,7 +23,7 @@ using Xunit.Abstractions;
 namespace Conduit.IntegrationTests;
 
 [Collection("Test collection")]
-public class TestBase(ConduitApiFactory factory, ITestOutputHelper output) : IAsyncLifetime, IClassFixture<ConduitApiFactory>
+public class TestBase(ConduitApiFactory factory, ITestOutputHelper output) : IAsyncLifetime
 {
     private readonly HttpClient _client = factory.CreateClient();
     private readonly IServiceScope _scope = factory.Services.CreateScope();
