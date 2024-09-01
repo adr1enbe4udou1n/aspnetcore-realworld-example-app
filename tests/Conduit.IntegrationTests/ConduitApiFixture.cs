@@ -29,10 +29,7 @@ public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
         .WithOutputConsumer(
             Consume.RedirectStdoutAndStderrToStream(new MemoryStream(), new MemoryStream())
         )
-        .WithNetwork(new NetworkBuilder()
-            .WithName("my_network")
-            .Build()
-        )
+        .WithNetwork("my_network")
         .Build();
 
     public async Task MigrateDatabase()
