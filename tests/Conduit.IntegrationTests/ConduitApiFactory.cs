@@ -52,9 +52,10 @@ public class ConduitApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
                 services.AddDbContext<IAppDbContext, AppDbContext>((options) =>
                 {
+                    var c = _postgreSqlContainer.GetConnectionString();
                     options
                         .UseLazyLoadingProxies()
-                        .UseNpgsql(_postgreSqlContainer.GetConnectionString());
+                        .UseNpgsql(c);
                 });
             });
     }
