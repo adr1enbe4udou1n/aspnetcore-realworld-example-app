@@ -62,9 +62,8 @@ public class ConduitApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public async Task InitializeAsync()
     {
         await _postgreSqlContainer.StartAsync();
-        await MigrateDatabase();
-
         await Task.Delay(600000);
+        await MigrateDatabase();
     }
 
     public new async Task DisposeAsync()
