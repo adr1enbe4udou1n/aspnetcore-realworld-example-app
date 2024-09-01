@@ -22,7 +22,6 @@ public class ConduitApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithUsername("main")
         .WithPassword("main")
         .WithImage("postgres:16")
-        .WithBindMount("/var/run/user/1000/docker.sock", "/var/run/docker.sock")
         .Build();
 
     public async Task MigrateDatabase()
@@ -64,6 +63,8 @@ public class ConduitApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         await _postgreSqlContainer.StartAsync();
         await MigrateDatabase();
+
+        await Task.Delay(600000);
     }
 
     public new async Task DisposeAsync()
