@@ -45,7 +45,7 @@ public class InvalidNewArticles : TheoryData<NewArticleDto>
     }
 }
 
-public class ArticleCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Theory, ClassData(typeof(InvalidNewArticles))]

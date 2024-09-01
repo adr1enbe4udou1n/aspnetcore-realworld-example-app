@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Profiles;
 
-public class ProfileGetTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class ProfileGetTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Fact]

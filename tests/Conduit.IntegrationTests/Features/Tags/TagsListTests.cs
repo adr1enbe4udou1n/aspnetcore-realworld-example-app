@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Tags;
 
-public class TagsListTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class TagsListTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Fact]

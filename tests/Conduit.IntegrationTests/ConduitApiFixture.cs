@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Conduit.IntegrationTests;
 
-public class ConduitApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
         .WithDatabase("main")

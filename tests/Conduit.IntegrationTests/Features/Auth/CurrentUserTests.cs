@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Auth;
 
-public class CurrentUserTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class CurrentUserTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Fact]

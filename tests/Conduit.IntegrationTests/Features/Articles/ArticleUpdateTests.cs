@@ -27,7 +27,7 @@ public class InvalidUpdateArticles : TheoryData<UpdateArticleDto>
     }
 }
 
-public class ArticleUpdateTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Theory, ClassData(typeof(InvalidUpdateArticles))]

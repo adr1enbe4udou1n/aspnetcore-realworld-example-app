@@ -39,7 +39,7 @@ public class InvalidRegisters : TheoryData<NewUserDto>
     }
 }
 
-public class RegisterTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Theory, ClassData(typeof(InvalidRegisters))]

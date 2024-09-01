@@ -29,7 +29,7 @@ public class InvalidCredentials : TheoryData<LoginUserDto>
     }
 }
 
-public class LoginTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class LoginTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Theory, ClassData(typeof(InvalidCredentials))]

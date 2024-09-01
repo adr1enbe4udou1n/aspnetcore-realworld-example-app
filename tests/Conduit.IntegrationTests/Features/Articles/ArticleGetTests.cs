@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
-public class ArticleGetTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class ArticleGetTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Fact]

@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Comments;
 
-public class CommentDeleteTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Fact]

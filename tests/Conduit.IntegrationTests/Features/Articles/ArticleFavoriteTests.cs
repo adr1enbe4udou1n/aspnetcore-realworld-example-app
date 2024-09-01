@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace Conduit.IntegrationTests.Features.Articles;
 
-public class ArticleFavoriteTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Fact]

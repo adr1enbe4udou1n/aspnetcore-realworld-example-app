@@ -25,7 +25,7 @@ public class InvalidComments : TheoryData<NewCommentDto>
     }
 }
 
-public class CommentCreateTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Theory, ClassData(typeof(InvalidComments))]

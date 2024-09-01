@@ -32,7 +32,7 @@ public class InvalidInfos : TheoryData<UpdateUserDto>
     }
 }
 
-public class UpdateUserTests(ConduitApiFactory factory, ITestOutputHelper output) : TestBase(factory, output)
+public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
 
     [Theory, ClassData(typeof(InvalidInfos))]
