@@ -3,6 +3,8 @@ using Conduit.Application.Interfaces;
 using Conduit.Infrastructure.Persistence;
 using Conduit.IntegrationTests.Events;
 
+using DotNet.Testcontainers.Builders;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,14 @@ public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
         .WithPassword("main")
         .WithImage("postgres:16")
         .WithPortBinding(32770, 5432)
+        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+        .WithOutputConsumer(
+            Consume.RedirectStdoutAndStderrToStream(new MemoryStream(), new MemoryStream())
+        )
+        .WithNetwork(new NetworkBuilder()
+            .WithName("my_network")
+            .Build()
+        )
         .Build();
 
     public async Task MigrateDatabase()
@@ -63,7 +73,6 @@ public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
     public async Task InitializeAsync()
     {
         await _postgreSqlContainer.StartAsync();
-        await Task.Delay(600000);
         await MigrateDatabase();
     }
 
