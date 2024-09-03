@@ -24,7 +24,8 @@ jobs:
           cache-dependency-path: "**/packages.lock.json"
       - uses: https://gitea.okami101.io/okami101/actions/task@main
         env:
-          ConnectionStrings__DefaultConnection: "Host=${{ vars.POSTGRESQL_HOST }};Username=test;Password=test;Database=conduit_aspnetcore_test"
+          TESTCONTAINERS_HOST_OVERRIDE: "db"
+          TESTCONTAINERS_RYUK_DISABLED: true
           SONARQUBE_URL: ${{ vars.SONAR_HOST_URL }}
           SONARQUBE_ANALYSIS_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONARQUBE_PROJECT_KEY: aspnet-core-realworld
