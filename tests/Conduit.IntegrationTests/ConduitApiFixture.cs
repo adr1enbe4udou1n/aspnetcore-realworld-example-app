@@ -24,7 +24,7 @@ public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
         .WithUsername("main")
         .WithPassword("main")
         .WithImage("postgres:16")
-        .WithNetwork("bridge")
+        .WithNetwork("gitea")
         .WithNetworkAliases("db")
         .Build();
 
