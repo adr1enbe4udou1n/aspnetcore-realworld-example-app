@@ -24,6 +24,8 @@ public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
         .WithUsername("main")
         .WithPassword("main")
         .WithImage("postgres:16")
+        .WithNetwork("bridge")
+        .WithNetworkAliases("db")
         .Build();
 
     public async Task MigrateDatabase()
