@@ -10,14 +10,14 @@
       "rollForward": false
     },
     "dotnet-sonarscanner": {
-      "version": "8.0.0",
+      "version": "8.0.2",
       "commands": [
         "dotnet-sonarscanner"
       ],
       "rollForward": false
     },
     "dotnet-coverage": {
-      "version": "17.11.5",
+      "version": "17.12.2",
       "commands": [
         "dotnet-coverage"
       ],
