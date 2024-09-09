@@ -61,4 +61,19 @@ public class User : IAuditableEntity
     {
         _following.AddRange(users.Select(x => new FollowerUser { Following = x, Follower = this }).ToList());
     }
+
+    public void AddFollower(User user)
+    {
+        _followers.Add(new FollowerUser { Following = this, Follower = user });
+    }
+
+    public void RemoveFollower(User user)
+    {
+        var follower = Followers.FirstOrDefault(f => f.FollowerId == user.Id);
+
+        if (follower is not null)
+        {
+            _followers.Remove(follower);
+        }
+    }
 }

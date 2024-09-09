@@ -27,11 +27,11 @@ public class UsersSeeder(IAppDbContext context, IPasswordHasher passwordHasher) 
             var f = new Faker();
             f.PickRandom(users, f.Random.Number(5))
                 .ToList()
-                .ForEach(follower => context.FollowerUser.Add(new FollowerUser
+                .ForEach(follower =>
                 {
-                    Follower = follower,
-                    Following = u
-                }));
+                    u.AddFollower(follower);
+                    context.Users.Update(u);
+                });
         });
         await context.SaveChangesAsync(cancellationToken);
     }

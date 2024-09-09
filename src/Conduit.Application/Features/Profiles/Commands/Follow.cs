@@ -19,19 +19,14 @@ public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) 
 
         if (request.Follow)
         {
-            await context.FollowerUser.AddAsync(new FollowerUser
-            {
-                Follower = currentUser.User!,
-                Following = user
-            }, CancellationToken.None);
+            user.AddFollower(currentUser.User!);
         }
         else
         {
-            context.FollowerUser.Remove(user.Followers
-                .First(x => x.FollowerId == currentUser.User!.Id)
-            );
+            user.RemoveFollower(currentUser.User!);
         }
 
+        context.Users.Update(user);
         await context.SaveChangesAsync(cancellationToken);
 
         return new ProfileResponse(user.MapToProfile(currentUser.User));

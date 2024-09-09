@@ -72,4 +72,19 @@ public class Article : IAuditableEntity
                 .ToList()
         );
     }
+
+    public void AddFavorite(User user)
+    {
+        _favoredUsers.Add(new ArticleFavorite { User = user, Article = this });
+    }
+
+    public void RemoveFavorite(User user)
+    {
+        var favorite = FavoredUsers.FirstOrDefault(x => x.UserId == user.Id);
+
+        if (favorite is not null)
+        {
+            _favoredUsers.Remove(favorite);
+        }
+    }
 }
