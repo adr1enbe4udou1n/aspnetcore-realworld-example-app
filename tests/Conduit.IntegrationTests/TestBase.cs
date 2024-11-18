@@ -16,8 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 
 using Npgsql;
 
-using Respawn;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,13 +42,28 @@ public class TestBase(ConduitApiFixture factory, ITestOutputHelper output) : IAs
 
         await conn.OpenAsync();
 
-        var respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
-        {
-            TablesToIgnore = ["__EFMigrationsHistory"],
-            DbAdapter = DbAdapter.Postgres
-        });
+        using var cmd = conn.CreateCommand();
 
-        await respawner.ResetAsync(conn);
+        cmd.CommandText = "SET session_replication_role = 'replica';";
+        await cmd.ExecuteNonQueryAsync();
+
+        try
+        {
+            cmd.CommandText = @"
+                TRUNCATE TABLE ""ArticleTag"" CASCADE;
+                TRUNCATE TABLE ""ArticleFavorite"" CASCADE;
+                TRUNCATE TABLE ""Comments"" CASCADE;
+                TRUNCATE TABLE ""Articles"" CASCADE;
+                TRUNCATE TABLE ""Tags"" CASCADE;
+                TRUNCATE TABLE ""Users"" CASCADE;
+            ";
+            await cmd.ExecuteNonQueryAsync();
+        }
+        finally
+        {
+            cmd.CommandText = "SET session_replication_role = 'origin';";
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 
     public async Task InitializeAsync()

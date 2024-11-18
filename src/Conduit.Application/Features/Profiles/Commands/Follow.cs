@@ -2,7 +2,6 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Domain.Entities;
 
 using MediatR;
 

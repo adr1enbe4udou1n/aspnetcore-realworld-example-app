@@ -19,7 +19,7 @@ jobs:
           key: ${{ runner.os }}-sonar
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.x
+          dotnet-version: 9.x
           cache: true
           cache-dependency-path: "**/packages.lock.json"
       - uses: https://gitea.okami101.io/okami101/actions/task@main
