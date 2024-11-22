@@ -15,11 +15,11 @@
       },
       "Npgsql.OpenTelemetry": {
         "type": "Direct",
-        "requested": "[9.0.0, )",
-        "resolved": "9.0.0",
-        "contentHash": "kqWVR+T3R0O31KEg/9eWHDsFF8omtfh9m4DLCHjZGYBrXyXaZ43wc46NWywGPi4aXr1lm4KalDyHd+A7oFCC2A==",
+        "requested": "[9.0.1, )",
+        "resolved": "9.0.1",
+        "contentHash": "DrZLGcuJLKZsfKJzk6TjYMk8E5oZUAPhpPzeAKJQQtlfrVN7co84RhG87O7aesemdPV1GUonJktzGR+KPFcBWQ==",
         "dependencies": {
-          "Npgsql": "9.0.0",
+          "Npgsql": "9.0.1",
           "OpenTelemetry.API": "1.7.0"
         }
       },
@@ -502,21 +502,20 @@
       },
       "Npgsql": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "zu1nCRt0gWP/GR0reYgg0Bl5o8qyNV7mVAgzAbVLRiAd1CYXcf/9nrubPH0mt93u8iGTKmYqWaLVECEAcE6IfQ==",
+        "resolved": "9.0.1",
+        "contentHash": "aZrXuBUUjRnvjoS4Lq0ZPYe3pnzAfK7TroGNGVpo4FCMBW1ypD/XfTTYjXpeRI8xcX5Otiv535Dy2jQWi98oeA==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.2",
-          "System.Text.Json": "9.0.0"
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.2"
         }
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "ObngKFRLMBAeMqQzK7SC0Q6WZtWw0imPmEkVPo12yLVF3fioz2TN+w0mhNMJ5cVd/sLB2u+jei0bmA9sDMtkMw==",
+        "resolved": "9.0.1",
+        "contentHash": "nN9Tjg73Edr4oBhNkBsfHBduNUlDFty1gIX0Ztp0np82ElSCiEcwRuN11Kv4kx2H9VDQaEeMwWAIym5aVsgVyg==",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "[9.0.0, 10.0.0)",
           "Microsoft.EntityFrameworkCore.Relational": "[9.0.0, 10.0.0)",
-          "Npgsql": "9.0.0"
+          "Npgsql": "9.0.1"
         }
       },
       "OpenTelemetry": {
@@ -736,11 +735,6 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
-      "System.Text.Json": {
-        "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "js7+qAu/9mQvnhA4EfGMZNEzXtJCDxgkgj8ohuxq/Qxv+R56G+ljefhiJHOxTNiw54q8vmABCWUwkMulNdlZ4A=="
-      },
       "conduit.application": {
         "type": "Project",
         "dependencies": {
@@ -763,7 +757,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[9.0.0, )",
           "Microsoft.EntityFrameworkCore.Proxies": "[9.0.0, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[9.0.0, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.0, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.1, )",
           "Scrutor": "[5.0.2, )",
           "Slugify.Core": "[4.0.1, )"
         }
