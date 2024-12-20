@@ -10,15 +10,15 @@
       },
       "ConsoleAppFramework": {
         "type": "Direct",
-        "requested": "[5.2.4, )",
-        "resolved": "5.2.4",
-        "contentHash": "p48u97bjSgRuyTDovmTZydfclHxjg5nbqhlsW53a2ttPK+W+VS8OXsjMsRPbYLeakJB5+Ik7Z5flUEKU1LvZuA=="
+        "requested": "[5.3.1, )",
+        "resolved": "5.3.1",
+        "contentHash": "SqB8mmz3GGneIM+Dg31R/qRvS6u3ddBvtLSupZhPbMQjao0gWBeIgkxf0KNxq3ASPVhPn/fWurIB55oA9/bVUg=="
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[10.3.0.106239, )",
-        "resolved": "10.3.0.106239",
-        "contentHash": "Ne5QHx0nUULk7PF+3GIQIC2EnFI93SPRilyqVY6US4JolZOCc9XyUKzvOVsufp7cyrqbOTL07U5mb6poYzllNQ=="
+        "requested": "[10.4.0.108396, )",
+        "resolved": "10.4.0.108396",
+        "contentHash": "xGcLZ+dvkVuBbd3sjPur9X+1owSL/iDoxVFJLhMx3/vq1fmoKM2fwvrZ8ReAas6l715GJ/dWU2ckwlrRVopmbg=="
       },
       "BCrypt.Net-Next": {
         "type": "Transitive",
