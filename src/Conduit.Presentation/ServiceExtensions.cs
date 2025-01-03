@@ -1,6 +1,5 @@
-using Carter;
-
 using Conduit.Presentation.Converters;
+using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Filters;
 using Conduit.Presentation.OptionsSetup;
 
@@ -18,10 +17,6 @@ public static class ServiceExtensions
     {
         services
             .AddRouting(options => options.LowercaseUrls = true)
-            .AddCarter(configurator: c =>
-            {
-                c.WithValidatorLifetime(ServiceLifetime.Scoped);
-            })
             .Configure<JsonOptions>(options =>
                 options.SerializerOptions.Converters.Add(new DateTimeConverter())
             );
@@ -36,7 +31,13 @@ public static class ServiceExtensions
     {
         var api = app.MapGroup("/api");
 
-        api.MapCarter();
+        api
+            .AddUserRoutes()
+            .AddUsersRoutes()
+            .AddProfilesRoutes()
+            .AddTagsRoutes()
+            .AddArticlesRoutes()
+            .AddCommentsRoutes();
 
         api.AddEndpointFilter<ApiExceptionFilter>();
     }

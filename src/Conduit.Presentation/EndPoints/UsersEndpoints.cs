@@ -1,5 +1,3 @@
-using Carter;
-
 using Conduit.Application.Features.Auth.Commands;
 
 using MediatR;
@@ -8,11 +6,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Conduit.Presentation.EndPoints;
+namespace Conduit.Presentation.Endpoints;
 
-public class UsersEndpoints : ICarterModule
+public static class UsersEndpoints
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder AddUsersRoutes(this IEndpointRouteBuilder app)
     {
         app.MapPost("/users", (ISender sender, NewUserRequest request, CancellationToken cancellationToken) =>
             sender.Send(new NewUserCommand(request.User), cancellationToken)
@@ -41,6 +39,8 @@ public class UsersEndpoints : ICarterModule
                 generatedOperation.RequestBody.Description = "Credentials to use";
                 return generatedOperation;
             });
+
+        return app;
     }
 }
 

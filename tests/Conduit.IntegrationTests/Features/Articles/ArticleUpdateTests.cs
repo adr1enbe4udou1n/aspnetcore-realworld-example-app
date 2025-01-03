@@ -3,7 +3,7 @@ using System.Net;
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
-using Conduit.Presentation.EndPoints;
+using Conduit.Presentation.Endpoints;
 
 using FluentAssertions;
 

@@ -1,5 +1,3 @@
-using Carter;
-
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 
@@ -9,11 +7,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Conduit.Presentation.EndPoints;
+namespace Conduit.Presentation.Endpoints;
 
-public class ArticlesEndpoints : ICarterModule
+public static class ArticlesEndpoints
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder AddArticlesRoutes(this IEndpointRouteBuilder app)
     {
         app.MapGet("/articles", (ISender sender,
             string? author,
@@ -166,6 +164,8 @@ public class ArticlesEndpoints : ICarterModule
                 parameter.Description = "Slug of the article that you want to unfavorite";
                 return generatedOperation;
             });
+
+        return app;
     }
 }
 
