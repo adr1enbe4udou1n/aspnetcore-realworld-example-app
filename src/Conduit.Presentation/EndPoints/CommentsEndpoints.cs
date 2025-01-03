@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
 
@@ -7,11 +9,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Conduit.Presentation.Endpoints;
+namespace Conduit.Presentation.EndPoints;
 
-public static class CommentsEndpoints
+public class CommentsEndpoints : ICarterModule
 {
-    public static IEndpointRouteBuilder AddCommentsRoutes(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/articles/{slug}/comments", (ISender sender, string slug, CancellationToken cancellationToken) =>
             sender.Send(new CommentsListQuery(slug), cancellationToken)
@@ -60,8 +62,6 @@ public static class CommentsEndpoints
                 parameter.Description = "ID of the comment you want to delete";
                 return generatedOperation;
             });
-
-        return app;
     }
 }
 

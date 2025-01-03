@@ -1,3 +1,5 @@
+using Carter;
+
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 
@@ -7,11 +9,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Conduit.Presentation.Endpoints;
+namespace Conduit.Presentation.EndPoints;
 
-public static class UserEndpoints
+public class UserEndpoints : ICarterModule
 {
-    public static IEndpointRouteBuilder AddUserRoutes(this IEndpointRouteBuilder app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/user", (ISender sender, CancellationToken cancellationToken) =>
             sender.Send(new CurrentUserQuery(), cancellationToken)
@@ -38,8 +40,6 @@ public static class UserEndpoints
                 generatedOperation.RequestBody.Description = "User details to update. At least <strong>one</strong> field is required.";
                 return generatedOperation;
             });
-
-        return app;
     }
 }
 
