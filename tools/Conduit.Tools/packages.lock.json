@@ -10,9 +10,9 @@
       },
       "ConsoleAppFramework": {
         "type": "Direct",
-        "requested": "[5.3.1, )",
-        "resolved": "5.3.1",
-        "contentHash": "SqB8mmz3GGneIM+Dg31R/qRvS6u3ddBvtLSupZhPbMQjao0gWBeIgkxf0KNxq3ASPVhPn/fWurIB55oA9/bVUg=="
+        "requested": "[5.3.3, )",
+        "resolved": "5.3.3",
+        "contentHash": "Jr1O9mD6YIZYBLWKo5CQg6jJ5jWMDUvOpqeOL+yqduJquwxOY7ZIZMq0NS/Qny51KXnKQN3TYhhlcjYf85h2ag=="
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
