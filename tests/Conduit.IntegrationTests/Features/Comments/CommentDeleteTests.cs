@@ -4,7 +4,6 @@ using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +19,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     public async Task Guest_Cannot_Delete_Comment()
     {
         var response = await Act(HttpMethod.Delete, "/articles/test-title/comments/1");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -42,7 +41,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         ));
 
         var response = await Act(HttpMethod.Delete, "/articles/test-title/comments/1");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -69,7 +68,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         }));
 
         var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{r.Comment.Id}");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -107,7 +106,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{r.Comment.Id}", new CommentDeleteCommand(
             "other-title", r.Comment.Id
         ));
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -140,7 +139,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         });
 
         var response = await Act(HttpMethod.Delete, $"/articles/test-title/comments/{r.Comment.Id}");
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [Fact]
@@ -168,7 +167,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
 
         await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
 
-        (await Context.Comments.AnyAsync()).Should().BeFalse();
+        Assert.False(await Context.Comments.AnyAsync());
     }
 
     [Fact]
@@ -207,6 +206,6 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
 
         await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
 
-        (await Context.Comments.CountAsync()).Should().Be(1);
+        Assert.Equal(1, await Context.Comments.CountAsync());
     }
 }

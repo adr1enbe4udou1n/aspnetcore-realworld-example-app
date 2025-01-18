@@ -1,7 +1,6 @@
 using Conduit.Application.Features.Tags.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -23,6 +22,6 @@ public class TagsListTests(ConduitApiFixture factory, ITestOutputHelper output) 
 
         var response = await Act<TagsResponse>(HttpMethod.Get, "/tags");
 
-        response.Tags.Should().Equal("Tag1", "Tag2", "Tag3");
+        Assert.Equal(["Tag1", "Tag2", "Tag3"], response.Tags);
     }
 }

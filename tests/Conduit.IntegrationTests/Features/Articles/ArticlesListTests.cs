@@ -5,7 +5,6 @@ using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -22,10 +21,10 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=30&offset=10");
 
-        response.Articles.Count().Should().Be(20);
-        response.ArticlesCount.Should().Be(50);
+        Assert.Equal(20, response.Articles.Count());
+        Assert.Equal(50, response.ArticlesCount);
 
-        response.Articles.First().Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "Jane Doe - Test Title 10",
             Description = "Test Description",
@@ -35,7 +34,7 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
                 Username = "Jane Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag Jane Doe" },
-        });
+        }, response.Articles.First());
     }
 
     [Fact]
@@ -45,10 +44,10 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&author=John Doe");
 
-        response.Articles.Count().Should().Be(10);
-        response.ArticlesCount.Should().Be(30);
+        Assert.Equal(10, response.Articles.Count());
+        Assert.Equal(30, response.ArticlesCount);
 
-        response.Articles.First().Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
@@ -58,7 +57,7 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
                 Username = "John Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
-        });
+        }, response.Articles.First());
     }
 
     [Fact]
@@ -68,10 +67,10 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&tag=Tag Jane Doe");
 
-        response.Articles.Count().Should().Be(10);
-        response.ArticlesCount.Should().Be(20);
+        Assert.Equal(10, response.Articles.Count());
+        Assert.Equal(20, response.ArticlesCount);
 
-        response.Articles.First().Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "Jane Doe - Test Title 20",
             Description = "Test Description",
@@ -81,7 +80,7 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
                 Username = "Jane Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag Jane Doe" },
-        });
+        }, response.Articles.First());
     }
 
     [Fact]
@@ -105,10 +104,10 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&favorited=Jane Doe");
 
-        response.Articles.Count().Should().Be(5);
-        response.ArticlesCount.Should().Be(5);
+        Assert.Equal(5, response.Articles.Count());
+        Assert.Equal(5, response.ArticlesCount);
 
-        response.Articles.First().Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "John Doe - Test Title 16",
             Description = "Test Description",
@@ -120,14 +119,14 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
             Favorited = true,
             FavoritesCount = 1
-        });
+        }, response.Articles.First());
     }
 
     [Fact]
     public async Task Guest_Cannot_Paginate_Articles_Of_Followed_Authors()
     {
         var response = await Act(HttpMethod.Get, "/articles/feed");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -139,10 +138,10 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles/feed?limit=10&offset=0");
 
-        response.Articles.Count().Should().Be(10);
-        response.ArticlesCount.Should().Be(30);
+        Assert.Equal(10, response.Articles.Count());
+        Assert.Equal(30, response.ArticlesCount);
 
-        response.Articles.First().Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
@@ -153,7 +152,7 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
                 Following = true
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag John Doe" },
-        });
+        }, response.Articles.First());
     }
 
     private async Task CreateArticles()

@@ -4,7 +4,6 @@ using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -24,7 +23,7 @@ public class ArticleGetTests(ConduitApiFixture factory, ITestOutputHelper output
         });
 
         var response = await Act(HttpMethod.Get, "/articles/slug-article");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -50,7 +49,7 @@ public class ArticleGetTests(ConduitApiFixture factory, ITestOutputHelper output
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Get, "/articles/test-title");
 
-        response.Article.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "Test Title",
             Description = "Test Description",
@@ -65,6 +64,6 @@ public class ArticleGetTests(ConduitApiFixture factory, ITestOutputHelper output
             TagList = new List<string> { "Test Tag 1", "Test Tag 2" },
             Favorited = false,
             FavoritesCount = 0,
-        });
+        }, response.Article);
     }
 }

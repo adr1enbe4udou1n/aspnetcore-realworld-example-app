@@ -3,7 +3,6 @@ using System.Net;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -24,8 +23,8 @@ public class CurrentUserTests(ConduitApiFixture factory, ITestOutputHelper outpu
 
         var response = await Act<UserResponse>(HttpMethod.Get, "/user");
 
-        response.User.Username.Should().Be("John Doe");
-        response.User.Email.Should().Be("john.doe@example.com");
+        Assert.Equal("John Doe", response.User.Username);
+        Assert.Equal("john.doe@example.com", response.User.Email);
     }
 
     [Fact]
@@ -33,6 +32,6 @@ public class CurrentUserTests(ConduitApiFixture factory, ITestOutputHelper outpu
     {
         var response = await Act(HttpMethod.Get, "/user");
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 }

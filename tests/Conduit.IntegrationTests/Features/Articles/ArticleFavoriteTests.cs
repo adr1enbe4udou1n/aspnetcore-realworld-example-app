@@ -4,7 +4,6 @@ using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +19,7 @@ public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper o
     public async Task Guest_Cannot_Favorite_Article()
     {
         var response = await Act(HttpMethod.Post, "/articles/slug-article/favorite");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -33,7 +32,7 @@ public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper o
         });
 
         var response = await Act(HttpMethod.Post, "/articles/slug-article/favorite");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -56,13 +55,12 @@ public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper o
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles/test-title/favorite");
 
-        response.Article.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Favorited = true,
             FavoritesCount = 1,
-        }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
-
-        (await Context.Set<ArticleFavorite>().CountAsync()).Should().Be(1);
+        }, response.Article);
+        Assert.Equal(1, await Context.Set<ArticleFavorite>().CountAsync());
     }
 
     [Fact]
@@ -87,12 +85,11 @@ public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper o
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 
-        response.Article.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Favorited = false,
             FavoritesCount = 0,
-        }, options => options.Including(x => x.Favorited).Including(x => x.FavoritesCount));
-
-        (await Context.Set<ArticleFavorite>().CountAsync()).Should().Be(0);
+        }, response.Article);
+        Assert.Equal(0, await Context.Set<ArticleFavorite>().CountAsync());
     }
 }

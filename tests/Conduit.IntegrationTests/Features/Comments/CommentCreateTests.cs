@@ -5,7 +5,6 @@ using Conduit.Application.Features.Comments.Commands;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Endpoints;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -47,7 +46,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
         ));
 
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(comment));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -65,7 +64,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
                 Body = "Test Body",
             }
         ));
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -77,7 +76,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
                 Body = "Test Body",
             }
         ));
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -105,7 +104,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
             Body = "Thank you !",
         }));
 
-        response.Comment.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Body = "Thank you !",
             Author = new
@@ -114,8 +113,8 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
                 Bio = "My Bio",
                 Image = "https://i.pravatar.cc/300"
             },
-        });
+        }, response.Comment);
 
-        (await Context.Comments.AnyAsync()).Should().BeTrue();
+        Assert.True(await Context.Set<Comment>().AnyAsync());
     }
 }

@@ -4,7 +4,6 @@ using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +19,7 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     public async Task Guest_Cannot_Delete_Article()
     {
         var response = await Act(HttpMethod.Delete, "/articles/slug-article");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -33,7 +32,7 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         });
 
         var response = await Act(HttpMethod.Delete, "/articles/slug-article");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -61,7 +60,7 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         });
 
         var response = await Act(HttpMethod.Delete, "/articles/test-title");
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [Fact]
@@ -94,7 +93,7 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
 
         await Act(HttpMethod.Delete, "/articles/test-title");
 
-        (await Context.Articles.AnyAsync()).Should().BeFalse();
-        (await Context.Comments.AnyAsync()).Should().BeFalse();
+        Assert.False(await Context.Articles.AnyAsync());
+        Assert.False(await Context.Comments.AnyAsync());
     }
 }

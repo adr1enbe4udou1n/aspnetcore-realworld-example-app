@@ -5,7 +5,6 @@ using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -19,7 +18,7 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
     public async Task Cannot_List_All_Comments_Of_Non_Existent_Article()
     {
         var response = await Act(HttpMethod.Get, "/articles/test-title/comments");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -75,9 +74,9 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         var response = await Act<MultipleCommentsResponse>(HttpMethod.Get, "/articles/test-title/comments");
 
-        response.Comments.Count().Should().Be(10);
+        Assert.Equal(10, response.Comments.Count());
 
-        response.Comments.First().Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Body = "This is Jane, Test Comment 5 !",
             Author = new
@@ -86,6 +85,6 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
                 Bio = "My Bio",
                 Image = "https://i.pravatar.cc/300"
             },
-        });
+        }, response.Comments.First());
     }
 }

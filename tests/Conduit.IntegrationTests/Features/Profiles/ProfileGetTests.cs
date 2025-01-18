@@ -3,7 +3,6 @@ using System.Net;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -27,20 +26,20 @@ public class ProfileGetTests(ConduitApiFixture factory, ITestOutputHelper output
 
         var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/John Doe");
 
-        response.Profile.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Username = "John Doe",
             Bio = "My Bio",
             Image = "https://i.pravatar.cc/300",
             Following = false
-        });
+        }, response.Profile);
     }
 
     [Fact]
     public async Task Cannot_Get_Non_Existent_Profile()
     {
         var response = await Act(HttpMethod.Get, "/profiles/John Doe");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -66,12 +65,12 @@ public class ProfileGetTests(ConduitApiFixture factory, ITestOutputHelper output
 
         var response = await Act<ProfileResponse>(HttpMethod.Get, "/profiles/Jane Doe");
 
-        response.Profile.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Username = "Jane Doe",
             Bio = "My Bio",
             Image = "https://i.pravatar.cc/300",
             Following = true
-        });
+        }, response.Profile);
     }
 }

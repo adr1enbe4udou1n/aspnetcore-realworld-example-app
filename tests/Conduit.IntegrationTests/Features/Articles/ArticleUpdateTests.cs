@@ -5,7 +5,6 @@ using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Endpoints;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -40,7 +39,7 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
         });
 
         var response = await Act(HttpMethod.Put, "/articles/test-title", new UpdateArticleRequest(article));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -60,7 +59,7 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
                 Body = "New Body",
             }
         ));
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
@@ -69,7 +68,7 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
         var response = await Act(HttpMethod.Put, "/articles/slug-article", new UpdateArticleRequest(
             new UpdateArticleDto()
         ));
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -106,7 +105,7 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
                     Body = "New Body",
                 }
             ));
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [Fact]
@@ -137,7 +136,7 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
             )
         );
 
-        response.Article.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "New Title",
             Description = "New Description",
@@ -148,8 +147,8 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
                 Username = "John Doe",
             },
             TagList = new List<string>(),
-        });
+        }, response.Article);
 
-        (await Context.Articles.AnyAsync(x => x.Title == "New Title")).Should().BeTrue();
+        Assert.True(await Context.Articles.AnyAsync(x => x.Title == "New Title"));
     }
 }

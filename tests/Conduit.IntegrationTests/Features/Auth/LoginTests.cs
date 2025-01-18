@@ -5,7 +5,6 @@ using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -44,7 +43,7 @@ public class LoginTests(ConduitApiFixture factory, ITestOutputHelper output) : T
         await Context.SaveChangesAsync();
 
         var response = await Act(HttpMethod.Post, "/users/login", new LoginUserCommand(credentials));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -70,13 +69,13 @@ public class LoginTests(ConduitApiFixture factory, ITestOutputHelper output) : T
             )
         );
 
-        currentUser.User.Username.Should().Be("John Doe");
-        currentUser.User.Email.Should().Be("john.doe@example.com");
+        Assert.Equal("John Doe", currentUser.User.Username);
+        Assert.Equal("john.doe@example.com", currentUser.User.Email);
 
         var payload = DecodeToken(currentUser.User.Token);
 
-        payload["sub"].Should().Be(user.Id.ToString(CultureInfo.InvariantCulture));
-        payload["name"].Should().Be("John Doe");
-        payload["email"].Should().Be("john.doe@example.com");
+        Assert.Equal(user.Id.ToString(CultureInfo.InvariantCulture), payload["sub"]);
+        Assert.Equal("John Doe", payload["name"]);
+        Assert.Equal("john.doe@example.com", payload["email"]);
     }
 }

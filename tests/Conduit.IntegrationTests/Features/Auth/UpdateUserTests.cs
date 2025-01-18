@@ -4,7 +4,6 @@ using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -45,7 +44,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
         });
 
         var response = await Act(HttpMethod.Put, "/user", new UpdateUserCommand(user));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -65,13 +64,13 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
 
         var currentUser = await Act<UserResponse>(HttpMethod.Put, "/user", request);
 
-        currentUser.User.Username.Should().Be("John Doe");
-        currentUser.User.Email.Should().Be("jane.doe@example.com");
-        currentUser.User.Bio.Should().Be("My Bio");
-        currentUser.User.Image.Should().BeNull();
+        Assert.Equal("John Doe", currentUser.User.Username);
+        Assert.Equal("jane.doe@example.com", currentUser.User.Email);
+        Assert.Equal("My Bio", currentUser.User.Bio);
+        Assert.Null(currentUser.User.Image);
 
         var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
-        created.Should().NotBeNull();
+        Assert.NotNull(created);
     }
 
     [Fact]
@@ -83,7 +82,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
                 Email = "jane.doe@example.com"
             }
         ));
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -110,6 +109,6 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
                     Email = "jane.doe@example.com",
                 }
             ));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

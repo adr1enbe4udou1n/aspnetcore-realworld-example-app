@@ -3,7 +3,6 @@ using System.Net;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +18,7 @@ public class ProfileFollowTests(ConduitApiFixture factory, ITestOutputHelper out
     public async Task Guest_Cannot_Follow_Profile()
     {
         var response = await Act(HttpMethod.Post, "/profiles/john/follow");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -47,15 +46,14 @@ public class ProfileFollowTests(ConduitApiFixture factory, ITestOutputHelper out
 
         var response = await Act<ProfileResponse>(HttpMethod.Post, "/profiles/Jane Doe/follow");
 
-        response.Profile.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Username = "Jane Doe",
             Following = true
-        });
+        }, response.Profile);
 
-        (await Context.Set<FollowerUser>().CountAsync()).Should().Be(1);
-        (await Context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Jane Doe"))
-            .Should().BeTrue();
+        Assert.Equal(1, await Context.Set<FollowerUser>().CountAsync());
+        Assert.True(await Context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Jane Doe"));
     }
 
     [Fact]
@@ -84,14 +82,13 @@ public class ProfileFollowTests(ConduitApiFixture factory, ITestOutputHelper out
 
         var response = await Act<ProfileResponse>(HttpMethod.Delete, "/profiles/Jane Doe/follow");
 
-        response.Profile.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Username = "Jane Doe",
             Following = false
-        });
+        }, response.Profile);
 
-        (await Context.Set<FollowerUser>().CountAsync()).Should().Be(1);
-        (await Context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Alice"))
-            .Should().BeTrue();
+        Assert.Equal(1, await Context.Set<FollowerUser>().CountAsync());
+        Assert.True(await Context.Set<FollowerUser>().AnyAsync(x => x.Following.Name == "Alice"));
     }
 }

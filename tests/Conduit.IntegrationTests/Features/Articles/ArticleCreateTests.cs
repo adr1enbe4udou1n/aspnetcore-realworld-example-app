@@ -1,11 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Net;
+using System.Text.Json;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
-
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -68,7 +67,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
 
         var response = await Act(HttpMethod.Post, "/articles", new NewArticleCommand(article));
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -83,7 +82,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
             }
         ));
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -116,7 +115,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
             )
         );
 
-        response.Article.Should().BeEquivalentTo(new
+        Assert.Equivalent(new
         {
             Title = "Test Article",
             Description = "Test Description",
@@ -129,9 +128,9 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
                 Image = "https://i.pravatar.cc/300"
             },
             TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
-        });
+        }, response.Article);
 
-        (await Context.Articles.AnyAsync()).Should().BeTrue();
-        (await Context.Tags.CountAsync()).Should().Be(3);
+        Assert.True(await Context.Articles.AnyAsync());
+        Assert.Equal(3, await Context.Tags.CountAsync());
     }
 }

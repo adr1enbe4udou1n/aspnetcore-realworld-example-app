@@ -5,7 +5,6 @@ using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
 
-using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -46,7 +45,7 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {
         var response = await Act(HttpMethod.Post, "/users", new NewUserCommand(user));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -61,19 +60,19 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
 
         var currentUser = await Act<UserResponse>(HttpMethod.Post, "/users", request);
 
-        currentUser.User.Username.Should().Be("John Doe");
-        currentUser.User.Email.Should().Be("john.doe@example.com");
+        Assert.Equal("John Doe", currentUser.User.Username);
+        Assert.Equal("john.doe@example.com", currentUser.User.Email);
 
         var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
-        created.Should().NotBeNull();
+        Assert.NotNull(created);
 
-        PasswordHasher.Check("password", created!.Password!).Should().BeTrue();
+        Assert.True(PasswordHasher.Check("password", created!.Password!));
 
         var payload = DecodeToken(currentUser.User.Token);
 
-        payload["sub"].Should().Be(created.Id.ToString(CultureInfo.InvariantCulture));
-        payload["name"].Should().Be("John Doe");
-        payload["email"].Should().Be("john.doe@example.com");
+        Assert.Equal(created.Id.ToString(CultureInfo.InvariantCulture), payload["sub"]);
+        Assert.Equal("John Doe", payload["name"]);
+        Assert.Equal("john.doe@example.com", payload["email"]);
     }
 
     [Fact]
@@ -97,6 +96,6 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
                     Password = "password",
                 }
             ));
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }
