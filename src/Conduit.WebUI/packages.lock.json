@@ -36,11 +36,11 @@
       },
       "Npgsql.OpenTelemetry": {
         "type": "Direct",
-        "requested": "[9.0.2, )",
-        "resolved": "9.0.2",
-        "contentHash": "i62hdoWS0i+G9PXxE7G0G0bfpmwEhTKvF7qSsR+yqAspEyXYaXEAow3xCSGESvcc7CJZHsFGowiHosXmEfWYcw==",
+        "requested": "[9.0.3, )",
+        "resolved": "9.0.3",
+        "contentHash": "YVxm5ekM6UNbLto3ttNShOy13jffA0szhlEWSDMka7PzN+Srp2XaHmGbUb/2ulbtkXSk4CZruWwbjZxbMvw93Q==",
         "dependencies": {
-          "Npgsql": "9.0.2",
+          "Npgsql": "9.0.3",
           "OpenTelemetry.API": "1.7.0"
         }
       },
@@ -109,15 +109,15 @@
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
-        "requested": "[10.6.0.109712, )",
-        "resolved": "10.6.0.109712",
-        "contentHash": "fMwoXhlmFrcIYLpmCZOPXQkKwQD6WoFsmkZp8FZ7RJ9Db+ELUg56qh1X4Vy2nU7ZOWmuAMDOMosYxiQKNLBWtw=="
+        "requested": "[10.7.0.110445, )",
+        "resolved": "10.7.0.110445",
+        "contentHash": "U4v2LWopxADYkUv7Z5CX7ifKMdDVqHb7a1bzppIQnQi4WQR6z1Zi5rDkCHlVYGEd1U/WMz1IJCU8OmFZLJpVig=="
       },
       "Yarp.ReverseProxy": {
         "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "t16Z+OplJEElJy1Q6t12EwMGF2BeLw8IKjD1ema7ewbCRaMqeVIRPZo3MlxidnRFRK+tV6II8tKYX+7N5ZS98A==",
+        "requested": "[2.3.0, )",
+        "resolved": "2.3.0",
+        "contentHash": "gxtkN3a+9biu9V9Zd5NaTO6VZWXAnS2mhQ0R/VXmSPoTuiQNZsakKikrKpDtKxrL5nUYzbRsHtl40WNq+ZBKKg==",
         "dependencies": {
           "System.IO.Hashing": "8.0.0"
         }
@@ -534,20 +534,20 @@
       },
       "Npgsql": {
         "type": "Transitive",
-        "resolved": "9.0.2",
-        "contentHash": "hCbO8box7i/XXiTFqCJ3GoowyLqx3JXxyrbOJ6om7dr+eAknvBNhhUHeJVGAQo44sySZTfdVffp4BrtPeLZOAA==",
+        "resolved": "9.0.3",
+        "contentHash": "tPvY61CxOAWxNsKLEBg+oR646X4Bc8UmyQ/tJszL/7mEmIXQnnBhVJZrZEEUv0Bstu0mEsHZD5At3EO8zQRAYw==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "8.0.2"
         }
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
         "type": "Transitive",
-        "resolved": "9.0.3",
-        "contentHash": "1A6HpMPbzK+quxdtug1aDHI4BSRTgpi7OaDt8WQh7SFJd2sSQ0nNTZ7sYrwyxVf4AdKdN7XJL9tpiiJjRUaa4g==",
+        "resolved": "9.0.4",
+        "contentHash": "mw5vcY2IEc7L+IeGrxpp/J5OSnCcjkjAgJYCm/eD52wpZze8zsSifdqV7zXslSMmfJG2iIUGZyo3KuDtEFKwMQ==",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "[9.0.1, 10.0.0)",
           "Microsoft.EntityFrameworkCore.Relational": "[9.0.1, 10.0.0)",
-          "Npgsql": "9.0.2"
+          "Npgsql": "9.0.3"
         }
       },
       "OpenTelemetry": {
@@ -665,13 +665,13 @@
       },
       "Swashbuckle.AspNetCore": {
         "type": "Transitive",
-        "resolved": "7.2.0",
-        "contentHash": "vJv19UpWm6OOgnS9QLDnWARNVasXUfj8SFvlG7UVALm4nBnfwRnEky7C0veSDqMUmBeMPC6Ec3d6G1ts/J04Uw==",
+        "resolved": "7.3.1",
+        "contentHash": "6u8w+UXp/sF89xQjfydWw6znQrUpbpFOmEIs8ODE+S0bV+mCQ9dNP4mk+HRsGHylpDaP5KSYSCEfFSgluLXHsA==",
         "dependencies": {
           "Microsoft.Extensions.ApiDescription.Server": "6.0.5",
-          "Swashbuckle.AspNetCore.Swagger": "7.2.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "7.2.0",
-          "Swashbuckle.AspNetCore.SwaggerUI": "7.2.0"
+          "Swashbuckle.AspNetCore.Swagger": "7.3.1",
+          "Swashbuckle.AspNetCore.SwaggerGen": "7.3.1",
+          "Swashbuckle.AspNetCore.SwaggerUI": "7.3.1"
         }
       },
       "Swashbuckle.AspNetCore.Filters": {
@@ -693,24 +693,24 @@
       },
       "Swashbuckle.AspNetCore.Swagger": {
         "type": "Transitive",
-        "resolved": "7.2.0",
-        "contentHash": "y27fNDfIh1vGhJjXYynLcZjl7DLOW1bSO2MDsY9wB4Zm1fdxpPsuBSiR4U+0acWlAqLmnuOPKr/OeOgwRUkBlw==",
+        "resolved": "7.3.1",
+        "contentHash": "jQuJ8kVbq+YE8WsJE3RwWHlF1kasp0QkA9Gl6NeNLICrhcgN8IQIthMufYW6t/4hpcN5cBIdES5jCEV81WjHbA==",
         "dependencies": {
           "Microsoft.OpenApi": "1.6.22"
         }
       },
       "Swashbuckle.AspNetCore.SwaggerGen": {
         "type": "Transitive",
-        "resolved": "7.2.0",
-        "contentHash": "pMrTxGVuXM7t4wqft5CNNU8A0++Yw5kTLmYhB6tbEcyBfO8xEF/Y8pkJhO6BZ/2MYONrRYoQTfPFJqu8fOf5WQ==",
+        "resolved": "7.3.1",
+        "contentHash": "xs7Pznb3SSjZy7HpThE0ILqECfQFsGDHOrRoIYD/j67ktdRR1juDG4AMyidXXCOipgzHanZoF+nFrc+Nmjqjyw==",
         "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "7.2.0"
+          "Swashbuckle.AspNetCore.Swagger": "7.3.1"
         }
       },
       "Swashbuckle.AspNetCore.SwaggerUI": {
         "type": "Transitive",
-        "resolved": "7.2.0",
-        "contentHash": "hgrXeKzyp5OGN8qVvL7A+vhmU7mDJTfGpiMBRL66IcfLOyna8UTLtn3cC3CghamXpRDufcc9ciklTszUGEQK0w=="
+        "resolved": "7.3.1",
+        "contentHash": "hs6C+lmNEzipOA1WPQpIaGvvoXjUbnoevbv6l7o9ZQE8SNF8ggjOmK6NB6cYdMcEvk0uBeKl4Qq/BnRt5MFVqg=="
       },
       "System.CodeDom": {
         "type": "Transitive",
@@ -857,7 +857,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[9.0.2, )",
           "Microsoft.EntityFrameworkCore.Proxies": "[9.0.2, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[9.0.2, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.3, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )",
           "Scrutor": "[6.0.1, )",
           "Slugify.Core": "[4.0.1, )"
         }
@@ -867,7 +867,7 @@
         "dependencies": {
           "Conduit.Application": "[1.0.0, )",
           "Microsoft.AspNetCore.OpenApi": "[9.0.2, )",
-          "Swashbuckle.AspNetCore": "[7.2.0, )",
+          "Swashbuckle.AspNetCore": "[7.3.1, )",
           "Swashbuckle.AspNetCore.Filters": "[8.0.2, )"
         }
       }
