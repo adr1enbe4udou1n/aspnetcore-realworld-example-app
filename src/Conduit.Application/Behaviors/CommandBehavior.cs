@@ -13,12 +13,12 @@ public class CommandBehavior<TRequest, TResponse>(IAppDbContext context) : IPipe
         if (IsNotCommand(request))
         {
             context.UseRoConnection();
-            return await next();
+            return await next(cancellationToken);
         }
 
         using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-        var response = await next();
+        var response = await next(cancellationToken);
 
         transactionScope.Complete();
 

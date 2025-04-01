@@ -22,6 +22,6 @@ public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? valid
             }
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

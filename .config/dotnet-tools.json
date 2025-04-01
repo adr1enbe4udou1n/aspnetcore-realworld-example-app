@@ -3,21 +3,21 @@
   "isRoot": true,
   "tools": {
     "dotnet-ef": {
-      "version": "9.0.2",
+      "version": "9.0.3",
       "commands": [
         "dotnet-ef"
       ],
       "rollForward": false
     },
     "dotnet-sonarscanner": {
-      "version": "9.2.0",
+      "version": "10.1.1",
       "commands": [
         "dotnet-sonarscanner"
       ],
       "rollForward": false
     },
     "dotnet-coverage": {
-      "version": "17.14.1",
+      "version": "17.14.2",
       "commands": [
         "dotnet-coverage"
       ],
