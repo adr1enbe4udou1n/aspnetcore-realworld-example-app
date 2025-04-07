@@ -38,20 +38,22 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Cannot_Delete_Article_Of_Other_Author()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         await ActingAs(new User
         {
@@ -66,30 +68,36 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Can_Delete_Own_Article_With_All_Comments()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
+
+        Context.Articles.Add(article);
+
+        await Context.SaveChangesAsync();
 
         for (var i = 1; i <= 5; i++)
         {
-            await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+            var comment = new Comment
             {
                 Body = $"This is John, Test Comment {i} !",
-            }));
-        }
+                Article = article,
+                Author = user,
+            };
 
-        await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
+            Context.Comments.Add(comment);
+        }
 
         await Act(HttpMethod.Delete, "/articles/test-title");
 

@@ -30,7 +30,7 @@ public class TestBase(ConduitApiFixture factory, ITestOutputHelper output) : IAs
     private readonly HttpClient _client = factory.CreateClient();
     private readonly IServiceScope _scope = factory.Services.CreateScope();
     protected AppDbContext Context => _scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    protected IMediator Mediator => _scope.ServiceProvider.GetRequiredService<IMediator>();
+    protected ISlugifier Slugifier => _scope.ServiceProvider.GetRequiredService<ISlugifier>();
     protected IPasswordHasher PasswordHasher => _scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
     private IJwtTokenGenerator JwtTokenGenerator => _scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();

@@ -38,20 +38,22 @@ public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper o
     [Fact]
     public async Task Can_Favorite_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles/test-title/favorite");
 
@@ -66,22 +68,28 @@ public class ArticleFavoriteTests(ConduitApiFixture factory, ITestOutputHelper o
     [Fact]
     public async Task Can_Unfavorite_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
 
-        await Mediator.Send(new ArticleFavoriteCommand("test-title", true));
+        await Context.SaveChangesAsync();
+
+        Context.ArticleFavorite.Add(new ArticleFavorite
+        {
+            Article = await Context.Articles.FirstAsync(x => x.Slug == "test-title"),
+            User = user,
+        });
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Delete, "/articles/test-title/favorite");
 

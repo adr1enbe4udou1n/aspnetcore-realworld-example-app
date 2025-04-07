@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
@@ -5,6 +6,7 @@ using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Domain.Entities;
 
+using Microsoft.EntityFrameworkCore;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -99,8 +101,14 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         foreach (var a in articles)
         {
-            await Mediator.Send(new ArticleFavoriteCommand(a, true));
+            Context.ArticleFavorite.Add(new ArticleFavorite
+            {
+                Article = await Context.Articles.FirstAsync(x => x.Slug == a),
+                User = await Context.Users.FirstAsync(x => x.Name == "Jane Doe"),
+            });
         }
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=10&offset=0&favorited=Jane Doe");
 
@@ -134,7 +142,13 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
     {
         await CreateArticles();
 
-        await Mediator.Send(new ProfileFollowCommand("John Doe", true));
+        Context.FollowerUser.Add(new FollowerUser
+        {
+            Follower = await Context.Users.FirstAsync(x => x.Name == "Jane Doe"),
+            Following = await Context.Users.FirstAsync(x => x.Name == "John Doe"),
+        });
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles/feed?limit=10&offset=0");
 
@@ -172,7 +186,7 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
     private async Task CreateArticlesForAuthor(User author, int count)
     {
-        await ActingAs(author);
+        var user = await ActingAs(author);
 
         var articles = new List<string>();
 
@@ -181,17 +195,34 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
             articles.Add($"{author.Name} - Test Title {i}");
         }
 
+        var tag1 = await Context.Tags
+            .FirstOrDefaultAsync(x => x.Name == "Test Tag 1")
+            ?? new Tag { Name = "Test Tag 1" };
+        var tag2 = await Context.Tags
+            .FirstOrDefaultAsync(x => x.Name == "Test Tag 2")
+            ?? new Tag { Name = "Test Tag 2" };
+
+        var tag3 = new Tag { Name = $"Tag {author.Name}" };
+        Context.Tags.Add(tag3);
+
         foreach (var a in articles)
         {
-            await Mediator.Send(new NewArticleCommand(
-                new NewArticleDto
-                {
-                    Title = a,
-                    Description = "Test Description",
-                    Body = "Test Body",
-                    TagList = ["Test Tag 1", "Test Tag 2", $"Tag {author.Name}"]
-                }
-            ));
+            var article = new Article
+            {
+                Title = a,
+                Description = "Test Description",
+                Body = "Test Body",
+                Slug = Slugifier.Generate(a),
+                Author = user,
+            };
+
+            article.AddTag(tag1);
+            article.AddTag(tag2);
+            article.AddTag(tag3);
+
+            Context.Articles.Add(article);
         }
+
+        await Context.SaveChangesAsync();
     }
 }

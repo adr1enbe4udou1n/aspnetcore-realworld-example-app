@@ -74,20 +74,22 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Cannot_Update_Article_Of_Other_Author()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         await ActingAs(new User
         {
@@ -111,20 +113,22 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Can_Update_Own_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Put, "/articles/test-title",
             new UpdateArticleRequest(

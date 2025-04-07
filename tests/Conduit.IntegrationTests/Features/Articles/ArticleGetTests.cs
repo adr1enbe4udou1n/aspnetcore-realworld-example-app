@@ -29,7 +29,7 @@ public class ArticleGetTests(ConduitApiFixture factory, ITestOutputHelper output
     [Fact]
     public async Task Can_Get_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
@@ -37,15 +37,21 @@ public class ArticleGetTests(ConduitApiFixture factory, ITestOutputHelper output
             Image = "https://i.pravatar.cc/300"
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-                TagList = ["Test Tag 1", "Test Tag 2"]
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
+
+        article.AddTag(new Tag { Name = "Test Tag 1" });
+        article.AddTag(new Tag { Name = "Test Tag 2" });
+
+        Context.Articles.Add(article);
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<SingleArticleResponse>(HttpMethod.Get, "/articles/test-title");
 

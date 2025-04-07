@@ -30,20 +30,22 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
     [Theory, ClassData(typeof(InvalidComments))]
     public async Task Cannot_Create_Comment_With_Invalid_Data(NewCommentDto comment)
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(comment));
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -82,7 +84,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Can_Create_Comment()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
@@ -90,14 +92,16 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
             Image = "https://i.pravatar.cc/300"
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(new NewCommentDto
         {

@@ -25,20 +25,22 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Cannot_Delete_Non_Existent_Comment()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
+
+        await Context.SaveChangesAsync();
 
         var response = await Act(HttpMethod.Delete, "/articles/test-title/comments/1");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -47,64 +49,82 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Cannot_Delete_Comment_With_Non_Existent_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
 
-        var r = await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+        Context.Articles.Add(article);
+
+        var comment = new Comment
         {
             Body = "Thank you !",
-        }));
+            Article = article,
+            Author = user,
+        };
 
-        var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{r.Comment.Id}");
+        Context.Comments.Add(comment);
+
+        await Context.SaveChangesAsync();
+
+        var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{comment.Id}");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
     public async Task Cannot_Delete_Comment_With_Bad_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        Context.Articles.Add(new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Other Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        await Context.SaveChangesAsync();
 
-        var r = await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+        var article = new Article
+        {
+            Title = "Other Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "other-title",
+            Author = user,
+        };
+
+        Context.Articles.Add(article);
+
+        var comment = new Comment
         {
             Body = "Thank you !",
-        }));
+            Article = article,
+            Author = user,
+        };
 
-        var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{r.Comment.Id}", new CommentDeleteCommand(
-            "other-title", r.Comment.Id
+        Context.Comments.Add(comment);
+
+        await Context.SaveChangesAsync();
+
+        var response = await Act(HttpMethod.Delete, $"/articles/slug-article/comments/{comment.Id}", new CommentDeleteCommand(
+            "other-title", comment.Id
         ));
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -112,25 +132,33 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Cannot_Delete_Comment_Of_Other_Author()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
 
-        var r = await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+        Context.Articles.Add(article);
+
+        var comment = new Comment
         {
             Body = "Thank you !",
-        }));
+            Article = article,
+            Author = user,
+        };
+
+        Context.Comments.Add(comment);
+
+        await Context.SaveChangesAsync();
 
         await ActingAs(new User
         {
@@ -138,34 +166,42 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
             Email = "jane.doe@example.com",
         });
 
-        var response = await Act(HttpMethod.Delete, $"/articles/test-title/comments/{r.Comment.Id}");
+        var response = await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}");
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [Fact]
     public async Task Can_Delete_Own_Comment()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
 
-        var response = await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+        Context.Articles.Add(article);
+
+        var comment = new Comment
         {
             Body = "Thank you !",
-        }));
+            Article = article,
+            Author = user,
+        };
 
-        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
+        Context.Comments.Add(comment);
+
+        await Context.SaveChangesAsync();
+
+        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}");
 
         Assert.False(await Context.Comments.AnyAsync());
     }
@@ -173,38 +209,48 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Can_Delete_All_Comments_Of_Own_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
 
-        await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+        Context.Articles.Add(article);
+
+        Context.Comments.Add(new Comment
         {
             Body = "Thank you !",
-        }));
+            Article = article,
+            Author = user,
+        });
 
-        await ActingAs(new User
+        await Context.SaveChangesAsync();
+
+        user = await ActingAs(new User
         {
             Name = "Jane Doe",
             Email = "jane.doe@example.com",
         });
 
-        var response = await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+        var comment = new Comment
         {
             Body = "Thank you John !",
-        }));
+            Article = article,
+            Author = user,
+        };
 
-        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{response.Comment.Id}");
+        Context.Comments.Add(comment);
+
+        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}");
 
         Assert.Equal(1, await Context.Comments.CountAsync());
     }

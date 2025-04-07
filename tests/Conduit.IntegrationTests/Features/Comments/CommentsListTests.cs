@@ -24,7 +24,7 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
     [Fact]
     public async Task Can_List_All_Comments_Of_Article()
     {
-        await ActingAs(new User
+        var user = await ActingAs(new User
         {
             Name = "John Doe",
             Email = "john.doe@example.com",
@@ -32,14 +32,16 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
             Image = "https://i.pravatar.cc/300"
         });
 
-        await Mediator.Send(new NewArticleCommand(
-            new NewArticleDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Body = "Test Body",
-            }
-        ));
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
+
+        Context.Articles.Add(article);
 
         var comments = new List<string>();
 
@@ -50,13 +52,15 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         foreach (var c in comments)
         {
-            await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+            Context.Comments.Add(new Comment
             {
                 Body = $"This is John, {c} !",
-            }));
+                Article = article,
+                Author = user,
+            });
         }
 
-        await ActingAs(new User
+        user = await ActingAs(new User
         {
             Name = "Jane Doe",
             Email = "jane.doe@example.com",
@@ -66,11 +70,15 @@ public class CommentsListTests(ConduitApiFixture factory, ITestOutputHelper outp
 
         foreach (var c in comments)
         {
-            await Mediator.Send(new NewCommentCommand("test-title", new NewCommentDto
+            Context.Comments.Add(new Comment
             {
                 Body = $"This is Jane, {c} !",
-            }));
+                Article = article,
+                Author = user,
+            });
         }
+
+        await Context.SaveChangesAsync();
 
         var response = await Act<MultipleCommentsResponse>(HttpMethod.Get, "/articles/test-title/comments");
 
