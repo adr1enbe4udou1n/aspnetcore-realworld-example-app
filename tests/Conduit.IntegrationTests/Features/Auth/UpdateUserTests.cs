@@ -3,7 +3,7 @@ using System.Net;
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
-
+using Conduit.Presentation.Endpoints;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -43,7 +43,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
             Email = "john.doe@example.com",
         });
 
-        var response = await Act(HttpMethod.Put, "/user", new UpdateUserCommand(user));
+        var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(user));
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
@@ -56,7 +56,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
             Email = "john.doe@example.com",
         });
 
-        var request = new UpdateUserCommand(new UpdateUserDto
+        var request = new UpdateUserRequest(new UpdateUserDto
         {
             Email = "jane.doe@example.com",
             Bio = "My Bio"
@@ -76,7 +76,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
     [Fact]
     public async Task Guest_User_Cannot_Update_Infos()
     {
-        var response = await Act(HttpMethod.Put, "/user", new UpdateUserCommand(
+        var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(
             new UpdateUserDto
             {
                 Email = "jane.doe@example.com"
@@ -103,7 +103,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
 
         var response = await Act(
             HttpMethod.Put, "/user",
-            new UpdateUserCommand(
+            new UpdateUserRequest(
                 new UpdateUserDto
                 {
                     Email = "jane.doe@example.com",

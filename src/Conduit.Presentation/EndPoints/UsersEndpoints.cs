@@ -12,8 +12,8 @@ public static class UsersEndpoints
 {
     public static IEndpointRouteBuilder AddUsersRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/users", (ISender sender, NewUserRequest request, CancellationToken cancellationToken) =>
-            sender.Send(new NewUserCommand(request.User), cancellationToken)
+        app.MapPost("/users", (ICommandUsers users, NewUserRequest request, CancellationToken cancellationToken) =>
+            users.Register(request.User, cancellationToken)
         )
             .WithTags("User and Authentication")
             .WithName("CreateUser")
@@ -25,8 +25,8 @@ public static class UsersEndpoints
                 return generatedOperation;
             });
 
-        app.MapPost("/users/login", (ISender sender, LoginUserRequest request, CancellationToken cancellationToken) =>
-            sender.Send(new LoginUserCommand(request.User), cancellationToken)
+        app.MapPost("/users/login", (ICommandUsers users, LoginUserRequest request, CancellationToken cancellationToken) =>
+            users.Login(request.User, cancellationToken)
         )
             .WithTags("User and Authentication")
             .WithName("Login")

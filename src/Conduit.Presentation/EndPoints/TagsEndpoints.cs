@@ -4,6 +4,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.Presentation.Endpoints;
@@ -12,8 +13,8 @@ public static class TagsEndpoints
 {
     public static IEndpointRouteBuilder AddTagsRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/tags", (ISender sender, CancellationToken cancellationToken) =>
-            sender.Send(new TagsListQuery(), cancellationToken)
+        app.MapGet("/tags", ([FromServices] IQueryTags tags, CancellationToken cancellationToken) =>
+            tags.List(cancellationToken)
         )
             .WithTags("Tags")
             .WithName("GetTags")

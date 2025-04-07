@@ -13,8 +13,8 @@ public static class ProfilesEndpoints
 {
     public static IEndpointRouteBuilder AddProfilesRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/profiles/{username}", (ISender sender, string username, CancellationToken cancellationToken) =>
-            sender.Send(new ProfileGetQuery(username), cancellationToken)
+        app.MapGet("/profiles/{username}", (IQueryProfiles profiles, string username, CancellationToken cancellationToken) =>
+            profiles.Find(username, cancellationToken)
         )
             .WithTags("Profile")
             .WithName("GetProfileByUsername")
@@ -22,8 +22,8 @@ public static class ProfilesEndpoints
             .WithDescription("Get a profile of a user of the system. Auth is optional")
             .WithOpenApi();
 
-        app.MapPost("/profiles/{username}/follow", (ISender sender, string username, CancellationToken cancellationToken) =>
-            sender.Send(new ProfileFollowCommand(username, true), cancellationToken)
+        app.MapPost("/profiles/{username}/follow", (ICommandProfiles profiles, string username, CancellationToken cancellationToken) =>
+            profiles.Follow(username, true, cancellationToken)
         )
             .WithTags("Profile")
             .WithName("FollowUserByUsername")
@@ -38,8 +38,8 @@ public static class ProfilesEndpoints
                 return generatedOperation;
             });
 
-        app.MapDelete("/profiles/{username}/follow", (ISender sender, string username, CancellationToken cancellationToken) =>
-            sender.Send(new ProfileFollowCommand(username, false), cancellationToken)
+        app.MapDelete("/profiles/{username}/follow", (ICommandProfiles profiles, string username, CancellationToken cancellationToken) =>
+            profiles.Follow(username, false, cancellationToken)
         )
             .WithTags("Profile")
             .WithName("UnfollowUserByUsername")

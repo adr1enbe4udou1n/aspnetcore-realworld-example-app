@@ -13,8 +13,8 @@ public static class UserEndpoints
 {
     public static IEndpointRouteBuilder AddUserRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/user", (ISender sender, CancellationToken cancellationToken) =>
-            sender.Send(new CurrentUserQuery(), cancellationToken)
+        app.MapGet("/user", (IQueryUsers users, CancellationToken cancellationToken) =>
+            users.Find(cancellationToken)
         )
             .WithTags("User and Authentication")
             .WithName("GetCurrentUser")
@@ -23,8 +23,8 @@ public static class UserEndpoints
             .RequireAuthorization()
             .WithOpenApi();
 
-        app.MapPut("/user", (ISender sender, UpdateUserRequest request, CancellationToken cancellationToken) =>
-            sender.Send(new UpdateUserCommand(request.User), cancellationToken)
+        app.MapPut("/user", (ICommandUsers users, UpdateUserRequest request, CancellationToken cancellationToken) =>
+            users.Update(request.User, cancellationToken)
         )
             .WithTags("User and Authentication")
             .WithName("UpdateCurrentUser")

@@ -2,8 +2,6 @@ using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 
-using MediatR;
-
 namespace Conduit.Application.Features.Auth.Queries;
 
 public class UserDto
@@ -42,21 +40,5 @@ public static class UserMapper
             Image = user.Image,
             Following = currentUser != null && currentUser.IsFollowing(user),
         };
-    }
-}
-
-public record UserResponse(UserDto User);
-
-#pragma warning disable S2094
-public record CurrentUserQuery : IRequest<UserResponse>;
-#pragma warning restore S2094
-
-public class CurrentUserHandler(ICurrentUser currentUser, IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<CurrentUserQuery, UserResponse>
-{
-    public Task<UserResponse> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(new UserResponse(
-            currentUser.User!.Map(jwtTokenGenerator)
-        ));
     }
 }

@@ -3,20 +3,16 @@ using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
 
-using MediatR;
-
 namespace Conduit.Application.Features.Profiles.Commands;
 
-public record ProfileFollowCommand(string Username, bool Follow) : IRequest<ProfileResponse>;
-
-public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ProfileFollowCommand, ProfileResponse>
+public class CommandProfiles(IAppDbContext context, ICurrentUser currentUser) : ICommandProfiles
 {
-    public async Task<ProfileResponse> Handle(ProfileFollowCommand request, CancellationToken cancellationToken)
+    public async Task<ProfileResponse> Follow(string username, bool follow, CancellationToken cancellationToken)
     {
         var user = await context.Users
-            .FindAsync(x => x.Name == request.Username, cancellationToken);
+            .FindAsync(x => x.Name == username, cancellationToken);
 
-        if (request.Follow)
+        if (follow)
         {
             user.AddFollower(currentUser.User!);
         }

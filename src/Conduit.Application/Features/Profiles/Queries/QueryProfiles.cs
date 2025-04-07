@@ -2,8 +2,6 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
 
-using MediatR;
-
 namespace Conduit.Application.Features.Profiles.Queries;
 
 public class ProfileDto
@@ -19,14 +17,12 @@ public class ProfileDto
 
 public record ProfileResponse(ProfileDto Profile);
 
-public record ProfileGetQuery(string Username) : IRequest<ProfileResponse>;
-
-public class ProfileGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ProfileGetQuery, ProfileResponse>
+public class QueryProfiles(IAppDbContext context, ICurrentUser currentUser) : IQueryProfiles
 {
-    public async Task<ProfileResponse> Handle(ProfileGetQuery request, CancellationToken cancellationToken)
+    public async Task<ProfileResponse> Find(string username, CancellationToken cancellationToken)
     {
         var user = await context.Users
-            .FindAsync(x => x.Name == request.Username, cancellationToken);
+            .FindAsync(x => x.Name == username, cancellationToken);
 
         return new ProfileResponse(user.MapToProfile(currentUser.User));
     }
