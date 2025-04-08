@@ -1,8 +1,11 @@
 using System.Reflection;
 
-using Conduit.Application.Behaviors;
+using Conduit.Application.Features.Articles.Commands;
+using Conduit.Application.Features.Articles.Queries;
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Features.Comments.Commands;
+using Conduit.Application.Features.Comments.Queries;
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Features.Tags.Queries;
@@ -21,13 +24,14 @@ public static class ServiceExtensions
     {
         return services
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceExtensions).Assembly))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(CommandBehavior<,>))
             .AddScoped<IQueryTags, QueryTags>()
             .AddScoped<IQueryProfiles, QueryProfiles>()
             .AddScoped<ICommandProfiles, CommandProfiles>()
             .AddScoped<IQueryUsers, QueryUsers>()
-            .AddScoped<ICommandUsers, CommandUsers>();
+            .AddScoped<ICommandUsers, CommandUsers>()
+            .AddScoped<ICommandComments, CommandComments>()
+            .AddScoped<ICommandArticles, CommandArticles>()
+            .AddScoped<IQueryArticles, QueryArticles>()
+            .AddScoped<IQueryComments, QueryComments>();
     }
 }

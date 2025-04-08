@@ -13,8 +13,8 @@ public static class CommentsEndpoints
 {
     public static IEndpointRouteBuilder AddCommentsRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/articles/{slug}/comments", (ISender sender, string slug, CancellationToken cancellationToken) =>
-            sender.Send(new CommentsListQuery(slug), cancellationToken)
+        app.MapGet("/articles/{slug}/comments", (IQueryComments comments, string slug, CancellationToken cancellationToken) =>
+            comments.List(slug, cancellationToken)
         )
             .WithTags("Comments")
             .WithName("GetArticleComments")
@@ -27,8 +27,8 @@ public static class CommentsEndpoints
                 return generatedOperation;
             });
 
-        app.MapPost("/articles/{slug}/comments", (ISender sender, string slug, NewCommentRequest request, CancellationToken cancellationToken) =>
-            sender.Send(new NewCommentCommand(slug, request.Comment), cancellationToken)
+        app.MapPost("/articles/{slug}/comments", (ICommandComments comments, string slug, NewCommentRequest request, CancellationToken cancellationToken) =>
+            comments.Create(slug, request.Comment, cancellationToken)
         )
             .WithTags("Comments")
             .WithName("CreateArticleComment")
@@ -44,8 +44,8 @@ public static class CommentsEndpoints
                 return generatedOperation;
             });
 
-        app.MapDelete("/articles/{slug}/comments/{commentId}", (ISender sender, string slug, int commentId, CancellationToken cancellationToken) =>
-            sender.Send(new CommentDeleteCommand(slug, commentId), cancellationToken)
+        app.MapDelete("/articles/{slug}/comments/{commentId}", (ICommandComments comments, string slug, int commentId, CancellationToken cancellationToken) =>
+            comments.Delete(slug, commentId, cancellationToken)
         )
             .WithTags("Comments")
             .WithName("DeleteArticleComment")

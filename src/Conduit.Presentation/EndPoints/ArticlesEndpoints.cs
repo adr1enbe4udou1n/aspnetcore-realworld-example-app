@@ -13,14 +13,14 @@ public static class ArticlesEndpoints
 {
     public static IEndpointRouteBuilder AddArticlesRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/articles", (ISender sender,
+        app.MapGet("/articles", (IQueryArticles articles,
             string? author,
             string? favorited,
             string? tag,
             int? limit,
             int? offset,
             CancellationToken cancellationToken) =>
-            sender.Send(new ArticlesListQuery
+            articles.List(new ArticlesListQuery
             {
                 Author = author,
                 Favorited = favorited,
@@ -48,11 +48,11 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapGet("/articles/feed", (ISender sender,
+        app.MapGet("/articles/feed", (IQueryArticles articles,
             int? limit,
             int? offset,
             CancellationToken cancellationToken) =>
-            sender.Send(new ArticlesFeedQuery
+            articles.Feed(new ArticlesFeedQuery
             {
                 Limit = limit,
                 Offset = offset
@@ -72,8 +72,8 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapGet("/articles/{slug}", (ISender sender, string slug, CancellationToken cancellationToken) =>
-            sender.Send(new ArticleGetQuery(slug), cancellationToken)
+        app.MapGet("/articles/{slug}", (IQueryArticles articles, string slug, CancellationToken cancellationToken) =>
+            articles.Find(slug, cancellationToken)
         )
             .WithTags("Articles")
             .WithName("GetArticle")
@@ -86,8 +86,8 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapPost("/articles", (ISender sender, NewArticleRequest request, CancellationToken cancellationToken) =>
-            sender.Send(new NewArticleCommand(request.Article), cancellationToken)
+        app.MapPost("/articles", (ICommandArticles articles, NewArticleRequest request, CancellationToken cancellationToken) =>
+            articles.Create(request.Article, cancellationToken)
         )
             .WithTags("Articles")
             .WithName("CreateArticle")
@@ -102,8 +102,8 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapPut("/articles/{slug}", (ISender sender, string slug, UpdateArticleRequest request, CancellationToken cancellationToken) =>
-            sender.Send(new UpdateArticleCommand(slug, request.Article), cancellationToken)
+        app.MapPut("/articles/{slug}", (ICommandArticles articles, string slug, UpdateArticleRequest request, CancellationToken cancellationToken) =>
+            articles.Update(slug, request.Article, cancellationToken)
         )
             .WithTags("Articles")
             .WithName("UpdateArticle")
@@ -120,8 +120,8 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapDelete("/articles/{slug}", (ISender sender, string slug, CancellationToken cancellationToken) =>
-            sender.Send(new ArticleDeleteCommand(slug), cancellationToken)
+        app.MapDelete("/articles/{slug}", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
+            articles.Delete(slug, cancellationToken)
         )
             .WithTags("Articles")
             .WithName("DeleteArticle")
@@ -135,8 +135,8 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapPost("/articles/{slug}/favorite", (ISender sender, string slug, CancellationToken cancellationToken) =>
-            sender.Send(new ArticleFavoriteCommand(slug, true), cancellationToken)
+        app.MapPost("/articles/{slug}/favorite", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
+            articles.Favorite(slug, true, cancellationToken)
         )
             .WithTags("Favorites")
             .WithName("CreateArticleFavorite")
@@ -150,8 +150,8 @@ public static class ArticlesEndpoints
                 return generatedOperation;
             });
 
-        app.MapDelete("/articles/{slug}/favorite", (ISender sender, string slug, CancellationToken cancellationToken) =>
-            sender.Send(new ArticleFavoriteCommand(slug, false), cancellationToken)
+        app.MapDelete("/articles/{slug}/favorite", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
+            articles.Favorite(slug, false, cancellationToken)
         )
             .WithTags("Favorites")
             .WithName("DeleteArticleFavorite")

@@ -1,12 +1,8 @@
 using System.Collections.ObjectModel;
 
-using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
-using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
-
-using MediatR;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
@@ -35,6 +31,7 @@ public class ArticleDto
     public int FavoritesCount { get; set; }
 }
 
+
 public static class ArticleMapper
 {
     public static ArticleDto Map(this Article article, User? currentUser)
@@ -52,20 +49,5 @@ public static class ArticleMapper
             Author = article.Author.MapToProfile(currentUser),
             TagList = new Collection<string>(article.Tags.Select(t => t.Tag.Name).OrderBy(t => t).ToList())
         };
-    }
-}
-
-public record SingleArticleResponse(ArticleDto Article);
-
-public record ArticleGetQuery(string Slug) : IRequest<SingleArticleResponse>;
-
-public class ArticleGetHandler(IAppDbContext context, ICurrentUser currentUser) : IRequestHandler<ArticleGetQuery, SingleArticleResponse>
-{
-    public async Task<SingleArticleResponse> Handle(ArticleGetQuery request, CancellationToken cancellationToken)
-    {
-        var article = await context.Articles
-            .FindAsync(x => x.Slug == request.Slug, cancellationToken);
-
-        return new SingleArticleResponse(article.Map(currentUser.User));
     }
 }
