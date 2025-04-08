@@ -6,8 +6,6 @@ using Conduit.Domain.Entities;
 
 using FluentValidation;
 
-using MediatR;
-
 namespace Conduit.Application.Features.Comments.Commands;
 
 public record SingleCommentResponse(CommentDto Comment);
@@ -21,7 +19,7 @@ public class CommentCreateValidator : AbstractValidator<NewCommentDto>
     }
 }
 
-public record CommentDeleteCommand(string Slug, int Id) : IRequest;
+public record CommentDeleteCommand(string Slug, int Id);
 
 public class CommandComments(IAppDbContext context, ICurrentUser currentUser, IValidator<NewCommentDto> createValidator) : ICommandComments
 {

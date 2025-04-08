@@ -1,8 +1,6 @@
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Application.Features.Profiles.Queries;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

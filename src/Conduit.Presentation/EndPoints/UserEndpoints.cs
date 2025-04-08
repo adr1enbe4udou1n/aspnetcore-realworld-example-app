@@ -1,8 +1,6 @@
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

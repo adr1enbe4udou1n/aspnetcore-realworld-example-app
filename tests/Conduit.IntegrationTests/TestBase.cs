@@ -7,8 +7,6 @@ using Conduit.Domain.Entities;
 using Conduit.Infrastructure.Persistence;
 using Conduit.IntegrationTests.Events;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

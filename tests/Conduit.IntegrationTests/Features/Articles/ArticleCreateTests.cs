@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Net;
-using System.Text.Json;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;

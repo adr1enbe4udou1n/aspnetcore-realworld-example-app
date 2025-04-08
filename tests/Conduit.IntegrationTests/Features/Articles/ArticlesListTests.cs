@@ -1,9 +1,6 @@
-using System.Globalization;
 using System.Net;
 
-using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
-using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;

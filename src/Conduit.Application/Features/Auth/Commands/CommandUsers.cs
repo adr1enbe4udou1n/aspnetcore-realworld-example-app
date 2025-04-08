@@ -4,8 +4,6 @@ using Conduit.Domain.Entities;
 
 using FluentValidation;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Auth.Commands;

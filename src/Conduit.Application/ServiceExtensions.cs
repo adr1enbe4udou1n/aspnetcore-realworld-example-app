@@ -12,8 +12,6 @@ using Conduit.Application.Features.Tags.Queries;
 
 using FluentValidation;
 
-using MediatR;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Conduit.Application;

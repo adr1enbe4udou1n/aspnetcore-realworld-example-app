@@ -1,8 +1,6 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Articles.Queries;
