@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Net;
-using System.Text.Json;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
+using Conduit.Presentation.Endpoints;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -67,7 +67,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
 
         await Context.SaveChangesAsync();
 
-        var response = await Act(HttpMethod.Post, "/articles", new NewArticleCommand(article));
+        var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(article));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -75,7 +75,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
     [Fact]
     public async Task Guest_Cannot_Create_Article()
     {
-        var response = await Act(HttpMethod.Post, "/articles", new NewArticleCommand(
+        var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(
             new NewArticleDto
             {
                 Title = "Test Title",
@@ -106,7 +106,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
 
         var response = await Act<SingleArticleResponse>(
             HttpMethod.Post, "/articles",
-            new NewArticleCommand(
+            new NewArticleRequest(
                 new NewArticleDto
                 {
                     Title = "Test Article",

@@ -4,7 +4,7 @@ using System.Net;
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
-
+using Conduit.Presentation.Endpoints;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -44,14 +44,14 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
     [Theory, ClassData(typeof(InvalidRegisters))]
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {
-        var response = await Act(HttpMethod.Post, "/users", new NewUserCommand(user));
+        var response = await Act(HttpMethod.Post, "/users", new NewUserRequest(user));
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
     public async Task User_Can_Register()
     {
-        var request = new NewUserCommand(new NewUserDto
+        var request = new NewUserRequest(new NewUserDto
         {
             Email = "john.doe@example.com",
             Username = "John Doe",
@@ -88,7 +88,7 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
 
         var response = await Act(
             HttpMethod.Post, "/users",
-            new NewUserCommand(
+            new NewUserRequest(
                 new NewUserDto
                 {
                     Email = "john.doe@example.com",

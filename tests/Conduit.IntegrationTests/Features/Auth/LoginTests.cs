@@ -4,7 +4,7 @@ using System.Net;
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
-
+using Conduit.Presentation.Endpoints;
 
 using Xunit;
 using Xunit.Abstractions;
@@ -42,7 +42,7 @@ public class LoginTests(ConduitApiFixture factory, ITestOutputHelper output) : T
         });
         await Context.SaveChangesAsync();
 
-        var response = await Act(HttpMethod.Post, "/users/login", new LoginUserCommand(credentials));
+        var response = await Act(HttpMethod.Post, "/users/login", new LoginUserRequest(credentials));
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
@@ -60,7 +60,7 @@ public class LoginTests(ConduitApiFixture factory, ITestOutputHelper output) : T
 
         var currentUser = await Act<UserResponse>(
             HttpMethod.Post, "/users/login",
-            new LoginUserCommand(
+            new LoginUserRequest(
                 new LoginUserDto
                 {
                     Email = "john.doe@example.com",
