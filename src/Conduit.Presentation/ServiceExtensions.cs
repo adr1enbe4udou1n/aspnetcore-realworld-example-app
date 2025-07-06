@@ -1,6 +1,7 @@
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Filters;
+using Conduit.Presentation.Middlewares;
 using Conduit.Presentation.OptionsSetup;
 
 using Microsoft.AspNetCore.Builder;

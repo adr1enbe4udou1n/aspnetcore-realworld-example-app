@@ -4,6 +4,7 @@ using Conduit.Application;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Persistence;
 using Conduit.Presentation;
+using Conduit.Presentation.Middlewares;
 using Conduit.WebUI.OptionsSetup;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -105,6 +106,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<TransactionalMiddleware>();
 app.AddApplicationEndpoints();
 
 if (app.Environment.IsDevelopment())
