@@ -23,8 +23,8 @@ Two databases will spin up, one for normal development and one dedicated for int
 ### Run app
 
 ```sh
-make seed # migrate and fill db with fake data
-make run
+task seed # migrate and fill db with fake data
+task run
 ```
 
 And that's all, go to <http://localhost:5000/swagger>
@@ -34,19 +34,13 @@ And that's all, go to <http://localhost:5000/swagger>
 Launch follow scripts for validating realworld schema :
 
 ```sh
-make fresh # wipe all database for clean state
-make run
+task fresh # wipe all database for clean state
+task run
 npx newman run postman.json --global-var "APIURL=http://localhost:5000/api" --global-var="USERNAME=johndoe" --global-var="EMAIL=john.doe@example.com" --global-var="PASSWORD=password"
 ```
 
 ### Full test suite
 
-This project is fully tested via **xUnit**, just run `make test` for launching it. All SQL queries are automatically showed up for easy debug and easy N+1 detection.
+This project is fully tested via **xUnit**, just run `dotnet test` for launching it. All SQL queries are automatically showed up for easy debug and easy N+1 detection.
 
-Use `make test-watch-app` for realtime test watching, perfect for TDD.
-
-### Publishing
-
-Use `make publish` for publishing the app. Be sure to have PostgreSQL running before. This will execute all pipeline with code format checking, building, testing then publishing under `publish` directory.
-
-The local `Dockerfile` is suitable as production container.
+Use `dotnet watch test -p tests/WebUI.IntegrationTests` for realtime test watching, perfect for TDD.
