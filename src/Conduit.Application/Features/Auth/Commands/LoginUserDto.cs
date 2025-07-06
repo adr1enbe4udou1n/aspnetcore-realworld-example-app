@@ -6,4 +6,3 @@ public class LoginUserDto
 
     public required string Password { get; set; }
 }
-
