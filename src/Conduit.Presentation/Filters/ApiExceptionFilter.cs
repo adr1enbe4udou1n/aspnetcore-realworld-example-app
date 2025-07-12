@@ -1,5 +1,7 @@
 using Conduit.Application.Exceptions;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 
 namespace Conduit.Presentation.Filters;
@@ -20,8 +22,15 @@ public sealed class ApiExceptionFilter : IEndpointFilter
         }
         catch (ValidationException ex)
         {
+            var errors = ex.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key.ToUpperInvariant(),
+                    g => g.Select(e => e.ErrorMessage).ToArray()
+                );
+
             return Results.ValidationProblem(
-                ex.Errors, ex.Message, statusCode: StatusCodes.Status400BadRequest
+                errors, ex.Message, statusCode: StatusCodes.Status400BadRequest
             );
         }
         catch (ForbiddenException ex)

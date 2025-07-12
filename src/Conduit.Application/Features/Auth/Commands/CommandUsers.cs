@@ -54,7 +54,7 @@ public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPass
 
         if (user?.Password is null || !passwordHasher.Check(credentials.Password, user.Password))
         {
-            throw new Exceptions.ValidationException("Bad credentials");
+            throw new ValidationException("Bad credentials");
         }
 
         return new UserResponse(user.Map(jwtTokenGenerator));
