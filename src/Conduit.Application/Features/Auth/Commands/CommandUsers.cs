@@ -62,9 +62,7 @@ public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPass
 
     public async Task<UserResponse> Register(NewUserDto newUser, CancellationToken cancellationToken)
     {
-        var result = await registerValidator.ValidateAsync(newUser, cancellationToken);
-        if (!result.IsValid)
-            throw new Exceptions.ValidationException(result.Errors);
+        await registerValidator.ValidateAndThrowAsync(newUser, cancellationToken);
 
         var user = new User
         {
@@ -81,9 +79,7 @@ public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPass
 
     public async Task<UserResponse> Update(UpdateUserDto updateUser, CancellationToken cancellationToken)
     {
-        var result = await updateValidator.ValidateAsync(updateUser, cancellationToken);
-        if (!result.IsValid)
-            throw new Exceptions.ValidationException(result.Errors);
+        await updateValidator.ValidateAndThrowAsync(updateUser, cancellationToken);
 
         var user = currentUser.User!;
 

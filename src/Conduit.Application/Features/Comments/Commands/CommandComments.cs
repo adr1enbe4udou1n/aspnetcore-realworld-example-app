@@ -25,9 +25,7 @@ public class CommandComments(IAppDbContext context, ICurrentUser currentUser, IV
 {
     public async Task<SingleCommentResponse> Create(string slug, NewCommentDto newComment, CancellationToken cancellationToken)
     {
-        var result = await createValidator.ValidateAsync(newComment, cancellationToken);
-        if (!result.IsValid)
-            throw new Exceptions.ValidationException(result.Errors);
+        await createValidator.ValidateAndThrowAsync(newComment, cancellationToken);
 
         var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
 

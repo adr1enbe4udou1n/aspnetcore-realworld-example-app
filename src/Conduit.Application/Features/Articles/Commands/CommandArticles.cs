@@ -41,9 +41,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 {
     public async Task<SingleArticleResponse> Create(NewArticleDto newArticle, CancellationToken cancellationToken)
     {
-        var result = await createValidator.ValidateAsync(newArticle, cancellationToken);
-        if (!result.IsValid)
-            throw new Exceptions.ValidationException(result.Errors);
+        await createValidator.ValidateAndThrowAsync(newArticle, cancellationToken);
 
         var article = new Article
         {
@@ -75,9 +73,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 
     public async Task<SingleArticleResponse> Update(string slug, UpdateArticleDto updateArticle, CancellationToken cancellationToken)
     {
-        var result = await updateValidator.ValidateAsync(updateArticle, cancellationToken);
-        if (!result.IsValid)
-            throw new Exceptions.ValidationException(result.Errors);
+        await updateValidator.ValidateAndThrowAsync(updateArticle, cancellationToken);
 
         var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
 
