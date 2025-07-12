@@ -107,6 +107,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<TransactionalMiddleware>();
+app.UseExceptionHandler();
+
 app.AddApplicationEndpoints();
 
 if (app.Environment.IsDevelopment())

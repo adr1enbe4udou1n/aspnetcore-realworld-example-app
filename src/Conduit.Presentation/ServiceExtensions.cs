@@ -1,7 +1,7 @@
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
+using Conduit.Presentation.Exceptions;
 using Conduit.Presentation.Filters;
-using Conduit.Presentation.Middlewares;
 using Conduit.Presentation.OptionsSetup;
 
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +23,10 @@ public static class ServiceExtensions
             );
 
         return services
+            .AddExceptionHandler<ValidationExceptionHandler>()
+            .AddExceptionHandler<NotFoundExceptionHandler>()
+            .AddExceptionHandler<ForbiddenExceptionHandler>()
+            .AddProblemDetails()
             .ConfigureOptions<SwaggerGenOptionsSetup>()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen();
@@ -39,7 +43,5 @@ public static class ServiceExtensions
             .AddTagsRoutes()
             .AddArticlesRoutes()
             .AddCommentsRoutes();
-
-        api.AddEndpointFilter<ApiExceptionFilter>();
     }
 }
