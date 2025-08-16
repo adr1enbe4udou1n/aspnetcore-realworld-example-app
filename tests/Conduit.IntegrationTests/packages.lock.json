@@ -113,8 +113,8 @@
       },
       "Microsoft.AspNetCore.OpenApi": {
         "type": "Transitive",
-        "resolved": "9.0.7",
-        "contentHash": "8aG0mkgmA38IDJ0ca5HIpdexKjHXIh0z1kIdw5WyM6CrD4+CEt97UgSwBBBCHG6QQKV0hj2mfkwtEcqrJBcu8g==",
+        "resolved": "9.0.8",
+        "contentHash": "BwF9sQCKmvu93C/pmKxJjPhF5fFB23MEcgTsGL+7W3wKLYawS4lyFSL5/qh00IJzuADLf+1SmvxMaphbyZYqQQ==",
         "dependencies": {
           "Microsoft.OpenApi": "1.6.17"
         }
@@ -313,28 +313,28 @@
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks": {
         "type": "Transitive",
-        "resolved": "9.0.7",
-        "contentHash": "nWutKqF6Eo0x8JE7Zo6eWtjjGynqjHvEQgpRTzavkU9VKwFECcZFBghpkEUCoDjeMCVafzGQTlQw7DsWHNnlsQ==",
+        "resolved": "9.0.8",
+        "contentHash": "UUHwo7ymGFF8q9yuvwD4TP2gLryB1hQSvt+ui1clH+jp3xlEnIRBym6zEtA+ddKJR6sI69w5pctz86GrkLk+/w==",
         "dependencies": {
-          "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "9.0.7",
-          "Microsoft.Extensions.Hosting.Abstractions": "9.0.7",
-          "Microsoft.Extensions.Logging.Abstractions": "9.0.7",
-          "Microsoft.Extensions.Options": "9.0.7"
+          "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Hosting.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Options": "9.0.8"
         }
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": {
         "type": "Transitive",
-        "resolved": "9.0.7",
-        "contentHash": "kDvMq6n3hzQw2mvFwmj/z4OGlTPCg0fGjbM8C+4qS+SxYv4+QTFOY7nZNGfY0CGb40oPKlZQZD9TVQjMSj2atw=="
+        "resolved": "9.0.8",
+        "contentHash": "Q+ygK4mcs5dwUGaRizpO3ylUYFFrsRQ/uz3wHuuX51Z7QpzGVGyapFfC5wplt/DsuU7zyu4wrjXGmYyYCyeusA=="
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": {
         "type": "Transitive",
-        "resolved": "9.0.7",
-        "contentHash": "sxg7sAdPxJtiYexLc7Ltv6B4fIfPPiMeGYYK1VGVd2r8LlDGAC6+e6eDwMg/p/3kBXwHZRMf/aBcCLwYQhQKNw==",
+        "resolved": "9.0.8",
+        "contentHash": "xmWlbH82SG5At+jF4LYFmK/HBCNKkBYyiSExFGRLC7XbV5lEBVleg/l7BxL+nQGY2GSeXu8eCVm0hArlHQv11w==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Relational": "9.0.7",
-          "Microsoft.Extensions.Diagnostics.HealthChecks": "9.0.7",
-          "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "9.0.7"
+          "Microsoft.EntityFrameworkCore.Relational": "9.0.8",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "9.0.8",
+          "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "9.0.8"
         }
       },
       "Microsoft.Extensions.FileProviders.Abstractions": {
@@ -973,7 +973,7 @@
         "type": "Project",
         "dependencies": {
           "Conduit.Application": "[1.0.0, )",
-          "Microsoft.AspNetCore.OpenApi": "[9.0.7, )",
+          "Microsoft.AspNetCore.OpenApi": "[9.0.8, )",
           "Swashbuckle.AspNetCore": "[9.0.3, )",
           "Swashbuckle.AspNetCore.Filters": "[9.0.0, )"
         }
@@ -983,7 +983,7 @@
         "dependencies": {
           "Conduit.Infrastructure": "[1.0.0, )",
           "Conduit.Presentation": "[1.0.0, )",
-          "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[9.0.7, )",
+          "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[9.0.8, )",
           "Npgsql.OpenTelemetry": "[9.0.3, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.12.0, )",
           "OpenTelemetry.Exporter.Prometheus.AspNetCore": "[1.12.0-beta.1, )",
