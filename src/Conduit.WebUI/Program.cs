@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 using OpenTelemetry;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -49,10 +48,10 @@ if (!builder.Environment.IsEnvironment("Testing"))
 
     builder.Services
         .AddOpenTelemetry()
-        // .UseOtlpExporter()
-        .WithMetrics(metrics =>
+        .UseOtlpExporter()
+        .WithMetrics(builder =>
         {
-            metrics
+            builder
                 .AddAspNetCoreInstrumentation()
                 .AddPrometheusExporter()
                 .AddMeter(
@@ -60,10 +59,14 @@ if (!builder.Environment.IsEnvironment("Testing"))
                     "Microsoft.AspNetCore.Server.Kestrel"
                 );
         })
-        .WithTracing(tracing =>
+        .WithTracing(b =>
         {
-            tracing
-                .AddSource("AspNetCore.Conduit")
+            b
+                .SetResourceBuilder(ResourceBuilder
+                    .CreateDefault()
+                    .AddService("AspNetCore.Conduit")
+                    .AddTelemetrySdk()
+                )
                 .AddAspNetCoreInstrumentation(b =>
                 {
                     b.Filter = ctx =>
@@ -74,12 +77,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
                     };
                 })
                 .AddEntityFrameworkCoreInstrumentation()
-                .AddNpgsql()
-                .AddOtlpExporter(options =>
-                {
-                    options.Endpoint = new Uri("http://tempo-distributor.tracing:4318/v1/traces");
-                    options.Protocol = OtlpExportProtocol.HttpProtobuf;
-                });
+                .AddNpgsql();
         });
 }
 
