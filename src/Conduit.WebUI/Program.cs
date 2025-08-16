@@ -49,9 +49,9 @@ if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services
         .AddOpenTelemetry()
         .UseOtlpExporter()
-        .WithMetrics(builder =>
+        .WithMetrics(metrics =>
         {
-            builder
+            metrics
                 .AddAspNetCoreInstrumentation()
                 .AddPrometheusExporter()
                 .AddMeter(
@@ -59,9 +59,9 @@ if (!builder.Environment.IsEnvironment("Testing"))
                     "Microsoft.AspNetCore.Server.Kestrel"
                 );
         })
-        .WithTracing(b =>
+        .WithTracing(tracing =>
         {
-            b
+            tracing
                 .SetResourceBuilder(ResourceBuilder
                     .CreateDefault()
                     .AddService("AspNetCore.Conduit")
