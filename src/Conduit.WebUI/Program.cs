@@ -64,7 +64,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
             tracing
                 .SetResourceBuilder(ResourceBuilder
                     .CreateDefault()
-                    .AddService("AspNetCore.Conduit")
+                    .AddService("aspnet-core")
                     .AddTelemetrySdk()
                 )
                 .AddAspNetCoreInstrumentation(b =>
