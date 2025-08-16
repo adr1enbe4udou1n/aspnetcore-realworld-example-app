@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Npgsql;
 
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -37,6 +38,10 @@ builder.Services
 
 if (!builder.Environment.IsEnvironment("Testing"))
 {
+    builder.Host.UseSerilog((context, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture));
+
     builder.Services
         .AddHealthChecks()
         .AddDbContextCheck<AppDbContext>();
@@ -71,13 +76,9 @@ if (!builder.Environment.IsEnvironment("Testing"))
                     };
                 })
                 .AddEntityFrameworkCoreInstrumentation()
-                .AddNpgsql()
-                .AddOtlpExporter();
-        });
-
-    builder.Host.UseSerilog((context, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture));
+                .AddNpgsql();
+        })
+        .UseOtlpExporter();
 }
 
 var app = builder.Build();
