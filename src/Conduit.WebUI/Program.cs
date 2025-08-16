@@ -48,6 +48,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
 
     builder.Services
         .AddOpenTelemetry()
+        .UseOtlpExporter()
         .WithMetrics(builder =>
         {
             builder
@@ -77,8 +78,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
                 })
                 .AddEntityFrameworkCoreInstrumentation()
                 .AddNpgsql();
-        })
-        .UseOtlpExporter();
+        });
 }
 
 var app = builder.Build();
