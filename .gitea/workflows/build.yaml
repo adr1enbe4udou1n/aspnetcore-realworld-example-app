@@ -7,12 +7,14 @@ jobs:
   test_docker:
     runs-on: docker-cli
     steps:
-      - run: docker info
-        shell: sh
-  test_node:
-    runs-on: node-bookworm
-    steps:
-      - run: docker info
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: test/${{ forge.repository }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=semver,pattern={{raw}},value=test
   # build:
   #   runs-on: node-bookworm
   #   steps:
