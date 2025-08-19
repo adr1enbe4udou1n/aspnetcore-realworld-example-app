@@ -27,6 +27,10 @@ jobs:
           SONARQUBE_URL: ${{ vars.SONAR_HOST_URL }}
           SONARQUBE_ANALYSIS_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONARQUBE_PROJECT_KEY: aspnet-core-realworld
+      - uses: https://forge.okami101.io/okami101/actions/release@main
+        id: release
+        with:
+          token: ${{ inputs.gitea-token }}
 
   deploy:
     runs-on: docker-cli
@@ -35,5 +39,4 @@ jobs:
       - uses: https://forge.okami101.io/okami101/actions/docker@main
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-          gitea-token: ${{ secrets.RELEASE_TOKEN }}
-          release: true
+          version: ${{ steps.release.outputs.version }}
