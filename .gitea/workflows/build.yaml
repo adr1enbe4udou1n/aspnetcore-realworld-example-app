@@ -31,5 +31,5 @@ jobs:
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
           # gitea-repository: ${{ secrets.RELEASE_TOKEN }}
-          token: ${{ secrets.RELEASE_TOKEN }}
+          gitea-token: ${{ secrets.RELEASE_TOKEN }}
           release: true
