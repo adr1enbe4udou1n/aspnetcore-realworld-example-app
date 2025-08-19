@@ -7,7 +7,7 @@ jobs:
   test_docker:
     runs-on: docker-cli
     steps:
-      - run: docker info
+      - run: node -v
         shell: sh
   test_node:
     runs-on: node-bookworm
