@@ -12,7 +12,7 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 21
-      - name: Cache SonarQube packagess
+      - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
