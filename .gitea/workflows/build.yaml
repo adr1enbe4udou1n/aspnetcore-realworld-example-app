@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: node-bookworm
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -27,24 +27,8 @@ jobs:
           SONARQUBE_URL: ${{ vars.SONAR_HOST_URL }}
           SONARQUBE_ANALYSIS_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONARQUBE_PROJECT_KEY: aspnet-core-realworld
-      - uses: https://forge.okami101.io/okami101/actions/release@main
-        id: release
-        with:
-          token: ${{ secrets.RELEASE_TOKEN }}
-      - uses: docker/metadata-action@v5
-        id: meta
-        with:
-          images: ${{ vars.CONTAINER_REGISTRY }}/${{ forge.repository }}
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=branch
-            type=semver,pattern={{raw}},value=${{ steps.release.outputs.version }}
-
-  deploy:
-    runs-on: docker-cli
-    needs: build
-    steps:
       - uses: https://forge.okami101.io/okami101/actions/docker@main
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-          version: ${{ steps.release.outputs.version }}
+          gitea-token: ${{ secrets.RELEASE_TOKEN }}
+          release: true
