@@ -5,14 +5,14 @@ on:
 
 jobs:
   build:
-    runs-on: docker-cli
+    runs-on: node-bookworm
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: 21
-      - name: Cache SonarQube packages
+      - name: Cache SonarQube packagess
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
@@ -30,6 +30,6 @@ jobs:
       - uses: https://forgejo.okami101.io/okami101/actions/docker@main
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-          gitea-repository: ${{ secrets.RELEASE_TOKEN }}
-          gitea-token: ${{ secrets.RELEASE_TOKEN }}
+          repository: ${{ gitea.repository }}
+          token: ${{ secrets.RELEASE_TOKEN }}
           release: true
