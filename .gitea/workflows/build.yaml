@@ -30,7 +30,7 @@ jobs:
       - uses: https://forge.okami101.io/okami101/actions/release@main
         id: release
         with:
-          token: ${{ inputs.gitea-token }}
+          token: ${{ secrets.RELEASE_TOKEN }}
 
   deploy:
     runs-on: docker-cli
