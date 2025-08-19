@@ -5,7 +5,7 @@ on:
 
 jobs:
   test_docker:
-    runs-on: docker-cli
+    runs-on: node-bookworm
     steps:
       - uses: docker/metadata-action@v5
         id: meta
