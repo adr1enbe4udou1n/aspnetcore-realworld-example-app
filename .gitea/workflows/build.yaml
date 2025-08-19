@@ -30,6 +30,6 @@ jobs:
       - uses: https://forgejo.okami101.io/okami101/actions/docker@main
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-          # gitea-repository: ${{ secrets.RELEASE_TOKEN }}
+          gitea-repository: ${{ secrets.RELEASE_TOKEN }}
           gitea-token: ${{ secrets.RELEASE_TOKEN }}
           release: true
