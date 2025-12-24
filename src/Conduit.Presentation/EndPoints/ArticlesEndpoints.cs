@@ -31,19 +31,19 @@ public static class ArticlesEndpoints
             .WithName("GetArticles")
             .WithSummary("Get recent articles globally")
             .WithDescription("Get most recent articles globally. Use query parameters to filter results. Auth is optional")
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Filter by author (username)";
-                parameter = generatedOperation.Parameters[1];
+                parameter = operation.Parameters![1];
                 parameter.Description = "Filter by favorites of a user (username)";
-                parameter = generatedOperation.Parameters[2];
+                parameter = operation.Parameters![2];
                 parameter.Description = "Filter by tag";
-                parameter = generatedOperation.Parameters[3];
+                parameter = operation.Parameters![3];
                 parameter.Description = "Limit number of articles returned (default is 20)";
-                parameter = generatedOperation.Parameters[4];
+                parameter = operation.Parameters![4];
                 parameter.Description = "Offset/skip number of articles (default is 0)";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapGet("/articles/feed", (IQueryArticles articles,
@@ -61,13 +61,13 @@ public static class ArticlesEndpoints
             .WithSummary("Get recent articles from users you follow")
             .WithDescription("Get most recent articles from users you follow. Use query parameters to limit. Auth is required")
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Limit number of articles returned (default is 20)";
-                parameter = generatedOperation.Parameters[1];
+                parameter = operation.Parameters![1];
                 parameter.Description = "Offset/skip number of articles (default is 0)";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapGet("/articles/{slug}", (IQueryArticles articles, string slug, CancellationToken cancellationToken) =>
@@ -77,11 +77,11 @@ public static class ArticlesEndpoints
             .WithName("GetArticle")
             .WithSummary("Get an article")
             .WithDescription("Get an article. Auth not required")
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article to get";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapPost("/articles", (ICommandArticles articles, NewArticleRequest request, CancellationToken cancellationToken) =>
@@ -94,10 +94,10 @@ public static class ArticlesEndpoints
             .Produces(200)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                generatedOperation.RequestBody.Description = "Article to create";
-                return generatedOperation;
+                operation.RequestBody!.Description = "Article to create";
+                return Task.CompletedTask;
             });
 
         app.MapPut("/articles/{slug}", (ICommandArticles articles, string slug, UpdateArticleRequest request, CancellationToken cancellationToken) =>
@@ -110,12 +110,12 @@ public static class ArticlesEndpoints
             .Produces(200)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article to update";
-                generatedOperation.RequestBody.Description = "Article to update";
-                return generatedOperation;
+                operation.RequestBody!.Description = "Article to update";
+                return Task.CompletedTask;
             });
 
         app.MapDelete("/articles/{slug}", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
@@ -126,11 +126,11 @@ public static class ArticlesEndpoints
             .WithSummary("Delete an article")
             .WithDescription("Delete an article. Auth is required")
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article to delete";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapPost("/articles/{slug}/favorite", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
@@ -141,11 +141,11 @@ public static class ArticlesEndpoints
             .WithSummary("Favorite an article")
             .WithDescription("Favorite an article. Auth is required")
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article that you want to favorite";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapDelete("/articles/{slug}/favorite", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
@@ -156,11 +156,11 @@ public static class ArticlesEndpoints
             .WithSummary("Unfavorite an article")
             .WithDescription("Unfavorite an article. Auth is required")
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article that you want to unfavorite";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         return app;

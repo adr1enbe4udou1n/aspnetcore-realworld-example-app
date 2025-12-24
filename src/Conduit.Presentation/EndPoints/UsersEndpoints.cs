@@ -17,10 +17,10 @@ public static class UsersEndpoints
             .WithName("CreateUser")
             .WithSummary("Register a new user")
             .WithDescription("Register a new user")
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                generatedOperation.RequestBody.Description = "Details of the new user to register";
-                return generatedOperation;
+                operation.RequestBody!.Description = "Details of the new user to register";
+                return Task.CompletedTask;
             });
 
         app.MapPost("/users/login", (ICommandUsers users, LoginUserRequest request, CancellationToken cancellationToken) =>
@@ -32,10 +32,10 @@ public static class UsersEndpoints
             .WithDescription("Login for existing user")
             .Produces(200)
             .ProducesValidationProblem(400)
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                generatedOperation.RequestBody.Description = "Credentials to use";
-                return generatedOperation;
+                operation.RequestBody!.Description = "Credentials to use";
+                return Task.CompletedTask;
             });
 
         return app;

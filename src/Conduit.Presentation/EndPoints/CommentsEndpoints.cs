@@ -18,11 +18,11 @@ public static class CommentsEndpoints
             .WithName("GetArticleComments")
             .WithSummary("Get comments for an article")
             .WithDescription("Get the comments for an article. Auth is optional")
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article that you want to get comments for";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapPost("/articles/{slug}/comments", (ICommandComments comments, string slug, NewCommentRequest request, CancellationToken cancellationToken) =>
@@ -35,11 +35,11 @@ public static class CommentsEndpoints
             .Produces(200)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article that you want to create a comments for";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapDelete("/articles/{slug}/comments/{commentId}", (ICommandComments comments, string slug, int commentId, CancellationToken cancellationToken) =>
@@ -50,13 +50,13 @@ public static class CommentsEndpoints
             .WithSummary("Delete a comment for an article")
             .WithDescription("Delete a comment for an article. Auth is required")
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article that you want to delete a comments for";
-                parameter = generatedOperation.Parameters[1];
+                parameter = operation.Parameters![1];
                 parameter.Description = "ID of the comment you want to delete";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         return app;

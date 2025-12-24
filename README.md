@@ -23,8 +23,8 @@ Two databases will spin up, one for normal development and one dedicated for int
 ### Run app
 
 ```sh
-task seed # migrate and fill db with fake data
-task run
+mise seed # migrate and fill db with fake data
+mise dev
 ```
 
 And that's all, go to <http://localhost:5000/swagger>
@@ -34,8 +34,8 @@ And that's all, go to <http://localhost:5000/swagger>
 Launch follow scripts for validating realworld schema :
 
 ```sh
-task fresh # wipe all database for clean state
-task run
+mise fresh # wipe all database for clean state
+mise dev
 npx newman run postman.json --global-var "APIURL=http://localhost:5000/api" --global-var="USERNAME=johndoe" --global-var="EMAIL=john.doe@example.com" --global-var="PASSWORD=password"
 ```
 

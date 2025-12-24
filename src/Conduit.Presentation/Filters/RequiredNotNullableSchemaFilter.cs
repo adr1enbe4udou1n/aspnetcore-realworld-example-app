@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -6,16 +6,16 @@ namespace Conduit.Presentation.Filters;
 
 public class RequiredNotNullableSchemaFilter : ISchemaFilter
 {
-    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    public void Apply(IOpenApiSchema schema, SchemaFilterContext context)
     {
-        if (schema.Properties is null)
+        if (schema.Properties is null || schema.Required is null)
         {
             return;
         }
 
         var notNullableProperties = schema
             .Properties
-            .Where(x => !x.Value.Nullable && !schema.Required.Contains(x.Key))
+            .Where(x => !schema.Required.Contains(x.Key))
             .ToList();
 
         foreach (var property in notNullableProperties)

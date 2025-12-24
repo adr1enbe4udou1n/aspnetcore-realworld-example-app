@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -12,12 +12,12 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.9" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
     <PackageReference Include="Slugify.Core" Version="5.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
-    <PackageReference Include="Scrutor" Version="6.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
+    <PackageReference Include="Scrutor" Version="7.0.0" />
   </ItemGroup>
 
   <Target Name="PostClean" AfterTargets="Clean">

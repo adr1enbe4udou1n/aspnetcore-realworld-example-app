@@ -17,8 +17,7 @@ public static class TagsEndpoints
             .WithTags("Tags")
             .WithName("GetTags")
             .WithSummary("Get tags")
-            .WithDescription("Get tags. Auth not required")
-            .WithOpenApi();
+            .WithDescription("Get tags. Auth not required");
 
         return app;
     }

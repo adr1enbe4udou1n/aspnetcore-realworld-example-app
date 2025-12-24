@@ -17,8 +17,7 @@ public static class ProfilesEndpoints
             .WithTags("Profile")
             .WithName("GetProfileByUsername")
             .WithSummary("Get a profile")
-            .WithDescription("Get a profile of a user of the system. Auth is optional")
-            .WithOpenApi();
+            .WithDescription("Get a profile of a user of the system. Auth is optional");
 
         app.MapPost("/profiles/{username}/follow", (ICommandProfiles profiles, string username, CancellationToken cancellationToken) =>
             profiles.Follow(username, true, cancellationToken)
@@ -27,13 +26,12 @@ public static class ProfilesEndpoints
             .WithName("FollowUserByUsername")
             .WithSummary("Follow a user")
             .WithDescription("Follow a user by username")
-            .WithOpenApi()
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Username of the profile you want to follow";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         app.MapDelete("/profiles/{username}/follow", (ICommandProfiles profiles, string username, CancellationToken cancellationToken) =>
@@ -43,13 +41,12 @@ public static class ProfilesEndpoints
             .WithName("UnfollowUserByUsername")
             .WithSummary("Unfollow a user")
             .WithDescription("Unfollow a user by username")
-            .WithOpenApi()
             .RequireAuthorization()
-            .WithOpenApi(generatedOperation =>
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                var parameter = generatedOperation.Parameters[0];
+                var parameter = operation.Parameters![0];
                 parameter.Description = "Username of the profile you want to unfollow";
-                return generatedOperation;
+                return Task.CompletedTask;
             });
 
         return app;

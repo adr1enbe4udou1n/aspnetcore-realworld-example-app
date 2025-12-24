@@ -4,7 +4,7 @@ run = "dotnet run --project tools/Conduit.Tools db seed"
 [tasks.fresh]
 run = "dotnet run --project tools/Conduit.Tools db fresh"
 
-[tasks.run]
+[tasks.dev]
 run = "dotnet run --project src/Conduit.WebUI"
 
 [tasks.watch]
@@ -21,14 +21,14 @@ run = "dotnet format --verify-no-changes"
 
 [tasks.build]
 run = [
-  "dotnet sonarscanner begin /k:\"{{.SONARQUBE_PROJECT_KEY}}\" /d:sonar.host.url=\"{{.SONARQUBE_URL}}\" /d:sonar.token=\"{{.SONARQUBE_ANALYSIS_TOKEN}}\" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml",
+  "dotnet sonarscanner begin /k:\"aspnet-core-realworld\" /d:sonar.host.url=\"$SONAR_HOST_URL\" /d:sonar.token=\"$SONAR_TOKEN\" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml",
   "dotnet build -c Release"
 ]
 
 [tasks.test]
 run = [
   "dotnet coverage collect 'dotnet test -c Release --no-restore --no-build --verbosity=normal' -f xml -o 'coverage.xml'",
-  "dotnet sonarscanner end /d:sonar.token=\"{{.SONARQUBE_ANALYSIS_TOKEN}}\"",
+  "dotnet sonarscanner end /d:sonar.token=\"$SONAR_TOKEN\"",
   "dotnet publish src/Conduit.WebUI -c Release -o publish --no-restore --no-build --verbosity=normal",
   "dotnet publish tools/Conduit.Tools -c Release -o publish --no-restore --no-build --verbosity=normal"
 ]
