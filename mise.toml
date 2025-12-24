@@ -33,5 +33,13 @@ run = [
   "dotnet publish tools/Conduit.Tools -c Release -o publish --no-restore --no-build --verbosity=normal"
 ]
 
+[tasks.ci]
+run = [
+  { task = "vendor" },
+  { task = "lint" },
+  { task = "build" },
+  { task = "test" },
+]
+
 [tools]
 dotnet = "10"
