@@ -31,6 +31,8 @@ jobs:
           SONARQUBE_ANALYSIS_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONARQUBE_PROJECT_KEY: aspnet-core-realworld
       - run: mise ci
+        env:
+          MISE_TASK_RUN_AUTO_INSTALL: false
       - uses: https://gitea.okami101.io/okami101/actions/docker@main
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
