@@ -7,26 +7,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: 21
       - name: Cache SonarQube packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 9.x
+          dotnet-version: 10.x
           cache: true
           cache-dependency-path: "**/packages.lock.json"
-      - uses: https://gitea.okami101.io/okami101/actions/task@main
+      - uses: jdx/mise-action@v3
+        with:
+          cache: false
+          install: false
         env:
           SONARQUBE_URL: ${{ vars.SONAR_HOST_URL }}
           SONARQUBE_ANALYSIS_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONARQUBE_PROJECT_KEY: aspnet-core-realworld
+      - run: mise vendor lint build test
       - uses: https://gitea.okami101.io/okami101/actions/docker@main
         with:
           password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
