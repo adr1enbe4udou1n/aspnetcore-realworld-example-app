@@ -92,13 +92,8 @@ if (!app.Environment.IsEnvironment("Testing"))
     app.MapPrometheusScrapingEndpoint();
 }
 
-app.UseSwagger(c =>
-{
-    c.RouteTemplate = "/api/{documentName}/docs.json";
-});
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("v1/docs.json", "Conduit v1");
     c.RoutePrefix = "api";
 });
 
@@ -111,6 +106,8 @@ app.UseMiddleware<TransactionalMiddleware>();
 app.UseExceptionHandler();
 
 app.AddApplicationEndpoints();
+
+app.MapOpenApi("/api/v1/{documentName}.json");
 
 if (app.Environment.IsDevelopment())
 {

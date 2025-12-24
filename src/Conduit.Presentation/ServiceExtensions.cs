@@ -1,14 +1,13 @@
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Exceptions;
-using Conduit.Presentation.Filters;
-using Conduit.Presentation.OptionsSetup;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi;
 
 namespace Conduit.Presentation;
 
@@ -27,15 +26,26 @@ public static class ServiceExtensions
             .AddExceptionHandler<NotFoundExceptionHandler>()
             .AddExceptionHandler<ForbiddenExceptionHandler>()
             .AddProblemDetails()
-            .ConfigureOptions<SwaggerGenOptionsSetup>()
-            .AddEndpointsApiExplorer()
-            .AddSwaggerGen(options =>
+            .AddOpenApi("docs", o =>
             {
-                options.OperationFilter<ArticlesApiOperationFilter>();
-                options.OperationFilter<CommentsApiOperationFilter>();
-                options.OperationFilter<ProfilesApiOperationFilter>();
-                options.OperationFilter<UserApiOperationFilter>();
-                options.OperationFilter<UsersApiOperationFilter>();
+                o.AddDocumentTransformer((document, context, cancellationToken) =>
+                {
+                    document.Servers =
+                    [
+                        new() {
+                            Url = "/api"
+                        }
+                    ];
+
+                    var newPaths = new OpenApiPaths();
+                    foreach (var path in document.Paths)
+                    {
+                        var newPathKey = path.Key.StartsWith("/api", StringComparison.OrdinalIgnoreCase) ? path.Key[4..] : path.Key;
+                        newPaths.Add(newPathKey, path.Value);
+                    }
+                    document.Paths = newPaths;
+                    return Task.CompletedTask;
+                });
             });
     }
 
