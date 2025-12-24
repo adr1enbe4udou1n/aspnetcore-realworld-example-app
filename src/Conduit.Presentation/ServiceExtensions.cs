@@ -29,7 +29,14 @@ public static class ServiceExtensions
             .AddProblemDetails()
             .ConfigureOptions<SwaggerGenOptionsSetup>()
             .AddEndpointsApiExplorer()
-            .AddSwaggerGen();
+            .AddSwaggerGen(options =>
+            {
+                options.OperationFilter<ArticlesApiOperationFilter>();
+                options.OperationFilter<CommentsApiOperationFilter>();
+                options.OperationFilter<ProfilesApiOperationFilter>();
+                options.OperationFilter<UserApiOperationFilter>();
+                options.OperationFilter<UsersApiOperationFilter>();
+            });
     }
 
     public static void AddApplicationEndpoints(this IEndpointRouteBuilder app)
