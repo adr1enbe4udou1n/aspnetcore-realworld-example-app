@@ -35,11 +35,11 @@ run = [
 
 [tasks.ci]
 run = [
-  { task = "vendor" },
-  { task = "lint" },
-  { task = "build" },
-  { task = "test" },
+  { tasks = ["lint", "build"] },
+  { tasks = ["test"] },
 ]
+depends = ["vendor"]
 
 [tools]
 dotnet = "10"
+sonar-scanner-cli = "8"
