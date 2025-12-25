@@ -42,4 +42,3 @@ depends = ["vendor"]
 
 [tools]
 dotnet = "10"
-sonar-scanner-cli = "8"
