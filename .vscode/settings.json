@@ -2,7 +2,7 @@
     "rest-client.rememberCookiesForSubsequentRequests": false,
     "dotnet.defaultSolution": "RealworldApp.sln",
     "sonarlint.connectedMode.project": {
-        "connectionId": "sonarqube-okami101",
+        "connectionId": "okami101",
         "projectKey": "aspnet-core-realworld"
     }
 }

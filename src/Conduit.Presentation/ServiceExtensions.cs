@@ -26,7 +26,7 @@ public static class ServiceExtensions
             .AddExceptionHandler<NotFoundExceptionHandler>()
             .AddExceptionHandler<ForbiddenExceptionHandler>()
             .AddProblemDetails()
-            .AddOpenApi("docs", o =>
+            .AddOpenApi("swagger", o =>
             {
                 o.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
