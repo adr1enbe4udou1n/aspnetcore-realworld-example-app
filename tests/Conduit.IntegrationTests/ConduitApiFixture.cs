@@ -17,11 +17,10 @@ namespace Conduit.IntegrationTests;
 
 public class ConduitApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
+    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder("postgres:18")
         .WithDatabase("main")
         .WithUsername("main")
         .WithPassword("main")
-        .WithImage("postgres:18")
         .Build();
 
     public async Task MigrateDatabase()
