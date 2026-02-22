@@ -15,8 +15,9 @@ public static class DbSetExtensions
             ?? throw new NotFoundException();
     }
 
-    public static async Task<PagedResponse<TSource>> PaginateAsync<TSource>(
+    public static async Task<PagedResponse<TResult>> PaginateAsync<TSource, TResult>(
         this IQueryable<TSource> source,
+        Expression<Func<TSource, TResult>> projection,
         PagedQuery query,
         CancellationToken cancellationToken = default
     )
@@ -27,8 +28,9 @@ public static class DbSetExtensions
             .Take(query.Limit > PagedQuery.MaxLimit
                 ? PagedQuery.MaxLimit
                 : query.Limit ?? PagedQuery.MaxLimit)
+            .Select(projection)
             .ToListAsync(cancellationToken);
 
-        return new PagedResponse<TSource>(items, count);
+        return new PagedResponse<TResult>(items, count);
     }
 }

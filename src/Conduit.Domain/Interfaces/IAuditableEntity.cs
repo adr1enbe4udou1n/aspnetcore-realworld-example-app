@@ -2,7 +2,7 @@ namespace Conduit.Domain.Interfaces;
 
 public interface IAuditableEntity
 {
-    DateTime CreatedAt { get; set; }
+    DateTime CreatedAt { get; }
 
-    DateTime UpdatedAt { get; set; }
+    DateTime UpdatedAt { get; }
 }

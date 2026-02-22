@@ -56,9 +56,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
         {
             var existingTags = await context.Tags
                 .Where(
-                    x => newArticle.TagList
-                        .AsEnumerable()
-                        .Any(t => t == x.Name)
+                    x => newArticle.TagList.Contains(x.Name)
                 )
                 .ToListAsync(cancellationToken);
 
