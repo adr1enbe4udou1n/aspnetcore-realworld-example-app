@@ -57,7 +57,7 @@ public class Article : IAuditableEntity
     {
         _tags.AddRange(
             newTags
-                .Where(x => !String.IsNullOrEmpty(x))
+                .Where(x => !string.IsNullOrEmpty(x))
                 .Distinct()
                 .Select(x =>
                 {

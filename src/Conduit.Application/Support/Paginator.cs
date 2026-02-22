@@ -15,5 +15,5 @@ public class PagedResponse<T>(IEnumerable<T> items, int total)
 {
     public Collection<T> Items { get; } = new Collection<T>(items.ToList());
 
-    public int Total { get; set; } = total;
+    public int Total { get; } = total;
 }

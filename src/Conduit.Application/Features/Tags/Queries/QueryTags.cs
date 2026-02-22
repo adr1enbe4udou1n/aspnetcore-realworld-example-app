@@ -10,7 +10,7 @@ public class QueryTags(IAppDbContext context) : IQueryTags
 {
     public async Task<TagsResponse> List(CancellationToken cancellationToken)
     {
-        var tags = await context.Tags.OrderBy(t => t.Name).ToListAsync(cancellationToken);
-        return new TagsResponse(tags.Select(t => t.Name));
+        var tags = await context.Tags.OrderBy(t => t.Name).Select(t => t.Name).ToListAsync(cancellationToken);
+        return new TagsResponse(tags);
     }
 }

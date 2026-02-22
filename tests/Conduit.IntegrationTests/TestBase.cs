@@ -131,8 +131,6 @@ public class TestBase(ConduitApiFixture factory, ITestOutputHelper output) : IAs
                         return await client.PostAsJsonAsync($"/api{requestPath}", value);
                     case "PUT":
                         return await client.PutAsJsonAsync($"/api{requestPath}", value);
-                    default:
-                        break;
                 }
             }
             return await client.SendAsync(request);
