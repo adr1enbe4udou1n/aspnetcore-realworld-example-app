@@ -1,5 +1,3 @@
-using System.Transactions;
-
 using Conduit.Application.Interfaces;
 
 using Microsoft.AspNetCore.Http;
@@ -21,10 +19,10 @@ public class TransactionalMiddleware(
             return;
         }
 
-        using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        await using var transaction = await dbContext.BeginTransactionAsync(ctx.RequestAborted);
 
         await next(ctx);
 
-        transactionScope.Complete();
+        await transaction.CommitAsync(ctx.RequestAborted);
     }
 }
