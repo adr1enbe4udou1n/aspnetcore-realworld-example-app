@@ -20,7 +20,7 @@ public class ArticleCreateValidator : AbstractValidator<NewArticleDto>
 
         RuleFor(x => x.Title).MustAsync(
             async (title, cancellationToken) => !await context.Articles
-                .Where(x => x.Slug == slugifier.Generate(title!))
+                .Where(x => x.Slug == slugifier.Generate(title))
                 .AnyAsync(cancellationToken)
         )
             .WithMessage("Slug with this title already used");

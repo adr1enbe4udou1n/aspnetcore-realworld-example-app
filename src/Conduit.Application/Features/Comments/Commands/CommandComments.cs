@@ -50,7 +50,7 @@ public class CommandComments(IAppDbContext context, ICurrentUser currentUser, IV
             cancellationToken
         );
 
-        if (article.AuthorId != currentUser.User!.Id && comment.AuthorId != currentUser.User!.Id)
+        if (article.AuthorId != currentUser.User!.Id && comment.AuthorId != currentUser.User.Id)
         {
             throw new ForbiddenException();
         }
