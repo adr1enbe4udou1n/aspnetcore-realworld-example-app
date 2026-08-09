@@ -2,6 +2,8 @@ using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Exceptions;
 
+using System.Text.Json.Serialization;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
@@ -19,8 +21,10 @@ public static class ServiceExtensions
         services
             .AddRouting(options => options.LowercaseUrls = true)
             .Configure<JsonOptions>(options =>
-                options.SerializerOptions.Converters.Add(new DateTimeConverter())
-            );
+            {
+                options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
+                options.SerializerOptions.Converters.Add(new DateTimeConverter());
+            });
 
         return services
             .AddExceptionHandler<ValidationExceptionHandler>()
