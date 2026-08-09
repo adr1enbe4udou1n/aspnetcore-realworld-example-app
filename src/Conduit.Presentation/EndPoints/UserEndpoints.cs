@@ -27,7 +27,7 @@ public static class UserEndpoints
             .WithName("UpdateCurrentUser")
             .WithSummary("Update current user")
             .WithDescription("Updated user information for current user")
-            .Produces(200)
+            .Produces<UserResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>

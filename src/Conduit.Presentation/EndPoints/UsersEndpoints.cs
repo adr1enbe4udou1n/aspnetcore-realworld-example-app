@@ -1,4 +1,5 @@
 using Conduit.Application.Features.Auth.Commands;
+using Conduit.Application.Features.Auth.Queries;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ public static class UsersEndpoints
             .WithName("Login")
             .WithSummary("Existing user login")
             .WithDescription("Login for existing user")
-            .Produces(200)
+            .Produces<UserResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {

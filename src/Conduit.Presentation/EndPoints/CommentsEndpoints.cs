@@ -32,7 +32,7 @@ public static class CommentsEndpoints
             .WithName("CreateArticleComment")
             .WithSummary("Create a comment for an article")
             .WithDescription("Create a comment for an article. Auth is required")
-            .Produces(200)
+            .Produces<SingleCommentResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>

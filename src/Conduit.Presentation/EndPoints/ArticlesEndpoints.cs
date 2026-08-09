@@ -91,7 +91,7 @@ public static class ArticlesEndpoints
             .WithName("CreateArticle")
             .WithSummary("Create an article")
             .WithDescription("Create an article. Auth is required")
-            .Produces(200)
+            .Produces<SingleArticleResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
@@ -107,7 +107,7 @@ public static class ArticlesEndpoints
             .WithName("UpdateArticle")
             .WithSummary("Update an article")
             .WithDescription("Update an article. Auth is required")
-            .Produces(200)
+            .Produces<SingleArticleResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
