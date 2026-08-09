@@ -66,7 +66,7 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
         var created = await Context.Users.Where(u => u.Email == request.User.Email).SingleOrDefaultAsync();
         Assert.NotNull(created);
 
-        Assert.True(PasswordHasher.Check("password", created!.Password!));
+        Assert.True(PasswordHasher.Check("password", created.Password!));
 
         var payload = DecodeToken(currentUser.User.Token);
 

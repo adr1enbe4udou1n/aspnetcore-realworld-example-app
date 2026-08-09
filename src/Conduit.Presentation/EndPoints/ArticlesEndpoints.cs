@@ -35,13 +35,13 @@ public static class ArticlesEndpoints
             {
                 var parameter = operation.Parameters![0];
                 parameter.Description = "Filter by author (username)";
-                parameter = operation.Parameters![1];
+                parameter = operation.Parameters[1];
                 parameter.Description = "Filter by favorites of a user (username)";
-                parameter = operation.Parameters![2];
+                parameter = operation.Parameters[2];
                 parameter.Description = "Filter by tag";
-                parameter = operation.Parameters![3];
+                parameter = operation.Parameters[3];
                 parameter.Description = "Limit number of articles returned (default is 20)";
-                parameter = operation.Parameters![4];
+                parameter = operation.Parameters[4];
                 parameter.Description = "Offset/skip number of articles (default is 0)";
                 return Task.CompletedTask;
             });
@@ -65,7 +65,7 @@ public static class ArticlesEndpoints
             {
                 var parameter = operation.Parameters![0];
                 parameter.Description = "Limit number of articles returned (default is 20)";
-                parameter = operation.Parameters![1];
+                parameter = operation.Parameters[1];
                 parameter.Description = "Offset/skip number of articles (default is 0)";
                 return Task.CompletedTask;
             });

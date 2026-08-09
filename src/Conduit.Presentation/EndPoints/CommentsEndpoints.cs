@@ -54,7 +54,7 @@ public static class CommentsEndpoints
             {
                 var parameter = operation.Parameters![0];
                 parameter.Description = "Slug of the article that you want to delete a comments for";
-                parameter = operation.Parameters![1];
+                parameter = operation.Parameters[1];
                 parameter.Description = "ID of the comment you want to delete";
                 return Task.CompletedTask;
             });
