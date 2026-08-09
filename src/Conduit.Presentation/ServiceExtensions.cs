@@ -42,6 +42,20 @@ public static class ServiceExtensions
                         : schemaId;
                 };
 
+                o.AddSchemaTransformer((schema, context, cancellationToken) =>
+                {
+                    var type = Nullable.GetUnderlyingType(context.JsonTypeInfo.Type)
+                        ?? context.JsonTypeInfo.Type;
+
+                    if (type == typeof(DateTime))
+                    {
+                        schema.Type = JsonSchemaType.String;
+                        schema.Format = "date-time";
+                    }
+
+                    return Task.CompletedTask;
+                });
+
                 o.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
                     document.Servers =

@@ -16,19 +16,19 @@ public class ArticleDto
 
     public required string Body { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public required DateTime CreatedAt { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public required DateTime UpdatedAt { get; set; }
 
 #pragma warning disable CA2227
-    public Collection<string> TagList { get; set; } = [];
+    public required Collection<string> TagList { get; set; } = [];
 #pragma warning restore CA2227
 
     public required ProfileDto Author { get; set; }
 
-    public bool Favorited { get; set; }
+    public required bool Favorited { get; set; }
 
-    public int FavoritesCount { get; set; }
+    public required int FavoritesCount { get; set; }
 }
 
 

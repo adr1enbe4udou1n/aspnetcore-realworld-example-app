@@ -6,13 +6,13 @@ namespace Conduit.Application.Features.Comments.Queries;
 
 public class CommentDto
 {
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     public required string Body { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public required DateTime CreatedAt { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public required DateTime UpdatedAt { get; set; }
 
     public required ProfileDto Author { get; set; }
 }
