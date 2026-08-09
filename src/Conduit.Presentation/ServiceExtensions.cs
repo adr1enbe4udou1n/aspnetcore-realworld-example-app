@@ -1,8 +1,8 @@
+using System.Text.Json.Serialization;
+
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Exceptions;
-
-using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
