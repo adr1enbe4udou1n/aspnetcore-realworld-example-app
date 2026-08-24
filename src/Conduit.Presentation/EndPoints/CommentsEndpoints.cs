@@ -25,14 +25,16 @@ public static class CommentsEndpoints
                 return Task.CompletedTask;
             });
 
-        app.MapPost("/articles/{slug}/comments", (ICommandComments comments, string slug, NewCommentRequest request, CancellationToken cancellationToken) =>
-            comments.Create(slug, request.Comment, cancellationToken)
+        app.MapPost("/articles/{slug}/comments", async (ICommandComments comments, string slug, NewCommentRequest request, CancellationToken cancellationToken) =>
+            Results.Json(
+                await comments.Create(slug, request.Comment, cancellationToken),
+                statusCode: StatusCodes.Status201Created)
         )
             .WithTags("Comments")
             .WithName("CreateArticleComment")
             .WithSummary("Create a comment for an article")
             .WithDescription("Create a comment for an article. Auth is required")
-            .Produces<SingleCommentResponse>(StatusCodes.Status200OK)
+            .Produces<SingleCommentResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>

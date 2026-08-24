@@ -114,7 +114,8 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
                     Body = "Test Body",
                     TagList = ["Test Tag 1", "Test Tag 2", "Existing Tag"],
                 }
-            )
+            ),
+            HttpStatusCode.Created
         );
 
         Assert.Equivalent(new

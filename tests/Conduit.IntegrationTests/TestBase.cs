@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -155,6 +156,15 @@ public class TestBase(ConduitApiFixture factory, ITestOutputHelper output) : IAs
         var response = await Act(method, requestPath, value);
 
         response.EnsureSuccessStatusCode();
+
+        return (await response.Content.ReadFromJsonAsync<T>())!;
+    }
+
+    protected async Task<T> Act<T>(HttpMethod method, string requestPath, object value, HttpStatusCode expectedStatusCode)
+    {
+        var response = await Act(method, requestPath, value);
+
+        Assert.Equal(expectedStatusCode, response.StatusCode);
 
         return (await response.Content.ReadFromJsonAsync<T>())!;
     }

@@ -58,7 +58,11 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
             Password = "password",
         });
 
-        var currentUser = await Act<UserResponse>(HttpMethod.Post, "/users", request);
+        var currentUser = await Act<UserResponse>(
+            HttpMethod.Post,
+            "/users",
+            request,
+            HttpStatusCode.Created);
 
         Assert.Equal("John Doe", currentUser.User.Username);
         Assert.Equal("john.doe@example.com", currentUser.User.Email);

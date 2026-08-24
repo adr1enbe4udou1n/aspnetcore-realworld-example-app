@@ -11,13 +11,17 @@ public static class UsersEndpoints
 {
     public static IEndpointRouteBuilder AddUsersRoutes(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/users", (ICommandUsers users, NewUserRequest request, CancellationToken cancellationToken) =>
-            users.Register(request.User, cancellationToken)
+        app.MapPost("/users", async (ICommandUsers users, NewUserRequest request, CancellationToken cancellationToken) =>
+            Results.Json(
+                await users.Register(request.User, cancellationToken),
+                statusCode: StatusCodes.Status201Created)
         )
             .WithTags("User and Authentication")
             .WithName("CreateUser")
             .WithSummary("Register a new user")
             .WithDescription("Register a new user")
+            .Produces<UserResponse>(StatusCodes.Status201Created)
+            .ProducesValidationProblem(400)
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Details of the new user to register";

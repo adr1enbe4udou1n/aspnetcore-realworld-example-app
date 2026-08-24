@@ -84,14 +84,16 @@ public static class ArticlesEndpoints
                 return Task.CompletedTask;
             });
 
-        app.MapPost("/articles", (ICommandArticles articles, NewArticleRequest request, CancellationToken cancellationToken) =>
-            articles.Create(request.Article, cancellationToken)
+        app.MapPost("/articles", async (ICommandArticles articles, NewArticleRequest request, CancellationToken cancellationToken) =>
+            Results.Json(
+                await articles.Create(request.Article, cancellationToken),
+                statusCode: StatusCodes.Status201Created)
         )
             .WithTags("Articles")
             .WithName("CreateArticle")
             .WithSummary("Create an article")
             .WithDescription("Create an article. Auth is required")
-            .Produces<SingleArticleResponse>(StatusCodes.Status200OK)
+            .Produces<SingleArticleResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>

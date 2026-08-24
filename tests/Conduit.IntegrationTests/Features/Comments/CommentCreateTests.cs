@@ -105,7 +105,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
         var response = await Act<SingleCommentResponse>(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(new NewCommentDto
         {
             Body = "Thank you !",
-        }));
+        }), HttpStatusCode.Created);
 
         Assert.Equivalent(new
         {
