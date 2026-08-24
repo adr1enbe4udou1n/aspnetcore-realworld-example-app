@@ -74,6 +74,33 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
     }
 
     [Fact]
+    public async Task Logged_User_Can_Clear_Nullable_Infos()
+    {
+        await ActingAs(new User
+        {
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+            Bio = "My Bio",
+            Image = "https://example.com/photo.jpg"
+        });
+
+        var currentUser = await Act<UserResponse>(HttpMethod.Put, "/user", new UpdateUserRequest(
+            new UpdateUserDto
+            {
+                Bio = "",
+                Image = ""
+            }));
+
+        Assert.Null(currentUser.User.Bio);
+        Assert.Null(currentUser.User.Image);
+
+        Context.ChangeTracker.Clear();
+        var persisted = await Context.Users.SingleAsync();
+        Assert.Null(persisted.Bio);
+        Assert.Null(persisted.Image);
+    }
+
+    [Fact]
     public async Task Guest_User_Cannot_Update_Infos()
     {
         var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(

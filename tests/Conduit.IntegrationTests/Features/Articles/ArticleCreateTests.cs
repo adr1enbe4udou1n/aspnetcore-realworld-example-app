@@ -133,6 +133,8 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
             TagList = new Collection<string> { "Test Tag 1", "Test Tag 2", "Existing Tag" },
         }, response.Article);
 
+        Assert.Equal(0, response.Article.CreatedAt.Ticks % 10);
+        Assert.Equal(0, response.Article.UpdatedAt.Ticks % 10);
         Assert.True(await Context.Articles.AnyAsync());
         Assert.Equal(3, await Context.Tags.CountAsync());
     }

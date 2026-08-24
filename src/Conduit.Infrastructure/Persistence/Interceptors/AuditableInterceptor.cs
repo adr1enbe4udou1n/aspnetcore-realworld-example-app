@@ -15,18 +15,25 @@ public class AuditableInterceptor : SaveChangesInterceptor
         var entries = eventData.Context!.ChangeTracker.Entries<IAuditableEntity>();
         foreach (var entry in entries)
         {
+            var utcNow = TruncateToMicroseconds(DateTime.UtcNow);
+
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Property(a => a.CreatedAt).CurrentValue = DateTime.UtcNow;
-                    entry.Property(a => a.UpdatedAt).CurrentValue = DateTime.UtcNow;
+                    entry.Property(a => a.CreatedAt).CurrentValue = utcNow;
+                    entry.Property(a => a.UpdatedAt).CurrentValue = utcNow;
                     break;
                 case EntityState.Modified:
-                    entry.Property(a => a.UpdatedAt).CurrentValue = DateTime.UtcNow;
+                    entry.Property(a => a.UpdatedAt).CurrentValue = utcNow;
                     break;
             }
         }
 
         return new ValueTask<InterceptionResult<int>>(result);
+    }
+
+    private static DateTime TruncateToMicroseconds(DateTime value)
+    {
+        return new DateTime(value.Ticks - value.Ticks % 10, value.Kind);
     }
 }

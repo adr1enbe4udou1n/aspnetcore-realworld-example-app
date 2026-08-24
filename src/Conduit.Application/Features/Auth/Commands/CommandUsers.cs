@@ -85,8 +85,15 @@ public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPass
 
         user.Name = updateUser.Username ?? user.Name;
         user.Email = updateUser.Email ?? user.Email;
-        user.Bio = updateUser.Bio ?? user.Bio;
-        user.Image = updateUser.Image ?? user.Image;
+        if (updateUser.BioSpecified)
+        {
+            user.Bio = string.IsNullOrEmpty(updateUser.Bio) ? null : updateUser.Bio;
+        }
+
+        if (updateUser.ImageSpecified)
+        {
+            user.Image = string.IsNullOrEmpty(updateUser.Image) ? null : updateUser.Image;
+        }
 
         context.Users.Update(user);
         await context.SaveChangesAsync(cancellationToken);
