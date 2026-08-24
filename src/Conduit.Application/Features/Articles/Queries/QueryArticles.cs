@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
-public record MultipleArticlesResponse(IEnumerable<ArticleDto> Articles, int ArticlesCount);
+public record MultipleArticlesResponse(IEnumerable<ArticleSummaryDto> Articles, int ArticlesCount);
 public record SingleArticleResponse(ArticleDto Article);
 
 
@@ -23,7 +23,7 @@ public class QueryArticles(IAppDbContext context, ICurrentUser currentUser) : IQ
             .FilterByTag(request.Tag)
             .FilterByFavoritedBy(request.Favorited)
             .OrderByDescending(x => x.Id)
-            .PaginateAsync(a => a.Map(currentUser.User), request, cancellationToken);
+            .PaginateAsync(a => a.MapToSummary(currentUser.User), request, cancellationToken);
 
         return new MultipleArticlesResponse(articles.Items, articles.Total);
     }
@@ -38,7 +38,7 @@ public class QueryArticles(IAppDbContext context, ICurrentUser currentUser) : IQ
             .AsSplitQuery()
             .HasAuthorsFollowedBy(currentUser.User!)
             .OrderByDescending(x => x.Id)
-            .PaginateAsync(a => a.Map(currentUser.User), request, cancellationToken);
+            .PaginateAsync(a => a.MapToSummary(currentUser.User), request, cancellationToken);
 
         return new MultipleArticlesResponse(articles.Items, articles.Total);
     }

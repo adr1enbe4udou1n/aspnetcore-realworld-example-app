@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
@@ -12,13 +13,17 @@ namespace Conduit.IntegrationTests.Features.Articles;
 
 public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
+    private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 
     [Fact]
     public async Task Can_Paginate_Articles()
     {
         await CreateArticles();
 
-        var response = await Act<MultipleArticlesResponse>(HttpMethod.Get, "/articles?limit=30&offset=10");
+        var httpResponse = await Act(HttpMethod.Get, "/articles?limit=30&offset=10");
+        httpResponse.EnsureSuccessStatusCode();
+        var content = await httpResponse.Content.ReadAsStringAsync();
+        var response = JsonSerializer.Deserialize<MultipleArticlesResponse>(content, SerializerOptions)!;
 
         Assert.Equal(20, response.Articles.Count());
         Assert.Equal(50, response.ArticlesCount);
@@ -27,13 +32,15 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
         {
             Title = "Jane Doe - Test Title 10",
             Description = "Test Description",
-            Body = "Test Body",
             Author = new
             {
                 Username = "Jane Doe"
             },
             TagList = new List<string> { "Test Tag 1", "Test Tag 2", "Tag Jane Doe" },
         }, response.Articles.First());
+
+        using var document = JsonDocument.Parse(content);
+        Assert.False(document.RootElement.GetProperty("articles")[0].TryGetProperty("body", out _));
     }
 
     [Fact]
@@ -50,7 +57,6 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
-            Body = "Test Body",
             Author = new
             {
                 Username = "John Doe"
@@ -73,7 +79,6 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
         {
             Title = "Jane Doe - Test Title 20",
             Description = "Test Description",
-            Body = "Test Body",
             Author = new
             {
                 Username = "Jane Doe"
@@ -116,7 +121,6 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
         {
             Title = "John Doe - Test Title 16",
             Description = "Test Description",
-            Body = "Test Body",
             Author = new
             {
                 Username = "John Doe"
@@ -156,7 +160,6 @@ public class ArticlesListTests(ConduitApiFixture factory, ITestOutputHelper outp
         {
             Title = "John Doe - Test Title 30",
             Description = "Test Description",
-            Body = "Test Body",
             Author = new
             {
                 Username = "John Doe",
