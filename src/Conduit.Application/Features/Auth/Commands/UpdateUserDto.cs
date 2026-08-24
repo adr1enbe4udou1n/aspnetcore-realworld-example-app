@@ -5,11 +5,45 @@ namespace Conduit.Application.Features.Auth.Commands;
 public class UpdateUserDto
 {
     private string? _bio;
+    private string? _email;
     private string? _image;
+    private string? _password;
+    private string? _username;
 
-    public string? Username { get; set; }
-    public string? Email { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Username
+    {
+        get => _username;
+        set
+        {
+            UsernameSpecified = true;
+            _username = value;
+        }
+    }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Email
+    {
+        get => _email;
+        set
+        {
+            EmailSpecified = true;
+            _email = value;
+        }
+    }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Password
+    {
+        get => _password;
+        set
+        {
+            PasswordSpecified = true;
+            _password = value;
+        }
+    }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Bio
     {
         get => _bio;
@@ -20,6 +54,7 @@ public class UpdateUserDto
         }
     }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Image
     {
         get => _image;
@@ -34,5 +69,14 @@ public class UpdateUserDto
     public bool BioSpecified { get; private set; }
 
     [JsonIgnore]
+    public bool EmailSpecified { get; private set; }
+
+    [JsonIgnore]
     public bool ImageSpecified { get; private set; }
+
+    [JsonIgnore]
+    public bool PasswordSpecified { get; private set; }
+
+    [JsonIgnore]
+    public bool UsernameSpecified { get; private set; }
 }

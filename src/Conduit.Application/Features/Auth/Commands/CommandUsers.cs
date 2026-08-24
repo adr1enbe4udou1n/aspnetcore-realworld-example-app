@@ -47,9 +47,11 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
 {
     public UpdateUserValidator(ICurrentUser currentUser, IAppDbContext context)
     {
-        RuleFor(x => x.Username).NotEmpty().When(x => x.Username != null);
+        RuleFor(x => x.Username).NotEmpty().When(x => x.UsernameSpecified);
+        RuleFor(x => x.Email).NotEmpty().When(x => x.EmailSpecified);
+        RuleFor(x => x.Password).NotEmpty().MinimumLength(8).When(x => x.PasswordSpecified);
 
-        When(x => !string.IsNullOrEmpty(x.Email), () =>
+        When(x => x.EmailSpecified && !string.IsNullOrEmpty(x.Email), () =>
         {
             RuleFor(x => x.Email).EmailAddress();
 
@@ -104,8 +106,21 @@ public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPass
 
         var user = currentUser.User!;
 
-        user.Name = updateUser.Username ?? user.Name;
-        user.Email = updateUser.Email ?? user.Email;
+        if (updateUser.UsernameSpecified)
+        {
+            user.Name = updateUser.Username!;
+        }
+
+        if (updateUser.EmailSpecified)
+        {
+            user.Email = updateUser.Email!;
+        }
+
+        if (updateUser.PasswordSpecified)
+        {
+            user.Password = passwordHasher.Hash(updateUser.Password!);
+        }
+
         if (updateUser.BioSpecified)
         {
             user.Bio = string.IsNullOrEmpty(updateUser.Bio) ? null : updateUser.Bio;

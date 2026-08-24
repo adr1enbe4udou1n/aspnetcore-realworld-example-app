@@ -28,6 +28,14 @@ public class InvalidInfos : TheoryData<UpdateUserDto>
             Email = "john.doe@example.com",
             Bio = "My Bio",
         });
+        Add(new UpdateUserDto
+        {
+            Email = "",
+        });
+        Add(new UpdateUserDto
+        {
+            Password = "short7c",
+        });
     }
 }
 
@@ -98,6 +106,24 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
         var persisted = await Context.Users.SingleAsync();
         Assert.Null(persisted.Bio);
         Assert.Null(persisted.Image);
+    }
+
+    [Fact]
+    public async Task Logged_User_Can_Update_Password()
+    {
+        await ActingAs(new User
+        {
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+            Password = PasswordHasher.Hash("old-password")
+        });
+
+        await Act<UserResponse>(HttpMethod.Put, "/user", new UpdateUserRequest(
+            new UpdateUserDto { Password = "bonjour1" }));
+
+        Context.ChangeTracker.Clear();
+        var persisted = await Context.Users.SingleAsync();
+        Assert.True(PasswordHasher.Check("bonjour1", persisted.Password!));
     }
 
     [Fact]
