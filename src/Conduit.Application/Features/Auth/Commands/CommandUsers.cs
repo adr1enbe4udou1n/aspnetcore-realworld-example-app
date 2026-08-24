@@ -34,6 +34,15 @@ public class RegisterValidator : AbstractValidator<NewUserDto>
     }
 }
 
+public class LoginValidator : AbstractValidator<LoginUserDto>
+{
+    public LoginValidator()
+    {
+        RuleFor(x => x.Email).NotNull().NotEmpty();
+        RuleFor(x => x.Password).NotNull().NotEmpty();
+    }
+}
+
 public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
 {
     public UpdateUserValidator(ICurrentUser currentUser, IAppDbContext context)
@@ -55,10 +64,12 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
     }
 }
 
-public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IValidator<NewUserDto> registerValidator, IValidator<UpdateUserDto> updateValidator) : ICommandUsers
+public class CommandUsers(ICurrentUser currentUser, IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IValidator<LoginUserDto> loginValidator, IValidator<NewUserDto> registerValidator, IValidator<UpdateUserDto> updateValidator) : ICommandUsers
 {
     public async Task<UserResponse> Login(LoginUserDto credentials, CancellationToken cancellationToken)
     {
+        await loginValidator.ValidateAndThrowAsync(credentials, cancellationToken);
+
         var user = await context.Users.Where(x => x.Email == credentials.Email)
             .SingleOrDefaultAsync(cancellationToken);
 

@@ -35,12 +35,6 @@ public class InvalidNewArticles : TheoryData<NewArticleDto>
             Description = "Test Description",
             Body = "Test Body",
         });
-        Add(new NewArticleDto
-        {
-            Title = "Existing Title",
-            Description = "Test Description",
-            Body = "Test Body",
-        });
     }
 }
 
@@ -137,5 +131,27 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
         Assert.Equal(0, response.Article.UpdatedAt.Ticks % 10);
         Assert.True(await Context.Articles.AnyAsync());
         Assert.Equal(3, await Context.Tags.CountAsync());
+    }
+
+    [Fact]
+    public async Task Can_Create_Articles_With_Duplicate_Titles()
+    {
+        await ActingAs(new User
+        {
+            Name = "John Doe",
+            Email = "john.doe@example.com"
+        });
+
+        var request = new NewArticleRequest(new NewArticleDto
+        {
+            Title = "Duplicate Title",
+            Description = "Test Description",
+            Body = "Test Body"
+        });
+
+        var first = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles", request);
+        var second = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles", request);
+
+        Assert.NotEqual(first.Article.Slug, second.Article.Slug);
     }
 }

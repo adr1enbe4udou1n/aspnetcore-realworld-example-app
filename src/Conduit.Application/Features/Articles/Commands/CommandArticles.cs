@@ -12,18 +12,11 @@ namespace Conduit.Application.Features.Articles.Commands;
 
 public class ArticleCreateValidator : AbstractValidator<NewArticleDto>
 {
-    public ArticleCreateValidator(IAppDbContext context, ISlugifier slugifier)
+    public ArticleCreateValidator()
     {
         RuleFor(x => x.Title).NotNull().NotEmpty();
         RuleFor(x => x.Description).NotNull().NotEmpty();
         RuleFor(x => x.Body).NotNull().NotEmpty();
-
-        RuleFor(x => x.Title).MustAsync(
-            async (title, cancellationToken) => !await context.Articles
-                .Where(x => x.Slug == slugifier.Generate(title))
-                .AnyAsync(cancellationToken)
-        )
-            .WithMessage("Slug with this title already used");
     }
 }
 
@@ -43,13 +36,22 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
     {
         await createValidator.ValidateAndThrowAsync(newArticle, cancellationToken);
 
+        var baseSlug = slugifier.Generate(newArticle.Title);
+        var slug = baseSlug;
+        var suffix = 1;
+
+        while (await context.Articles.AnyAsync(x => x.Slug == slug, cancellationToken))
+        {
+            slug = $"{baseSlug}-{suffix++}";
+        }
+
         var article = new Article
         {
             Title = newArticle.Title,
             Description = newArticle.Description,
             Body = newArticle.Body,
             Author = currentUser.User!,
-            Slug = slugifier.Generate(newArticle.Title)
+            Slug = slug
         };
 
         if (newArticle.TagList.Count > 0)
@@ -77,7 +79,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 
         if (article.AuthorId != currentUser.User!.Id)
         {
-            throw new ForbiddenException();
+            throw new ForbiddenException("article");
         }
 
         article.Title = updateArticle.Title ?? article.Title;
@@ -96,7 +98,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 
         if (article.AuthorId != currentUser.User!.Id)
         {
-            throw new ForbiddenException();
+            throw new ForbiddenException("article");
         }
 
         context.Articles.Remove(article);

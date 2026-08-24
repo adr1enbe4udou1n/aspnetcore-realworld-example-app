@@ -43,7 +43,7 @@ public class LoginTests(ConduitApiFixture factory, ITestOutputHelper output) : T
         await Context.SaveChangesAsync();
 
         var response = await Act(HttpMethod.Post, "/users/login", new LoginUserRequest(credentials));
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]

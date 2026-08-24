@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -94,7 +95,7 @@ public class TestBase(ConduitApiFixture factory, ITestOutputHelper output) : IAs
 
         if (_token != null)
         {
-            _client.DefaultRequestHeaders.Add("Authorization", $"Token {_token}");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", _token);
         }
 
         return _client;

@@ -34,6 +34,10 @@ public class ForbiddenExceptionHandler(
                 Status = StatusCodes.Status403Forbidden
             }
         };
+        context.ProblemDetails.Extensions.Add("errors", new Dictionary<string, string[]>
+        {
+            [forbiddenException.Resource] = ["forbidden"]
+        });
 
         return await problemDetailsService.TryWriteAsync(context);
     }

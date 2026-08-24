@@ -22,9 +22,17 @@ public class ValidationExceptionHandler(
             return false;
         }
 
-        var statusCode = validationException.Errors.Any(e => e.ErrorCode == "Conflict")
-            ? StatusCodes.Status409Conflict
-            : StatusCodes.Status422UnprocessableEntity;
+        var failures = validationException.Errors.ToArray();
+        var invalidCredentials = failures.Length == 0;
+        var statusCode = StatusCodes.Status422UnprocessableEntity;
+        if (invalidCredentials)
+        {
+            statusCode = StatusCodes.Status401Unauthorized;
+        }
+        else if (failures.Any(e => e.ErrorCode == "Conflict"))
+        {
+            statusCode = StatusCodes.Status409Conflict;
+        }
 
         httpContext.Response.StatusCode = statusCode;
         var context = new ProblemDetailsContext
@@ -38,7 +46,7 @@ public class ValidationExceptionHandler(
             }
         };
 
-        var errors = validationException.Errors
+        var errors = failures
             .GroupBy(e => e.PropertyName)
             .ToDictionary(
                 g => JsonNamingPolicy.CamelCase.ConvertName(g.Key),
@@ -46,6 +54,10 @@ public class ValidationExceptionHandler(
                     ? "can't be blank"
                     : e.ErrorMessage).ToArray()
             );
+        if (invalidCredentials)
+        {
+            errors.Add("credentials", ["invalid"]);
+        }
         context.ProblemDetails.Extensions.Add("errors", errors);
 
         return await problemDetailsService.TryWriteAsync(context);

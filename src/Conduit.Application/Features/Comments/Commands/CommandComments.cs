@@ -53,7 +53,7 @@ public class CommandComments(IAppDbContext context, ICurrentUser currentUser, IV
 
         if (article.AuthorId != currentUser.User!.Id && comment.AuthorId != currentUser.User.Id)
         {
-            throw new ForbiddenException();
+            throw new ForbiddenException("comment");
         }
 
         context.Comments.Remove(comment);
