@@ -69,7 +69,7 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
 
         var response = await Act(HttpMethod.Post, "/articles", new NewArticleRequest(article));
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]

@@ -44,7 +44,7 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
         });
 
         var response = await Act(HttpMethod.Put, "/user", new UpdateUserRequest(user));
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
@@ -136,6 +136,6 @@ public class UpdateUserTests(ConduitApiFixture factory, ITestOutputHelper output
                     Email = "jane.doe@example.com",
                 }
             ));
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
     }
 }

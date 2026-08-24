@@ -47,7 +47,7 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
         await Context.SaveChangesAsync();
 
         var response = await Act(HttpMethod.Post, "/articles/test-title/comments", new NewCommentRequest(comment));
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]

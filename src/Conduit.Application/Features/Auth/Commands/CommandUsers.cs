@@ -21,7 +21,16 @@ public class RegisterValidator : AbstractValidator<NewUserDto>
                 .Where(x => x.Email == email)
                 .AnyAsync(cancellationToken)
         )
-            .WithMessage("Email is already used");
+            .WithMessage("has already been taken")
+            .WithErrorCode("Conflict");
+
+        RuleFor(x => x.Username).MustAsync(
+            async (username, cancellationToken) => !await context.Users
+                .Where(x => x.Name == username)
+                .AnyAsync(cancellationToken)
+        )
+            .WithMessage("has already been taken")
+            .WithErrorCode("Conflict");
     }
 }
 
@@ -40,7 +49,8 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
                     .Where(x => x.Id != currentUser.User!.Id && x.Email == email)
                     .AnyAsync(cancellationToken)
                 )
-                    .WithMessage("Email is already used");
+                    .WithMessage("has already been taken")
+                    .WithErrorCode("Conflict");
         });
     }
 }

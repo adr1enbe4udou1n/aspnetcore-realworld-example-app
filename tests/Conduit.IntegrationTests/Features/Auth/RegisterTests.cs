@@ -45,7 +45,7 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
     public async Task User_Cannot_Register_With_Invalid_Data(NewUserDto user)
     {
         var response = await Act(HttpMethod.Post, "/users", new NewUserRequest(user));
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
     }
 
     [Fact]
@@ -100,6 +100,6 @@ public class RegisterTests(ConduitApiFixture factory, ITestOutputHelper output) 
                     Password = "password",
                 }
             ));
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
     }
 }

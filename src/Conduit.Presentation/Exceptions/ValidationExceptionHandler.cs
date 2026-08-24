@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using FluentValidation;
 
 using Microsoft.AspNetCore.Diagnostics;
@@ -20,7 +22,11 @@ public class ValidationExceptionHandler(
             return false;
         }
 
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        var statusCode = validationException.Errors.Any(e => e.ErrorCode == "Conflict")
+            ? StatusCodes.Status409Conflict
+            : StatusCodes.Status422UnprocessableEntity;
+
+        httpContext.Response.StatusCode = statusCode;
         var context = new ProblemDetailsContext
         {
             HttpContext = httpContext,
@@ -28,15 +34,17 @@ public class ValidationExceptionHandler(
             ProblemDetails = new ProblemDetails
             {
                 Detail = "One or more validation errors occurred",
-                Status = StatusCodes.Status400BadRequest
+                Status = statusCode
             }
         };
 
         var errors = validationException.Errors
             .GroupBy(e => e.PropertyName)
             .ToDictionary(
-                g => g.Key.ToUpperInvariant(),
-                g => g.Select(e => e.ErrorMessage).ToArray()
+                g => JsonNamingPolicy.CamelCase.ConvertName(g.Key),
+                g => g.Select(e => e.ErrorCode is "NotEmptyValidator" or "NotNullValidator"
+                    ? "can't be blank"
+                    : e.ErrorMessage).ToArray()
             );
         context.ProblemDetails.Extensions.Add("errors", errors);
 
