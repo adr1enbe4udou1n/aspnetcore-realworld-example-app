@@ -1,11 +1,10 @@
-using System.Net;
 using System.Collections.ObjectModel;
+using System.Net;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Endpoints;
-
 
 using Microsoft.EntityFrameworkCore;
 
