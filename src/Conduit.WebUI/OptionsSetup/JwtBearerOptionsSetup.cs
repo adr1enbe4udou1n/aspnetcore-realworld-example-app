@@ -6,6 +6,7 @@ using Conduit.Application.Interfaces;
 using Conduit.Infrastructure.Options;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -43,6 +44,18 @@ public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) : IPostConfi
                     ?? context.Request.Cookies[JwtBearerDefaults.AuthenticationScheme];
 
                 return Task.CompletedTask;
+            },
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    errors = new Dictionary<string, string[]>
+                    {
+                        ["token"] = ["is missing"]
+                    }
+                });
             }
         };
     }

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Domain.Entities;
@@ -78,6 +79,12 @@ public class CommentCreateTests(ConduitApiFixture factory, ITestOutputHelper out
             }
         ));
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        Assert.Equal("is missing", document.RootElement
+            .GetProperty("errors")
+            .GetProperty("token")[0]
+            .GetString());
     }
 
     [Fact]
