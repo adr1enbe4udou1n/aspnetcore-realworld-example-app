@@ -95,6 +95,7 @@ if (!app.Environment.IsEnvironment("Testing"))
 app.UseSwaggerUI(c =>
 {
     c.RoutePrefix = "api";
+    c.SwaggerEndpoint("/api/v1/v1.json", "Conduit API v1");
 });
 
 app.UseRouting();

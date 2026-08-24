@@ -31,7 +31,7 @@ public static class ServiceExtensions
             .AddExceptionHandler<NotFoundExceptionHandler>()
             .AddExceptionHandler<ForbiddenExceptionHandler>()
             .AddProblemDetails()
-            .AddOpenApi("swagger", o =>
+            .AddOpenApi("v1", o =>
             {
                 o.CreateSchemaReferenceId = typeInfo =>
                 {
