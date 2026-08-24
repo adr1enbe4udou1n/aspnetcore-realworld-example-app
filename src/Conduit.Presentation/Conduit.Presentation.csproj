@@ -14,4 +14,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Conduit.Application\Conduit.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/*</Value>
+    </SonarQubeSetting>
+  </ItemGroup>
 </Project>

@@ -40,6 +40,9 @@
     <SonarQubeSetting Include="sonar.exclusions">
       <Value>appsettings.Testing.json</Value>
     </SonarQubeSetting>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/*</Value>
+    </SonarQubeSetting>
   </ItemGroup>
 
 </Project>
