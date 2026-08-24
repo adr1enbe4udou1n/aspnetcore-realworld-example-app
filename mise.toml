@@ -33,5 +33,12 @@ depends = ["vendor"]
 description = "Run mutation tests"
 run = "dotnet stryker"
 
+[tasks."openapi:diff"]
+description = "Check generated OpenAPI against reference specification"
+run = [
+  "dotnet build",
+  "oasdiff diff openapi.yml src/Conduit.WebUI/openapi-generated/openapi.json -f text",
+]
+
 [tools]
 dotnet = "10"

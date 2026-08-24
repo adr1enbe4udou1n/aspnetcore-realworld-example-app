@@ -455,3 +455,4 @@ $RECYCLE.BIN/
 
 reports/
 .sonarqube/
+openapi-generated/
