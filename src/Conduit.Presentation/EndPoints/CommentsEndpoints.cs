@@ -26,10 +26,10 @@ public static class CommentsEndpoints
             });
 
         app.MapPost("/articles/{slug}/comments", async (ICommandComments comments, string slug, NewCommentRequest request, CancellationToken cancellationToken) =>
-            Results.Json(
-                await comments.Create(slug, request.Comment, cancellationToken),
-                statusCode: StatusCodes.Status201Created)
-        )
+        {
+            var response = await comments.Create(slug, request.Comment, cancellationToken);
+            return Results.Created((string?)null, response);
+        })
             .WithTags("Comments")
             .WithName("CreateArticleComment")
             .WithSummary("Create a comment for an article")
@@ -44,13 +44,17 @@ public static class CommentsEndpoints
                 return Task.CompletedTask;
             });
 
-        app.MapDelete("/articles/{slug}/comments/{commentId}", (ICommandComments comments, string slug, int commentId, CancellationToken cancellationToken) =>
-            comments.Delete(slug, commentId, cancellationToken)
+        app.MapDelete("/articles/{slug}/comments/{commentId}", async (ICommandComments comments, string slug, int commentId, CancellationToken cancellationToken) =>
+        {
+            await comments.Delete(slug, commentId, cancellationToken);
+            return Results.NoContent();
+        }
         )
             .WithTags("Comments")
             .WithName("DeleteArticleComment")
             .WithSummary("Delete a comment for an article")
             .WithDescription("Delete a comment for an article. Auth is required")
+            .Produces(StatusCodes.Status204NoContent)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {

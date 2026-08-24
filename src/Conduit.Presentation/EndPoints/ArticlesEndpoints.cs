@@ -85,10 +85,10 @@ public static class ArticlesEndpoints
             });
 
         app.MapPost("/articles", async (ICommandArticles articles, NewArticleRequest request, CancellationToken cancellationToken) =>
-            Results.Json(
-                await articles.Create(request.Article, cancellationToken),
-                statusCode: StatusCodes.Status201Created)
-        )
+        {
+            var response = await articles.Create(request.Article, cancellationToken);
+            return Results.Created((string?)null, response);
+        })
             .WithTags("Articles")
             .WithName("CreateArticle")
             .WithSummary("Create an article")
@@ -120,13 +120,17 @@ public static class ArticlesEndpoints
                 return Task.CompletedTask;
             });
 
-        app.MapDelete("/articles/{slug}", (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
-            articles.Delete(slug, cancellationToken)
+        app.MapDelete("/articles/{slug}", async (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
+        {
+            await articles.Delete(slug, cancellationToken);
+            return Results.NoContent();
+        }
         )
             .WithTags("Articles")
             .WithName("DeleteArticle")
             .WithSummary("Delete an article")
             .WithDescription("Delete an article. Auth is required")
+            .Produces(StatusCodes.Status204NoContent)
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {

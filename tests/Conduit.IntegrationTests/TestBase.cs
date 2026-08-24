@@ -169,6 +169,13 @@ public class TestBase(ConduitApiFixture factory, ITestOutputHelper output) : IAs
         return (await response.Content.ReadFromJsonAsync<T>())!;
     }
 
+    protected async Task Act(HttpMethod method, string requestPath, HttpStatusCode expectedStatusCode)
+    {
+        var response = await Act(method, requestPath);
+
+        Assert.Equal(expectedStatusCode, response.StatusCode);
+    }
+
     protected static IDictionary<string, string> DecodeToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

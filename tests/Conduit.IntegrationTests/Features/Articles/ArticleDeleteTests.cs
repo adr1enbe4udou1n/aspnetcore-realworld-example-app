@@ -97,7 +97,7 @@ public class ArticleDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
             Context.Comments.Add(comment);
         }
 
-        await Act(HttpMethod.Delete, "/articles/test-title");
+        await Act(HttpMethod.Delete, "/articles/test-title", HttpStatusCode.NoContent);
 
         Assert.False(await Context.Articles.AnyAsync());
         Assert.False(await Context.Comments.AnyAsync());

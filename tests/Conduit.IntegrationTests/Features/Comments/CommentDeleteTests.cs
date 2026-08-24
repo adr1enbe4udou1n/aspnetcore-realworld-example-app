@@ -200,7 +200,7 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
 
         await Context.SaveChangesAsync();
 
-        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}");
+        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}", HttpStatusCode.NoContent);
 
         Assert.False(await Context.Comments.AnyAsync());
     }
@@ -248,8 +248,9 @@ public class CommentDeleteTests(ConduitApiFixture factory, ITestOutputHelper out
         };
 
         Context.Comments.Add(comment);
+        await Context.SaveChangesAsync();
 
-        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}");
+        await Act(HttpMethod.Delete, $"/articles/test-title/comments/{comment.Id}", HttpStatusCode.NoContent);
 
         Assert.Equal(1, await Context.Comments.CountAsync());
     }

@@ -12,10 +12,10 @@ public static class UsersEndpoints
     public static IEndpointRouteBuilder AddUsersRoutes(this IEndpointRouteBuilder app)
     {
         app.MapPost("/users", async (ICommandUsers users, NewUserRequest request, CancellationToken cancellationToken) =>
-            Results.Json(
-                await users.Register(request.User, cancellationToken),
-                statusCode: StatusCodes.Status201Created)
-        )
+        {
+            var response = await users.Register(request.User, cancellationToken);
+            return Results.Created((string?)null, response);
+        })
             .WithTags("User and Authentication")
             .WithName("CreateUser")
             .WithSummary("Register a new user")
