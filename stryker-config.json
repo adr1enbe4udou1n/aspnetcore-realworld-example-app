@@ -1,0 +1,11 @@
+{
+  "stryker-config": {
+    "concurrency": 8,
+    "mutate": [
+      "!**/Migrations/**",
+      "!**/Conduit.Presentation/**",
+      "!**/Conduit.WebUI/**"
+    ],
+    "break-on-initial-test-failure": true
+  }
+}
