@@ -1,4 +1,5 @@
 using System.Net;
+using System.Collections.ObjectModel;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
@@ -154,5 +155,38 @@ public class ArticleUpdateTests(ConduitApiFixture factory, ITestOutputHelper out
         }, response.Article);
 
         Assert.True(await Context.Articles.AnyAsync(x => x.Title == "New Title"));
+    }
+
+    [Fact]
+    public async Task Can_Remove_All_Article_Tags()
+    {
+        var user = await ActingAs(new User
+        {
+            Name = "John Doe",
+            Email = "john.doe@example.com",
+        });
+
+        var article = new Article
+        {
+            Title = "Test Title",
+            Description = "Test Description",
+            Body = "Test Body",
+            Slug = "test-title",
+            Author = user,
+        };
+        article.AddTag(new Tag { Name = "Tag 1" });
+        article.AddTag(new Tag { Name = "Tag 2" });
+        Context.Articles.Add(article);
+        await Context.SaveChangesAsync();
+
+        var response = await Act<SingleArticleResponse>(HttpMethod.Put, "/articles/test-title",
+            new UpdateArticleRequest(new UpdateArticleDto
+            {
+                TagList = new Collection<string>()
+            }));
+
+        Assert.Empty(response.Article.TagList);
+        Context.ChangeTracker.Clear();
+        Assert.Empty(await Context.Set<ArticleTag>().ToListAsync());
     }
 }

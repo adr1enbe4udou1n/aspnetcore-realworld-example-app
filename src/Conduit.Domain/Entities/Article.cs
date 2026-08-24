@@ -73,6 +73,12 @@ public class Article : IAuditableEntity
         );
     }
 
+    public void SetTags(IEnumerable<Tag> existingTags, params string[] newTags)
+    {
+        _tags.Clear();
+        AddTags(existingTags, newTags);
+    }
+
     public void AddFavorite(User user)
     {
         _favoredUsers.Add(new ArticleFavorite { User = user, Article = this });

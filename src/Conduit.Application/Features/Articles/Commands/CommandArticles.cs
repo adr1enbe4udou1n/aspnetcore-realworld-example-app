@@ -27,6 +27,7 @@ public class ArticleUpdateValidator : AbstractValidator<UpdateArticleDto>
         RuleFor(x => x.Title).NotEmpty().When(x => x.Title != null);
         RuleFor(x => x.Description).NotEmpty().When(x => x.Description != null);
         RuleFor(x => x.Body).NotEmpty().When(x => x.Body != null);
+        RuleFor(x => x.TagList).NotNull().When(x => x.TagListSpecified);
     }
 }
 
@@ -75,7 +76,10 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
     {
         await updateValidator.ValidateAndThrowAsync(updateArticle, cancellationToken);
 
-        var article = await context.Articles.FindAsync(x => x.Slug == slug, "article", cancellationToken);
+        var article = await context.Articles
+            .Include(x => x.Tags)
+            .ThenInclude(x => x.Tag)
+            .FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         if (article.AuthorId != currentUser.User!.Id)
         {
@@ -85,6 +89,15 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
         article.Title = updateArticle.Title ?? article.Title;
         article.Description = updateArticle.Description ?? article.Description;
         article.Body = updateArticle.Body ?? article.Body;
+
+        if (updateArticle.TagListSpecified)
+        {
+            var existingTags = await context.Tags
+                .Where(x => updateArticle.TagList!.Contains(x.Name))
+                .ToListAsync(cancellationToken);
+
+            article.SetTags(existingTags, updateArticle.TagList!.ToArray());
+        }
 
         context.Articles.Update(article);
         await context.SaveChangesAsync(cancellationToken);
