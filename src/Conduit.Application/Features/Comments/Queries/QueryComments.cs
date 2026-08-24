@@ -11,7 +11,7 @@ public class QueryComments(IAppDbContext context, ICurrentUser currentUser) : IQ
 {
     public async Task<MultipleCommentsResponse> List(string slug, CancellationToken cancellationToken)
     {
-        var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         var comments = await context.Comments
             .Include(c => c.Author)

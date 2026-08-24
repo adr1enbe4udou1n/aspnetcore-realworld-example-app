@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 
 using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Domain.Entities;
@@ -40,6 +41,12 @@ public class ProfileGetTests(ConduitApiFixture factory, ITestOutputHelper output
     {
         var response = await Act(HttpMethod.Get, "/profiles/John Doe");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        Assert.Equal("not found", document.RootElement
+            .GetProperty("errors")
+            .GetProperty("profile")[0]
+            .GetString());
     }
 
     [Fact]

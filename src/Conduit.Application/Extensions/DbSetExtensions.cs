@@ -9,10 +9,10 @@ namespace Conduit.Application.Extensions;
 
 public static class DbSetExtensions
 {
-    public static async Task<TSource> FindAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken = default)
+    public static async Task<TSource> FindAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, string resource, CancellationToken cancellationToken = default)
     {
         return await source.Where(predicate).SingleOrDefaultAsync(cancellationToken)
-            ?? throw new NotFoundException();
+            ?? throw new NotFoundException(resource);
     }
 
     public static async Task<PagedResponse<TResult>> PaginateAsync<TSource, TResult>(

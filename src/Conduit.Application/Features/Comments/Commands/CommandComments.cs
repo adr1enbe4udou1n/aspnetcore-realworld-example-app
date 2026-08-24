@@ -27,7 +27,7 @@ public class CommandComments(IAppDbContext context, ICurrentUser currentUser, IV
     {
         await createValidator.ValidateAndThrowAsync(newComment, cancellationToken);
 
-        var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         var comment = new Comment
         {
@@ -44,9 +44,10 @@ public class CommandComments(IAppDbContext context, ICurrentUser currentUser, IV
 
     public async Task Delete(string slug, int id, CancellationToken cancellationToken)
     {
-        var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == slug, "article", cancellationToken);
         var comment = await context.Comments.FindAsync(
             x => x.Id == id && x.ArticleId == article.Id,
+            "comment",
             cancellationToken
         );
 

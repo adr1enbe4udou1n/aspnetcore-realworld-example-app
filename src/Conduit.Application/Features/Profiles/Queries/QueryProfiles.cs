@@ -22,7 +22,7 @@ public class QueryProfiles(IAppDbContext context, ICurrentUser currentUser) : IQ
     public async Task<ProfileResponse> Find(string username, CancellationToken cancellationToken)
     {
         var user = await context.Users
-            .FindAsync(x => x.Name == username, cancellationToken);
+            .FindAsync(x => x.Name == username, "profile", cancellationToken);
 
         return new ProfileResponse(user.MapToProfile(currentUser.User));
     }

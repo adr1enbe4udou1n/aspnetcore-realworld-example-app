@@ -10,7 +10,7 @@ public class CommandProfiles(IAppDbContext context, ICurrentUser currentUser) : 
     public async Task<ProfileResponse> Follow(string username, bool follow, CancellationToken cancellationToken)
     {
         var user = await context.Users
-            .FindAsync(x => x.Name == username, cancellationToken);
+            .FindAsync(x => x.Name == username, "profile", cancellationToken);
 
         if (follow)
         {

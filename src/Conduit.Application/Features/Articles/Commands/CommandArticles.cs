@@ -73,7 +73,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
     {
         await updateValidator.ValidateAndThrowAsync(updateArticle, cancellationToken);
 
-        var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         if (article.AuthorId != currentUser.User!.Id)
         {
@@ -92,7 +92,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 
     public async Task Delete(string slug, CancellationToken cancellationToken)
     {
-        var article = await context.Articles.FindAsync(x => x.Slug == slug, cancellationToken);
+        var article = await context.Articles.FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         if (article.AuthorId != currentUser.User!.Id)
         {
@@ -106,7 +106,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
     public async Task<SingleArticleResponse> Favorite(string slug, bool favorite, CancellationToken cancellationToken)
     {
         var article = await context.Articles
-            .FindAsync(x => x.Slug == slug, cancellationToken);
+            .FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         if (favorite)
         {

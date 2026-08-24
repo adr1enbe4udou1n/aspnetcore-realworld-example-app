@@ -34,6 +34,10 @@ public class NotFoundExceptionHandler(
                 Status = StatusCodes.Status404NotFound
             }
         };
+        context.ProblemDetails.Extensions.Add("errors", new Dictionary<string, string[]>
+        {
+            [notFoundException.Resource] = ["not found"]
+        });
 
         return await problemDetailsService.TryWriteAsync(context);
     }

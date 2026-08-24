@@ -2,15 +2,19 @@ namespace Conduit.Application.Exceptions;
 
 public class NotFoundException : Exception
 {
-    public NotFoundException() : base("Resource not found")
+    public NotFoundException() : this("resource")
     {
     }
 
-    public NotFoundException(string message) : base(message)
+    public NotFoundException(string resource) : base($"{resource} not found")
     {
+        Resource = resource;
     }
 
     public NotFoundException(string message, Exception innerException) : base(message, innerException)
     {
+        Resource = "resource";
     }
+
+    public string Resource { get; }
 }

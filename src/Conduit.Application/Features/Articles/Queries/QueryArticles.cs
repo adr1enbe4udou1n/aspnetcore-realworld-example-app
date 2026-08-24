@@ -47,7 +47,7 @@ public class QueryArticles(IAppDbContext context, ICurrentUser currentUser) : IQ
     public async Task<SingleArticleResponse> Find(string slug, CancellationToken cancellationToken)
     {
         var article = await context.Articles
-            .FindAsync(x => x.Slug == slug, cancellationToken);
+            .FindAsync(x => x.Slug == slug, "article", cancellationToken);
 
         return new SingleArticleResponse(article.Map(currentUser.User));
     }
