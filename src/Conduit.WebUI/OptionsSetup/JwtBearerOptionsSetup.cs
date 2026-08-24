@@ -40,8 +40,15 @@ public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) : IPostConfi
             },
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ")[^1]
-                    ?? context.Request.Cookies[JwtBearerDefaults.AuthenticationScheme];
+                var authorization = context.Request.Headers.Authorization.FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(authorization))
+                {
+                    var separator = authorization.IndexOf(' ', StringComparison.Ordinal);
+                    if (separator >= 0 && separator < authorization.Length - 1)
+                    {
+                        context.Token = authorization[(separator + 1)..];
+                    }
+                }
 
                 return Task.CompletedTask;
             },
