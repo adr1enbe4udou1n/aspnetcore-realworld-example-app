@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,14 +36,5 @@
     <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
-
-  <ItemGroup>
-    <SonarQubeSetting Include="sonar.exclusions">
-      <Value>appsettings.Testing.json</Value>
-    </SonarQubeSetting>
-    <SonarQubeSetting Include="sonar.coverage.exclusions">
-      <Value>**/*</Value>
-    </SonarQubeSetting>
-  </ItemGroup>
 
 </Project>
