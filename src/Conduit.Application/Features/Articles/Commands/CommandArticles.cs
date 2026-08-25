@@ -57,11 +57,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 
         if (newArticle.TagList.Count > 0)
         {
-            var existingTags = await context.Tags
-                .Where(
-                    x => newArticle.TagList.Contains(x.Name)
-                )
-                .ToListAsync(cancellationToken);
+            var existingTags = await GetOrCreateTagsAsync(newArticle.TagList, cancellationToken);
 
             article.AddTags(existingTags, newArticle.TagList.ToArray());
         }
@@ -92,9 +88,7 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
 
         if (updateArticle.TagListSpecified)
         {
-            var existingTags = await context.Tags
-                .Where(x => updateArticle.TagList!.Contains(x.Name))
-                .ToListAsync(cancellationToken);
+            var existingTags = await GetOrCreateTagsAsync(updateArticle.TagList!, cancellationToken);
 
             article.SetTags(existingTags, updateArticle.TagList!.ToArray());
         }
@@ -136,5 +130,42 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
         await context.SaveChangesAsync(cancellationToken);
 
         return new SingleArticleResponse(article.Map(currentUser.User));
+    }
+
+    private async Task<IReadOnlyCollection<Tag>> GetOrCreateTagsAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken)
+    {
+        var tagNames = names
+            .Where(name => !string.IsNullOrEmpty(name))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+        var tags = await context.Tags
+            .Where(tag => tagNames.Contains(tag.Name))
+            .ToListAsync(cancellationToken);
+        var missingTags = tagNames
+            .Except(tags.Select(tag => tag.Name), StringComparer.Ordinal)
+            .Select(name => new Tag { Name = name })
+            .ToArray();
+
+        if (missingTags.Length == 0)
+        {
+            return tags;
+        }
+
+        await context.Tags.AddRangeAsync(missingTags, cancellationToken);
+        try
+        {
+            await context.SaveChangesAsync(cancellationToken);
+            tags.AddRange(missingTags);
+            return tags;
+        }
+        catch (DbUpdateException exception) when (exception.Entries.All(entry => entry.Entity is Tag))
+        {
+            context.Tags.RemoveRange(missingTags);
+            return await context.Tags
+                .Where(tag => tagNames.Contains(tag.Name))
+                .ToListAsync(cancellationToken);
+        }
     }
 }

@@ -1,8 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
+using Conduit.Application.Features.Auth.Commands;
+using Conduit.Application.Features.Auth.Queries;
 using Conduit.Domain.Entities;
 using Conduit.Presentation.Endpoints;
 
@@ -40,6 +44,7 @@ public class InvalidNewArticles : TheoryData<NewArticleDto>
 
 public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper output) : TestBase(factory, output)
 {
+    private readonly ConduitApiFixture _factory = factory;
 
     [Theory, ClassData(typeof(InvalidNewArticles))]
     public async Task Cannot_Create_Article_With_Invalid_Data(NewArticleDto article)
@@ -153,5 +158,47 @@ public class ArticleCreateTests(ConduitApiFixture factory, ITestOutputHelper out
         var second = await Act<SingleArticleResponse>(HttpMethod.Post, "/articles", request);
 
         Assert.NotEqual(first.Article.Slug, second.Article.Slug);
+    }
+
+    [Fact]
+    public async Task Can_Create_Articles_With_The_Same_New_Tag_Concurrently()
+    {
+        var suffix = Guid.NewGuid().ToString("N");
+        using var firstClient = await CreateAuthenticatedClient($"first-{suffix}");
+        using var secondClient = await CreateAuthenticatedClient($"second-{suffix}");
+        var sharedTag = $"shared-{suffix}";
+
+        var responses = await Task.WhenAll(
+            CreateArticle(firstClient, $"First {suffix}", sharedTag),
+            CreateArticle(secondClient, $"Second {suffix}", sharedTag));
+
+        Assert.All(responses, response => Assert.Equal(HttpStatusCode.Created, response.StatusCode));
+        Assert.Equal(1, await Context.Tags.CountAsync(tag => tag.Name == sharedTag));
+    }
+
+    private async Task<HttpClient> CreateAuthenticatedClient(string username)
+    {
+        var client = _factory.CreateClient();
+        var response = await client.PostAsJsonAsync("/api/users", new NewUserRequest(new NewUserDto
+        {
+            Username = username,
+            Email = $"{username}@test.com",
+            Password = "password123"
+        }));
+        response.EnsureSuccessStatusCode();
+        var user = (await response.Content.ReadFromJsonAsync<UserResponse>())!.User;
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", user.Token);
+        return client;
+    }
+
+    private static Task<HttpResponseMessage> CreateArticle(HttpClient client, string title, string tag)
+    {
+        return client.PostAsJsonAsync("/api/articles", new NewArticleRequest(new NewArticleDto
+        {
+            Title = title,
+            Description = "Test Description",
+            Body = "Test Body",
+            TagList = [tag]
+        }));
     }
 }
