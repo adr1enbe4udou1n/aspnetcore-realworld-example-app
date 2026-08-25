@@ -42,6 +42,13 @@ public static class ServiceExtensions
             {
                 o.CreateSchemaReferenceId = typeInfo =>
                 {
+                    if (typeInfo.Type.Name.EndsWith("Request", StringComparison.Ordinal)
+                        || typeInfo.Type.Name.EndsWith("Response", StringComparison.Ordinal)
+                        || typeInfo.Type.Name is "ArticleSummaryDto" or "HttpValidationProblemDetails")
+                    {
+                        return null;
+                    }
+
                     var schemaId = OpenApiOptions.CreateDefaultSchemaReferenceId(typeInfo);
 
                     return schemaId?.EndsWith("Dto", StringComparison.Ordinal) == true
@@ -172,17 +179,6 @@ public static class ServiceExtensions
                         var status = metadata[0];
                         var component = metadata[1];
                         var response = operation.Responses![status];
-                        if (component != "EmptyOkResponse"
-                            && response.Content?.TryGetValue("application/json", out var mediaType) == true)
-                        {
-                            mediaType.Schema = document.Components.Schemas![component].CreateShallowCopy();
-                            if (component == "MultipleArticlesResponse")
-                            {
-                                var responseSchema = (OpenApiSchema)mediaType.Schema;
-                                var articlesSchema = (OpenApiSchema)responseSchema.Properties!["articles"];
-                                articlesSchema.Items = document.Components.Schemas["ArticleSummary"].CreateShallowCopy();
-                            }
-                        }
                         responseComponents.TryAdd(component, response);
                         operation.Responses[status] = new OpenApiResponseReference(component, document);
                         operation.Extensions.Remove(OpenApiContractExtensions.ResponseComponentExtension);
@@ -229,8 +225,6 @@ public static class ServiceExtensions
                         var component = nodeExtension.Node?.GetValue<string>()
                             ?? throw new InvalidOperationException("Missing OpenAPI request body component metadata.");
                         var requestBody = operation.RequestBody!;
-                        var mediaType = requestBody.Content!["application/json"];
-                        mediaType.Schema = document.Components.Schemas![component].CreateShallowCopy();
                         requestBodyComponents[component] = requestBody;
                         operation.RequestBody = new OpenApiRequestBodyReference(component, document);
                         operation.Extensions.Remove(OpenApiContractExtensions.RequestBodyComponentExtension);
@@ -266,17 +260,6 @@ public static class ServiceExtensions
                     var errorSchema = (OpenApiSchema)responseComponents["GenericError"]
                         .Content!["application/json"].Schema!;
                     document.Components.Schemas!["GenericErrorModel"] = errorSchema;
-                    foreach (var schemaName in new[]
-                    {
-                        "ArticleSummary", "HttpValidationProblemDetails", "LoginUserRequest",
-                        "MultipleArticlesResponse", "MultipleCommentsResponse", "NewArticleRequest",
-                        "NewCommentRequest", "NewUserRequest", "ProfileResponse", "SingleArticleResponse",
-                        "SingleCommentResponse", "TagsResponse", "UpdateArticleRequest", "UpdateUserRequest",
-                        "UserResponse"
-                    })
-                    {
-                        document.Components.Schemas.Remove(schemaName);
-                    }
 #pragma warning restore S3267, CA1861
                     return Task.CompletedTask;
                 });
