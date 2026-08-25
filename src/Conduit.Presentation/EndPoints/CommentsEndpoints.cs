@@ -1,6 +1,5 @@
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
-using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -80,5 +79,4 @@ public static class CommentsEndpoints
     }
 }
 
-[JsonSchemaInline]
 public record NewCommentRequest(NewCommentDto Comment);

@@ -1,6 +1,5 @@
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
-using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -52,7 +51,5 @@ public static class UsersEndpoints
     }
 }
 
-[JsonSchemaInline]
 public record LoginUserRequest(LoginUserDto User);
-[JsonSchemaInline]
 public record NewUserRequest(NewUserDto User);

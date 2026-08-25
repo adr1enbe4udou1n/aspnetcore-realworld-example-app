@@ -1,6 +1,5 @@
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
-using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -47,5 +46,4 @@ public static class UserEndpoints
     }
 }
 
-[JsonSchemaInline]
 public record UpdateUserRequest(UpdateUserDto User);

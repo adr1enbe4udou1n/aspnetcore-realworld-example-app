@@ -1,6 +1,5 @@
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
-using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -214,7 +213,5 @@ public static class ArticlesEndpoints
     }
 }
 
-[JsonSchemaInline]
 public record NewArticleRequest(NewArticleDto Article);
-[JsonSchemaInline]
 public record UpdateArticleRequest(UpdateArticleDto Article);

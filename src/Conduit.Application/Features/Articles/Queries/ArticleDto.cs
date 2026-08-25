@@ -2,13 +2,11 @@ using System.Collections.ObjectModel;
 
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
-using Conduit.Application.Support;
 using Conduit.Domain.Entities;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
-[JsonSchemaInline]
-public class ArticleSummaryDto
+public class ArticleSummary
 {
     public required string Title { get; set; }
 
@@ -31,7 +29,7 @@ public class ArticleSummaryDto
     public required int FavoritesCount { get; set; }
 }
 
-public class ArticleDto : ArticleSummaryDto
+public class ArticleDto : ArticleSummary
 {
     public required string Body { get; set; }
 }
@@ -55,7 +53,7 @@ public static class ArticleMapper
         };
     }
 
-    public static ArticleSummaryDto MapToSummary(this Article article, User? currentUser)
+    public static ArticleSummary MapToSummary(this Article article, User? currentUser)
     {
         return new()
         {

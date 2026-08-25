@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-using Conduit.Application.Support;
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Exceptions;
@@ -45,16 +44,13 @@ public static class ServiceExtensions
             {
                 o.CreateSchemaReferenceId = typeInfo =>
                 {
-                    if (typeInfo.Type.IsDefined(typeof(JsonSchemaInlineAttribute), false))
+                    var schemaId = OpenApiOptions.CreateDefaultSchemaReferenceId(typeInfo);
+                    if (schemaId?.EndsWith("Dto", StringComparison.Ordinal) != true)
                     {
                         return null;
                     }
 
-                    var schemaId = OpenApiOptions.CreateDefaultSchemaReferenceId(typeInfo);
-
-                    return schemaId?.EndsWith("Dto", StringComparison.Ordinal) == true
-                        ? schemaId[..^3]
-                        : schemaId;
+                    return schemaId[..^3];
                 };
 
                 o.AddSchemaTransformer((schema, context, cancellationToken) =>

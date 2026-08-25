@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
-using Conduit.Application.Support;
 
 namespace Conduit.Application.Features.Profiles.Queries;
 
@@ -21,7 +20,6 @@ public class ProfileDto
     public bool Following { get; set; }
 }
 
-[JsonSchemaInline]
 public record ProfileResponse(ProfileDto Profile);
 
 public class QueryProfiles(IAppDbContext context, ICurrentUser currentUser) : IQueryProfiles
