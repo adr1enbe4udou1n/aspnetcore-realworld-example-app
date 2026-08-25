@@ -35,7 +35,7 @@ run = "dotnet stryker"
 
 [tasks."openapi:diff"]
 description = "Check generated OpenAPI against reference specification"
-run = "oasdiff diff openapi.yml src/Conduit.WebUI/openapi-generated/openapi.json -f text"
+run = "oasdiff diff openapi.yml src/Conduit.WebUI/openapi-generated/openapi.json"
 
 [tools]
 dotnet = "10"

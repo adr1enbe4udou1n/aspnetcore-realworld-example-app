@@ -193,7 +193,7 @@ public static class ServiceExtensions
 
                                 Token xxxxxx.yyyyyyy.zzzzzz
 
-                            """
+                            """ + "    \n"
                     });
 
                     var operations = document.Paths.Values
@@ -291,6 +291,152 @@ public static class ServiceExtensions
                                 new JsonNodeExtension(JsonValue.Create(requestBodyName));
                         }
                     }
+
+                    if (document.Tags is not null)
+                    {
+                        foreach (var tag in document.Tags)
+                        {
+                            tag.Description = $"Everything about your {tag.Name}";
+                        }
+                    }
+
+#pragma warning disable S3267, CA1861
+                    var operationsById = operations.ToDictionary(
+                        operation => operation.OperationId!, StringComparer.Ordinal);
+                    var responseComponents = new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal);
+                    var successResponseComponents = new Dictionary<string, (string Status, string Component, string Schema)>(StringComparer.Ordinal)
+                    {
+                        ["GetArticles"] = ("200", "MultipleArticlesResponse", "MultipleArticlesResponse"),
+                        ["CreateArticle"] = ("201", "SingleArticleResponse", "SingleArticleResponse"),
+                        ["GetArticlesFeed"] = ("200", "MultipleArticlesResponse", "MultipleArticlesResponse"),
+                        ["DeleteArticle"] = ("204", "EmptyOkResponse", ""),
+                        ["GetArticle"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
+                        ["UpdateArticle"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
+                        ["GetArticleComments"] = ("200", "MultipleCommentsResponse", "MultipleCommentsResponse"),
+                        ["CreateArticleComment"] = ("201", "SingleCommentResponse", "SingleCommentResponse"),
+                        ["DeleteArticleComment"] = ("204", "EmptyOkResponse", ""),
+                        ["DeleteArticleFavorite"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
+                        ["CreateArticleFavorite"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
+                        ["GetProfileByUsername"] = ("200", "ProfileResponse", "ProfileResponse"),
+                        ["UnfollowUserByUsername"] = ("200", "ProfileResponse", "ProfileResponse"),
+                        ["FollowUserByUsername"] = ("200", "ProfileResponse", "ProfileResponse"),
+                        ["GetTags"] = ("200", "TagsResponse", "TagsResponse"),
+                        ["GetCurrentUser"] = ("200", "UserResponse", "UserResponse"),
+                        ["UpdateCurrentUser"] = ("200", "UserResponse", "UserResponse"),
+                        ["CreateUser"] = ("201", "UserResponse", "UserResponse"),
+                        ["Login"] = ("200", "UserResponse", "UserResponse")
+                    };
+
+                    foreach (var item in successResponseComponents)
+                    {
+                        var operation = operationsById[item.Key];
+                        var response = operation.Responses![item.Value.Status];
+                        if (item.Value.Schema.Length > 0
+                            && response.Content?.TryGetValue("application/json", out var mediaType) == true)
+                        {
+                            mediaType.Schema = document.Components.Schemas![item.Value.Schema].CreateShallowCopy();
+                            if (item.Value.Schema == "MultipleArticlesResponse")
+                            {
+                                var responseSchema = (OpenApiSchema)mediaType.Schema;
+                                var articlesSchema = (OpenApiSchema)responseSchema.Properties!["articles"];
+                                articlesSchema.Items = document.Components.Schemas["ArticleSummary"].CreateShallowCopy();
+                            }
+                        }
+                        responseComponents.TryAdd(item.Value.Component, response);
+                        operation.Responses[item.Value.Status] =
+                            new OpenApiResponseReference(item.Value.Component, document);
+                    }
+
+                    var errorResponseComponents = new Dictionary<string, string>(StringComparer.Ordinal)
+                    {
+                        ["401"] = "Unauthorized",
+                        ["403"] = "Forbidden",
+                        ["404"] = "NotFound",
+                        ["409"] = "ConflictError",
+                        ["422"] = "GenericError"
+                    };
+                    foreach (var errorComponent in errorResponseComponents)
+                    {
+                        var operation = operationsById.Values.First(candidate =>
+                            candidate.Responses?.ContainsKey(errorComponent.Key) == true);
+                        responseComponents[errorComponent.Value] = operation.Responses![errorComponent.Key];
+                    }
+                    foreach (var operation in operationsById.Values)
+                    {
+                        foreach (var errorComponent in errorResponseComponents)
+                        {
+                            if (operation.Responses?.ContainsKey(errorComponent.Key) == true)
+                            {
+                                operation.Responses[errorComponent.Key] =
+                                    new OpenApiResponseReference(errorComponent.Value, document);
+                            }
+                        }
+                    }
+                    document.Components.Responses = responseComponents;
+
+                    var requestBodyComponents = new Dictionary<string, IOpenApiRequestBody>(StringComparer.Ordinal);
+                    var requestBodyOperations = new Dictionary<string, string>(StringComparer.Ordinal)
+                    {
+                        ["Login"] = "LoginUserRequest",
+                        ["CreateUser"] = "NewUserRequest",
+                        ["UpdateCurrentUser"] = "UpdateUserRequest",
+                        ["CreateArticle"] = "NewArticleRequest",
+                        ["UpdateArticle"] = "UpdateArticleRequest",
+                        ["CreateArticleComment"] = "NewCommentRequest"
+                    };
+                    foreach (var item in requestBodyOperations)
+                    {
+                        var operation = operationsById[item.Key];
+                        var requestBody = operation.RequestBody!;
+                        var mediaType = requestBody.Content!["application/json"];
+                        mediaType.Schema = document.Components.Schemas![item.Value].CreateShallowCopy();
+                        requestBodyComponents[item.Value] = requestBody;
+                        operation.RequestBody = new OpenApiRequestBodyReference(item.Value, document);
+                    }
+                    document.Components.RequestBodies = requestBodyComponents;
+
+                    var parameterComponents = new Dictionary<string, IOpenApiParameter>(StringComparer.Ordinal);
+                    foreach (var parameter in operationsById["GetArticles"].Parameters!)
+                    {
+                        if (parameter.Name is "limit" or "offset")
+                        {
+                            var componentName = $"{parameter.Name}Param";
+                            parameterComponents[componentName] = parameter;
+                        }
+                    }
+                    foreach (var operation in operationsById.Values)
+                    {
+                        if (operation.Parameters is null)
+                        {
+                            continue;
+                        }
+                        for (var index = 0; index < operation.Parameters.Count; index++)
+                        {
+                            var parameter = operation.Parameters[index];
+                            if (parameter.Name is "limit" or "offset")
+                            {
+                                operation.Parameters[index] =
+                                    new OpenApiParameterReference($"{parameter.Name}Param", document);
+                            }
+                        }
+                    }
+                    document.Components.Parameters = parameterComponents;
+
+                    var errorSchema = (OpenApiSchema)responseComponents["GenericError"]
+                        .Content!["application/json"].Schema!;
+                    document.Components.Schemas!["GenericErrorModel"] = errorSchema;
+                    foreach (var schemaName in new[]
+                    {
+                        "ArticleSummary", "HttpValidationProblemDetails", "LoginUserRequest",
+                        "MultipleArticlesResponse", "MultipleCommentsResponse", "NewArticleRequest",
+                        "NewCommentRequest", "NewUserRequest", "ProfileResponse", "SingleArticleResponse",
+                        "SingleCommentResponse", "TagsResponse", "UpdateArticleRequest", "UpdateUserRequest",
+                        "UserResponse"
+                    })
+                    {
+                        document.Components.Schemas.Remove(schemaName);
+                    }
+#pragma warning restore S3267, CA1861
                     return Task.CompletedTask;
                 });
             });
