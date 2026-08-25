@@ -1,8 +1,8 @@
+using System.Text.Json.Serialization;
+
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
-
-using System.Text.Json.Serialization;
 
 namespace Conduit.Application.Features.Profiles.Queries;
 
