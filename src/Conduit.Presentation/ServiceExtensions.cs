@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -17,7 +20,6 @@ namespace Conduit.Presentation;
 
 public static class ServiceExtensions
 {
-    private static readonly string[] UpdateUserNonNullableProperties = ["email", "password", "username"];
 #pragma warning disable S1075
     private static readonly Uri DocumentationUri = new("https://realworld-docs.netlify.app/");
     private static readonly Uri LicenseUri = new("https://opensource.org/licenses/MIT");
@@ -72,26 +74,34 @@ public static class ServiceExtensions
                         schema.Format = null;
                     }
 
-                    if (type.Name is "LoginUserDto" or "NewUserDto"
-                        && schema.Properties?.TryGetValue("password", out var password) == true)
+                    foreach (var jsonProperty in context.JsonTypeInfo.Properties)
                     {
-                        ((OpenApiSchema)password).Format = "password";
-                    }
-
-                    if (type.Name == "UpdateArticleDto" && schema.Properties is not null)
-                    {
-                        foreach (var property in schema.Properties.Values)
+                        if (schema.Properties?.TryGetValue(jsonProperty.Name, out var property) != true
+                            || property is not OpenApiSchema propertySchema
+                            || jsonProperty.AttributeProvider is null)
                         {
-                            var propertySchema = (OpenApiSchema)property;
-                            propertySchema.Type &= ~JsonSchemaType.Null;
+                            continue;
                         }
-                    }
 
-                    if (type.Name == "UpdateUserDto" && schema.Properties is not null)
-                    {
-                        foreach (var propertyName in UpdateUserNonNullableProperties)
+                        var dataType = jsonProperty.AttributeProvider
+                            .GetCustomAttributes(typeof(DataTypeAttribute), true)
+                            .OfType<DataTypeAttribute>()
+                            .FirstOrDefault();
+                        if (dataType?.DataType == DataType.Password)
                         {
-                            var propertySchema = (OpenApiSchema)schema.Properties[propertyName];
+                            propertySchema.Format = "password";
+                        }
+
+                        var disallowsNull = jsonProperty.AttributeProvider
+                            .GetCustomAttributes(typeof(DisallowNullAttribute), true).Length > 0;
+                        if (!disallowsNull
+                            && jsonProperty.AttributeProvider is PropertyInfo { SetMethod: not null } propertyInfo)
+                        {
+                            disallowsNull = propertyInfo.SetMethod.GetParameters()[0]
+                                .IsDefined(typeof(DisallowNullAttribute), true);
+                        }
+                        if (disallowsNull)
+                        {
                             propertySchema.Type &= ~JsonSchemaType.Null;
                         }
                     }

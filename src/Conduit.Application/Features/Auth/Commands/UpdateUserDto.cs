@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Conduit.Application.Features.Auth.Commands;
@@ -11,6 +12,7 @@ public class UpdateUserDto
     private string? _username;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [DisallowNull]
     public string? Username
     {
         get => _username;
@@ -22,6 +24,7 @@ public class UpdateUserDto
     }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [DisallowNull]
     public string? Email
     {
         get => _email;
@@ -33,6 +36,7 @@ public class UpdateUserDto
     }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [DisallowNull]
     public string? Password
     {
         get => _password;
