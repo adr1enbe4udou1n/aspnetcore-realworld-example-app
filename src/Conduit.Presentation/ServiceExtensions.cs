@@ -104,44 +104,6 @@ public static class ServiceExtensions
                         }
                     };
 
-                    var operations = document.Paths.Values
-                        .Where(path => path.Operations is not null)
-                        .SelectMany(path => path.Operations!.Values);
-
-#pragma warning disable S3267, CA1861
-                    var responseComponents = document.Components.Responses!;
-
-                    var errorResponseComponents = new Dictionary<string, string>(StringComparer.Ordinal)
-                    {
-                        ["401"] = "Unauthorized",
-                        ["403"] = "Forbidden",
-                        ["404"] = "NotFound",
-                        ["409"] = "ConflictError",
-                        ["422"] = "GenericError"
-                    };
-                    foreach (var errorComponent in errorResponseComponents)
-                    {
-                        var operation = operations.First(candidate =>
-                            candidate.Responses?.ContainsKey(errorComponent.Key) == true);
-                        responseComponents[errorComponent.Value] = operation.Responses![errorComponent.Key];
-                    }
-                    foreach (var operation in operations)
-                    {
-                        foreach (var errorComponent in errorResponseComponents)
-                        {
-                            if (operation.Responses?.ContainsKey(errorComponent.Key) == true)
-                            {
-                                operation.Responses[errorComponent.Key] =
-                                    new OpenApiResponseReference(errorComponent.Value, document);
-                            }
-                        }
-                    }
-                    document.Components.Responses = responseComponents;
-
-                    var errorSchema = (OpenApiSchema)responseComponents["GenericError"]
-                        .Content!["application/json"].Schema!;
-                    document.Components.Schemas!["GenericErrorModel"] = errorSchema;
-#pragma warning restore S3267, CA1861
                     return Task.CompletedTask;
                 });
             });

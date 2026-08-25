@@ -44,7 +44,24 @@ internal static class OpenApiContractExtensions
             foreach (var statusCode in statusCodes)
             {
                 var status = statusCode.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                operation.Responses.TryAdd(status, CreateErrorResponse(statusCode));
+                var response = CreateErrorResponse(statusCode);
+                var document = context.Document
+                    ?? throw new InvalidOperationException("Missing OpenAPI document.");
+                var components = document.Components ??= new OpenApiComponents();
+                var responses = components.Responses ??=
+                    new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal);
+                var componentName = GetErrorComponentName(statusCode);
+
+                responses.TryAdd(componentName, response);
+                operation.Responses[status] = new OpenApiResponseReference(componentName, document);
+
+                if (statusCode == StatusCodes.Status422UnprocessableEntity)
+                {
+                    components.Schemas ??= new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+                    components.Schemas.TryAdd(
+                        "GenericErrorModel",
+                        response.Content!["application/json"].Schema!);
+                }
             }
             return Task.CompletedTask;
         });
@@ -153,6 +170,19 @@ internal static class OpenApiContractExtensions
                     }
                 }
             }
+        };
+    }
+
+    private static string GetErrorComponentName(int statusCode)
+    {
+        return statusCode switch
+        {
+            StatusCodes.Status401Unauthorized => "Unauthorized",
+            StatusCodes.Status403Forbidden => "Forbidden",
+            StatusCodes.Status404NotFound => "NotFound",
+            StatusCodes.Status409Conflict => "ConflictError",
+            StatusCodes.Status422UnprocessableEntity => "GenericError",
+            _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, "Unsupported error status code.")
         };
     }
 }
