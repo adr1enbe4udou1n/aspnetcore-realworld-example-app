@@ -1,3 +1,7 @@
+[tools]
+dotnet = "10"
+hurl = "8"
+
 [tasks.seed]
 run = "dotnet run --project tools/Conduit.Tools db seed"
 
@@ -29,9 +33,13 @@ run = [
 ]
 depends = ["vendor"]
 
-[tasks.mutation]
+[tasks."test:mutation"]
 description = "Run mutation tests"
 run = "dotnet stryker"
+
+[tasks."test:api"]
+description = "Run all Hurl API tests"
+run = 'hurl --test --variable host="${HURL_HOST:-http://localhost:5000}" --variable uid="$(date +%s)" specs/tests/*.hurl'
 
 [tasks."openapi:bundle"]
 description = "Check generated OpenAPI against reference specification"
@@ -41,6 +49,3 @@ run = "npx --yes @redocly/cli@latest bundle specs/api/openapi.yml --output specs
 description = "Check generated OpenAPI against reference specification"
 run = "oasdiff diff specs/api/openapi-bundled.yml src/Conduit.WebUI/openapi-generated/openapi.json"
 depends = ["openapi:bundle"]
-
-[tools]
-dotnet = "10"
