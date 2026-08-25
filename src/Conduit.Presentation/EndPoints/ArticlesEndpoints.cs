@@ -31,6 +31,8 @@ public static class ArticlesEndpoints
             .WithName("GetArticles")
             .WithSummary("Get recent articles globally")
             .WithDescription("Get most recent articles globally. Use query parameters to filter results. Auth is optional")
+            .WithOpenApiResponse(200, "MultipleArticlesResponse", "Multiple articles")
+            .WithOpenApiErrors(401, 422)
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -68,6 +70,9 @@ public static class ArticlesEndpoints
             .WithSummary("Get recent articles from users you follow")
             .WithDescription("Get most recent articles from users you follow. Use query parameters to limit. Auth is required")
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "MultipleArticlesResponse", "Multiple articles")
+            .WithOpenApiErrors(401, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -91,6 +96,8 @@ public static class ArticlesEndpoints
             .WithName("GetArticle")
             .WithSummary("Get an article")
             .WithDescription("Get an article. Auth not required")
+            .WithOpenApiResponse(200, "SingleArticleResponse", "Single article")
+            .WithOpenApiErrors(404, 422)
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -110,6 +117,10 @@ public static class ArticlesEndpoints
             .Produces<SingleArticleResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
+            .WithOpenApiResponse(201, "SingleArticleResponse", "Single article")
+            .WithOpenApiErrors(401, 409, 422)
+            .WithOpenApiRequestBody("NewArticleRequest", "article")
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Article to create";
@@ -126,6 +137,10 @@ public static class ArticlesEndpoints
             .Produces<SingleArticleResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "SingleArticleResponse", "Single article")
+            .WithOpenApiErrors(401, 403, 404, 422)
+            .WithOpenApiRequestBody("UpdateArticleRequest", "article")
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -146,6 +161,9 @@ public static class ArticlesEndpoints
             .WithDescription("Delete an article. Auth is required")
             .Produces(StatusCodes.Status204NoContent)
             .RequireAuthorization()
+            .WithOpenApiResponse(204, "EmptyOkResponse", "No content")
+            .WithOpenApiErrors(401, 403, 404, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -161,6 +179,9 @@ public static class ArticlesEndpoints
             .WithSummary("Favorite an article")
             .WithDescription("Favorite an article. Auth is required")
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "SingleArticleResponse", "Single article")
+            .WithOpenApiErrors(401, 404, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -176,6 +197,9 @@ public static class ArticlesEndpoints
             .WithSummary("Unfavorite an article")
             .WithDescription("Unfavorite an article. Auth is required")
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "SingleArticleResponse", "Single article")
+            .WithOpenApiErrors(401, 404, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];

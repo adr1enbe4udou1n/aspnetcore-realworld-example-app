@@ -22,6 +22,9 @@ public static class UsersEndpoints
             .WithDescription("Register a new user")
             .Produces<UserResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(400)
+            .WithOpenApiResponse(201, "UserResponse", "User")
+            .WithOpenApiErrors(409, 422)
+            .WithOpenApiRequestBody("NewUserRequest", "body")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Details of the new user to register";
@@ -37,6 +40,9 @@ public static class UsersEndpoints
             .WithDescription("Login for existing user")
             .Produces<UserResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
+            .WithOpenApiResponse(200, "UserResponse", "User")
+            .WithOpenApiErrors(401, 422)
+            .WithOpenApiRequestBody("LoginUserRequest", "body")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Credentials to use";

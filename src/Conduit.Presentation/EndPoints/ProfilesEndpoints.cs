@@ -18,6 +18,8 @@ public static class ProfilesEndpoints
             .WithName("GetProfileByUsername")
             .WithSummary("Get a profile")
             .WithDescription("Get a profile of a user of the system. Auth is optional")
+            .WithOpenApiResponse(200, "ProfileResponse", "Profile")
+            .WithOpenApiErrors(401, 404, 422)
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.Parameters![0].Description = "Username of the profile to get";
@@ -32,6 +34,9 @@ public static class ProfilesEndpoints
             .WithSummary("Follow a user")
             .WithDescription("Follow a user by username")
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "ProfileResponse", "Profile")
+            .WithOpenApiErrors(401, 404, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -47,6 +52,9 @@ public static class ProfilesEndpoints
             .WithSummary("Unfollow a user")
             .WithDescription("Unfollow a user by username")
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "ProfileResponse", "Profile")
+            .WithOpenApiErrors(401, 404, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];

@@ -18,6 +18,8 @@ public static class CommentsEndpoints
             .WithName("GetArticleComments")
             .WithSummary("Get comments for an article")
             .WithDescription("Get the comments for an article. Auth is optional")
+            .WithOpenApiResponse(200, "MultipleCommentsResponse", "Multiple comments")
+            .WithOpenApiErrors(401, 404, 422)
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -37,6 +39,10 @@ public static class CommentsEndpoints
             .Produces<SingleCommentResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
+            .WithOpenApiResponse(201, "SingleCommentResponse", "Single comment")
+            .WithOpenApiErrors(401, 404, 422)
+            .WithOpenApiRequestBody("NewCommentRequest", "comment")
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -57,6 +63,9 @@ public static class CommentsEndpoints
             .WithDescription("Delete a comment for an article. Auth is required")
             .Produces(StatusCodes.Status204NoContent)
             .RequireAuthorization()
+            .WithOpenApiResponse(204, "EmptyOkResponse", "No content")
+            .WithOpenApiErrors(401, 403, 404, 422)
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];

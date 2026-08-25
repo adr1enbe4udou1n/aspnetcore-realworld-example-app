@@ -18,7 +18,10 @@ public static class UserEndpoints
             .WithName("GetCurrentUser")
             .WithSummary("Get current user")
             .WithDescription("Gets the currently logged-in user")
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .WithOpenApiResponse(200, "UserResponse", "User")
+            .WithOpenApiErrors(401, 422)
+            .WithTokenSecurity();
 
         app.MapPut("/user", (ICommandUsers users, UpdateUserRequest request, CancellationToken cancellationToken) =>
             users.Update(request.User, cancellationToken)
@@ -30,6 +33,10 @@ public static class UserEndpoints
             .Produces<UserResponse>(StatusCodes.Status200OK)
             .ProducesValidationProblem(400)
             .RequireAuthorization()
+            .WithOpenApiResponse(200, "UserResponse", "User")
+            .WithOpenApiErrors(401, 422)
+            .WithOpenApiRequestBody("UpdateUserRequest", "body")
+            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "User details to update. At least **one** field is required.";

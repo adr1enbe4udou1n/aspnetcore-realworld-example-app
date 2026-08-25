@@ -123,60 +123,6 @@ public static class ServiceExtensions
                     }
                     document.Paths = newPaths;
 
-                    var successResponses = new Dictionary<string, (string Status, string Description)>(StringComparer.Ordinal)
-                    {
-                        ["GetArticles"] = ("200", "Multiple articles"),
-                        ["CreateArticle"] = ("201", "Single article"),
-                        ["GetArticlesFeed"] = ("200", "Multiple articles"),
-                        ["DeleteArticle"] = ("204", "No content"),
-                        ["GetArticle"] = ("200", "Single article"),
-                        ["UpdateArticle"] = ("200", "Single article"),
-                        ["GetArticleComments"] = ("200", "Multiple comments"),
-                        ["CreateArticleComment"] = ("201", "Single comment"),
-                        ["DeleteArticleComment"] = ("204", "No content"),
-                        ["DeleteArticleFavorite"] = ("200", "Single article"),
-                        ["CreateArticleFavorite"] = ("200", "Single article"),
-                        ["GetProfileByUsername"] = ("200", "Profile"),
-                        ["UnfollowUserByUsername"] = ("200", "Profile"),
-                        ["FollowUserByUsername"] = ("200", "Profile"),
-                        ["GetTags"] = ("200", "Tags"),
-                        ["GetCurrentUser"] = ("200", "User"),
-                        ["UpdateCurrentUser"] = ("200", "User"),
-                        ["CreateUser"] = ("201", "User"),
-                        ["Login"] = ("200", "User")
-                    };
-
-                    var errorResponses = new Dictionary<string, string[]>(StringComparer.Ordinal)
-                    {
-                        ["GetArticles"] = ["401", "422"],
-                        ["CreateArticle"] = ["401", "409", "422"],
-                        ["GetArticlesFeed"] = ["401", "422"],
-                        ["DeleteArticle"] = ["401", "403", "404", "422"],
-                        ["GetArticle"] = ["404", "422"],
-                        ["UpdateArticle"] = ["401", "403", "404", "422"],
-                        ["GetArticleComments"] = ["401", "404", "422"],
-                        ["CreateArticleComment"] = ["401", "404", "422"],
-                        ["DeleteArticleComment"] = ["401", "403", "404", "422"],
-                        ["DeleteArticleFavorite"] = ["401", "404", "422"],
-                        ["CreateArticleFavorite"] = ["401", "404", "422"],
-                        ["GetProfileByUsername"] = ["401", "404", "422"],
-                        ["UnfollowUserByUsername"] = ["401", "404", "422"],
-                        ["FollowUserByUsername"] = ["401", "404", "422"],
-                        ["GetTags"] = ["422"],
-                        ["GetCurrentUser"] = ["401", "422"],
-                        ["UpdateCurrentUser"] = ["401", "422"],
-                        ["CreateUser"] = ["409", "422"],
-                        ["Login"] = ["401", "422"]
-                    };
-
-                    var securedOperations = new HashSet<string>(StringComparer.Ordinal)
-                    {
-                        "CreateArticle", "GetArticlesFeed", "DeleteArticle", "UpdateArticle",
-                        "CreateArticleComment", "DeleteArticleComment", "DeleteArticleFavorite",
-                        "CreateArticleFavorite", "UnfollowUserByUsername", "FollowUserByUsername",
-                        "GetCurrentUser", "UpdateCurrentUser"
-                    };
-
                     document.Components ??= new OpenApiComponents();
                     document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
                     document.Components.SecuritySchemes.TryAdd("Token", new OpenApiSecurityScheme
@@ -200,98 +146,6 @@ public static class ServiceExtensions
                         .Where(path => path.Operations is not null)
                         .SelectMany(path => path.Operations!.Values);
 
-                    foreach (var operation in operations)
-                    {
-                        if (operation.OperationId is null)
-                        {
-                            continue;
-                        }
-
-                        if (successResponses.TryGetValue(operation.OperationId, out var success)
-                            && operation.Responses?.TryGetValue(success.Status, out var response) == true)
-                        {
-                            response.Description = success.Description;
-                        }
-
-                        operation.Responses?.Remove("400");
-                        if (operation.Responses is not null
-                            && errorResponses.TryGetValue(operation.OperationId, out var statuses))
-                        {
-                            foreach (var status in statuses)
-                            {
-                                operation.Responses.TryAdd(status, new OpenApiResponse
-                                {
-                                    Description = status switch
-                                    {
-                                        "401" => "Unauthorized",
-                                        "403" => "Forbidden. The error key identifies the resource type (article, comment, etc.)",
-                                        "404" => "Not Found. The error key identifies the resource type (article, profile, comment, etc.)",
-                                        "409" => "Conflict - resource already exists",
-                                        _ => "Unexpected error"
-                                    },
-                                    Content = new Dictionary<string, OpenApiMediaType>
-                                    {
-                                        ["application/json"] = new()
-                                        {
-                                            Example = JsonNode.Parse(status switch
-                                            {
-                                                "401" => """{"errors":{"token":["is missing"]}}""",
-                                                "403" => """{"errors":{"resource":["forbidden"]}}""",
-                                                "404" => """{"errors":{"resource":["not found"]}}""",
-                                                "409" => """{"errors":{"username":["has already been taken"]}}""",
-                                                _ => """{"errors":{"title":["can't be blank"]}}"""
-                                            }),
-                                            Schema = new OpenApiSchema
-                                            {
-                                                Type = JsonSchemaType.Object,
-                                                Required = new HashSet<string>(StringComparer.Ordinal) { "errors" },
-                                                Properties = new Dictionary<string, IOpenApiSchema>
-                                                {
-                                                    ["errors"] = new OpenApiSchema
-                                                    {
-                                                        Type = JsonSchemaType.Object,
-                                                        AdditionalProperties = new OpenApiSchema
-                                                        {
-                                                            Type = JsonSchemaType.Array,
-                                                            Items = new OpenApiSchema { Type = JsonSchemaType.String }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
-
-                        if (securedOperations.Contains(operation.OperationId))
-                        {
-                            operation.Security =
-                            [
-                                new OpenApiSecurityRequirement
-                                {
-                                    [new OpenApiSecuritySchemeReference("Token", document)] = []
-                                }
-                            ];
-                        }
-
-                        var requestBodyNames = new Dictionary<string, string>(StringComparer.Ordinal)
-                        {
-                            ["CreateArticle"] = "article",
-                            ["UpdateArticle"] = "article",
-                            ["CreateArticleComment"] = "comment",
-                            ["UpdateCurrentUser"] = "body",
-                            ["CreateUser"] = "body",
-                            ["Login"] = "body"
-                        };
-                        if (requestBodyNames.TryGetValue(operation.OperationId, out var requestBodyName))
-                        {
-                            operation.Extensions ??= new Dictionary<string, IOpenApiExtension>();
-                            operation.Extensions["x-codegen-request-body-name"] =
-                                new JsonNodeExtension(JsonValue.Create(requestBodyName));
-                        }
-                    }
-
                     if (document.Tags is not null)
                     {
                         foreach (var tag in document.Tags)
@@ -301,50 +155,37 @@ public static class ServiceExtensions
                     }
 
 #pragma warning disable S3267, CA1861
-                    var operationsById = operations.ToDictionary(
-                        operation => operation.OperationId!, StringComparer.Ordinal);
                     var responseComponents = new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal);
-                    var successResponseComponents = new Dictionary<string, (string Status, string Component, string Schema)>(StringComparer.Ordinal)
+                    foreach (var operation in operations)
                     {
-                        ["GetArticles"] = ("200", "MultipleArticlesResponse", "MultipleArticlesResponse"),
-                        ["CreateArticle"] = ("201", "SingleArticleResponse", "SingleArticleResponse"),
-                        ["GetArticlesFeed"] = ("200", "MultipleArticlesResponse", "MultipleArticlesResponse"),
-                        ["DeleteArticle"] = ("204", "EmptyOkResponse", ""),
-                        ["GetArticle"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
-                        ["UpdateArticle"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
-                        ["GetArticleComments"] = ("200", "MultipleCommentsResponse", "MultipleCommentsResponse"),
-                        ["CreateArticleComment"] = ("201", "SingleCommentResponse", "SingleCommentResponse"),
-                        ["DeleteArticleComment"] = ("204", "EmptyOkResponse", ""),
-                        ["DeleteArticleFavorite"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
-                        ["CreateArticleFavorite"] = ("200", "SingleArticleResponse", "SingleArticleResponse"),
-                        ["GetProfileByUsername"] = ("200", "ProfileResponse", "ProfileResponse"),
-                        ["UnfollowUserByUsername"] = ("200", "ProfileResponse", "ProfileResponse"),
-                        ["FollowUserByUsername"] = ("200", "ProfileResponse", "ProfileResponse"),
-                        ["GetTags"] = ("200", "TagsResponse", "TagsResponse"),
-                        ["GetCurrentUser"] = ("200", "UserResponse", "UserResponse"),
-                        ["UpdateCurrentUser"] = ("200", "UserResponse", "UserResponse"),
-                        ["CreateUser"] = ("201", "UserResponse", "UserResponse"),
-                        ["Login"] = ("200", "UserResponse", "UserResponse")
-                    };
+                        if (operation.Extensions?.TryGetValue(
+                            OpenApiContractExtensions.ResponseComponentExtension, out var extension) != true)
+                        {
+                            continue;
+                        }
 
-                    foreach (var item in successResponseComponents)
-                    {
-                        var operation = operationsById[item.Key];
-                        var response = operation.Responses![item.Value.Status];
-                        if (item.Value.Schema.Length > 0
+                        var nodeExtension = extension as JsonNodeExtension
+                            ?? throw new InvalidOperationException("Invalid OpenAPI response component metadata.");
+                        var metadata = (nodeExtension.Node?.GetValue<string>()
+                            ?? throw new InvalidOperationException("Missing OpenAPI response component metadata."))
+                            .Split(':', 2);
+                        var status = metadata[0];
+                        var component = metadata[1];
+                        var response = operation.Responses![status];
+                        if (component != "EmptyOkResponse"
                             && response.Content?.TryGetValue("application/json", out var mediaType) == true)
                         {
-                            mediaType.Schema = document.Components.Schemas![item.Value.Schema].CreateShallowCopy();
-                            if (item.Value.Schema == "MultipleArticlesResponse")
+                            mediaType.Schema = document.Components.Schemas![component].CreateShallowCopy();
+                            if (component == "MultipleArticlesResponse")
                             {
                                 var responseSchema = (OpenApiSchema)mediaType.Schema;
                                 var articlesSchema = (OpenApiSchema)responseSchema.Properties!["articles"];
                                 articlesSchema.Items = document.Components.Schemas["ArticleSummary"].CreateShallowCopy();
                             }
                         }
-                        responseComponents.TryAdd(item.Value.Component, response);
-                        operation.Responses[item.Value.Status] =
-                            new OpenApiResponseReference(item.Value.Component, document);
+                        responseComponents.TryAdd(component, response);
+                        operation.Responses[status] = new OpenApiResponseReference(component, document);
+                        operation.Extensions.Remove(OpenApiContractExtensions.ResponseComponentExtension);
                     }
 
                     var errorResponseComponents = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -357,11 +198,11 @@ public static class ServiceExtensions
                     };
                     foreach (var errorComponent in errorResponseComponents)
                     {
-                        var operation = operationsById.Values.First(candidate =>
+                        var operation = operations.First(candidate =>
                             candidate.Responses?.ContainsKey(errorComponent.Key) == true);
                         responseComponents[errorComponent.Value] = operation.Responses![errorComponent.Key];
                     }
-                    foreach (var operation in operationsById.Values)
+                    foreach (var operation in operations)
                     {
                         foreach (var errorComponent in errorResponseComponents)
                         {
@@ -375,28 +216,29 @@ public static class ServiceExtensions
                     document.Components.Responses = responseComponents;
 
                     var requestBodyComponents = new Dictionary<string, IOpenApiRequestBody>(StringComparer.Ordinal);
-                    var requestBodyOperations = new Dictionary<string, string>(StringComparer.Ordinal)
+                    foreach (var operation in operations)
                     {
-                        ["Login"] = "LoginUserRequest",
-                        ["CreateUser"] = "NewUserRequest",
-                        ["UpdateCurrentUser"] = "UpdateUserRequest",
-                        ["CreateArticle"] = "NewArticleRequest",
-                        ["UpdateArticle"] = "UpdateArticleRequest",
-                        ["CreateArticleComment"] = "NewCommentRequest"
-                    };
-                    foreach (var item in requestBodyOperations)
-                    {
-                        var operation = operationsById[item.Key];
+                        if (operation.Extensions?.TryGetValue(
+                            OpenApiContractExtensions.RequestBodyComponentExtension, out var extension) != true)
+                        {
+                            continue;
+                        }
+
+                        var nodeExtension = extension as JsonNodeExtension
+                            ?? throw new InvalidOperationException("Invalid OpenAPI request body component metadata.");
+                        var component = nodeExtension.Node?.GetValue<string>()
+                            ?? throw new InvalidOperationException("Missing OpenAPI request body component metadata.");
                         var requestBody = operation.RequestBody!;
                         var mediaType = requestBody.Content!["application/json"];
-                        mediaType.Schema = document.Components.Schemas![item.Value].CreateShallowCopy();
-                        requestBodyComponents[item.Value] = requestBody;
-                        operation.RequestBody = new OpenApiRequestBodyReference(item.Value, document);
+                        mediaType.Schema = document.Components.Schemas![component].CreateShallowCopy();
+                        requestBodyComponents[component] = requestBody;
+                        operation.RequestBody = new OpenApiRequestBodyReference(component, document);
+                        operation.Extensions.Remove(OpenApiContractExtensions.RequestBodyComponentExtension);
                     }
                     document.Components.RequestBodies = requestBodyComponents;
 
                     var parameterComponents = new Dictionary<string, IOpenApiParameter>(StringComparer.Ordinal);
-                    foreach (var parameter in operationsById["GetArticles"].Parameters!)
+                    foreach (var parameter in operations.SelectMany(operation => operation.Parameters ?? []))
                     {
                         if (parameter.Name is "limit" or "offset")
                         {
@@ -404,7 +246,7 @@ public static class ServiceExtensions
                             parameterComponents[componentName] = parameter;
                         }
                     }
-                    foreach (var operation in operationsById.Values)
+                    foreach (var operation in operations)
                     {
                         if (operation.Parameters is null)
                         {
