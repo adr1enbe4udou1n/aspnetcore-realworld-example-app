@@ -132,33 +132,6 @@ public static class ServiceExtensions
                         operation.Extensions.Remove(OpenApiContractExtensions.ResponseComponentExtension);
                     }
 
-                    var errorResponseComponents = new Dictionary<string, string>(StringComparer.Ordinal)
-                    {
-                        ["401"] = "Unauthorized",
-                        ["403"] = "Forbidden",
-                        ["404"] = "NotFound",
-                        ["409"] = "ConflictError",
-                        ["422"] = "GenericError"
-                    };
-                    foreach (var errorComponent in errorResponseComponents)
-                    {
-                        var operation = operations.First(candidate =>
-                            candidate.Responses?.ContainsKey(errorComponent.Key) == true);
-                        responseComponents[errorComponent.Value] = operation.Responses![errorComponent.Key];
-                    }
-                    foreach (var operation in operations)
-                    {
-                        foreach (var errorComponent in errorResponseComponents)
-                        {
-                            if (operation.Responses?.ContainsKey(errorComponent.Key) == true)
-                            {
-                                operation.Responses[errorComponent.Key] =
-                                    new OpenApiResponseReference(errorComponent.Value, document);
-                            }
-                        }
-                    }
-                    document.Components.Responses = responseComponents;
-
                     var requestBodyComponents = new Dictionary<string, IOpenApiRequestBody>(StringComparer.Ordinal);
                     foreach (var operation in operations)
                     {
@@ -204,6 +177,33 @@ public static class ServiceExtensions
                         }
                     }
                     document.Components.Parameters = parameterComponents;
+
+                    var errorResponseComponents = new Dictionary<string, string>(StringComparer.Ordinal)
+                    {
+                        ["401"] = "Unauthorized",
+                        ["403"] = "Forbidden",
+                        ["404"] = "NotFound",
+                        ["409"] = "ConflictError",
+                        ["422"] = "GenericError"
+                    };
+                    foreach (var errorComponent in errorResponseComponents)
+                    {
+                        var operation = operations.First(candidate =>
+                            candidate.Responses?.ContainsKey(errorComponent.Key) == true);
+                        responseComponents[errorComponent.Value] = operation.Responses![errorComponent.Key];
+                    }
+                    foreach (var operation in operations)
+                    {
+                        foreach (var errorComponent in errorResponseComponents)
+                        {
+                            if (operation.Responses?.ContainsKey(errorComponent.Key) == true)
+                            {
+                                operation.Responses[errorComponent.Key] =
+                                    new OpenApiResponseReference(errorComponent.Value, document);
+                            }
+                        }
+                    }
+                    document.Components.Responses = responseComponents;
 
                     var errorSchema = (OpenApiSchema)responseComponents["GenericError"]
                         .Content!["application/json"].Schema!;
