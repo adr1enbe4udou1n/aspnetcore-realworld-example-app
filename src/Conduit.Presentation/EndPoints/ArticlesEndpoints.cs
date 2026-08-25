@@ -33,8 +33,6 @@ public static class ArticlesEndpoints
             .WithDescription("Get most recent articles globally. Use query parameters to filter results. Auth is optional")
             .WithOpenApiResponse(200, "MultipleArticlesResponse", "Multiple articles")
             .WithOpenApiErrors(401, 422)
-            .WithOpenApiParameter("limit", "limitParam")
-            .WithOpenApiParameter("offset", "offsetParam")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -55,7 +53,9 @@ public static class ArticlesEndpoints
                 schema.Format = null;
                 schema.Minimum = "0";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiParameter("limit", "limitParam")
+            .WithOpenApiParameter("offset", "offsetParam");
 
         app.MapGet("/articles/feed", (IQueryArticles articles,
             int? limit,
@@ -75,8 +75,6 @@ public static class ArticlesEndpoints
             .WithOpenApiResponse(200, "MultipleArticlesResponse", "Multiple articles")
             .WithOpenApiErrors(401, 422)
             .WithTokenSecurity()
-            .WithOpenApiParameter("limit", "limitParam")
-            .WithOpenApiParameter("offset", "offsetParam")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -91,7 +89,9 @@ public static class ArticlesEndpoints
                 schema.Format = null;
                 schema.Minimum = "0";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiParameter("limit", "limitParam")
+            .WithOpenApiParameter("offset", "offsetParam");
 
         app.MapGet("/articles/{slug}", (IQueryArticles articles, string slug, CancellationToken cancellationToken) =>
             articles.Find(slug, cancellationToken)
@@ -122,13 +122,13 @@ public static class ArticlesEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(201, "SingleArticleResponse", "Single article")
             .WithOpenApiErrors(401, 409, 422)
-            .WithOpenApiRequestBody("NewArticleRequest", "article")
             .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Article to create";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiRequestBody("NewArticleRequest", "article");
 
         app.MapPut("/articles/{slug}", (ICommandArticles articles, string slug, UpdateArticleRequest request, CancellationToken cancellationToken) =>
             articles.Update(slug, request.Article, cancellationToken)
@@ -141,7 +141,6 @@ public static class ArticlesEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(200, "SingleArticleResponse", "Single article")
             .WithOpenApiErrors(401, 403, 404, 422)
-            .WithOpenApiRequestBody("UpdateArticleRequest", "article")
             .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
@@ -149,7 +148,8 @@ public static class ArticlesEndpoints
                 parameter.Description = "Slug of the article to update";
                 operation.RequestBody!.Description = "Article to update";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiRequestBody("UpdateArticleRequest", "article");
 
         app.MapDelete("/articles/{slug}", async (ICommandArticles articles, string slug, CancellationToken cancellationToken) =>
         {

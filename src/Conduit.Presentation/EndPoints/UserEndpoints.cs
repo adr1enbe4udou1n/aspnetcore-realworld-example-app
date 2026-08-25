@@ -34,13 +34,13 @@ public static class UserEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(200, "UserResponse", "User")
             .WithOpenApiErrors(401, 422)
-            .WithOpenApiRequestBody("UpdateUserRequest", "body")
             .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "User details to update. At least **one** field is required.";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiRequestBody("UpdateUserRequest", "body");
 
         return app;
     }

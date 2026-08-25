@@ -9,10 +9,6 @@ namespace Conduit.Presentation;
 
 internal static class OpenApiContractExtensions
 {
-    internal const string ResponseComponentExtension = "x-conduit-response-component";
-    internal const string RequestBodyComponentExtension = "x-conduit-request-body-component";
-    internal const string ParameterComponentExtension = "x-conduit-parameter-component";
-
     public static RouteHandlerBuilder WithOpenApiResponse(
         this RouteHandlerBuilder builder,
         int statusCode,
@@ -22,10 +18,16 @@ internal static class OpenApiContractExtensions
         return builder.AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
         {
             var status = statusCode.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            operation.Responses![status].Description = description;
-            operation.Extensions ??= new Dictionary<string, IOpenApiExtension>();
-            operation.Extensions[ResponseComponentExtension] =
-                new JsonNodeExtension(JsonValue.Create($"{status}:{componentName}"));
+            var response = operation.Responses![status];
+            response.Description = description;
+
+            var document = context.Document
+                ?? throw new InvalidOperationException("Missing OpenAPI document.");
+            var components = document.Components ??= new OpenApiComponents();
+            var responses = components.Responses ??=
+                new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal);
+            responses.TryAdd(componentName, response);
+            operation.Responses[status] = new OpenApiResponseReference(componentName, document);
             return Task.CompletedTask;
         });
     }
@@ -55,9 +57,16 @@ internal static class OpenApiContractExtensions
     {
         return builder.AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
         {
+            var requestBody = operation.RequestBody!;
+            var document = context.Document
+                ?? throw new InvalidOperationException("Missing OpenAPI document.");
+            var components = document.Components ??= new OpenApiComponents();
+            var requestBodies = components.RequestBodies ??=
+                new Dictionary<string, IOpenApiRequestBody>(StringComparer.Ordinal);
+            requestBodies.TryAdd(componentName, requestBody);
+            operation.RequestBody = new OpenApiRequestBodyReference(componentName, document);
+
             operation.Extensions ??= new Dictionary<string, IOpenApiExtension>();
-            operation.Extensions[RequestBodyComponentExtension] =
-                new JsonNodeExtension(JsonValue.Create(componentName));
             operation.Extensions["x-codegen-request-body-name"] =
                 new JsonNodeExtension(JsonValue.Create(codegenName));
             return Task.CompletedTask;
@@ -86,11 +95,17 @@ internal static class OpenApiContractExtensions
     {
         return builder.AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
         {
-            var parameter = (OpenApiParameter)operation.Parameters!
-                .Single(candidate => candidate.Name == parameterName);
-            parameter.Extensions ??= new Dictionary<string, IOpenApiExtension>();
-            parameter.Extensions[ParameterComponentExtension] =
-                new JsonNodeExtension(JsonValue.Create(componentName));
+            var parameters = operation.Parameters!;
+            var parameter = parameters.Single(candidate => candidate.Name == parameterName);
+
+            var document = context.Document
+                ?? throw new InvalidOperationException("Missing OpenAPI document.");
+            var components = document.Components ??= new OpenApiComponents();
+            var componentParameters = components.Parameters ??=
+                new Dictionary<string, IOpenApiParameter>(StringComparer.Ordinal);
+            componentParameters.TryAdd(componentName, parameter);
+            parameters[parameters.IndexOf(parameter)] =
+                new OpenApiParameterReference(componentName, document);
             return Task.CompletedTask;
         });
     }

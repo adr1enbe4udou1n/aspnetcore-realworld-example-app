@@ -23,12 +23,12 @@ public static class UsersEndpoints
             .Produces<UserResponse>(StatusCodes.Status201Created)
             .WithOpenApiResponse(201, "UserResponse", "User")
             .WithOpenApiErrors(409, 422)
-            .WithOpenApiRequestBody("NewUserRequest", "body")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Details of the new user to register";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiRequestBody("NewUserRequest", "body");
 
         app.MapPost("/users/login", (ICommandUsers users, LoginUserRequest request, CancellationToken cancellationToken) =>
             users.Login(request.User, cancellationToken)
@@ -40,12 +40,12 @@ public static class UsersEndpoints
             .Produces<UserResponse>(StatusCodes.Status200OK)
             .WithOpenApiResponse(200, "UserResponse", "User")
             .WithOpenApiErrors(401, 422)
-            .WithOpenApiRequestBody("LoginUserRequest", "body")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 operation.RequestBody!.Description = "Credentials to use";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiRequestBody("LoginUserRequest", "body");
 
         return app;
     }

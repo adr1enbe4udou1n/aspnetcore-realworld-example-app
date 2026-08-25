@@ -1,4 +1,3 @@
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 using Conduit.Presentation.Converters;
@@ -110,73 +109,7 @@ public static class ServiceExtensions
                         .SelectMany(path => path.Operations!.Values);
 
 #pragma warning disable S3267, CA1861
-                    var responseComponents = new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal);
-                    foreach (var operation in operations)
-                    {
-                        if (operation.Extensions?.TryGetValue(
-                            OpenApiContractExtensions.ResponseComponentExtension, out var extension) != true)
-                        {
-                            continue;
-                        }
-
-                        var nodeExtension = extension as JsonNodeExtension
-                            ?? throw new InvalidOperationException("Invalid OpenAPI response component metadata.");
-                        var metadata = (nodeExtension.Node?.GetValue<string>()
-                            ?? throw new InvalidOperationException("Missing OpenAPI response component metadata."))
-                            .Split(':', 2);
-                        var status = metadata[0];
-                        var component = metadata[1];
-                        var response = operation.Responses![status];
-                        responseComponents.TryAdd(component, response);
-                        operation.Responses[status] = new OpenApiResponseReference(component, document);
-                        operation.Extensions.Remove(OpenApiContractExtensions.ResponseComponentExtension);
-                    }
-
-                    var requestBodyComponents = new Dictionary<string, IOpenApiRequestBody>(StringComparer.Ordinal);
-                    foreach (var operation in operations)
-                    {
-                        if (operation.Extensions?.TryGetValue(
-                            OpenApiContractExtensions.RequestBodyComponentExtension, out var extension) != true)
-                        {
-                            continue;
-                        }
-
-                        var nodeExtension = extension as JsonNodeExtension
-                            ?? throw new InvalidOperationException("Invalid OpenAPI request body component metadata.");
-                        var component = nodeExtension.Node?.GetValue<string>()
-                            ?? throw new InvalidOperationException("Missing OpenAPI request body component metadata.");
-                        var requestBody = operation.RequestBody!;
-                        requestBodyComponents[component] = requestBody;
-                        operation.RequestBody = new OpenApiRequestBodyReference(component, document);
-                        operation.Extensions.Remove(OpenApiContractExtensions.RequestBodyComponentExtension);
-                    }
-                    document.Components.RequestBodies = requestBodyComponents;
-
-                    var parameterComponents = new Dictionary<string, IOpenApiParameter>(StringComparer.Ordinal);
-                    foreach (var operation in operations)
-                    {
-                        if (operation.Parameters is null)
-                        {
-                            continue;
-                        }
-                        for (var index = 0; index < operation.Parameters.Count; index++)
-                        {
-                            var parameter = operation.Parameters[index];
-                            if (parameter.Extensions?.TryGetValue(
-                                OpenApiContractExtensions.ParameterComponentExtension, out var extension) == true)
-                            {
-                                var nodeExtension = extension as JsonNodeExtension
-                                    ?? throw new InvalidOperationException("Invalid OpenAPI parameter component metadata.");
-                                var componentName = nodeExtension.Node?.GetValue<string>()
-                                    ?? throw new InvalidOperationException("Missing OpenAPI parameter component metadata.");
-                                parameter.Extensions.Remove(OpenApiContractExtensions.ParameterComponentExtension);
-                                parameterComponents.TryAdd(componentName, parameter);
-                                operation.Parameters[index] =
-                                    new OpenApiParameterReference(componentName, document);
-                            }
-                        }
-                    }
-                    document.Components.Parameters = parameterComponents;
+                    var responseComponents = document.Components.Responses!;
 
                     var errorResponseComponents = new Dictionary<string, string>(StringComparer.Ordinal)
                     {

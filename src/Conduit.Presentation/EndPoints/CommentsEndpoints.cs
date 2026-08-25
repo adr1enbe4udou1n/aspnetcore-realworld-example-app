@@ -40,7 +40,6 @@ public static class CommentsEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(201, "SingleCommentResponse", "Single comment")
             .WithOpenApiErrors(401, 404, 422)
-            .WithOpenApiRequestBody("NewCommentRequest", "comment")
             .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
@@ -48,7 +47,8 @@ public static class CommentsEndpoints
                 parameter.Description = "Slug of the article that you want to create a comment for";
                 operation.RequestBody!.Description = "Comment you want to create";
                 return Task.CompletedTask;
-            });
+            })
+            .WithOpenApiRequestBody("NewCommentRequest", "comment");
 
         app.MapDelete("/articles/{slug}/comments/{id}", async (ICommandComments comments, string slug, int id, CancellationToken cancellationToken) =>
         {
