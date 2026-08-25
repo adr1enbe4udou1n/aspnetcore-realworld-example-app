@@ -91,17 +91,23 @@ public static class ServiceExtensions
                             """ + "    \n"
                     });
 
+                    document.Tags = new HashSet<OpenApiTag>
+                    {
+                        new() { Name = "Articles", Description = "Everything about your Articles" },
+                        new() { Name = "Comments", Description = "Everything about your Comments" },
+                        new() { Name = "Favorites", Description = "Everything about your Favorites" },
+                        new() { Name = "Profile", Description = "Everything about your Profile" },
+                        new() { Name = "Tags", Description = "Everything about your Tags" },
+                        new()
+                        {
+                            Name = "User and Authentication",
+                            Description = "Everything about your User and Authentication"
+                        }
+                    };
+
                     var operations = document.Paths.Values
                         .Where(path => path.Operations is not null)
                         .SelectMany(path => path.Operations!.Values);
-
-                    if (document.Tags is not null)
-                    {
-                        foreach (var tag in document.Tags)
-                        {
-                            tag.Description = $"Everything about your {tag.Name}";
-                        }
-                    }
 
 #pragma warning disable S3267, CA1861
                     var responseComponents = new Dictionary<string, IOpenApiResponse>(StringComparer.Ordinal);
