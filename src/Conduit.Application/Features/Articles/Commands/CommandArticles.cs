@@ -132,17 +132,14 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
         return new SingleArticleResponse(article.Map(currentUser.User));
     }
 
-    private async Task<IReadOnlyCollection<Tag>> GetOrCreateTagsAsync(
+    private async Task<List<Tag>> GetOrCreateTagsAsync(
         IEnumerable<string> names,
         CancellationToken cancellationToken)
     {
         var tagNames = names
             .Where(name => !string.IsNullOrEmpty(name))
-            .Distinct(StringComparer.Ordinal)
-            .ToArray();
-        var tags = await context.Tags
-            .Where(tag => tagNames.Contains(tag.Name))
-            .ToListAsync(cancellationToken);
+            .ToHashSet(StringComparer.Ordinal);
+        var tags = await LoadTags();
         var missingTags = tagNames
             .Except(tags.Select(tag => tag.Name), StringComparer.Ordinal)
             .Select(name => new Tag { Name = name })
@@ -153,17 +150,21 @@ public class CommandArticles(IAppDbContext context, ICurrentUser currentUser, IS
             return tags;
         }
 
-        await context.Tags.AddRangeAsync(missingTags, cancellationToken);
+        context.Tags.AddRange(missingTags);
         try
         {
             await context.SaveChangesAsync(cancellationToken);
-            tags.AddRange(missingTags);
-            return tags;
+            return [.. tags, .. missingTags];
         }
         catch (DbUpdateException exception) when (exception.Entries.All(entry => entry.Entity is Tag))
         {
             context.Tags.RemoveRange(missingTags);
-            return await context.Tags
+            return await LoadTags();
+        }
+
+        Task<List<Tag>> LoadTags()
+        {
+            return context.Tags
                 .Where(tag => tagNames.Contains(tag.Name))
                 .ToListAsync(cancellationToken);
         }
