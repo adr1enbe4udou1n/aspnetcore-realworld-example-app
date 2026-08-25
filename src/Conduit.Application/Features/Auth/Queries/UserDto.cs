@@ -2,6 +2,8 @@ using Conduit.Application.Features.Profiles.Queries;
 using Conduit.Application.Interfaces;
 using Conduit.Domain.Entities;
 
+using System.Text.Json.Serialization;
+
 namespace Conduit.Application.Features.Auth.Queries;
 
 public class UserDto
@@ -10,8 +12,10 @@ public class UserDto
 
     public required string Username { get; set; }
 
+    [JsonRequired]
     public string? Bio { get; set; }
 
+    [JsonRequired]
     public string? Image { get; set; }
 
     public required string Token { get; set; }

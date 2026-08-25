@@ -18,7 +18,6 @@ public static class UsersEndpoints
         })
             .WithTags("User and Authentication")
             .WithName("CreateUser")
-            .WithSummary("Register a new user")
             .WithDescription("Register a new user")
             .Produces<UserResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem(400)

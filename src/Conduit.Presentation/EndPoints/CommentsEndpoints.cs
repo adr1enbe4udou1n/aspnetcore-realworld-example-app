@@ -40,13 +40,14 @@ public static class CommentsEndpoints
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
-                parameter.Description = "Slug of the article that you want to create a comments for";
+                parameter.Description = "Slug of the article that you want to create a comment for";
+                operation.RequestBody!.Description = "Comment you want to create";
                 return Task.CompletedTask;
             });
 
-        app.MapDelete("/articles/{slug}/comments/{commentId}", async (ICommandComments comments, string slug, int commentId, CancellationToken cancellationToken) =>
+        app.MapDelete("/articles/{slug}/comments/{id}", async (ICommandComments comments, string slug, int id, CancellationToken cancellationToken) =>
         {
-            await comments.Delete(slug, commentId, cancellationToken);
+            await comments.Delete(slug, id, cancellationToken);
             return Results.NoContent();
         }
         )
@@ -59,9 +60,10 @@ public static class CommentsEndpoints
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
-                parameter.Description = "Slug of the article that you want to delete a comments for";
+                parameter.Description = "Slug of the article that you want to delete a comment for";
                 parameter = operation.Parameters[1];
                 parameter.Description = "ID of the comment you want to delete";
+                ((Microsoft.OpenApi.OpenApiSchema)parameter.Schema!).Format = null;
                 return Task.CompletedTask;
             });
 

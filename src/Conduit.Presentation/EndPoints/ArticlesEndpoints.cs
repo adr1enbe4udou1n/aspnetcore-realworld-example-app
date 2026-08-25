@@ -40,9 +40,16 @@ public static class ArticlesEndpoints
                 parameter = operation.Parameters[2];
                 parameter.Description = "Filter by tag";
                 parameter = operation.Parameters[3];
-                parameter.Description = "Limit number of articles returned (default is 20)";
+                parameter.Description = "The numbers of items to return.";
+                var schema = (Microsoft.OpenApi.OpenApiSchema)parameter.Schema!;
+                schema.Format = null;
+                schema.Minimum = "1";
+                schema.Default = 20;
                 parameter = operation.Parameters[4];
-                parameter.Description = "Offset/skip number of articles (default is 0)";
+                parameter.Description = "The number of items to skip before starting to collect the result set.";
+                schema = (Microsoft.OpenApi.OpenApiSchema)parameter.Schema!;
+                schema.Format = null;
+                schema.Minimum = "0";
                 return Task.CompletedTask;
             });
 
@@ -64,9 +71,16 @@ public static class ArticlesEndpoints
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
-                parameter.Description = "Limit number of articles returned (default is 20)";
+                parameter.Description = "The numbers of items to return.";
+                var schema = (Microsoft.OpenApi.OpenApiSchema)parameter.Schema!;
+                schema.Format = null;
+                schema.Minimum = "1";
+                schema.Default = 20;
                 parameter = operation.Parameters[1];
-                parameter.Description = "Offset/skip number of articles (default is 0)";
+                parameter.Description = "The number of items to skip before starting to collect the result set.";
+                schema = (Microsoft.OpenApi.OpenApiSchema)parameter.Schema!;
+                schema.Format = null;
+                schema.Minimum = "0";
                 return Task.CompletedTask;
             });
 

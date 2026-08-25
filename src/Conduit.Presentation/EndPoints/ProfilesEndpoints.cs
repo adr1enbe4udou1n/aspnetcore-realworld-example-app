@@ -17,7 +17,12 @@ public static class ProfilesEndpoints
             .WithTags("Profile")
             .WithName("GetProfileByUsername")
             .WithSummary("Get a profile")
-            .WithDescription("Get a profile of a user of the system. Auth is optional");
+            .WithDescription("Get a profile of a user of the system. Auth is optional")
+            .AddOpenApiOperationTransformer((operation, context, ct) =>
+            {
+                operation.Parameters![0].Description = "Username of the profile to get";
+                return Task.CompletedTask;
+            });
 
         app.MapPost("/profiles/{username}/follow", (ICommandProfiles profiles, string username, CancellationToken cancellationToken) =>
             profiles.Follow(username, true, cancellationToken)

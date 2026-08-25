@@ -32,7 +32,7 @@ public static class UserEndpoints
             .RequireAuthorization()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
-                operation.RequestBody!.Description = "User details to update. At least <strong>one</strong> field is required.";
+                operation.RequestBody!.Description = "User details to update. At least **one** field is required.";
                 return Task.CompletedTask;
             });
 

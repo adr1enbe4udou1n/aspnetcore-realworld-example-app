@@ -2,16 +2,21 @@ using Conduit.Application.Extensions;
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Interfaces;
 
+using System.Text.Json.Serialization;
+
 namespace Conduit.Application.Features.Profiles.Queries;
 
 public class ProfileDto
 {
     public required string Username { get; set; }
 
+    [JsonRequired]
     public string? Bio { get; set; }
 
+    [JsonRequired]
     public string? Image { get; set; }
 
+    [JsonRequired]
     public bool Following { get; set; }
 }
 
