@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -20,6 +17,8 @@ namespace Conduit.Presentation;
 
 public static class ServiceExtensions
 {
+    private const string ApiPrefix = "/api";
+
 #pragma warning disable S1075
     private static readonly Uri DocumentationUri = new("https://realworld-docs.netlify.app/");
     private static readonly Uri LicenseUri = new("https://opensource.org/licenses/MIT");
@@ -53,56 +52,7 @@ public static class ServiceExtensions
                     return schemaId[..^3];
                 };
 
-                o.AddSchemaTransformer((schema, context, cancellationToken) =>
-                {
-                    var type = Nullable.GetUnderlyingType(context.JsonTypeInfo.Type)
-                        ?? context.JsonTypeInfo.Type;
-
-                    if (type == typeof(DateTime))
-                    {
-                        schema.Type = JsonSchemaType.String;
-                        schema.Format = "date-time";
-                    }
-
-                    if (type == typeof(int))
-                    {
-                        schema.Format = null;
-                    }
-
-                    foreach (var jsonProperty in context.JsonTypeInfo.Properties)
-                    {
-                        if (schema.Properties?.TryGetValue(jsonProperty.Name, out var property) != true
-                            || property is not OpenApiSchema propertySchema
-                            || jsonProperty.AttributeProvider is null)
-                        {
-                            continue;
-                        }
-
-                        var dataType = jsonProperty.AttributeProvider
-                            .GetCustomAttributes(typeof(DataTypeAttribute), true)
-                            .OfType<DataTypeAttribute>()
-                            .FirstOrDefault();
-                        if (dataType?.DataType == DataType.Password)
-                        {
-                            propertySchema.Format = "password";
-                        }
-
-                        var disallowsNull = jsonProperty.AttributeProvider
-                            .GetCustomAttributes(typeof(DisallowNullAttribute), true).Length > 0;
-                        if (!disallowsNull
-                            && jsonProperty.AttributeProvider is PropertyInfo { SetMethod: not null } propertyInfo)
-                        {
-                            disallowsNull = propertyInfo.SetMethod.GetParameters()[0]
-                                .IsDefined(typeof(DisallowNullAttribute), true);
-                        }
-                        if (disallowsNull)
-                        {
-                            propertySchema.Type &= ~JsonSchemaType.Null;
-                        }
-                    }
-
-                    return Task.CompletedTask;
-                });
+                o.AddSchemaTransformer(new ConduitOpenApiSchemaTransformer());
 
                 o.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
@@ -120,20 +70,7 @@ public static class ServiceExtensions
                         Url = LicenseUri
                     };
 
-                    document.Servers =
-                    [
-                        new() {
-                            Url = "/api"
-                        }
-                    ];
-
-                    var newPaths = new OpenApiPaths();
-                    foreach (var path in document.Paths)
-                    {
-                        var newPathKey = path.Key.StartsWith("/api", StringComparison.OrdinalIgnoreCase) ? path.Key[4..] : path.Key;
-                        newPaths.Add(newPathKey, path.Value);
-                    }
-                    document.Paths = newPaths;
+                    document.MovePathPrefixToServer(ApiPrefix);
 
                     document.Components ??= new OpenApiComponents();
                     document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
@@ -273,7 +210,7 @@ public static class ServiceExtensions
 
     public static void AddApplicationEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api");
+        var api = app.MapGroup(ApiPrefix);
 
         api
             .AddUserRoutes()
