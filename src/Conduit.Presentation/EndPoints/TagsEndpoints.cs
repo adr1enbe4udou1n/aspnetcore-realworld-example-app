@@ -1,4 +1,5 @@
 using Conduit.Application.Features.Tags.Queries;
+using Conduit.Presentation.Extensions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

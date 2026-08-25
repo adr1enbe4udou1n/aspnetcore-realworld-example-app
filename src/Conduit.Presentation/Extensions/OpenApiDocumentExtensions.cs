@@ -1,6 +1,6 @@
 using Microsoft.OpenApi;
 
-namespace Conduit.Presentation;
+namespace Conduit.Presentation.Extensions;
 
 internal static class OpenApiDocumentExtensions
 {

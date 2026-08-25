@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
+using Conduit.Presentation.Extensions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

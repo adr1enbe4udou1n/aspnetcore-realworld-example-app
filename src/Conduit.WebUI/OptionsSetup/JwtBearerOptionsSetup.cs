@@ -6,7 +6,6 @@ using Conduit.Application.Interfaces;
 using Conduit.Infrastructure.Options;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

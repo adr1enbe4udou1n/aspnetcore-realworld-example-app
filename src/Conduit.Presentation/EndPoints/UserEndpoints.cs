@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
+using Conduit.Presentation.Extensions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

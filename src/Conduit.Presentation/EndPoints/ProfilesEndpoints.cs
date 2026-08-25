@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Profiles.Commands;
 using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Presentation.Extensions;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

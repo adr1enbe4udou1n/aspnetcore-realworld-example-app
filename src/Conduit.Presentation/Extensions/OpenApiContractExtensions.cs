@@ -2,10 +2,9 @@ using System.Text.Json.Nodes;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Conduit.Presentation;
+namespace Conduit.Presentation.Extensions;
 
 internal static class OpenApiContractExtensions
 {

@@ -1,7 +1,9 @@
+using Conduit.Presentation.Extensions;
+
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Conduit.Presentation;
+namespace Conduit.Presentation.Transformers;
 
 internal sealed class ConduitOpenApiDocumentTransformer(string apiPrefix) : IOpenApiDocumentTransformer
 {

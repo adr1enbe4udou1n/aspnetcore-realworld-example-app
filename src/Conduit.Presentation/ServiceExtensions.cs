@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Exceptions;
+using Conduit.Presentation.Transformers;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Json;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,17 +33,7 @@ public static class ServiceExtensions
             .AddProblemDetails()
             .AddOpenApi("v1", o =>
             {
-                o.CreateSchemaReferenceId = typeInfo =>
-                {
-                    var schemaId = OpenApiOptions.CreateDefaultSchemaReferenceId(typeInfo);
-                    if (schemaId?.EndsWith("Dto", StringComparison.Ordinal) != true)
-                    {
-                        return null;
-                    }
-
-                    return schemaId[..^3];
-                };
-
+                o.CreateSchemaReferenceId = ConduitOpenApiSchemaReferenceId.Create;
                 o.AddSchemaTransformer(new ConduitOpenApiSchemaTransformer());
                 o.AddDocumentTransformer(new ConduitOpenApiDocumentTransformer(ApiPrefix));
             });

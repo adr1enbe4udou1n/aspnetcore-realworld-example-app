@@ -5,7 +5,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Conduit.Presentation;
+namespace Conduit.Presentation.Transformers;
 
 internal sealed class ConduitOpenApiSchemaTransformer : IOpenApiSchemaTransformer
 {
