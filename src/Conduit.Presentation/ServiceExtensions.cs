@@ -35,6 +35,7 @@ public static class ServiceExtensions
             {
                 o.CreateSchemaReferenceId = ConduitOpenApiSchemaReferenceId.Create;
                 o.AddSchemaTransformer(new ConduitOpenApiSchemaTransformer());
+                o.AddOperationTransformer(new ConduitOpenApiSecurityTransformer());
                 o.AddDocumentTransformer(new ConduitOpenApiDocumentTransformer(ApiPrefix));
             });
     }

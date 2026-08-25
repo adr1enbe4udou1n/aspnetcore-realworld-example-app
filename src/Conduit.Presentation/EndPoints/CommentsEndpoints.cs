@@ -41,7 +41,6 @@ public static class CommentsEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(201, "SingleCommentResponse", "Single comment")
             .WithOpenApiErrors(401, 404, 422)
-            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -65,7 +64,6 @@ public static class CommentsEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(204, "EmptyOkResponse", "No content")
             .WithOpenApiErrors(401, 403, 404, 422)
-            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];

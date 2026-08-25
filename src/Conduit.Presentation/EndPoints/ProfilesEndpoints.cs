@@ -37,7 +37,6 @@ public static class ProfilesEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(200, "ProfileResponse", "Profile")
             .WithOpenApiErrors(401, 404, 422)
-            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -55,7 +54,6 @@ public static class ProfilesEndpoints
             .RequireAuthorization()
             .WithOpenApiResponse(200, "ProfileResponse", "Profile")
             .WithOpenApiErrors(401, 404, 422)
-            .WithTokenSecurity()
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];

@@ -89,21 +89,6 @@ internal static class OpenApiContractExtensions
         });
     }
 
-    public static RouteHandlerBuilder WithTokenSecurity(this RouteHandlerBuilder builder)
-    {
-        return builder.AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
-        {
-            operation.Security =
-            [
-                new OpenApiSecurityRequirement
-                {
-                    [new OpenApiSecuritySchemeReference("Token", context.Document)] = []
-                }
-            ];
-            return Task.CompletedTask;
-        });
-    }
-
     public static RouteHandlerBuilder WithOpenApiParameter(
         this RouteHandlerBuilder builder,
         string parameterName,
