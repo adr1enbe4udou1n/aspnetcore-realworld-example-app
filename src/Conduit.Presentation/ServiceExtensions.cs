@@ -31,7 +31,7 @@ public static class ServiceExtensions
             .AddExceptionHandler<NotFoundExceptionHandler>()
             .AddExceptionHandler<ForbiddenExceptionHandler>()
             .AddProblemDetails()
-            .AddOpenApi("v1", o =>
+            .AddOpenApi("openapi", o =>
             {
                 o.CreateSchemaReferenceId = ConduitOpenApiSchemaReferenceId.Create;
                 o.AddSchemaTransformer(new ConduitOpenApiSchemaTransformer());
