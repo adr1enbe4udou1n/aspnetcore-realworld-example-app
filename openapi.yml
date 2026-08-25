@@ -11,13 +11,20 @@ info:
   version: 2.0.0
 tags:
   - name: Articles
+    description: Everything about your Articles
   - name: Comments
+    description: Everything about your Comments
   - name: Favorites
+    description: Everything about your Favorites
   - name: Profile
+    description: Everything about your Profile
   - name: Tags
+    description: Everything about your Tags
   - name: User and Authentication
+    description: Everything about your User and Authentication
 servers:
   - url: /api
+security: []
 paths:
   /users/login:
     post:
@@ -40,6 +47,7 @@ paths:
     post:
       tags:
         - User and Authentication
+      summary: Register a new user
       description: Register a new user
       operationId: CreateUser
       requestBody:
