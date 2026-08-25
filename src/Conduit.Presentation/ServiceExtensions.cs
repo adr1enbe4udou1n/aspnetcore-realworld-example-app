@@ -238,14 +238,6 @@ public static class ServiceExtensions
                     document.Components.RequestBodies = requestBodyComponents;
 
                     var parameterComponents = new Dictionary<string, IOpenApiParameter>(StringComparer.Ordinal);
-                    foreach (var parameter in operations.SelectMany(operation => operation.Parameters ?? []))
-                    {
-                        if (parameter.Name is "limit" or "offset")
-                        {
-                            var componentName = $"{parameter.Name}Param";
-                            parameterComponents[componentName] = parameter;
-                        }
-                    }
                     foreach (var operation in operations)
                     {
                         if (operation.Parameters is null)
@@ -255,10 +247,17 @@ public static class ServiceExtensions
                         for (var index = 0; index < operation.Parameters.Count; index++)
                         {
                             var parameter = operation.Parameters[index];
-                            if (parameter.Name is "limit" or "offset")
+                            if (parameter.Extensions?.TryGetValue(
+                                OpenApiContractExtensions.ParameterComponentExtension, out var extension) == true)
                             {
+                                var nodeExtension = extension as JsonNodeExtension
+                                    ?? throw new InvalidOperationException("Invalid OpenAPI parameter component metadata.");
+                                var componentName = nodeExtension.Node?.GetValue<string>()
+                                    ?? throw new InvalidOperationException("Missing OpenAPI parameter component metadata.");
+                                parameter.Extensions.Remove(OpenApiContractExtensions.ParameterComponentExtension);
+                                parameterComponents.TryAdd(componentName, parameter);
                                 operation.Parameters[index] =
-                                    new OpenApiParameterReference($"{parameter.Name}Param", document);
+                                    new OpenApiParameterReference(componentName, document);
                             }
                         }
                     }

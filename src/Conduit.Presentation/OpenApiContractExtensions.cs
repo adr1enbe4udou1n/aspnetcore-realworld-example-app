@@ -11,6 +11,7 @@ internal static class OpenApiContractExtensions
 {
     internal const string ResponseComponentExtension = "x-conduit-response-component";
     internal const string RequestBodyComponentExtension = "x-conduit-request-body-component";
+    internal const string ParameterComponentExtension = "x-conduit-parameter-component";
 
     public static RouteHandlerBuilder WithOpenApiResponse(
         this RouteHandlerBuilder builder,
@@ -74,6 +75,22 @@ internal static class OpenApiContractExtensions
                     [new OpenApiSecuritySchemeReference("Token", context.Document)] = []
                 }
             ];
+            return Task.CompletedTask;
+        });
+    }
+
+    public static RouteHandlerBuilder WithOpenApiParameter(
+        this RouteHandlerBuilder builder,
+        string parameterName,
+        string componentName)
+    {
+        return builder.AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
+        {
+            var parameter = (OpenApiParameter)operation.Parameters!
+                .Single(candidate => candidate.Name == parameterName);
+            parameter.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+            parameter.Extensions[ParameterComponentExtension] =
+                new JsonNodeExtension(JsonValue.Create(componentName));
             return Task.CompletedTask;
         });
     }

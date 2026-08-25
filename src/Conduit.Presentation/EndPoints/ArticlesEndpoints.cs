@@ -33,6 +33,8 @@ public static class ArticlesEndpoints
             .WithDescription("Get most recent articles globally. Use query parameters to filter results. Auth is optional")
             .WithOpenApiResponse(200, "MultipleArticlesResponse", "Multiple articles")
             .WithOpenApiErrors(401, 422)
+            .WithOpenApiParameter("limit", "limitParam")
+            .WithOpenApiParameter("offset", "offsetParam")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
@@ -73,6 +75,8 @@ public static class ArticlesEndpoints
             .WithOpenApiResponse(200, "MultipleArticlesResponse", "Multiple articles")
             .WithOpenApiErrors(401, 422)
             .WithTokenSecurity()
+            .WithOpenApiParameter("limit", "limitParam")
+            .WithOpenApiParameter("offset", "offsetParam")
             .AddOpenApiOperationTransformer((operation, context, ct) =>
             {
                 var parameter = operation.Parameters![0];
