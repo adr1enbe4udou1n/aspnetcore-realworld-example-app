@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Comments.Commands;
 using Conduit.Application.Features.Comments.Queries;
+using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,6 @@ public static class CommentsEndpoints
             .WithSummary("Create a comment for an article")
             .WithDescription("Create a comment for an article. Auth is required")
             .Produces<SingleCommentResponse>(StatusCodes.Status201Created)
-            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApiResponse(201, "SingleCommentResponse", "Single comment")
             .WithOpenApiErrors(401, 404, 422)
@@ -80,4 +80,5 @@ public static class CommentsEndpoints
     }
 }
 
+[JsonSchemaInline]
 public record NewCommentRequest(NewCommentDto Comment);

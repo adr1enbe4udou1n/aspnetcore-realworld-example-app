@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +22,6 @@ public static class UsersEndpoints
             .WithSummary("Register a new user")
             .WithDescription("Register a new user")
             .Produces<UserResponse>(StatusCodes.Status201Created)
-            .ProducesValidationProblem(400)
             .WithOpenApiResponse(201, "UserResponse", "User")
             .WithOpenApiErrors(409, 422)
             .WithOpenApiRequestBody("NewUserRequest", "body")
@@ -39,7 +39,6 @@ public static class UsersEndpoints
             .WithSummary("Existing user login")
             .WithDescription("Login for existing user")
             .Produces<UserResponse>(StatusCodes.Status200OK)
-            .ProducesValidationProblem(400)
             .WithOpenApiResponse(200, "UserResponse", "User")
             .WithOpenApiErrors(401, 422)
             .WithOpenApiRequestBody("LoginUserRequest", "body")
@@ -53,5 +52,7 @@ public static class UsersEndpoints
     }
 }
 
+[JsonSchemaInline]
 public record LoginUserRequest(LoginUserDto User);
+[JsonSchemaInline]
 public record NewUserRequest(NewUserDto User);

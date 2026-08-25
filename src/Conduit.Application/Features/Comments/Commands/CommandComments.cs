@@ -2,12 +2,14 @@ using Conduit.Application.Exceptions;
 using Conduit.Application.Extensions;
 using Conduit.Application.Features.Comments.Queries;
 using Conduit.Application.Interfaces;
+using Conduit.Application.Support;
 using Conduit.Domain.Entities;
 
 using FluentValidation;
 
 namespace Conduit.Application.Features.Comments.Commands;
 
+[JsonSchemaInline]
 public record SingleCommentResponse(CommentDto Comment);
 
 

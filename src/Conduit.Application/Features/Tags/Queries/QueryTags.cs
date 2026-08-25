@@ -1,9 +1,11 @@
 using Conduit.Application.Interfaces;
+using Conduit.Application.Support;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Tags.Queries;
 
+[JsonSchemaInline]
 public record TagsResponse(IEnumerable<string> Tags);
 
 public class QueryTags(IAppDbContext context) : IQueryTags

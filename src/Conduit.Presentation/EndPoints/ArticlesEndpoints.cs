@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Articles.Commands;
 using Conduit.Application.Features.Articles.Queries;
+using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -119,7 +120,6 @@ public static class ArticlesEndpoints
             .WithSummary("Create an article")
             .WithDescription("Create an article. Auth is required")
             .Produces<SingleArticleResponse>(StatusCodes.Status201Created)
-            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApiResponse(201, "SingleArticleResponse", "Single article")
             .WithOpenApiErrors(401, 409, 422)
@@ -139,7 +139,6 @@ public static class ArticlesEndpoints
             .WithSummary("Update an article")
             .WithDescription("Update an article. Auth is required")
             .Produces<SingleArticleResponse>(StatusCodes.Status200OK)
-            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApiResponse(200, "SingleArticleResponse", "Single article")
             .WithOpenApiErrors(401, 403, 404, 422)
@@ -215,5 +214,7 @@ public static class ArticlesEndpoints
     }
 }
 
+[JsonSchemaInline]
 public record NewArticleRequest(NewArticleDto Article);
+[JsonSchemaInline]
 public record UpdateArticleRequest(UpdateArticleDto Article);

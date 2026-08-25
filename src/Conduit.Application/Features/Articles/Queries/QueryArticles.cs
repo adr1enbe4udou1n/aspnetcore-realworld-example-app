@@ -1,11 +1,14 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
+using Conduit.Application.Support;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
+[JsonSchemaInline]
 public record MultipleArticlesResponse(IEnumerable<ArticleSummaryDto> Articles, int ArticlesCount);
+[JsonSchemaInline]
 public record SingleArticleResponse(ArticleDto Article);
 
 

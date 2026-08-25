@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
+using Conduit.Application.Support;
 using Conduit.Presentation.Converters;
 using Conduit.Presentation.Endpoints;
 using Conduit.Presentation.Exceptions;
@@ -44,9 +45,7 @@ public static class ServiceExtensions
             {
                 o.CreateSchemaReferenceId = typeInfo =>
                 {
-                    if (typeInfo.Type.Name.EndsWith("Request", StringComparison.Ordinal)
-                        || typeInfo.Type.Name.EndsWith("Response", StringComparison.Ordinal)
-                        || typeInfo.Type.Name is "ArticleSummaryDto" or "HttpValidationProblemDetails")
+                    if (typeInfo.Type.IsDefined(typeof(JsonSchemaInlineAttribute), false))
                     {
                         return null;
                     }

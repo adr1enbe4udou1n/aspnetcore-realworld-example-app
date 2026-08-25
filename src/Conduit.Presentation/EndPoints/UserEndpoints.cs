@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Auth.Commands;
 using Conduit.Application.Features.Auth.Queries;
+using Conduit.Application.Support;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +32,6 @@ public static class UserEndpoints
             .WithSummary("Update current user")
             .WithDescription("Updated user information for current user")
             .Produces<UserResponse>(StatusCodes.Status200OK)
-            .ProducesValidationProblem(400)
             .RequireAuthorization()
             .WithOpenApiResponse(200, "UserResponse", "User")
             .WithOpenApiErrors(401, 422)
@@ -47,4 +47,5 @@ public static class UserEndpoints
     }
 }
 
+[JsonSchemaInline]
 public record UpdateUserRequest(UpdateUserDto User);

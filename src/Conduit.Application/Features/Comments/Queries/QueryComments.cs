@@ -1,10 +1,12 @@
 using Conduit.Application.Extensions;
 using Conduit.Application.Interfaces;
+using Conduit.Application.Support;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Application.Features.Comments.Queries;
 
+[JsonSchemaInline]
 public record MultipleCommentsResponse(IEnumerable<CommentDto> Comments);
 
 public class QueryComments(IAppDbContext context, ICurrentUser currentUser) : IQueryComments

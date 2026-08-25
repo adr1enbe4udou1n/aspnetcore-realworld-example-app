@@ -2,10 +2,12 @@ using System.Collections.ObjectModel;
 
 using Conduit.Application.Features.Auth.Queries;
 using Conduit.Application.Features.Profiles.Queries;
+using Conduit.Application.Support;
 using Conduit.Domain.Entities;
 
 namespace Conduit.Application.Features.Articles.Queries;
 
+[JsonSchemaInline]
 public class ArticleSummaryDto
 {
     public required string Title { get; set; }
