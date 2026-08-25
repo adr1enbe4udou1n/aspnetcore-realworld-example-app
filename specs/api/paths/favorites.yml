@@ -1,0 +1,49 @@
+/articles/{slug}/favorite:
+  post:
+    tags:
+    - Favorites
+    summary: Favorite an article
+    description: Favorite an article. Auth is required
+    operationId: CreateArticleFavorite
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article that you want to favorite
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/SingleArticleResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+  delete:
+    tags:
+    - Favorites
+    summary: Unfavorite an article
+    description: Unfavorite an article. Auth is required
+    operationId: DeleteArticleFavorite
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article that you want to unfavorite
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/SingleArticleResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []

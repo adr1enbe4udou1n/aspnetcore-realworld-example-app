@@ -1,0 +1,83 @@
+/articles/{slug}/comments:
+  get:
+    tags:
+    - Comments
+    summary: Get comments for an article
+    description: Get the comments for an article. Auth is optional
+    operationId: GetArticleComments
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article that you want to get comments for
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/MultipleCommentsResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+  post:
+    tags:
+    - Comments
+    summary: Create a comment for an article
+    description: Create a comment for an article. Auth is required
+    operationId: CreateArticleComment
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article that you want to create a comment for
+      required: true
+      schema:
+        type: string
+    requestBody:
+      $ref: ../components/request-bodies.yml#/NewCommentRequest
+    responses:
+      '201':
+        $ref: ../components/responses.yml#/SingleCommentResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+    x-codegen-request-body-name: comment
+/articles/{slug}/comments/{id}:
+  delete:
+    tags:
+    - Comments
+    summary: Delete a comment for an article
+    description: Delete a comment for an article. Auth is required
+    operationId: DeleteArticleComment
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article that you want to delete a comment for
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      description: ID of the comment you want to delete
+      required: true
+      schema:
+        type: integer
+    responses:
+      '204':
+        $ref: ../components/responses.yml#/EmptyOkResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '403':
+        $ref: ../components/responses.yml#/Forbidden
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []

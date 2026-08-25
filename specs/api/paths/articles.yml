@@ -1,0 +1,147 @@
+/articles/feed:
+  get:
+    tags:
+    - Articles
+    summary: Get recent articles from users you follow
+    description: Get most recent articles from users you follow. Use query parameters to limit. Auth is required
+    operationId: GetArticlesFeed
+    parameters:
+    - $ref: ../components/parameters.yml#/offsetParam
+    - $ref: ../components/parameters.yml#/limitParam
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/MultipleArticlesResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+/articles:
+  get:
+    tags:
+    - Articles
+    summary: Get recent articles globally
+    description: Get most recent articles globally. Use query parameters to filter results. Auth is optional
+    operationId: GetArticles
+    parameters:
+    - name: tag
+      in: query
+      description: Filter by tag
+      schema:
+        type: string
+    - name: author
+      in: query
+      description: Filter by author (username)
+      schema:
+        type: string
+    - name: favorited
+      in: query
+      description: Filter by favorites of a user (username)
+      schema:
+        type: string
+    - $ref: ../components/parameters.yml#/offsetParam
+    - $ref: ../components/parameters.yml#/limitParam
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/MultipleArticlesResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+  post:
+    tags:
+    - Articles
+    summary: Create an article
+    description: Create an article. Auth is required
+    operationId: CreateArticle
+    requestBody:
+      $ref: ../components/request-bodies.yml#/NewArticleRequest
+    responses:
+      '201':
+        $ref: ../components/responses.yml#/SingleArticleResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '409':
+        $ref: ../components/responses.yml#/ConflictError
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+    x-codegen-request-body-name: article
+/articles/{slug}:
+  get:
+    tags:
+    - Articles
+    summary: Get an article
+    description: Get an article. Auth not required
+    operationId: GetArticle
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article to get
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/SingleArticleResponse
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+  put:
+    tags:
+    - Articles
+    summary: Update an article
+    description: Update an article. Auth is required
+    operationId: UpdateArticle
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article to update
+      required: true
+      schema:
+        type: string
+    requestBody:
+      $ref: ../components/request-bodies.yml#/UpdateArticleRequest
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/SingleArticleResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '403':
+        $ref: ../components/responses.yml#/Forbidden
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+    x-codegen-request-body-name: article
+  delete:
+    tags:
+    - Articles
+    summary: Delete an article
+    description: Delete an article. Auth is required
+    operationId: DeleteArticle
+    parameters:
+    - name: slug
+      in: path
+      description: Slug of the article to delete
+      required: true
+      schema:
+        type: string
+    responses:
+      '204':
+        $ref: ../components/responses.yml#/EmptyOkResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '403':
+        $ref: ../components/responses.yml#/Forbidden
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []

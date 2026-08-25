@@ -1,0 +1,72 @@
+LoginUserRequest:
+  required: true
+  description: Credentials to use
+  content:
+    application/json:
+      schema:
+        required:
+        - user
+        type: object
+        properties:
+          user:
+            $ref: ./schemas.yml#/LoginUser
+NewUserRequest:
+  required: true
+  description: Details of the new user to register
+  content:
+    application/json:
+      schema:
+        required:
+        - user
+        type: object
+        properties:
+          user:
+            $ref: ./schemas.yml#/NewUser
+UpdateUserRequest:
+  required: true
+  description: User details to update. At least **one** field is required.
+  content:
+    application/json:
+      schema:
+        required:
+        - user
+        type: object
+        properties:
+          user:
+            $ref: ./schemas.yml#/UpdateUser
+NewArticleRequest:
+  required: true
+  description: Article to create
+  content:
+    application/json:
+      schema:
+        required:
+        - article
+        type: object
+        properties:
+          article:
+            $ref: ./schemas.yml#/NewArticle
+UpdateArticleRequest:
+  required: true
+  description: Article to update
+  content:
+    application/json:
+      schema:
+        required:
+        - article
+        type: object
+        properties:
+          article:
+            $ref: ./schemas.yml#/UpdateArticle
+NewCommentRequest:
+  required: true
+  description: Comment you want to create
+  content:
+    application/json:
+      schema:
+        required:
+        - comment
+        type: object
+        properties:
+          comment:
+            $ref: ./schemas.yml#/NewComment

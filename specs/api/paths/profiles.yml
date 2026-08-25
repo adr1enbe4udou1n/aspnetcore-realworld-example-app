@@ -1,0 +1,72 @@
+/profiles/{username}:
+  get:
+    tags:
+    - Profile
+    summary: Get a profile
+    description: Get a profile of a user of the system. Auth is optional
+    operationId: GetProfileByUsername
+    parameters:
+    - name: username
+      in: path
+      description: Username of the profile to get
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/ProfileResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+/profiles/{username}/follow:
+  post:
+    tags:
+    - Profile
+    summary: Follow a user
+    description: Follow a user by username
+    operationId: FollowUserByUsername
+    parameters:
+    - name: username
+      in: path
+      description: Username of the profile you want to follow
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/ProfileResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+  delete:
+    tags:
+    - Profile
+    summary: Unfollow a user
+    description: Unfollow a user by username
+    operationId: UnfollowUserByUsername
+    parameters:
+    - name: username
+      in: path
+      description: Username of the profile you want to unfollow
+      required: true
+      schema:
+        type: string
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/ProfileResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '404':
+        $ref: ../components/responses.yml#/NotFound
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []

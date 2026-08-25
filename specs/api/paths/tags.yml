@@ -1,0 +1,12 @@
+/tags:
+  get:
+    tags:
+    - Tags
+    summary: Get tags
+    description: Get tags. Auth not required
+    operationId: GetTags
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/TagsResponse
+      '422':
+        $ref: ../components/responses.yml#/GenericError

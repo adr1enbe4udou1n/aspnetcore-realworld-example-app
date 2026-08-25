@@ -1,0 +1,172 @@
+TagsResponse:
+  description: Tags
+  content:
+    application/json:
+      schema:
+        required:
+        - tags
+        type: object
+        properties:
+          tags:
+            type: array
+            items:
+              type: string
+SingleCommentResponse:
+  description: Single comment
+  content:
+    application/json:
+      schema:
+        required:
+        - comment
+        type: object
+        properties:
+          comment:
+            $ref: ./schemas.yml#/Comment
+MultipleCommentsResponse:
+  description: Multiple comments
+  content:
+    application/json:
+      schema:
+        required:
+        - comments
+        type: object
+        properties:
+          comments:
+            type: array
+            items:
+              $ref: ./schemas.yml#/Comment
+SingleArticleResponse:
+  description: Single article
+  content:
+    application/json:
+      schema:
+        required:
+        - article
+        type: object
+        properties:
+          article:
+            $ref: ./schemas.yml#/Article
+MultipleArticlesResponse:
+  description: Multiple articles
+  content:
+    application/json:
+      schema:
+        required:
+        - articles
+        - articlesCount
+        type: object
+        properties:
+          articles:
+            type: array
+            items:
+              required:
+              - author
+              - createdAt
+              - description
+              - favorited
+              - favoritesCount
+              - slug
+              - tagList
+              - title
+              - updatedAt
+              type: object
+              properties:
+                slug:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                tagList:
+                  type: array
+                  items:
+                    type: string
+                createdAt:
+                  type: string
+                  format: date-time
+                updatedAt:
+                  type: string
+                  format: date-time
+                favorited:
+                  type: boolean
+                favoritesCount:
+                  type: integer
+                author:
+                  $ref: ./schemas.yml#/Profile
+          articlesCount:
+            type: integer
+ProfileResponse:
+  description: Profile
+  content:
+    application/json:
+      schema:
+        required:
+        - profile
+        type: object
+        properties:
+          profile:
+            $ref: ./schemas.yml#/Profile
+UserResponse:
+  description: User
+  content:
+    application/json:
+      schema:
+        required:
+        - user
+        type: object
+        properties:
+          user:
+            $ref: ./schemas.yml#/User
+EmptyOkResponse:
+  description: No content
+  content: {}
+Unauthorized:
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas.yml#/GenericErrorModel
+      example:
+        errors:
+          token:
+          - is missing
+ConflictError:
+  description: Conflict - resource already exists
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas.yml#/GenericErrorModel
+      example:
+        errors:
+          username:
+          - has already been taken
+Forbidden:
+  description: Forbidden. The error key identifies the resource type (article, comment, etc.)
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas.yml#/GenericErrorModel
+      example:
+        errors:
+          resource:
+          - forbidden
+NotFound:
+  description: Not Found. The error key identifies the resource type (article, profile, comment, etc.)
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas.yml#/GenericErrorModel
+      example:
+        errors:
+          resource:
+          - not found
+GenericError:
+  description: Unexpected error
+  content:
+    application/json:
+      schema:
+        $ref: ./schemas.yml#/GenericErrorModel
+      example:
+        errors:
+          title:
+          - can't be blank

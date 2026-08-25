@@ -1,0 +1,192 @@
+LoginUser:
+  required:
+  - email
+  - password
+  type: object
+  properties:
+    email:
+      type: string
+    password:
+      type: string
+      format: password
+NewUser:
+  required:
+  - email
+  - password
+  - username
+  type: object
+  properties:
+    username:
+      type: string
+    email:
+      type: string
+    password:
+      type: string
+      format: password
+User:
+  required:
+  - bio
+  - email
+  - image
+  - token
+  - username
+  type: object
+  properties:
+    email:
+      type: string
+    token:
+      type: string
+    username:
+      type: string
+    bio:
+      type:
+      - string
+      - 'null'
+    image:
+      type:
+      - string
+      - 'null'
+UpdateUser:
+  type: object
+  properties:
+    email:
+      type: string
+    password:
+      type: string
+    username:
+      type: string
+    bio:
+      type:
+      - string
+      - 'null'
+    image:
+      type:
+      - string
+      - 'null'
+Profile:
+  required:
+  - bio
+  - following
+  - image
+  - username
+  type: object
+  properties:
+    username:
+      type: string
+    bio:
+      type:
+      - string
+      - 'null'
+    image:
+      type:
+      - string
+      - 'null'
+    following:
+      type: boolean
+Article:
+  required:
+  - author
+  - body
+  - createdAt
+  - description
+  - favorited
+  - favoritesCount
+  - slug
+  - tagList
+  - title
+  - updatedAt
+  type: object
+  properties:
+    slug:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+    body:
+      type: string
+    tagList:
+      type: array
+      items:
+        type: string
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+    favorited:
+      type: boolean
+    favoritesCount:
+      type: integer
+    author:
+      $ref: '#/Profile'
+NewArticle:
+  required:
+  - body
+  - description
+  - title
+  type: object
+  properties:
+    title:
+      type: string
+    description:
+      type: string
+    body:
+      type: string
+    tagList:
+      type: array
+      items:
+        type: string
+UpdateArticle:
+  type: object
+  properties:
+    title:
+      type: string
+    description:
+      type: string
+    body:
+      type: string
+    tagList:
+      type: array
+      items:
+        type: string
+Comment:
+  required:
+  - author
+  - body
+  - createdAt
+  - id
+  - updatedAt
+  type: object
+  properties:
+    id:
+      type: integer
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+    body:
+      type: string
+    author:
+      $ref: '#/Profile'
+NewComment:
+  required:
+  - body
+  type: object
+  properties:
+    body:
+      type: string
+GenericErrorModel:
+  required:
+  - errors
+  type: object
+  properties:
+    errors:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string

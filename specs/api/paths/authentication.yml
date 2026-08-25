@@ -1,0 +1,68 @@
+/users/login:
+  post:
+    tags:
+    - User and Authentication
+    summary: Existing user login
+    description: Login for existing user
+    operationId: Login
+    requestBody:
+      $ref: ../components/request-bodies.yml#/LoginUserRequest
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/UserResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    x-codegen-request-body-name: body
+/users:
+  post:
+    tags:
+    - User and Authentication
+    summary: Register a new user
+    description: Register a new user
+    operationId: CreateUser
+    requestBody:
+      $ref: ../components/request-bodies.yml#/NewUserRequest
+    responses:
+      '201':
+        $ref: ../components/responses.yml#/UserResponse
+      '409':
+        $ref: ../components/responses.yml#/ConflictError
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    x-codegen-request-body-name: body
+/user:
+  get:
+    tags:
+    - User and Authentication
+    summary: Get current user
+    description: Gets the currently logged-in user
+    operationId: GetCurrentUser
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/UserResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+  put:
+    tags:
+    - User and Authentication
+    summary: Update current user
+    description: Updated user information for current user
+    operationId: UpdateCurrentUser
+    requestBody:
+      $ref: ../components/request-bodies.yml#/UpdateUserRequest
+    responses:
+      '200':
+        $ref: ../components/responses.yml#/UserResponse
+      '401':
+        $ref: ../components/responses.yml#/Unauthorized
+      '422':
+        $ref: ../components/responses.yml#/GenericError
+    security:
+    - Token: []
+    x-codegen-request-body-name: body

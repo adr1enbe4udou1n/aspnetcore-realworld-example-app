@@ -1,0 +1,124 @@
+openapi: 3.1.1
+info:
+  title: RealWorld Conduit API
+  description: Conduit API documentation
+  contact:
+    name: RealWorld
+    url: https://realworld-docs.netlify.app/
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+tags:
+- name: Articles
+  description: Everything about your Articles
+- name: Comments
+  description: Everything about your Comments
+- name: Favorites
+  description: Everything about your Favorites
+- name: Profile
+  description: Everything about your Profile
+- name: Tags
+  description: Everything about your Tags
+- name: User and Authentication
+  description: Everything about your User and Authentication
+servers:
+- url: /api
+security: []
+paths:
+  /users/login:
+    $ref: ./paths/authentication.yml#/~1users~1login
+  /users:
+    $ref: ./paths/authentication.yml#/~1users
+  /user:
+    $ref: ./paths/authentication.yml#/~1user
+  /profiles/{username}:
+    $ref: ./paths/profiles.yml#/~1profiles~1{username}
+  /profiles/{username}/follow:
+    $ref: ./paths/profiles.yml#/~1profiles~1{username}~1follow
+  /articles/feed:
+    $ref: ./paths/articles.yml#/~1articles~1feed
+  /articles:
+    $ref: ./paths/articles.yml#/~1articles
+  /articles/{slug}:
+    $ref: ./paths/articles.yml#/~1articles~1{slug}
+  /articles/{slug}/comments:
+    $ref: ./paths/comments.yml#/~1articles~1{slug}~1comments
+  /articles/{slug}/comments/{id}:
+    $ref: ./paths/comments.yml#/~1articles~1{slug}~1comments~1{id}
+  /articles/{slug}/favorite:
+    $ref: ./paths/favorites.yml#/~1articles~1{slug}~1favorite
+  /tags:
+    $ref: ./paths/tags.yml#/~1tags
+components:
+  schemas:
+    LoginUser:
+      $ref: ./components/schemas.yml#/LoginUser
+    NewUser:
+      $ref: ./components/schemas.yml#/NewUser
+    User:
+      $ref: ./components/schemas.yml#/User
+    UpdateUser:
+      $ref: ./components/schemas.yml#/UpdateUser
+    Profile:
+      $ref: ./components/schemas.yml#/Profile
+    Article:
+      $ref: ./components/schemas.yml#/Article
+    NewArticle:
+      $ref: ./components/schemas.yml#/NewArticle
+    UpdateArticle:
+      $ref: ./components/schemas.yml#/UpdateArticle
+    Comment:
+      $ref: ./components/schemas.yml#/Comment
+    NewComment:
+      $ref: ./components/schemas.yml#/NewComment
+    GenericErrorModel:
+      $ref: ./components/schemas.yml#/GenericErrorModel
+  responses:
+    TagsResponse:
+      $ref: ./components/responses.yml#/TagsResponse
+    SingleCommentResponse:
+      $ref: ./components/responses.yml#/SingleCommentResponse
+    MultipleCommentsResponse:
+      $ref: ./components/responses.yml#/MultipleCommentsResponse
+    SingleArticleResponse:
+      $ref: ./components/responses.yml#/SingleArticleResponse
+    MultipleArticlesResponse:
+      $ref: ./components/responses.yml#/MultipleArticlesResponse
+    ProfileResponse:
+      $ref: ./components/responses.yml#/ProfileResponse
+    UserResponse:
+      $ref: ./components/responses.yml#/UserResponse
+    EmptyOkResponse:
+      $ref: ./components/responses.yml#/EmptyOkResponse
+    Unauthorized:
+      $ref: ./components/responses.yml#/Unauthorized
+    ConflictError:
+      $ref: ./components/responses.yml#/ConflictError
+    Forbidden:
+      $ref: ./components/responses.yml#/Forbidden
+    NotFound:
+      $ref: ./components/responses.yml#/NotFound
+    GenericError:
+      $ref: ./components/responses.yml#/GenericError
+  requestBodies:
+    LoginUserRequest:
+      $ref: ./components/request-bodies.yml#/LoginUserRequest
+    NewUserRequest:
+      $ref: ./components/request-bodies.yml#/NewUserRequest
+    UpdateUserRequest:
+      $ref: ./components/request-bodies.yml#/UpdateUserRequest
+    NewArticleRequest:
+      $ref: ./components/request-bodies.yml#/NewArticleRequest
+    UpdateArticleRequest:
+      $ref: ./components/request-bodies.yml#/UpdateArticleRequest
+    NewCommentRequest:
+      $ref: ./components/request-bodies.yml#/NewCommentRequest
+  parameters:
+    offsetParam:
+      $ref: ./components/parameters.yml#/offsetParam
+    limitParam:
+      $ref: ./components/parameters.yml#/limitParam
+  securitySchemes:
+    Token:
+      $ref: ./components/security-schemes.yml#/Token
