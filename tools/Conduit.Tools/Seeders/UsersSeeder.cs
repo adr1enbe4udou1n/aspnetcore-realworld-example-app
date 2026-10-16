@@ -14,7 +14,8 @@ public class UsersSeeder(IAppDbContext context, IPasswordHasher passwordHasher) 
             .RuleFor(m => m.Name, f => f.Person.FullName)
             .RuleFor(m => m.Email, f => f.Person.Email)
             .RuleFor(m => m.Bio, f => f.Lorem.Paragraphs(3))
-            .RuleFor(m => m.Image, f => f.Internet.Avatar())
+            .RuleFor(m => m.Image, (f, u) =>
+                $"https://api.dicebear.com/9.x/initials/svg?seed={Uri.EscapeDataString(u.Name)}")
             .RuleFor(m => m.Password, passwordHasher.Hash("password"))
             .Generate(50);
 
