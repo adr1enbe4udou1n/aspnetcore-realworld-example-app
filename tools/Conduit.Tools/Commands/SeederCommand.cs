@@ -31,26 +31,17 @@ public class SeederCommand(IConfiguration config, AppDbContext context, IEnumera
 
         using var cmd = conn.CreateCommand();
 
-        cmd.CommandText = "SET session_replication_role = 'replica';";
+        cmd.CommandText = @"
+            TRUNCATE TABLE
+                ""ArticleTag"",
+                ""ArticleFavorite"",
+                ""Comments"",
+                ""Articles"",
+                ""Tags"",
+                ""Users""
+            CASCADE;
+        ";
         await cmd.ExecuteNonQueryAsync();
-
-        try
-        {
-            cmd.CommandText = @"
-                TRUNCATE TABLE ""ArticleTag"" CASCADE;
-                TRUNCATE TABLE ""ArticleFavorite"" CASCADE;
-                TRUNCATE TABLE ""Comments"" CASCADE;
-                TRUNCATE TABLE ""Articles"" CASCADE;
-                TRUNCATE TABLE ""Tags"" CASCADE;
-                TRUNCATE TABLE ""Users"" CASCADE;
-            ";
-            await cmd.ExecuteNonQueryAsync();
-        }
-        finally
-        {
-            cmd.CommandText = "SET session_replication_role = 'origin';";
-            await cmd.ExecuteNonQueryAsync();
-        }
     }
 
     /// <summary>
